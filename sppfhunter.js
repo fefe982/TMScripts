@@ -603,6 +603,7 @@ function handleFusionCard(){
         clickA('//a[text()="Nカード一括強化"]');
     }
 }
+
 function handleTeamBattle(){
     var wait = 2000,
         bp_need = 1,
@@ -647,11 +648,8 @@ function handleERBBattle(){
         bp_need = 1,
         i,
         attacked = false;
-    //debugger;
     setInterval(function(){
-        //attacked = attacked || clickAV('//*[@id="skip_battle_btn"]', '//*[@id="skip_battle_btn"]/div/a');
-        //attacked = attacked || 
-		clickSth(getXPATH('//*[@id="do_battle_btn" and not(@style="display:none")]'),"click");
+        var do_battle = $('div#do_battle_btn').filter(":visible").click();
     }, wait);
     
     //setInterval(function(){
