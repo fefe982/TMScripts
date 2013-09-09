@@ -1,4 +1,4 @@
 TMScripts
 =========
 
-TamperMonkey script that write to help automate some games.
+TamperMonkey script that I write to help automate some games.
