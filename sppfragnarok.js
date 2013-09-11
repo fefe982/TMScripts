@@ -1,7 +1,6 @@
 var xpathmypage = '//*[@id="header_left_button"]/a';
 var xpathquest = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]';
 var xpathevent = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_event_image"]]';
-//http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fmission%2FMissionResult%2F
 
 function handleArenaTop(){
     var succ = false;
@@ -66,10 +65,6 @@ function handleArenaMissionRes() {
 
 function handleArenaUserList(){
     var min = 10000, i, minid = 0;
-    //if (getXPATH('//div[@class="fnt_emphasis blink" and text()="BPが不足しています"]')) {
-    //    clickA(xpathevent);
-    //    return;
-    //}
     for (i = 1; i<= 5; i++){
         var t = getXPATH('//*[@id="rcv_submit_btns"]/ul/li['+i+']/table/tbody/tr/td[3]/div/span[2]');
         if (t && getXPATH('//*[@id="rcv_submit_btns"]/ul/li['+i+']/table/tbody/tr/td[3]/div/div/a') && parseInt(t.innerText, 10) < min) {
@@ -85,7 +80,7 @@ function handleArenaUserList(){
     setTimeout(function(){clickA(xpathevent);}, 10000);
 }
 
-function handleStrongBossTop() {//http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fisland%2FBeatdownBossBattle%2F%3FbossId%3D1625358
+function handleStrongBossTop() {
     var succ = false, attack;
     succ = succ || clickA('//*[@id="requestChain"]/a');
     if (!succ){
@@ -124,10 +119,6 @@ function handleMyPage(){
             return;
         }
     }
-    if (ap > 10 && !mission_error) {
-        succ = succ || clickA(xpathevent);
-        succ = succ || clickA(xpathquest);
-    }
     var boss_clear = getCookie("__my_r_boss_clear");
     if (!boss_clear){
         succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
@@ -142,6 +133,10 @@ function handleMyPage(){
     succ = succ || clickA('//a[text()="贈り物が届いてます"]');
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
+    if (ap > 10 && !mission_error) {
+        succ = succ || clickA(xpathevent);
+        succ = succ || clickA(xpathquest);
+    }
     //succ = succ || clickA(xpathevent);
     succ = succ || setTimeout(function(){location.reload(true);},  60000);
 }
