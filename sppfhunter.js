@@ -644,12 +644,13 @@ function handleTeamBattle(){
     }, 2000);
 }
 function handleERBBattle(){
+    // player battle, BP1 only
     var wait = 2000,
         bp_need = 1,
         i,
         attacked = false;
     setInterval(function(){
-        var do_battle = $('div#do_battle_btn').filter(":visible").click();
+        $('div#do_battle_btn').filter(":visible").click();
     }, wait);
     
     //setInterval(function(){
@@ -664,8 +665,10 @@ function handleERBBattle(){
         var ff = getXPATH("//*[@id=\"stage_front\"]");
         if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
     }, 5000);
+
+    var reload = false;
     setInterval(function(){
-    if (getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
+    if (reload = false && getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
         //debugger;
         var ele, ele_s;//*[@id="bp_recovery"]/div/div[2]
         var ok = getXPATH('//*[@id="bp_recovery"]/div/div[text()="OK"]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
@@ -679,6 +682,8 @@ function handleERBBattle(){
             setTimeout(function(){clickSth(ok,"click");}, 1000);
         } else {
             //clickA(xpathgiftbox);
+            setTimeout(function(){location.reload(true);},  600000);
+            reload = true;
         }
     }
     }, 2000);
@@ -819,6 +824,7 @@ var actions =[
 		['hold']]],
 	[/eventSurvival%2FEventTop/, 'list', [
 		['a', '//a[@href="http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FDoMissionExecutionCheck"]'],
+        ['a', '//a[@href="http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleConf"]'],
 		['hold']]],
 	[/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
     [/event[a-zA-Z]*%2FRaidBossTop/, 'func', handleEventRaid],
