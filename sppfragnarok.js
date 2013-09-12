@@ -33,7 +33,7 @@ function handleMissionRes(){
         clickA('//a[text()="' + decodeURIComponent("%E3%81%95%E3%82%89%E3%81%AB%E9%80%B2%E3%82%80") + '"]');
     //} else if (title.match(/MP割り振り/)) {
     //    clickA('//div[text()="自動割り振り"]');
-    } else if (title == "") {
+    } else if (title === "") {
         var succ = false;
         succ = succ || clickA('//a[text()="クエストをさらに進む"]');
         if (!succ && getXPATH('//*[@id="swfArea"]')) {

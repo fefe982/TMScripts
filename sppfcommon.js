@@ -199,7 +199,7 @@ function setCookie(c_name,value,exsecs)
 {
     var exdate=new Date();
     exdate.setSeconds(exdate.getSeconds() + exsecs);
-    var c_value=escape(value) + ((exsecs==null) ? "" : "; expires="+exdate.toUTCString());
+    var c_value=escape(value) + ((exsecs===null) ? "" : "; expires="+exdate.toUTCString());
     document.cookie=c_name + "=" + c_value;
 }
 function getCookie(c_name)
