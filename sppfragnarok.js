@@ -309,7 +309,7 @@ var actions =[
         ['a', '//*[@id="choiceArea"]/div[1]/div['+Math.floor(Math.random() * 3 + 1)+']/a']]],
     [/island%2FChoiceSpAreaSelectEnd%2F/, 'list', [
         ['a', '//*[@id="containerBox"]/div[5]/a'],
-        ['flash', '//*[@id="container"]|//div[@id="gamecanvas"]/canvas']]],
+        ['flash', '//div[@id="gamecanvas"]/canvas']]],
     [/island%2FIslandSlotResult/, 'a', '(//a[contains(@href, "DoIslandSlot")])[last()]'],
     [/island%2FIslandSlotTop%2F/, 'list', [
         ['a', '(//a[contains(@href, "DoIslandSlot")])[last()]']]],

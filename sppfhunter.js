@@ -682,7 +682,8 @@ function handleERBBattle(){
             setTimeout(function(){clickSth(ok,"click");}, 1000);
         } else {
             //clickA(xpathgiftbox);
-            setTimeout(function(){location.reload(true);},  600000);
+            //setTimeout(function(){location.reload(true);},  600000);
+            //default reload at msgloop
             reload = true;
         }
     }
