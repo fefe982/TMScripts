@@ -668,7 +668,7 @@ function handleERBBattle(){
 
     var reload = false;
     setInterval(function(){
-    if (reload = false && getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
+    if (reload == false && getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
         //debugger;
         var ele, ele_s;//*[@id="bp_recovery"]/div/div[2]
         var ok = getXPATH('//*[@id="bp_recovery"]/div/div[text()="OK"]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
