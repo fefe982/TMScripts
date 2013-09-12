@@ -1,9 +1,9 @@
 
-function getXPATH(xpath){
+function getXPATH(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
 }
 
-function getXPATHAll(xpath){
+function getXPATHAll(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
 }
 
@@ -26,42 +26,39 @@ var defaultOptions = {
 
 function extend(destination, source) {
     var property;
-    for (property in source){
-        destination[property] = source[property];
+    for (property in source) {
+        if (source.hasOwnProperty(property)) {
+            destination[property] = source[property];
+        }
     }
     return destination;
 }
 
-function simulate(element, eventName)
-{
-    var options = extend(defaultOptions, arguments[2] || {});
+function simulate(element, eventName, config) {
+    var options = extend(defaultOptions, config || {});
     var oEvent, eventType = null;
-    
-    for (var name in eventMatchers)
-    {
-        if (eventMatchers[name].test(eventName)) { eventType = name; break; }
-    }
-    
-    if (!eventType)
-        throw new SyntaxError('Only HTMLEvents and MouseEvents interfaces are supported');
-    
-    if (document.createEvent)
-    {
-        oEvent = document.createEvent(eventType);
-        if (eventType == 'HTMLEvents')
-        {
-            oEvent.initEvent(eventName, options.bubbles, options.cancelable);
+    var name;
+    for (name in eventMatchers) {
+        if (eventMatchers.hasOwnProperty(name)) {
+            if (eventMatchers[name].test(eventName)) { eventType = name; break; }
         }
-        else
-        {
+    }
+
+    if (!eventType) {
+        throw new SyntaxError('Only HTMLEvents and MouseEvents interfaces are supported');
+    }
+
+    if (document.createEvent) {
+        oEvent = document.createEvent(eventType);
+        if (eventType === 'HTMLEvents') {
+            oEvent.initEvent(eventName, options.bubbles, options.cancelable);
+        } else {
             oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView,
                                   options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY,
                                   options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.button, element);
         }
         element.dispatchEvent(oEvent);
-    }
-    else
-    {
+    } else {
         options.clientX = options.pointerX;
         options.clientY = options.pointerY;
         var evt = document.createEventObject();
@@ -72,17 +69,16 @@ function simulate(element, eventName)
 }
 
 
-function clickSth(obj, eventname, xoff, yoff){
+function clickSth(obj, eventname, xoff, yoff) {
     var rect, x, y;
-    if (!obj)
-    {
+    if (!obj) {
 	//debugger;
         return false;
     }
     if (obj.getBoundingClientRect) {
         rect = obj.getBoundingClientRect();
-        x = xoff ? rect.left + xoff :(rect.left + rect.right)/2;
-        y = yoff ? rect.top + yoff :(rect.top + rect.bottom)/2;
+        x = xoff ? rect.left + xoff : (rect.left + rect.right) / 2;
+        y = yoff ? rect.top + yoff : (rect.top + rect.bottom) / 2;
     } else {
         x = 0;
         y = 0;
@@ -90,26 +86,25 @@ function clickSth(obj, eventname, xoff, yoff){
     if (document.createEvent && obj.dispatchEvent) {
         var event = document.createEvent("MouseEvents");
         event.initMouseEvent(eventname, true, true, window,
-                             0,x,y,x,y,
+                             0, x, y, x, y,
                              false, false, false, false,
                              0, obj);
         obj.dispatchEvent(event);
-    }
-    else if (obj.fireEvent) {
+    } else if (obj.fireEvent) {
         obj.fireEvent("onclick");
     }
     return true;
 }
 
 function clickLink(link) {
-    setTimeout(function(){
+    setTimeout(function () {
         var event = document.createEvent("MouseEvents");
         event.initMouseEvent("click", true, true, window,
                              0, 0, 0, 0, 0,
                              false, false, false, false,
                              0, null);
         var cancelled = !link.dispatchEvent(event);
-        if (!cancelled){
+        if (!cancelled) {
             window.location = link.href;
         }
     }, 2000);
@@ -117,55 +112,56 @@ function clickLink(link) {
 
 var url = document.URL;
 
-function clickA(xpath){
+function clickA(xpath) {
     var a = getXPATH(xpath);
     if (a) {
-        clickLink(a); 
+        clickLink(a);
         return true;
-    } else {
-        return false;
-    }
+    } //else {
+    return false;
+    //}
 }
 
-function clickAV(xpathw, xpatha){
+function clickAV(xpathw, xpatha) {
     var w = getXPATH(xpathw), a = getXPATH(xpatha);
     //debugger;
-    if (w && a && getComputedStyle(w) .getPropertyValue("display")!="none") {clickLink(a, "click"); return true;}
-    else { return false;}
+    if (w && a && getComputedStyle(w).getPropertyValue("display") !== "none") {clickLink(a, "click"); return true; }
+    //else { return false;}
+    return false;
 }
 
-function clickForm(xpath, nocheck){
+function clickForm(xpath, nocheck) {
     var a = getXPATH(xpath);
     if (a && (nocheck || a.querySelectorAll("input").length > 0)) {
-        setTimeout(function(){
+        setTimeout(function () {
             a.submit();
         }, 2000);
         return true;
-    } else {
-        return false;
-    }
+    } //else {
+    return false;
+    //}
 }
-function clickS(xpath){
-    setInterval(function(){
+function clickS(xpath) {
+    setInterval(function () {
         var a = getXPATH(xpath);
-        if (a) {clickSth(a, "click");}
+        if (a) {clickSth(a, "click"); }
     }, 1000);
 }
 
-function clickFlash(xpath,xoff,yoff){
+function clickFlash(xpath, xoff, yoff) {
     //if (getXPATH(xpath))
     //{
-        setInterval(function () {
-            var canvas = getXPATH(xpath);
-            if (canvas) {
-                //clickSth(canvas,"mousemove",xoff,yoff);
-                clickSth(canvas,"mousedown",xoff,yoff);
-                //clickSth(canvas,"click",xoff,yoff);
-                clickSth(canvas,"mouseup",xoff,yoff);
-                clickSth(canvas,"click",xoff,yoff);
-            }
-        }, 1000);
-        return true;
+    setInterval(function () {
+        var canvas = getXPATH(xpath);
+        if (canvas) {
+            //clickSth(canvas,"mousemove",xoff,yoff);
+            clickSth(canvas, "mousedown", xoff, yoff);
+            //clickSth(canvas,"click",xoff,yoff);
+            clickSth(canvas, "mouseup", xoff, yoff);
+            clickSth(canvas, "click", xoff, yoff);
+        }
+    }, 1000);
+    return true;
     //}
     //else
     //{
@@ -173,56 +169,49 @@ function clickFlash(xpath,xoff,yoff){
     //}
 }
 
-function clickMinMax(xpath1, xpath2, xpath3, minmaxflag){
+function clickMinMax(xpath1, xpath2, xpath3, minmaxflag) {
     var minmax = 1000000, id = 0, i = 1, ele, nres, num;
-    if (minmaxflag){
+    if (minmaxflag) {
         minmax = -minmax;
     }
-    while ((ele = getXPATH(xpath1 + i + xpath2)) && getXPATH(xpath1 + i + xpath3)){
+    while (((ele = getXPATH(xpath1 + i + xpath2)) !== null) && getXPATH(xpath1 + i + xpath3)) {
         nres = ele.innerText.match(/([0-9]+)/);
-        num = parseInt(nres[1],10);
-        if ((minmaxflag && num > minmax) || (!minmaxflag && num < minmax)){
+        num = parseInt(nres[1], 10);
+        if ((minmaxflag && num > minmax) || (!minmaxflag && num < minmax)) {
             minmax = num;
-            id= i;
+            id = i;
         }
-        i ++;
+        i += 1;
     }
-    if (id > 0){
+    if (id > 0) {
         return clickA(xpath1 + id + xpath3);
-    } else {
-        return false;
-    }
+    } //else {
+    return false;
+    //}
 }
 
 ////////////
-function setCookie(c_name,value,exsecs)
-{
-    var exdate=new Date();
+function setCookie(c_name, value, exsecs) {
+    var exdate = new Date();
     exdate.setSeconds(exdate.getSeconds() + exsecs);
-    var c_value=escape(value) + ((exsecs===null) ? "" : "; expires="+exdate.toUTCString());
-    document.cookie=c_name + "=" + c_value;
+    var c_value = escape(value) + ((exsecs === null) ? "" : "; expires=" + exdate.toUTCString());
+    document.cookie = c_name + "=" + c_value;
 }
-function getCookie(c_name)
-{
+function getCookie(c_name) {
     var c_value = document.cookie;
     var c_start = c_value.indexOf(" " + c_name + "=");
-    if (c_start == -1)
-    {
+    if (c_start === -1) {
         c_start = c_value.indexOf(c_name + "=");
     }
-    if (c_start == -1)
-    {
+    if (c_start === -1) {
         c_value = null;
-    }
-    else
-    {
+    } else {
         c_start = c_value.indexOf("=", c_start) + 1;
         var c_end = c_value.indexOf(";", c_start);
-        if (c_end == -1)
-        {
+        if (c_end === -1) {
             c_end = c_value.length;
         }
-        c_value = unescape(c_value.substring(c_start,c_end));
+        c_value = unescape(c_value.substring(c_start, c_end));
     }
     return c_value;
 }
