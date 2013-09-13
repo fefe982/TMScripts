@@ -2,7 +2,7 @@ var xpathmypage = '//*[@id="header_left_button"]/a';
 var xpathquest = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]';
 var xpathevent = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_event_image"]]';
 
-function handleArenaTop(){
+function handleArenaTop() {
     var succ = false;
     var bp_gauge = getXPATH('//*[@id="header_bp_gauge"]'), bp;
     if (bp_gauge) {
@@ -16,17 +16,17 @@ function handleArenaTop(){
         clickS('//*[@id="container"]');
     }
 }
-function handleMissionRes(){
+function handleMissionRes() {
     var title_ele = getXPATH('//p[@class="section_title"]'), title;
-    if (title_ele){
+    if (title_ele) {
         title = title_ele.innerText;
     } else {
         title = "";
     }//
-    if (title == "入手した秘宝") {
+    if (title === "入手した秘宝") {
         clickA('//*[@id="containerBox"]/div[5]/a');
-    } else  if (title.match(/N$/)){
-        if (!clickA('//a[text()="' + decodeURIComponent("%E5%A3%B2%E5%8D%B4%E3%81%97%E9%80%B2%E3%82%80") +'"]')){ //売却し進む
+    } else if (title.match(/N$/)) {
+        if (!clickA('//a[text()="' + decodeURIComponent("%E5%A3%B2%E5%8D%B4%E3%81%97%E9%80%B2%E3%82%80") + '"]')) { //売却し進む
             clickA('//a[text()="' + decodeURIComponent("%E3%81%95%E3%82%89%E3%81%AB%E9%80%B2%E3%82%80") + '"]');
         }
     } else if (title.match(/R$/)) {
@@ -63,28 +63,28 @@ function handleArenaMissionRes() {
     succ = succ || clickA("//*[@id='containerBox']/div[@class='section margin_bottom_20']/div/a");
 }
 
-function handleArenaUserList(){
+function handleArenaUserList() {
     var min = 10000, i, minid = 0;
-    for (i = 1; i<= 5; i++){
-        var t = getXPATH('//*[@id="rcv_submit_btns"]/ul/li['+i+']/table/tbody/tr/td[3]/div/span[2]');
-        if (t && getXPATH('//*[@id="rcv_submit_btns"]/ul/li['+i+']/table/tbody/tr/td[3]/div/div/a') && parseInt(t.innerText, 10) < min) {
+    for (i = 1; i <= 5; i++) {
+        var t = getXPATH('//*[@id="rcv_submit_btns"]/ul/li[' + i + ']/table/tbody/tr/td[3]/div/span[2]');
+        if (t && getXPATH('//*[@id="rcv_submit_btns"]/ul/li[' + i + ']/table/tbody/tr/td[3]/div/div/a') && parseInt(t.innerText, 10) < min) {
             min = parseInt(t.innerText, 10);
             //alert(min);
             minid = i;
         }
     }
     if (minid > 0) {
-        setInterval(function(){clickA('//*[@id="rcv_submit_btns"]/ul/li['+minid+']/table/tbody/tr/td[3]/div/div/a');}, 2000);
+        setInterval(function () {clickA('//*[@id="rcv_submit_btns"]/ul/li[' + minid + ']/table/tbody/tr/td[3]/div/div/a'); }, 2000);
     }
 
-    setTimeout(function(){clickA(xpathevent);}, 10000);
+    setTimeout(function () {clickA(xpathevent); }, 10000);
 }
 
 function handleStrongBossTop() {
     var succ = false, attack;
     succ = succ || clickA('//*[@id="requestChain"]/a');
-    if (!succ){
-        
+    if (!succ) {
+
         var owner = getXPATH('//*[@id="damage_box"]/div/div[2]/div[1]/div[text()="ヴィル"]');
         var attacked = getXPATH('//*[@id="damage_box"]/ul/li/a/div/div[2]/div[text()="ヴィル"]');
         if (!owner && !attacked) {
@@ -98,15 +98,15 @@ function handleStrongBossTop() {
             return;
         }
         attack = getXPATH('//*[@id="rcv_submit_btns"]/ul/li/a');
-        setInterval(function(){clickSth(attack, "click");}, 2000);
-        
-        if (!attack.className.match(/enabled/)){
+        setInterval(function () {clickSth(attack, "click"); }, 2000);
+
+        if (!attack.className.match(/enabled/)) {
             clickA('//*[@id="rcv_items"]/ul/li/a');
         }
     }
 }
 
-function handleMyPage(){
+function handleMyPage() {
     var ap_gauge = getXPATH('//*[@id="header_ap_gauge"]');
     var ap = 0;
     var mission_error = getCookie('__my_rg_m_error');
@@ -120,7 +120,7 @@ function handleMyPage(){
         }
     }
     var boss_clear = getCookie("__my_r_boss_clear");
-    if (!boss_clear){
+    if (!boss_clear) {
         succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
     }
     succ = succ || clickA('//a[contains(text(),"戦友申請が")]');
@@ -138,10 +138,10 @@ function handleMyPage(){
         succ = succ || clickA(xpathquest);
     }
     //succ = succ || clickA(xpathevent);
-    succ = succ || setTimeout(function(){location.reload(true);},  60000);
+    succ = succ || setTimeout(function () {location.reload(true); },  60000);
 }
 
-function handleGachaFlashResult(){
+function handleGachaFlashResult() {
     if (getXPATH('//div[@id="gamecanvas"]/canvas|//*[@id="container"]')) {
         clickFlash('//div[@id="gamecanvas"]/canvas|//*[@id="container"]');
     } else {
@@ -166,7 +166,7 @@ function handlePrizeTop() {
 
 function handleChoiceCoin() {
     //clickS('//div[@class="popup_btn symbol"]');
-    //setTimeout(function(){
+    //setTimeout(function () {
     //    var succ = false;
     //    succ = succ || clickA('(//div[@id="overrayArea" and not(@class="hide")]//div[contains(@class, "targetSymbolList") and @style="display: block;"]//a)[last()]');
     //},2000);
@@ -175,8 +175,8 @@ function handleChoiceCoin() {
 function handleArrangement() {
     //clickS('//div[text()="自動割り振り"]');
     clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
-    setInterval(function(){
-        if (getXPATH('//div[@id="overrayArea" and not(@class="hide")]')){
+    setInterval(function () {
+        if (getXPATH('//div[@id="overrayArea" and not(@class="hide")]')) {
             clickForm('//*[@id="containerBox"]/form');
         }
     }, 5000);
@@ -185,7 +185,7 @@ function handleArrangement() {
 function handleBulkFusion() {
     var xp_select = getXPATHAll('//*[@id="containerBox"]/form//select');
     var select;
-    while ((select = xp_select.iterateNext())) {
+    while ((select = xp_select.iterateNext()) !== null) {
         select.selectedIndex = select.options.length - 1;
     }
     clickForm('//*[@id="containerBox"]/form');
@@ -195,23 +195,23 @@ function handleMissionError() {
     var succ = false;
     succ = clickA('(//*[@id="rcv_items"]/ul/li/a[@class="enabled"])[last()]');
     if (succ) {
-        setTimeout(function(){
+        setTimeout(function () {
             clickForm('//*[@id="recovery_form"]');
         }, 2000);
     }
-    setTimeout(function(){clickA(xpathmypage)}, 5000);
+    setTimeout(function () {clickA(xpathmypage); }, 5000);
 }
 
-var actions =[
+var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="containerBox"]/table//form'],
     [/arena%2FArenaBattleResult%2F/, 'list', [
-        ["a",'//a[contains(@href, "arena%2FArenaUserSelectList")]'],//text()="戦いを続ける"]'],
+        ["a", '//a[contains(@href, "arena%2FArenaUserSelectList")]'],//text()="戦いを続ける"]'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]], //*[@id="container"]']]],
     //[/arena%2FArenaBattleSwf%2F/, 'flash', ''],
     [/arena%2FArenaBattleTop%2F/,  'list', [
         ['a', '//div[@class="battle_btn"]/a'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
-    [/arena%2FArenaBossBattle%2F/, 'func', handleStrongBossTop], 
+    [/arena%2FArenaBossBattle%2F/, 'func', handleStrongBossTop],
 	[/arena%2FArenaBossBattleHelpRequestEnd%2F/, 'a', '//a[text()="イベントTOP"]'],
     [/arena%2FArenaBossBattleList\b/, 'list', [
         ['a', '//*[@id="containerBox"]/div[5]/ul/li[.//img[contains(@src, "new3.gif")]]/div[2]/div/a'],
@@ -238,7 +238,7 @@ var actions =[
     [/arena%2FTop/, 'func', handleArenaTop],
     [/arrangement%2FArrangementEdit%2F/, 'func', handleArrangement],
     [/beatdown%2FBossAppear%2F%/, 'a', '//a[text()="ボスと戦う"]'],
-    [/beatdown%2FBossBattle%2F/, 'list',[
+    [/beatdown%2FBossBattle%2F/, 'list', [
         ['a', '//a[text()="BP消費なしで攻撃"]'],
         ['func', handleStrongBossTop]]],
     [/beatdown%2FBossBattleHelpRequestEnd%2F/, 'a', '//a[text()="イベントTOP"]'],
@@ -247,8 +247,8 @@ var actions =[
         ['a', '//li[.//img[contains(@src, "new3.gif")]]//a[text()="バトル"]'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         //['hold'],
-        ]],
-    [/beatdown%2FBossBattleFlash%2F/, 'flash', '//div[@id="gamecanvas"]/canvas', 79, 346], 
+    ]],
+    [/beatdown%2FBossBattleFlash%2F/, 'flash', '//div[@id="gamecanvas"]/canvas', 79, 346],
     [/beatdown%2FBossBattleResult%2F/, 'a', '//a[text()="イベントを進める"]'],
     [/beatdown%2FBossRewardAllGetEnd%2F/, 'a', '//a[text()="ボス一覧へ戻る"]'],
     [/beatdown%2FMissionBossBattleResult%2F/, 'a', '//a[text()="イベントを進める"]'],
@@ -266,7 +266,7 @@ var actions =[
     [/deck%2FDeckEditTop%2F/, 'a', xpathmypage],
     [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="canvas"]'],
     [/fusion%2FBulkMaterialCardFusionConfirm%2F/, 'form', '//*[@id="containerBox"]/form'],
-    [/gacha%2FSetFreeGachaFlashResult%2F/, 'list',[
+    [/gacha%2FSetFreeGachaFlashResult%2F/, 'list', [
         ['flash', '//*[@id="container"]|//div[@id="gamecanvas"]/canvas', 100, 366],
         ['func', handleGachaFlashResult]]],
     [/gacha%2FSetGachaResult%2F/, 'list', [
@@ -306,7 +306,7 @@ var actions =[
         ['flash', '//*[@id="container"]']]],
     [/island%2FChoiceSpAreaSelect%2F/, 'list', [
         ['a', '//*[@id="choiceArea"]/div[1]/div[4]/a'],
-        ['a', '//*[@id="choiceArea"]/div[1]/div['+Math.floor(Math.random() * 3 + 1)+']/a']]],
+        ['a', '//*[@id="choiceArea"]/div[1]/div[' + Math.floor(Math.random() * 3 + 1) + ']/a']]],
     [/island%2FChoiceSpAreaSelectEnd%2F/, 'list', [
         ['a', '//*[@id="containerBox"]/div[5]/a'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
@@ -347,10 +347,10 @@ var actions =[
     [/strongBoss%2FStrongBossNoWinList%2F/, 'list', [
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', xpathmypage]]],
-    [/treasure%2FCardList%2F/,'a', '//a[text()="メンバーに追加"]'],
+    [/treasure%2FCardList%2F/, 'a', '//a[text()="メンバーに追加"]'],
     [/treasure%2FTreasureConf%2F/, 'a', '//a[text()="出発させる"]'],
     [/treasure%2FTreasureEnd%2F/, 'a', '//a[text()="スカウトする" or text()="マップ選択に戻る"]'],
-    [/treasure%2FTreasureMapList%2F/, 'a', '//*[@id="area_progress_status"]/div[' + Math.floor(Math.random() * 3 +1) + ']/a'],
+    [/treasure%2FTreasureMapList%2F/, 'a', '//*[@id="area_progress_status"]/div[' + Math.floor(Math.random() * 3 + 1) + ']/a'],
     [/treasure%2FTreasureStatus%2F/, 'a', '//a[text()="探索結果確認"]'],
     [/treasure%2FTreasureTop%2F/, 'a', '//a[text()="探索先を選ぶ"]'],
     [/Swf\b/, 'flash',  '//*[@id="btn_exec"]|//canvas|//*[@id="container"]|//*[@id="canvas"]'],

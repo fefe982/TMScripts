@@ -4,24 +4,24 @@ var xpathevent = '//a[contains(@href, "EventTop")]';
 var xpatheventnext = '//*[@id="mainCommand_quest"]/a';
 var xpathgiftbox = '//a[.//i[@class="sprite_menu3 menu_btn_prize"]]';
 
-function handleRaidBoss(){
+function handleRaidBoss() {
     var boss_info = getXPATH("//*[@id=\"main\"]/p[@class='subtitle raidboss_status']");
     var boss_n, boss_lvl;
     if (boss_info) {
         var res = boss_info.innerText.match(/(\S+)[\s\S]*Lv([0-9]+)/);
         if (res && res.length >= 3) {
-            boss_n =res[1];
-            boss_lvl= res[2];
+            boss_n = res[1];
+            boss_lvl = res[2];
         } else {
             boss_n = boss_info.innerText;
             boss_lvl = 0;
         }
     }//*[@id="raidboss_hp"]/div/div/div[2]/div[2]
     var bp_need, bp_need_cookie;
-    if (document.URL.match(/isHelpUser/)){
+    if (document.URL.match(/isHelpUser/)) {
         bp_need = 1;
     } else {
-        bp_need_cookie = getCookie("__my_boss_"+boss_n);
+        bp_need_cookie = getCookie("__my_boss_" + boss_n);
         if (!bp_need_cookie) {
             bp_need_cookie = 1;
             bp_need = 1;
@@ -30,107 +30,104 @@ function handleRaidBoss(){
         } else {
             bp_need = bp_need_cookie;
         }
-        
-        if (document.URL.match(/sentHelpFlg%3D1/)){
-            if (bp_need_cookie >0 && bp_need_cookie < 3) {
-                bp_need_cookie ++;
+
+        if (document.URL.match(/sentHelpFlg%3D1/)) {
+            if (bp_need_cookie  > 0 && bp_need_cookie < 3) {
+                bp_need_cookie++;
             } else {
                 bp_need_cookie = -1;
             }
-            setCookie("__my_boss_"+boss_n, bp_need_cookie, 3600*24);
+            setCookie("__my_boss_" + boss_n, bp_need_cookie, 3600 * 24);
             clickA('//div[@class="event_help_button"]//a');
             return;
         }
     }
     var i;
-    setInterval(function(){
-        var attack = getXPATH("//*[@id=\"bp_attack\"]/div["+bp_need+"]/div[3]");
-        if (attack && getComputedStyle(attack) .getPropertyValue("display")!="none") {
+    setInterval(function () {
+        var attack = getXPATH("//*[@id=\"bp_attack\"]/div[" + bp_need + "]/div[3]");
+        if (attack && getComputedStyle(attack).getPropertyValue("display") !== "none") {
             clickSth(attack, "click");
-            attack.style.display="none";
+            attack.style.display = "none";
         }
     }, 2000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
-        if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
+        if (res_wrapper && getComputedStyle(res_wrapper).getPropertyValue("display") !== "none") {
             var result = getXPATH("//*[@id=\"battle_result_btn\"]/a");
-            if (result) {clickSth(result, "click");}
+            if (result) {clickSth(result, "click"); }
         }
     }, 1000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         var ff = getXPATH("//*[@id=\"stage_front\"]");
-        if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
+        if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {clickSth(ff, "click"); }
     }, 1000);
-    
-    setInterval(function(){
-        
+
+    setInterval(function () {
         var bp_now = 0;
         var battle_bp = [];
-        for ( i = 1; i <=3; i++) {
+        for (i = 1; i <= 3; i++) {
             battle_bp[i] = getXPATH("//*[@id=\"bp_attack\"]/div[" + i + "]/div[1]");
-            if (battle_bp[i] && getComputedStyle(battle_bp[i]) .getPropertyValue("display")!= "none") {
-                bp_now ++;
+            if (battle_bp[i] && getComputedStyle(battle_bp[i]).getPropertyValue("display") !== "none") {
+                bp_now++;
             }
         }
-        if (bp_now < bp_need)
-        {
+        if (bp_now < bp_need) {
             var gap = bp_need - bp_now;
             var ele;
             var ok = getXPATH("//*[@id=\"bp_recovery\"]/div/div[2]");
             if (gap >= 3) {
                 ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[1]/div[1]");
                 if (ele &&  ele.dataset.life > 0) {
-                    clickSth(ele,"click");
-                    setTimeout(function(){clickSth(ok,"click");}, 1000);
+                    clickSth(ele, "click");
+                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
                 }
             }
-            if (gap < 3 || !ele || ele.dataset.life == 0) {
+            if (gap < 3 || !ele || ele.dataset.life === 0) {
                 ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[2]/div[1]");
-                if (ele && ele.dataset.life >= gap){
-                    for (i=0 ; i < gap; i++){
-                        clickSth(ele,"click");
+                if (ele && ele.dataset.life >= gap) {
+                    for (i = 0; i < gap; i++) {
+                        clickSth(ele, "click");
                     }
-                    setTimeout(function(){clickSth(ok,"click");}, 1000);
+                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
                 }
             }
         }
     }, 2000);
 }
 
-function handleMissionResult(){
+function handleMissionResult() {
     var succ = false;
     succ = succ || clickA("//*[@id=\"go\"]/a");
     succ = succ || clickA("//*[@id=\"next\"]/a");
     succ = succ || clickA(xpathmypage);
 }
 
-function handleMissionList(){
+function handleMissionList() {
     var succ = false;
     succ = succ || clickA("//*[@id=\"current_priority\"]/a");
     succ = succ || clickA("//*[@id=\"to_latest_mission\"]/a");
     succ = succ || clickA("//div[@class='boss_btn ']/div/a");
 }
 
-function handleRaidGacha(){
+function handleRaidGacha() {
     //if (!clickA("//*[@id=\"main\"]/section[1]/div[3]/div[2]/a")){
     //    clickA("//*[@id=\"main\"]/section[1]/div[2]/div/p/a");
     //}
 }
-function handleFriendGachaTop(){
+function handleFriendGachaTop() {
     var free_gacha = getXPATH("//*[@id=\"main\"]/div[4]/div/ul/li/div/a");
     if (free_gacha) {
         clickLink(free_gacha);
-    }
-    else {
-        for (i = 3; i>=2; i--) {
-            var gacha = getXPATH("//*[@id=\"main\"]/div[4]/div/ul/li/div["+i+"]/div/a");
-            if (gacha){setTimeout(clickLink(gacha),1000);break;}
+    } else {
+        for (i = 3; i >= 2; i--) {
+            var gacha = getXPATH("//*[@id=\"main\"]/div[4]/div/ul/li/div[" + i + "]/div/a");
+            if (gacha) {setTimeout(clickLink(gacha), 1000); break; }
         }
     }
 }
-function handleFriendGachaRes(){
+function handleFriendGachaRes() {
     var i;
     //for (i = 3; i>=2; i--) {
     //    if (clickA("//*[@id=\"main\"]/aside/div/div/ul/li/div["+i+"]/div/a")){return;}
@@ -138,19 +135,19 @@ function handleFriendGachaRes(){
     //clickA(xpathmypage);
 }
 
-function handleCoinGacha(){
-    var lvl = 512; 
+function handleCoinGacha() {
+    var lvl = 512;
     //alert("coin");
-    for (lvl = 512; lvl >=510; lvl --){
-        for (i = 2; i >=1; i--){
-            var button = getXPATH("//*[@id=\"item_"+lvl+"\"]/div/div"+(i==1?"":("["+i+"]")) +"/a");
-            if (button) {clickLink(button); return;}
+    for (lvl = 512; lvl >= 510; lvl--) {
+        for (i = 2; i >= 1; i--) {
+            var button = getXPATH("//*[@id=\"item_" + lvl + "\"]/div/div" + (i === 1 ? "" : ("[" + i + "]")) + "/a");
+            if (button) {clickLink(button); return; }
         }
     }
     clickA(xpathmypage);
 }
 
-function handlemypage(){
+function handlemypage() {
     //alert("mypage");
     var ap_gauge = getXPATH("//div[@class=\"gauge stamina\"]/div"),
         raid_help_clear = getCookie("__myraid_clear"),
@@ -158,7 +155,7 @@ function handlemypage(){
         battle_olympia_over = getCookie("__ht_bo_over"),
 		raid_my_boss_wait = getCookie("__ht_myboss_wait"),
         succ = false;
-    if(!raid_help_clear && !no_bp_candy) {
+    if (!raid_help_clear && !no_bp_candy) {
         succ = succ || clickA("//a[div[@class='sprite_mypage2 btn_help']]");
     }
     if (!no_bp_candy && !raid_my_boss_wait) {
@@ -173,17 +170,16 @@ function handlemypage(){
         succ = succ || clickA(xpathevent);
         //succ = succ || clickA("//div[@class='mission']/a");
     }
-    if (!succ) { 
+    if (!succ) {
         if (getXPATH('//div[@class="battle"]/a/div[@class="mypage_battleOlympia"]')) {
             if (!battle_olympia_over) {
                 succ = clickA('//div[@class="battle"]/a');
             }
-        } else if (getXPATH("//div[@class='battle']/div/div[@class='badge']") || getXPATH("//div[@class='sprite gauge_bp bp1']")) 
-        {
+        } else if (getXPATH("//div[@class='battle']/div/div[@class='badge']") || getXPATH("//div[@class='sprite gauge_bp bp1']")) {
             setCookie("__mybattle_bp", "1", 60);
             succ = clickA("//div[@class='battle']/a");
         }
-    } 
+    }
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
     //succ = succ || clickA('//*[@id="menus"]/a[1]');
     if (!succ) {
@@ -192,7 +188,7 @@ function handlemypage(){
                 //clickA("//div[@class='mission']/a");
         //        }
         //        }, 60000);
-        setTimeout(function(){location.reload(true);},  60000);
+        setTimeout(function () {location.reload(true); },  60000);
     }
 }
 
@@ -223,60 +219,57 @@ function handleBattleResult() {
     }
 }
 
-function handleBattleTower(){
+function handleBattleTower() {
     // "//*[@id=\"first_action_box\"]/div[1]/div[3]/a"
     //alert("battletower");
     var free = getCookie("__mybattle_free");
     var bp = 0;
     var n_use_bp = 1;
     var bp_use = getXPATH("//*[@id=\"do_battle_btn\"]/div[2]");
-    if (bp_use)
-    {
+    if (bp_use) {
         var res = bp_use.innerText.match(/BP([0-9])/);
-        if (res) { n_use_bp = res[1];}
+        if (res) { n_use_bp = res[1]; }
     }
     if (n_use_bp > 0) {
         free = 0;
-    } else if (n_use_bp == 0) {
-        if (!free){free = 1;}
+    } else if (n_use_bp === 0) {
+        if (!free) {free = 1; }
     }
-        if (free) {
-            setCookie("__mybattle_free", free > 0 ? free-1 : 0,60);
-        }
+    if (free) {
+        setCookie("__mybattle_free", free > 0 ? free - 1 : 0, 60);
+    }
     var bp_gauge;// = getXPATH("//div[@class='sprite gauge_bp bp_gauge3']");
     var style;// = getComputedStyle(bp_gauge);
     var disp;// = style.getPropertyValue("display");
     if (getXPATH("//div[@class='sprite gauge_bp bp_gauge3' and not(contains(@style,'display: none'))]")) {
-        bp =3;
-    } else  if (getXPATH("//div[@class='sprite gauge_bp bp_gauge2' and not(contains(@style,'display: none'))]")) {
-        bp =2;
+        bp = 3;
+    } else if (getXPATH("//div[@class='sprite gauge_bp bp_gauge2' and not(contains(@style,'display: none'))]")) {
+        bp = 2;
     } else if (getXPATH("//div[@class='sprite gauge_bp bp_gauge1' and not(contains(@style,'display: none'))]")) {
-        bp =1;
-    } else{
+        bp = 1;
+    } else {
         bp = 0;
     }
     //alert(bp);
-    if (free > 0)
-    {
+    if (free > 0) {
         setCookie("__mybattle_bp", bp, 60);
     } else {
-        setCookie("__mybattle_bp", bp-1, 60);
+        setCookie("__mybattle_bp", bp - 1, 60);
     }
     //alert(free);
     //alert(bp);
     if (free > 0 || bp > 0) {
         if (!clickAV("//*[@id=\"first_action_box\"]/div[1]/div[3]/a", "//*[@id=\"first_action_box\"]/div[1]/div[3]/a")) {
-            
-            setInterval(function(){                
+            setInterval(function () {
                 var res_wrapper = getXPATH("//*[@id=\"first_action_box\"]");
-                if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
+                if (res_wrapper && getComputedStyle(res_wrapper).getPropertyValue("display") !== "none") {
                     clickSth(getXPATH("//*[@id=\"do_battle_btn\"]"), "click");
                 }
-            }, 1000); 
-            
+            }, 1000);
+
             //setInterval(function(){clickAV("//*[@id=\"stage\"]");}, 5000);
             clickFlash('//*[@id="stage"]');
-            
+
             //setInterval(function(){
             //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
             //    if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
@@ -292,14 +285,14 @@ function handleBattleTower(){
 function handleFusionEnd() {
     var lvl = getXPATH("//div[div[@class='sprite_deck heading_level']]").innerText;
     var res = lvl.match(/([0-9]+)\/([0-9]+)/);
-    if (res[1] == res[2]) {
+    if (res[1] === res[2]) {
         clickA("//a[contains(text(),'他のカードを強化')]");
     } else {
         clickA("//a[contains(text(),'さらに強化')]");
     }
 }
 
-function handleFusionResult(){
+function handleFusionResult() {
     var form = getXPATH("(//ul[@class='lst_sub']/li/form)[last()]"),
         succ = false;
     if (form) {
@@ -320,23 +313,23 @@ function handlePrizeTop() {
 
 function handleCaveAreaSelect() {
     var areaID = Math.floor(Math.random() * 5) + 1;
-    clickA('(//a[text()="選択"])['+areaID+']');
+    clickA('(//a[text()="選択"])[' + areaID + ']');
 }
 
 function handleCardSelect() {
     var select_sort = getXPATH("//form/div[2]/div/select");
-    if (select_sort && select_sort.selectedIndex != 8) {
+    if (select_sort && select_sort.selectedIndex !== 8) {
         select_sort.selectedIndex = 8;
         getXPATH("//form").submit();
     }
-    
-    setInterval(function(){
+
+    setInterval(function () {
         clickA('//li[//td[@class="aura" and contains(text(), 24)]]/div[2]/a');
     }, 2000);
 }
 
 function handleRaidBossAssistList() {
-    if (!clickA('//a[.//span[@class="sprite txt_new"]]')){
+    if (!clickA('//a[.//span[@class="sprite txt_new"]]')) {
         setCookie("__myraid_clear", 1, 60);
         clickA(xpathmypage);
     }
@@ -344,61 +337,60 @@ function handleRaidBossAssistList() {
 
 function handleEventRes() {
     var min = 1000000, minid = 0, i;
-    for (i = 1; i<=3; i++){
+    for (i = 1; i <= 3; i++) {
         var att_e = getXPATH('//*[@id="main"]/section[2]/ul/li[' + i + ']/a/div/div[2]/table/tbody/tr[3]/td');
         var res = att_e.innerText.match(/([0-9]+)/);
-        var att = parseInt(res[1],10);
+        var att = parseInt(res[1], 10);
         var def_e = getXPATH('//*[@id="main"]/section[2]/ul/li[' + i + ']/a/div/div[2]/table/tbody/tr[4]/td');
         res = def_e.innerText.match(/([0-9]+)/);
-        var def = parseInt(res[1],10);
-        if (att + def < min){
-            min = att+def;
-            minid= i;
+        var def = parseInt(res[1], 10);
+        if (att + def < min) {
+            min = att + def;
+            minid = i;
         }
     }
-    if (minid > 0){
+    if (minid > 0) {
         clickA('//*[@id="main"]/section[2]/ul/li[' + minid + ']/a');
     } else {
         clickA(xpathmypage);
     }
 }
 
-function handleEventBattle(){
+function handleEventBattle() {
     var i;
-    setInterval(function(){
+    setInterval(function () {
         var battle_btn_wrapper = getXPATH('//*[@id="first_action_box"]');
-        if (battle_btn_wrapper){
-            if (getComputedStyle(battle_btn_wrapper) .getPropertyValue("display")!="none"){
+        if (battle_btn_wrapper) {
+            if (getComputedStyle(battle_btn_wrapper).getPropertyValue("display") !== "none") {
                 var battle_btn = getXPATH('//*[@id="do_battle_btn"]');
-                if (getComputedStyle(battle_btn) .getPropertyValue("display")!="none"){
+                if (getComputedStyle(battle_btn).getPropertyValue("display") !== "none") {
                     clickSth(battle_btn, "click");
-                } else          {
+                } else {
                     var ok = getXPATH("//*[@id=\"bp_recovery\"]/div/div[2]");
                     var ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[2]/div[1]");
-                    if (!ele || ele.dataset.life == 0) {
+                    if (!ele || ele.dataset.life === 0) {
                         ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[1]/div[1]");
                     }
-                    if (ele && ele.dataset.life >= 1){
-                        
-                        clickSth(ele,"click");
-                        setTimeout(function(){clickSth(ok,"click");}, 1000);
+                    if (ele && ele.dataset.life >= 1) {
+                        clickSth(ele, "click");
+                        setTimeout(function () {clickSth(ok, "click"); }, 1000);
                     }
                 }
             }
-        } 
+        }
     }, 2000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
-        if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
+        if (res_wrapper && getComputedStyle(res_wrapper).getPropertyValue("display") !== "none") {
             var result = getXPATH("//*[@id=\"battle_result_btn\"]/a");
-            if (result) {clickSth(result, "click");}
+            if (result) {clickSth(result, "click"); }
         }
     }, 1000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         var ff = getXPATH("//*[@id=\"stage_front\"]");
-        if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
+        if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {clickSth(ff, "click"); }
     }, 1000);
 }
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventRaidBoss%2FRaidBossTop%2F%3FuserRaidbossId%3D141239245%26isHelpUser%3D1
@@ -408,7 +400,7 @@ function handleEventBattle(){
 //historyId%3D132067221%26userRaidbossDefeatLogId%3D158357577%26userRaidbossId%3D165736712%26sentHelpFlg%3D0%26addEventPoint%3D2940%26winEventPoint%3D240%26itemEventPoint%3D1500%26attackEventPoint%3D1200%26getEventItem%3D663%26isEventPointOnly%3D1%26specialRewardHistory%3D%26winFlg%3D1%26isFever%3D0%26isMultiRaid%3D0
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventCollection%2FRaidBossBattleResult%2F%3FuserRaidbossDefeatLogId%3D158351315
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventRaidBoss%2FEventTop
-function handleEvent(){
+function handleEvent() {
     var succ = false;
     var raid_clear = getCookie("__myraid_clear");
     var no_bp_candy = getCookie("__ht_no_bp");
@@ -423,7 +415,7 @@ function handleEvent(){
     succ = succ || clickA('//*[@id="go"]/a');
     succ = succ || clickA(xpathmypage);
 }
-function handleEventRaid(){
+function handleEventRaid() {
     var boss_info = getXPATH("//*[@id=\"main\"]/*[@class='subtitle raidboss_status']");
     var boss_n, boss_lvl;
     var wait = 2000;
@@ -438,21 +430,21 @@ function handleEventRaid(){
         //alert(boss_info.innerText);
         var res = boss_info.innerText.match(/(\S+)[\s\S]*Lv([0-9]+)/);
         if (res) {
-            boss_n =res[1];
-            boss_lvl= res[2];
+            boss_n = res[1];
+            boss_lvl = res[2];
         } else {
             boss_n = boss_info.innerText;
             boss_lvl = 0;
         }
     }//*[@id="raidboss_hp"]/div/div/div[2]/div[2]
-    var hp_gauge=getXPATH('//div[contains(@class, "bosshp")]/div[contains(@style, "100")]');
+    var hp_gauge = getXPATH('//div[contains(@class, "bosshp")]/div[contains(@style, "100")]');
     var help_record = getXPATH('//*[@id="user_conf_info"]/a//div[contains(@class,"tactical_situation_detail") and contains(text(), "ヴィルさんの攻撃")]');
     var last_attack = getXPATH('//*[@id="user_conf_info"]/a//div[contains(@class,"tactical_situation_detail")]');
     var bp_need, bp_need_cookie;
     if (!hp_gauge && !getXPATH('//dl/dd[1]/a[text()="ヴィル"]')) { //document.URL.match(/isHelpUser/) || document.URL.match(/sentHelpFlg%3D0/)){
         //alert("HELP!");
         bp_need = 1;
-        if (help_record){
+        if (help_record) {
             //alert("FOUND");
             //clickA('//a[contains(text(), "他の仲間を助けよう！！")]');
             //clickA('//div[@class="event_help_button"]//a');
@@ -460,7 +452,7 @@ function handleEventRaid(){
             return;
         }
     } else {
-        bp_need_cookie = getCookie("__my_boss_"+boss_n);
+        bp_need_cookie = getCookie("__my_boss_" + boss_n);
         if (!bp_need_cookie) {
             bp_need_cookie = 1;
             bp_need = 1;
@@ -474,20 +466,20 @@ function handleEventRaid(){
             bp_need = bp_need_cookie;
         }
         bp_need = 1;
-        
+
         if (!hp_gauge) {
             var metBoss = getCookie("__ht_event_boss_" + boss_n + "lv" + boss_lvl);
-            if (!metBoss){
-                if (bp_need_cookie >0 && bp_need_cookie < 3) {
-                    bp_need_cookie ++;
+            if (!metBoss) {
+                if (bp_need_cookie > 0 && bp_need_cookie < 3) {
+                    bp_need_cookie++;
                 } else {
                     //alert(boss_n);
                     bp_need_cookie = -1;
                 }
-                setCookie("__my_boss_"+boss_n, bp_need_cookie, 3600*24);
+                setCookie("__my_boss_" + boss_n, bp_need_cookie, 3600 * 24);
             }
-            setCookie("__ht_event_boss_" + boss_n + "lv" + boss_lvl, 1, 60*10);
-            if (last_attack && last_attack.innerText.match(/ヴィルさんの攻撃/)){
+            setCookie("__ht_event_boss_" + boss_n + "lv" + boss_lvl, 1, 60 * 10);
+            if (last_attack && last_attack.innerText.match(/ヴィルさんの攻撃/)) {
                 //clickA(back_xpath);
                 var succ = false;
                 succ = succ || clickA('//a[contains(text(), "他の仲間を助けよう！！")]');
@@ -500,9 +492,9 @@ function handleEventRaid(){
             var countdown = getXPATH('//*[@id="stage"]//span[@class="countdown"]');
             var time_left;
             if (countdown) {
-                time_left = countdown.dataset.end_unixtime - Date.now()/1000;
+                time_left = countdown.dataset.end_unixtime - Date.now() / 1000;
             }
-            if (time_left > 60*10) {
+            if (time_left > 60 * 10) {
                 //wait = 5 * 60 * 1000;
                 wait = 10000;
             } else {
@@ -511,23 +503,21 @@ function handleEventRaid(){
         }//else {
         //   alert('hp gauge full');
         //}
-    } 
-    
-    
-    
+    }
+
     var i;
-    setInterval(function(){
+    setInterval(function () {
         //var countdown = getXPATH('//*[@id="stage"]//span[@class="countdown"]');
         //if (!countdown || Date.now()/1000 > countdown.dataset.end_unixtime)
         //{
         //    clickA(back_xpath);
         //    return;
         //}
-        var attack = getXPATH("//*[@id=\"bp_attack\"]/div["+bp_need+"]/div[3]");
+        var attack = getXPATH("//*[@id=\"bp_attack\"]/div[" + bp_need + "]/div[3]");
         //debugger;
-        if (attack && getComputedStyle(attack) .getPropertyValue("display")!="none") {clickSth(attack, "click");}
+        if (attack && getComputedStyle(attack).getPropertyValue("display") !== "none") {clickSth(attack, "click"); }
     }, wait);
-    
+
     //setInterval(function(){
     //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
     //    if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
@@ -535,24 +525,23 @@ function handleEventRaid(){
     //        if (result) {clickSth(result, "click");}
     //    }
     //}, 1000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         var ff = getXPATH("//*[@id=\"stage_front\"]");
-        if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
+        if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {clickSth(ff, "click"); }
     }, 5000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         //alert("restore");
         var bp_now = 0;
         var battle_bp = [];
-        for ( i = 1; i <=3; i++) {
+        for (i = 1; i <= 3; i++) {
             battle_bp[i] = getXPATH("//*[@id=\"bp_attack\"]/div[" + i + ']/div[contains(@class, "btn_main_small")]');
-            if (battle_bp[i] && getComputedStyle(battle_bp[i]) .getPropertyValue("display")!= "none") {
-                bp_now ++;
+            if (battle_bp[i] && getComputedStyle(battle_bp[i]).getPropertyValue("display") !== "none") {
+                bp_now++;
             }
         }
-        if (bp_now < bp_need)
-        {
+        if (bp_now < bp_need) {
             //debugger;
             var gap = bp_need - bp_now;
             var ele, ele_s;
@@ -560,32 +549,31 @@ function handleEventRaid(){
             if (gap >= 3) {
                 ele = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[1]/div/div[contains(@class, 'bp_recovery_btn')]");
                 if (ele &&  ele.dataset.life > 0) {
-                    clickSth(ele,"click");
-                    setTimeout(function(){clickSth(ok,"click");}, 1000);
+                    clickSth(ele, "click");
+                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
                 }
             }
-            if (gap < 3 || !ele || ele.dataset.life == 0) {
+            if (gap < 3 || !ele || ele.dataset.life === 0) {
                 ele_s = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[2]/div/div[contains(@class, 'bp_recovery_btn')]");
                 ele = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[1]/div/div[contains(@class, 'bp_recovery_btn')]");
-                if (ele_s && ele_s.dataset.life >= gap){
-                    for (i=0 ; i < gap; i++){
-                        clickSth(ele_s,"click");
+                if (ele_s && ele_s.dataset.life >= gap) {
+                    for (i = 0; i < gap; i++) {
+                        clickSth(ele_s, "click");
                     }
-                    setTimeout(function(){clickSth(ok,"click");}, 1000);
+                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
                 } else if (ele && ele.dataset.life > 0) {
-                    clickSth(ele,"click");
-                    setTimeout(function(){clickSth(ok,"click");}, 1000);
+                    clickSth(ele, "click");
+                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
                 } else {
                     var no_bp_candy = getCookie("__ht_no_bp");
                     if (no_bp_candy) {
-                        no_bp_candy ++;
+                        no_bp_candy++;
                     } else {
                         no_bp_candy = 1;
                     }
-                    setCookie("__ht_no_bp", no_bp_candy, 60*10);
+                    setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
                     //clickA(xpathgiftbox);
                 }
-                
             }
         }
     }, 2000);
@@ -596,7 +584,7 @@ function handleEventRaid(){
     //'//*[@id="main"]/section/ul/li[1]/a//table/tbody/tr[2]/td'
 //}
 
-function handleFusionCard(){
+function handleFusionCard() {
     if (getXPATH('//div[contains(text(), "選択可能なカードがありません")]')) {
         clickA(xpathmypage);
     } else {
@@ -604,15 +592,15 @@ function handleFusionCard(){
     }
 }
 
-function handleTeamBattle(){
+function handleTeamBattle() {
     var wait = 2000,
         bp_need = 1,
         i,
         attacked = false;
-    setInterval(function(){
+    setInterval(function () {
         attacked = attacked || clickA('//*[@id="do_battle_btn" and not(@style="display:none")]/a');
     }, wait);
-    
+
     //setInterval(function(){
     //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
     //    if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
@@ -620,39 +608,39 @@ function handleTeamBattle(){
     //        if (result) {clickSth(result, "click");}
     //    }
     //}, 1000);
-    
+
     //setInterval(function(){
     //    var ff = getXPATH("//*[@id=\"stage_front\"]");
     //    if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
     //}, 5000);
-    setInterval(function(){
-    if (getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
-        var ele, ele_s;
-        var ok = getXPATH('//*[@id="bp_recovery"]/div/div[2]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
-        ele_s = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[2]/di/v[contains(@class, 'btn_main_small')]");
-        ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[1]/div[contains(@class, 'btn_main_small')]");
-        if (ele_s && ele_s.dataset.life > 0){
-            clickSth(ele_s,"click");
-            setTimeout(function(){clickSth(ok,"click");}, 1000);
-        } else if (ele && ele.dataset.life > 0) {
-            clickSth(ele,"click");
-            setTimeout(function(){clickSth(ok,"click");}, 1000);
-        } else {
-            clickA(xpathgiftbox);
+    setInterval(function () {
+        if (getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
+            var ele, ele_s;
+            var ok = getXPATH('//*[@id="bp_recovery"]/div/div[2]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
+            ele_s = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[2]/di/v[contains(@class, 'btn_main_small')]");
+            ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[1]/div[contains(@class, 'btn_main_small')]");
+            if (ele_s && ele_s.dataset.life > 0) {
+                clickSth(ele_s, "click");
+                setTimeout(function () {clickSth(ok, "click"); }, 1000);
+            } else if (ele && ele.dataset.life > 0) {
+                clickSth(ele, "click");
+                setTimeout(function () {clickSth(ok, "click"); }, 1000);
+            } else {
+                clickA(xpathgiftbox);
+            }
         }
-    }
     }, 2000);
 }
-function handleERBBattle(){
+function handleERBBattle() {
     // player battle, BP1 only
     var wait = 2000,
         bp_need = 1,
         i,
         attacked = false;
-    setInterval(function(){
+    setInterval(function () {
         $('div#do_battle_btn').filter(":visible").click();
     }, wait);
-    
+
     //setInterval(function(){
     //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
     //    if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
@@ -660,33 +648,33 @@ function handleERBBattle(){
     //        if (result) {clickSth(result, "click");}
     //    }
     //}, 1000);
-    
-    setInterval(function(){
+
+    setInterval(function () {
         var ff = getXPATH("//*[@id=\"stage_front\"]");
-        if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
+        if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {clickSth(ff, "click"); }
     }, 5000);
 
     var reload = false;
-    setInterval(function(){
-    if (reload == false && getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
-        //debugger;
-        var ele, ele_s;//*[@id="bp_recovery"]/div/div[2]
-        var ok = getXPATH('//*[@id="bp_recovery"]/div/div[text()="OK"]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
-        ele_s = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[2]/div/div[contains(@class, 'bp_recovery_btn')]");
-        ele = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[1]/div/div[contains(@class, 'bp_recovery_btn')]");
-        if (ele_s && ele_s.dataset.life > 0){
-            clickSth(ele_s,"click");
-            setTimeout(function(){clickSth(ok,"click");}, 1000);
-        } else if (ele && ele.dataset.life > 0) {
-            clickSth(ele,"click");
-            setTimeout(function(){clickSth(ok,"click");}, 1000);
-        } else {
-            //clickA(xpathgiftbox);
-            //setTimeout(function(){location.reload(true);},  600000);
-            //default reload at msgloop
-            reload = true;
+    setInterval(function () {
+        if (reload === false && getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
+            //debugger;
+            var ele, ele_s;//*[@id="bp_recovery"]/div/div[2]
+            var ok = getXPATH('//*[@id="bp_recovery"]/div/div[text()="OK"]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
+            ele_s = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[2]/div/div[contains(@class, 'bp_recovery_btn')]");
+            ele = getXPATH("//*[@id=\"bp_recovery\"]//ul/li[1]/div/div[contains(@class, 'bp_recovery_btn')]");
+            if (ele_s && ele_s.dataset.life > 0) {
+                clickSth(ele_s, "click");
+                setTimeout(function () {clickSth(ok, "click"); }, 1000);
+            } else if (ele && ele.dataset.life > 0) {
+                clickSth(ele, "click");
+                setTimeout(function () {clickSth(ok, "click"); }, 1000);
+            } else {
+                //clickA(xpathgiftbox);
+                //setTimeout(function(){location.reload(true);},  600000);
+                //default reload at msgloop
+                reload = true;
+            }
         }
-    }
     }, 2000);
 }
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleResult%3FhistoryId%3D1019502%26getMoney%3D2600%26addEventPoint%3D669%26_timestamp%3D1376098213654
@@ -699,16 +687,16 @@ function handleERBBattle(){
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventTop
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FMissionResult%2F%3FautoSellFlg%3D0%26recoveryPoint%3D%26firstCardGetFlg%3D%26firstFairyHitFlg%3D%26firstBattleCostFlg%3D%26firstTreasureDropFlg%3D%26missionId%3D478%26attackBefore%3D0%26defenceBefore%3D0%26turnEndType%3D10%26recoverMaxFlg%3D%26recoveryPercent%3D%26firstTournamentFlg%3D%26addEventPoint%3D62
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FRescueList%2F%3FrescueId%3D784510
-var actions =[
+var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
     [/battleOlympia%2FBattleConf%2F/, 'a', '//a[contains(text(), "対戦結果を見る")]'],
     [/battleOlympia%2FBattleResult%2F%/, 'a', '//a[text()="次の相手"]'],
     [/battleOlympia%2FTargetSelect%2F/, 'minmax', '//*[@id="main"]/section/ul/li[', ']/a/div/div[2]/table/tbody/tr[2]/td', ']/a'],
     [/battleOlympia%2FTop/, 'list', [
         ['a', '//div[@class="battle_entry"]/a'],
-        ['setCookie', '__ht_bo_over', 1, 3600*24]]],
+        ['setCookie', '__ht_bo_over', 1, 3600 * 24]]],
     [/battleTower%2FBattleConf%2F/, "func", handleBattleTower],
-    [/battleTower%2FBattleResult%2F/,"func", handleBattleResult],
+    [/battleTower%2FBattleResult%2F/, "func", handleBattleResult],
     [/battleTower%2FBattleTop/, "func", handleBattleTop],
     [/battleTower%2FBattleTowerBossConf%2F/, "func", handleBattleTower],
     [/battleTower%2FBattleTowerBossResult%2F/, "func", handleBattleResult],
@@ -783,19 +771,17 @@ var actions =[
     [/eventStoryMission%2FEventBattleResult/, 'list', [
         ['a', '//a[contains(@href, "eventStoryMission%2FMissionList")]'],
         ['a', '//a[contains(@href, "eventStoryMission%2FDoMissionExecutionCheck")]'],
-        ['hold']
-        ]],
+        ['hold']]],
     [/eventStoryMission%2FMissionList/, 'list', [
         ['a', '//a[contains(@href, "eventStoryMission%2FDoMissionExecutionCheck")]'],
-        ['hold']
-        ]],
+        ['hold']]],
     [/eventStoryMission%2FEventTop/, 'list', [
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href, "eventStoryMission%2FMissionList")]'],
         ['a', '//*[@id="eventstorymission_top"]/div/div[2]/a'],
         ['a', '//a[contains(@href, "eventStoryMission%2FRaidBossTop")]'],
         ['a', '//a[contains(@href, "eventStoryMission%2FDoMissionExecutionCheck")]']
-        ]],
+    ]],
     [/eventStoryMission%2FMissionResult/, 'list', [
         ['a', '//a[contains(@href, "eventStoryMission%2FEventBattleConf")]'],
         ['a', '//*[@id="mission_wrap"]/div/div/p/a'], //go
@@ -806,8 +792,7 @@ var actions =[
         //['a', '//*[@id="mission_wrap"]/div/div/p/a'],
         //['a', '//a[contains(@href, "eventStoryMission%2FDoMissionExecutionCheck")]'],
         //['a', '//a[contains(@href, "eventStoryMission%2FMissionList")]'],
-        ['hold']
-        ]],
+        ['hold']]],
     [/eventStoryMission%2FRaidBossBattleResult%2F/, 'list', [
         ['a', '//a[contains(@href, "eventStoryMission%2FMissionList")]'],
         ['hold']]],
@@ -842,7 +827,7 @@ var actions =[
         ['a', '//a[contains(@href, "skipFlg%3D1")]'], //''//a[text()="バトルをスキップしてガチャをする"]'],
         ['a', '//a[contains(@href, "prizeReceive%2FPrizeReceiveTop%2F")]']]], //text()="贈り物BOX"]']]],
     [/gacha%2FGachaResult%2F%3FgachaId%3D/, "a", '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
-    [/gacha%2FGachaSwf%2F/, 'flash', "//*[@id=\"container\"]", 372,62],
+    [/gacha%2FGachaSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/, 'a', '(//a[contains(text(), "ガチャをする")])[last()]'],
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D2/, 'a', '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'a', '//a[contains(@href, "skipFlg%3D1")]'], //text(), "ガチャをする")])[last()]'],
@@ -851,7 +836,7 @@ var actions =[
     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
     [/mission%2FMissionResult%2F/, "func", handleMissionResult],
     [/mission%2FMissionList/, "func", handleMissionList],
-    [/mission%2FMissionSwf%2F/, 'flash',"//*[@id=\"container\"]", 372,62],
+    [/mission%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
     [/mission%2FBossAppear/, "form", "//*[@id=\"main\"]/div[3]/form"],
     [/mission%2FBossBattleResult%2F/, "a", "//*[@id=\"to_latest_mission\"]/a"],
     [/mypage%2FGreetEnd%2F/, 'a', xpathmypage],
@@ -867,7 +852,7 @@ var actions =[
         ['a', '//a[contains(text(),"ステージへ進む")]'],
         ['hold']]],
     [/questRaidBoss%2FQuestDetail/, 'a', '//a[text()="このステージをはじめる！"]'],
-    [/questRaidBoss%2FQuestEvent/, 'a','//a[text()="先へ進む"]'], 
+    [/questRaidBoss%2FQuestEvent/, 'a', '//a[text()="先へ進む"]'],
     [/questRaidBoss%2FQuestList/, 'a', '(//a[text()="ステージ詳細を見る"])[last()]'],
     [/questRaidBoss%2FQuestRaidBossTop/, 'a', '//div[@class="quest_btn"]/a'],
     [/questRaidBoss%2FRaidBossBattleResult%2F/, 'list', [
@@ -880,15 +865,15 @@ var actions =[
     [/raidBoss%2FRaidBossAssistList/, 'func', handleRaidBossAssistList],
     [/raidBoss%2FRaidBossBattleResult/, "a", "//*[@id=\"main\"]/div[3]/a"],
     [/raidBoss%2FRaidBossTop/, "func", handleEventRaid],
-    [/QuestEnd/ , "a", "//*[@id=\"main_container\"]/header/div[2]/a"],
-    [/CompanionApplicationAcceptEnd/ , "a", "//*[@id=\"main_container\"]/header/div[2]/a"],
-    [/EvolutionConfirm/,"form", "//*[@id=\"main\"]/div[2]/div[4]/div/form"],
+    [/QuestEnd/, "a", "//*[@id=\"main_container\"]/header/div[2]/a"],
+    [/CompanionApplicationAcceptEnd/, "a", "//*[@id=\"main_container\"]/header/div[2]/a"],
+    [/EvolutionConfirm/, "form", "//*[@id=\"main\"]/div[2]/div[4]/div/form"],
     //[/eventBattle%2FEventBattleConf%3F/, 'func', handleEventBattle],
     //[/eventBattle%2FEventBattleResult%3F/, 'a', '//a[contains(text(), "相手を探す")]'],
     //[/eventBattle%2FMissionResult%2F/, 'func', handleEventRes],
     //[/eventBattle%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372,62],
     [/FusionFlash/, "flash", "//*[@id=\"container\"]"],
-    [/%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372,62],
+    [/%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
     [/Swf\b/, "flash", "//*[@id=\"container\"]"],
     [/xxxxxxxxxxxxxxxxx/]
 ];
