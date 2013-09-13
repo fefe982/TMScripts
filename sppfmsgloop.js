@@ -1,10 +1,10 @@
 var i, j;
 var list_action;
 GM_log(url);
-for (i=0; i<actions.length; i++) {
+for (i = 0; i < actions.length; i++) {
     if (url.match(actions[i][0])) {
         GM_log(actions[i][0]);
-        if (actions[i][1] == 'list') {
+        if (actions[i][1] === 'list') {
             list_action = actions[i][2];
         } else {
             list_action = [actions[i].slice(1, actions[i].length)];
@@ -30,11 +30,11 @@ for (i=0; i<actions.length; i++) {
                 }
                 break;
             case 'sth':
-                if (!succ) {clickS(list_action[j][1]);}
+                if (!succ) {clickS(list_action[j][1]); }
                 succ = true;
                 break;
             case 'flash':
-                succ = succ || clickFlash(list_action[j][1] , list_action[j][2] , list_action[j][3] );
+                succ = succ || clickFlash(list_action[j][1], list_action[j][2], list_action[j][3]);
                 break;
             case 'func':
                 if (!succ) {
@@ -52,7 +52,7 @@ for (i=0; i<actions.length; i++) {
                 succ = succ || clickForm(list_action[j][1], true);
                 break;
             case 'setCookie':
-                if (!succ) {setCookie(list_action[j][1], list_action[j][2], list_action[j][3]);}
+                if (!succ) {setCookie(list_action[j][1], list_action[j][2], list_action[j][3]); }
                 break;
             case 'hold':
                 succ = true;
@@ -61,14 +61,14 @@ for (i=0; i<actions.length; i++) {
                 succ = succ || clickMinMax(list_action[j][1], list_action[j][2], list_action[j][3], list_action[j][4]);
                 break;
             case 'link':
-                if (!succ) {window.location.href = list_action[j][1];}
+                if (!succ) {window.location.href = list_action[j][1]; }
                 succ = true;
                 break;
             case 'dbg':
-                if (!succ) {debugger;}
+                if (!succ) {debugger; }
                 break;
             case 'reload':
-                if (!succ) {setTimeout(function(){location.reload(true);}, list_action[j][1]);}
+                if (!succ) {reload_page(list_action[j][1]); /*setTimeout(function () {location.reload(true); }, list_action[j][1]);*/ }
                 succ = true;
                 break;
             default:
@@ -81,4 +81,5 @@ for (i=0; i<actions.length; i++) {
     }
 }
 
-setTimeout(function(){location.reload(true);}, 600000);
+//setTimeout(function () {location.reload(true); }, 600000);
+reload_page(600000);

@@ -215,4 +215,8 @@ function getCookie(c_name) {
     }
     return c_value;
 }
+
+function reload_page(timeout) {
+    setTimeout(function () {location.reload(true); }, timeout);
+}
 ///////////
