@@ -2,11 +2,6 @@
 var xpathmypage = "//*[@id=\"main_header_menu\"]/ul/li[1]/a";
 var xpathquest = "//*[@id=\"main_header_menu\"]/ul/li[2]/a";
 
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmission%2FMissionResult%2F%3FareaId%3D34%26exeCount%3D4%26historyGroupId%3D14333829%26rewardId%3D%26isFirstStaminaLess%3D%26isFirstDailyQuest%3D%26isFirstLevelUp%3D%26isFirstFriendUp%3D%26isFirstTreasureCard%3D%26isFirstTreasureEP%3D%26isFirstTreasureMoney%3D%26isGateOpenFlg%3D%26newRecordFlg%3D
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fsubjugation%2FSubjugationSelectAttackType%2F%3Funix%3D1373684628
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fgacha%2FGachaTop%2F
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fguildbattle%2FGuildbattleResult%2F%3FhistoryId%3D259250156%26addSummonGage%3D%26addGuildbattlePoint%3D%26getExp%3D%26totalDamage%3D5%26comboCnt%3D1%26targetCnt%3D1%26formerUserId%3D0%26evolutionString%3D%26skillId%3D18%26beforeLevel%3D%26afterLevel%3D0%26beforeExp%3D%26afterExp%3D%26collabolateUserId%3D0
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2FtowerRaid%2FTowerRaidRaidbossTop%2F%3FhistoryId%3D1523346
 function handleMissionResult() {
     //debugger;
     //*[@id="contents"]/div[2]/div[1]
@@ -22,17 +17,6 @@ function handleMissionResult() {
     succ = succ || clickA('//a[text()="次のエリアへ"]');
     succ = succ || clickA(xpathmypage);
 }
-///raidboss%2FRaidbossTop%2F/
-//function handleRaidBoss() {
-//    var succ = false;
-//    succ = succ || clickForm("//*[@id=\"contents\"]/form");
-//    alert("oo");
-//    succ = succ || clickA('//a[text()="レイドボス応援一覧に戻る"]');
-//    succ = succ || clickA("//*[@id=\"raid_help\"]/a");
-//    succ = succ || clickA("//*[@id=\"attack_btn\"]/div/a");
-//    succ = succ || clickA('//*[@id="bp_recovery_popup"]//a[text()="使用する"]');
-//    succ = succ || clickA(xpathmypage);
-//}
 
 function handleStoryMission() {
     var ap_status = getXPATH('//div[div[contains(text(),"のステータス")]]/div[2]/table/tbody/tr[2]/td[1]'), ap_c = 0, ap_full = 1, res;
@@ -92,11 +76,6 @@ function handleMypage() {
     var succ = false;
     succ = succ || clickA('//a[span[@id="battle_name"]]');
     succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
-    if (ap > 10) {
-        succ = succ || clickA('//a[@href="http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fisland%2FIslandTop%2F"]');
-        //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
-        //succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
-    }
     if (bp > 20) {
         succ = succ || clickA('//*[@id="battle_btn"]/a');
     }
@@ -111,6 +90,11 @@ function handleMypage() {
     succ = succ || clickA("//a[contains(text(), 'を討伐してくれました')]");
     if (!getCookie("__ava_no_gift")) {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
+    }
+    if (ap > 10) {
+        //succ = succ || clickA('//a[@href="http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fisland%2FIslandTop%2F"]');
+        //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
+        succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
     }
     succ = succ || setTimeout(function () {location.reload(true); }, 60000);
 }

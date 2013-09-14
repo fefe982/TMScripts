@@ -687,6 +687,8 @@ function handleERBBattle() {
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventTop
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FMissionResult%2F%3FautoSellFlg%3D0%26recoveryPoint%3D%26firstCardGetFlg%3D%26firstFairyHitFlg%3D%26firstBattleCostFlg%3D%26firstTreasureDropFlg%3D%26missionId%3D478%26attackBefore%3D0%26defenceBefore%3D0%26turnEndType%3D10%26recoverMaxFlg%3D%26recoveryPercent%3D%26firstTournamentFlg%3D%26addEventPoint%3D62
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FRescueList%2F%3FrescueId%3D784510
+var eventName = "StageRaidBoss";
+
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
     [/battleOlympia%2FBattleConf%2F/, 'a', '//a[contains(text(), "対戦結果を見る")]'],
@@ -711,6 +713,19 @@ var actions = [
     [/cave%2FQuestResult%2F/, 'a', '//a[@text="トレハンTOP"]'],
     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
+    [new RegExp("event" + eventName + "%2FEventTop"), 'list', [
+        ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
+        ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+        ['hold']]],
+    [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
+        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "eventCollection%2FRaidbossTop")]'],
+        ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+        ['hold']]],
+    [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
+        ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+        ['hold']]],
+    [/eventStageRaidBoss%2FRaidBossBattleLose/, 'a', '//a[contains(@href,"eventStageRaidBoss%2FDoMissionExecutionCheck")]'],
+
     //[/eventCollection%2FRaidBossBattleResult\b/, 'list', [
     //    ['a', '//a[contains(text(), "撃破者にあいさつする")]'],
     //    ['a', '//p[@class="block_flex btn_base radius"]/a']]],

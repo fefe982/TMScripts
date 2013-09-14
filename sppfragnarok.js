@@ -11,7 +11,7 @@ function handleArenaTop() {
     if (bp > 20) {
         succ = succ || clickA('//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]');
     }
-    succ = succ || clickA("//div[@class='event_btn ']/a");
+    succ = succ || clickA("//div[@class='event_btn']/a");
     if (!succ && getXPATH('//*[@id="container"]')) {
         clickS('//*[@id="container"]');
     }
@@ -267,7 +267,7 @@ var actions = [
     [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="canvas"]'],
     [/fusion%2FBulkMaterialCardFusionConfirm%2F/, 'form', '//*[@id="containerBox"]/form'],
     [/gacha%2FSetFreeGachaFlashResult%2F/, 'list', [
-        ['flash', '//*[@id="container"]|//div[@id="gamecanvas"]/canvas', 100, 366],
+        ['flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 100, 366],
         ['func', handleGachaFlashResult]]],
     [/gacha%2FSetGachaResult%2F/, 'list', [
         ['a', '(//a[contains(text(), "エールガチャ")])[last()]'],

@@ -1,6 +1,6 @@
 var i, j;
 var list_action;
-GM_log(url);
+GM_log(Date() + url);
 for (i = 0; i < actions.length; i++) {
     if (url.match(actions[i][0])) {
         GM_log(actions[i][0]);
