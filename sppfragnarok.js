@@ -8,9 +8,9 @@ function handleArenaTop() {
     if (bp_gauge) {
         bp = bp_gauge.dataset.value;
     }
-    if (bp > 20) {
-        succ = succ || clickA('//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]');
-    }
+    //if (bp > 20) {
+    succ = succ || clickA('//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]');
+    //}
     succ = succ || clickA("//div[@class='event_btn']/a");
     if (!succ && getXPATH('//*[@id="container"]')) {
         clickS('//*[@id="container"]');
@@ -228,9 +228,28 @@ var actions = [
         ['a', '//a[text()="ボス一覧へ戻る"]'],
         ['a', '//a[text()="イベントを進める"]']]],
     [/arena%2FArenaError%2F/, 'a', '//a[text()="イベントTOP"]'],
-    [/arena%2FArenaUserSelectList/, 'func', handleArenaUserList],
+    [/arena%2FArenaUserSelectList/, 'list', [  // 'func', handleArenaUserList],
+        //['dbg'],
+        ['aJV', 'a[href*="arena%2FDoArenaUseAdvantageItem%2F"]'],
+        //['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
+        //['aJP', '#rcv_items a'],
+        ['func', function () {
+            setInterval(function () {
+                if ($('#current_worker').text() < 20) {
+                    clickLink($('#rcv_items a').filter(":first")[0]);
+                }
+            }, 1000);
+            setInterval(function () {
+                clickMinMax('//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a');
+            }, 1000);
+            return false;
+        }],
+        //['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
+        ['hold']]],
     [/arena%2FBossAppear%2F/, 'a',  "//a[text()='ボスと戦う']"],
-    [/arena%2FBossBattleResult%2F/, 'a', "//a[text()='次のエリアに進む']"],
+    [/arena%2FBossBattleResult%2F/, 'list', [
+        ['a', '//a[contains(@href, "arena%2FDoMissionExecutionCheck%2F")]'],
+        ['flash', '//*[@id="gamecanvas"]/canvas']]],//"//a[text()='次のエリアに進む']"]]],
     [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="gamecanvas"]/canvas', 79, 346],
     [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
     [/arena%2FMissionError%2F/, 'func', handleMissionError],
@@ -328,7 +347,7 @@ var actions = [
         ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'], //div[contains(@class,"sprites-event-top-quest")]/a'],
         ['flash', '//*[@id="container"]']]],
     [/mission%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
-    [/mission%2FBossBattleFlash/, 'flash', '//div[@id="gamecanvas"]/canvas', 79, 346],
+    [/mission%2FBossBattleFlash/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],
     [/mission%2FBossBattleResult%2F/, 'a', '//a[text()="次に進む"]'],
     [/mission%2FMissionError%2F/,  'a', '//*[@id="global_menu"]/ul/li[2]/ul/li[2]/a'],
     [/mission%2FMissionList%2F/, 'func', handleMissionList],

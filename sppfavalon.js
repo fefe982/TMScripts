@@ -77,7 +77,7 @@ function handleMypage() {
     succ = succ || clickA('//a[span[@id="battle_name"]]');
     succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
     if (bp > 20) {
-        succ = succ || clickA('//*[@id="battle_btn"]/a');
+        succ = succ || clickA('//a[contains(@href, "battleTower%2FBattleTowerTop%")]');
     }
     succ = succ || clickA("//a[text()='無料ガチャが回せます']");
     succ = succ || clickA("//a[text()='振り分けポイントがあります']");
@@ -119,7 +119,8 @@ function handleRaidbossBattleResult() {
 
 function handleBattleTowerTop() {
     if (getXPATH('//div[contains(@class, "last_free_cnt")]') || getXPATH('//div[@id="gauge_bp"]').dataset.value > 0) {
-        clickA('//*[@id="entaku_main"]/div[2]/div[3]/div[1]/a');
+        //clickA('//*[@id="entaku_main"]/div[2]/div[3]/div[1]/a');
+        $("a[href*='battleTower%2FBattleTowerEnemyList']").clickJ();
     } else {
         clickA(xpathmypage);
     }
@@ -210,12 +211,14 @@ var actions = [
     [/giftBingo%2FGiftBingoTop%2F/, 'a', '(//a[contains(text(), "引く")])[last()]'],
     [/giftBingo%2FGiftBingoHitResult%2F/, 'a', '(//a[contains(text(), "引く")])[last()]'],
     [/guildbattle%2FGuildbattleSelectAttackType%2F/, 'list', [
+        ['aJ', 'div#btn_magic a'],
         ['a', '//*[@id="btn_start"]/a'],
         ['a', '//*[@id="btn_force"]/a'],
         //['a', '//*[@id="btn_command"]/a'],
         ['a', '//*[@id="use_bp_gp_recovery"]/a'],
         ['hold']]],
     [/guildbattle%2FGuildbattleResult%2F/, 'list', [
+        ['aJ', 'div#btn_magic a'],
         ['a', '//*[@id="btn_force"]/a'],
         //['a', '//*[@id="btn_command"]/a'],
         ['a', '//div[@id="command_list"]//div[@class="btn_sub_medium"]/a'],

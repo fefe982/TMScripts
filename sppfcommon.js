@@ -110,6 +110,98 @@ function clickLink(link) {
     }, 2000);
 }
 
+$.fn.simMouseEvent = function (eveName, xoff, yoff) {
+    var rect, x, y;
+    if (this.length === 0) {
+        return this;
+    }
+    if (this[0].getBoundingClientRect) {
+        rect = this[0].getBoundingClientRect();
+        x = xoff ? rect.left + xoff : (rect.left + rect.right) / 2;
+        y = yoff ? rect.top + yoff : (rect.top + rect.bottom) / 2;
+    } else {
+        x = 0;
+        y = 0;
+    }
+    var eve = document.createEvent("MouseEvents");
+    eve.initMouseEvent(eveName, true, true, window,
+                         0, x, y, x, y,
+                         false, false, false, false,
+                         0, this[0]);
+    if (this[0].dispatchEvent(eve) && this[0].tagName === 'a') {
+        window.location = this[0].href;
+    }
+    return this;
+};
+$.fn.simTouchEvent = function (eveName, xoff, yoff) {
+    var rect, x, y;
+    if (this.length === 0) {
+        return this;
+    }
+    if (this[0].getBoundingClientRect) {
+        rect = this[0].getBoundingClientRect();
+        x = xoff ? rect.left + xoff : (rect.left + rect.right) / 2;
+        y = yoff ? rect.top + yoff : (rect.top + rect.bottom) / 2;
+    } else {
+        x = 0;
+        y = 0;
+    }
+    var eve = new CustomEvent(eveName);//document.createEvent("TouchEvent");
+    this[0].dispatchEvent(eve);
+    return this;
+};
+
+$.fn.clickJ = function (timeout) {
+    if (this.length === 0) {
+        return this;
+    }
+    if (timeout === 0) {
+        this.simMouseEvent("click");
+    } else {
+        var jq = $(this);
+
+        setTimeout(function () {
+            jq.simMouseEvent("click");
+        }, timeout || 1000);
+    }
+    return this;
+};
+
+$.fn.submitJ = function (timeout) {
+    if (this.length === 0) {
+        return this;
+    }
+    var jq = $(this);
+    setTimeout(function () {
+        jq.submit();
+    }, timeout || 1000);
+    return this;
+};
+
+$.fn.clickFlash = function (xoff, yoff) {
+    if (this.length === 0) {
+        return this;
+    }
+    var flash = $(this);
+    setInterval(function () {
+        flash.simMouseEvent("mousedown", xoff, yoff);
+        flash.simMouseEvent("mouseup", xoff, yoff);
+        flash.simMouseEvent("click", xoff, yoff);
+    }, 1000);
+};
+
+$.fn.touchFlash = function (xoff, yoff) {
+    if (this.length === 0) {
+        return this;
+    }
+    var flash = $(this);
+    setInterval(function () {
+        flash.simTouchEvent("touchstart", xoff, yoff);
+        flash.simTouchEvent("touchmove", xoff, yoff);
+    }, 1000);
+    return this;
+};
+
 var url = document.URL;
 
 function clickA(xpath) {
@@ -220,3 +312,4 @@ function reload_page(timeout) {
     setTimeout(function () {location.reload(true); }, timeout);
 }
 ///////////
+

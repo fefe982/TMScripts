@@ -166,6 +166,7 @@ function handlemypage() {
     succ = succ || clickA("//a[contains(text(), '冒険に行けます')]");
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
+    succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
     if (ap_gauge && ap_gauge.dataset.width > 10) {
         succ = succ || clickA(xpathevent);
         //succ = succ || clickA("//div[@class='mission']/a");
@@ -180,14 +181,7 @@ function handlemypage() {
             succ = clickA("//div[@class='battle']/a");
         }
     }
-    succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
-    //succ = succ || clickA('//*[@id="menus"]/a[1]');
     if (!succ) {
-        //setTimeout(function(){
-        //        if (ap_gauge && ap_gauge.dataset.width > 50) {
-                //clickA("//div[@class='mission']/a");
-        //        }
-        //        }, 60000);
         setTimeout(function () {location.reload(true); },  60000);
     }
 }
