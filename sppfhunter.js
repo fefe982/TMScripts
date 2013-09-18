@@ -712,7 +712,7 @@ var actions = [
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
-        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "eventCollection%2FRaidbossTop")]'],
+        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidbossTop")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
