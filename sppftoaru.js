@@ -28,6 +28,13 @@ var actions = [
     [/friend%2FacceptOrderConfirm/, 'aJ', 'input[name="yes"]'],
     [/friend%2FcompleteFriendOrder/, 'a', xpathmypage],
     [/friend%2FsearchFriends/, 'formJ', 'form'],
+
+    //fusion
+    [/fusion%2Fevolution_confirm%/, 'aJ', 'a[href*="fusion%2Fevolution%"]'],
+    [/fusion%2Fevolution_result%/, 'aJ', "a[href*='fusion%2Fevolution_select']"],
+    [/fusion%2Fevolution%/, 'flashJ', "#container"],
+    [/fusion%2Flimit_result%/, 'aJ', "a[href*='fusion%2Flimit_select']"],
+    [/fusion%2Flimit%/, 'flashJ', "#container"],
     [/item%2FpresentList/, 'formJ', 'form'],
     [/login%2Fperiod/, 'flashJ', '#container'],
     [/mypage%2FsetParameter/, 'func', function () {
@@ -50,12 +57,20 @@ var actions = [
         ['func', function () {
             var res = $('div#graph_hp div.graph_text_detail').text().match(/([0-9]*)\/[0-9]*/);
             var hp = res ? +res[1] : 0;
+            res = $('div#graph_atk div.graph_text_detail').text().match(/([0-9]*)\/([0-9]*)/);
+            var ap = res ? +res[1] : 0;
+            var apall = res ? +res[2] : 0;
             GM_log("hp = " + hp);
             if (hp > 10) {
                 return /*$('a[href*="Da2%2FeventTop"]').clickJ().length > 0 ||*/$('a[href*="quest"]').clickJ();
             }
+            if (ap === apall) {
+                return $('a[href*="playerBattle%2Fbattle"]').clickJ();
+            }
         }]
     ]],
+
+    //pick
     [/pick%2Fresult%2Ffree/, 'aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
     [/pick%2Frun/, 'flashJ', '#container', 20, 2500],
     [/pick%2Ftop%2Ffree/, 'list', [
@@ -64,6 +79,14 @@ var actions = [
     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
         ['aJ', 'a[href*="pick%2Frun%2Fpremium%2Fmedal"]'],
         ['flashJ', '#container']]],
+
+    //player_battle
+    [/playerBattle%2Fbattle\b/, 'aJ', 'a[href*="player_battle%2Fbattle_confirm"]'],
+    [/player_battle%2Fbattle_confirm%/, 'aJ', 'a[href*="battle_animation"]'],
+    [/player_battle%2Fbattle_result%/, 'aJ', 'a[href*="mypage"]'],
+    [/player_battle%2Fcomplete%/, 'flashJ', "#container"],
+
+    //quest
     [/quest%2FbossSuccess/, 'aJ', 'a[href*="scenario%2Fquest"]'],
     [/*quest%2F*//clearAreaFlash/, 'flashJ', '#container'],
     [/quest%2Findex/, 'func', function () {

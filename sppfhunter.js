@@ -708,11 +708,14 @@ var actions = [
     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
     [new RegExp("event" + eventName + "%2FEventTop"), 'list', [
+        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
-        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidbossTop")]'],
+        //['dbg'],
+        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
+        ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
@@ -728,7 +731,7 @@ var actions = [
         ['a', '//a[contains(@href,"eventCollection%2FDoMissionExecutionCheck")]'],
         ['hold']]], //@class="block_flex btn_base radius"]/a'],
     [/eventCollection%2FMissionResult%2F/, 'list', [
-        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "eventCollection%2FRaidbossTop")]'],
+        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "eventCollection%2FRaidBossTop")]'],
         ['a', '//a[contains(@href,"eventCollection%2FDoMissionExecutionCheck")]'],
         ['hold']]],
     [/eventCollection%2FRaidBossBattleResult/, 'list', [
@@ -883,7 +886,7 @@ var actions = [
     //[/eventBattle%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372,62],
     [/FusionFlash/, "flash", "//*[@id=\"container\"]"],
     [/%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
-    [/Swf\b/, "flash", "//*[@id=\"container\"]"],
+    [/Swf\b/, "flash", "//*[@id=\"container\"]|//*[@id='stage']"],
     [/xxxxxxxxxxxxxxxxx/]
 ];
 

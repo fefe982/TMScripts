@@ -44,24 +44,24 @@ function handleMissionRes() {
     }
 }//'//*[@id="containerBox"]/div[4]/ul/li[1]/div[3]/div[2]/div/a'
 
-function handleArenaMissionRes() {
-    var ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
-        bp_gauge = getXPATH('//*[@id="header_bp_gauge"]');
-    var ap = 0, bp = 0, succ = false;
-    if (ap_gauge) {
-        ap = ap_gauge.dataset.value;
-    }
-    if (bp_gauge) {
-        bp = bp_gauge.dataset.value;
-    }
-    if (ap > 10) {
-        succ = succ || clickA(xpathquest);
-    }
-    if (bp > 20) {
-        succ = succ || clickA('//*[@id="arenaOpenButton"]/a');
-    }
-    succ = succ || clickA("//*[@id='containerBox']/div[@class='section margin_bottom_20']/div/a");
-}
+//function handleArenaMissionRes() {
+//    var ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
+//        bp_gauge = getXPATH('//*[@id="header_bp_gauge"]');
+//    var ap = 0, bp = 0, succ = false;
+//    if (ap_gauge) {
+//        ap = ap_gauge.dataset.value;
+//    }
+//    if (bp_gauge) {
+//        bp = bp_gauge.dataset.value;
+//    }
+//    if (ap > 10) {
+//        succ = succ || clickA(xpathquest);
+//    }
+//    if (bp > 20) {
+//        succ = succ || clickA('//*[@id="arenaOpenButton"]/a');
+//    }
+//    succ = succ || clickA("//*[@id='containerBox']/div[@class='section margin_bottom_20']/div/a");
+//}
 
 function handleArenaUserList() {
     var min = 10000, i, minid = 0;
@@ -253,7 +253,10 @@ var actions = [
     [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="gamecanvas"]/canvas', 79, 346],
     [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
     [/arena%2FMissionError%2F/, 'func', handleMissionError],
-    [/arena%2FMissionResult%2F%/, 'func', handleArenaMissionRes],
+    [/arena%2FMissionResult%2F%/, 'list', [
+        ['aJ', '#arenaOpenButton a'],
+        ['aJ', 'a[href*="arena%2FDoMissionExecutionCheck"]']]],
+        //'func', handleArenaMissionRes],
     [/arena%2FTop/, 'func', handleArenaTop],
     [/arrangement%2FArrangementEdit%2F/, 'func', handleArrangement],
     [/beatdown%2FBossAppear%2F%/, 'a', '//a[text()="ボスと戦う"]'],
@@ -373,7 +376,7 @@ var actions = [
     [/treasure%2FTreasureStatus%2F/, 'a', '//a[text()="探索結果確認"]'],
     [/treasure%2FTreasureTop%2F/, 'a', '//a[text()="探索先を選ぶ"]'],
     [/Swf\b/, 'flash',  '//*[@id="btn_exec"]|//canvas|//*[@id="container"]|//*[@id="canvas"]'],
-    [/Flash\b/, 'flash',  "//*[@id='btn_exec']|//*[@id='container']"],
+    [/Flash\b/, 'flash',  "//div[@id='gamecanvas']/canvas|//*[@id='btn_exec']|//*[@id='container']"],
     [/xxxxxxxxxxxxxxxxx/]
 ];
 //alert("oops");
