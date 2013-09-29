@@ -179,6 +179,7 @@ $.fn.submitJ = function (timeout) {
 };
 
 $.fn.clickFlash = function (xoff, yoff) {
+    //debugger;
     if (this.length === 0) {
         return this;
     }
@@ -188,6 +189,7 @@ $.fn.clickFlash = function (xoff, yoff) {
         flash.simMouseEvent("mouseup", xoff, yoff);
         flash.simMouseEvent("click", xoff, yoff);
     }, 1000);
+    return this;
 };
 
 $.fn.touchFlash = function (xoff, yoff) {

@@ -138,7 +138,7 @@ function handleMyPage() {
         succ = succ || clickA(xpathquest);
     }
     //succ = succ || clickA(xpathevent);
-    succ = succ || setTimeout(function () {location.reload(true); },  60000);
+    //succ = succ || setTimeout(function () {location.reload(true); },  60000);
 }
 
 function handleGachaFlashResult() {
@@ -173,8 +173,8 @@ function handleChoiceCoin() {
 }
 
 function handleArrangement() {
-    //clickS('//div[text()="自動割り振り"]');
-    clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
+    clickS('//div[text()="自動割り振り"]');
+    //clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
     setInterval(function () {
         if (getXPATH('//div[@id="overrayArea" and not(@class="hide")]')) {
             clickForm('//*[@id="containerBox"]/form');
@@ -203,7 +203,7 @@ function handleMissionError() {
 }
 
 var actions = [
-    [/apology%2FApologyList%2F/, 'form', '//*[@id="containerBox"]/table//form'],
+    [/apology%2FApologyList%2F/, 'form', '//*[@id="containerBox"]//form'],
     [/arena%2FArenaBattleResult%2F/, 'list', [
         ["a", '//a[contains(@href, "arena%2FArenaUserSelectList")]'],//text()="戦いを続ける"]'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]], //*[@id="container"]']]],

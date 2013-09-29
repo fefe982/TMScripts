@@ -168,8 +168,13 @@ function handlemypage() {
     succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
     if (ap_gauge && ap_gauge.dataset.width > 10) {
-        succ = succ || clickA(xpathevent);
-        //succ = succ || clickA("//div[@class='mission']/a");
+        var eventL = $('a[href*="EventTop"]');
+        //if (eventL.length > 0 && !eventL.text().match(/終了/)) {
+        //    eventL.clickJ();
+        //    succ = true;
+        //}
+        //succ = succ || clickA(xpathevent);
+        succ = succ || clickA("//div[@class='mission']/a");
     }
     if (!succ) {
         if (getXPATH('//div[@class="battle"]/a/div[@class="mypage_battleOlympia"]')) {

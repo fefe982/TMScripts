@@ -22,7 +22,7 @@ var actions = [
         ['aJ', 'a[href*="da2%2FrArea%2F4"]'],
         ['aJ', 'a[href*="da2%2FrArea%2F' + Math.floor(Math.random() * 3 + 1) + '"]']]],
     [/da2%2FrSkill/, 'aJ', 'a[href*="da2%2FrSkill%2Fdefeat"]'],
-    [/da2%2FuseItemComplete/, 'aJ', 'a[href*="da2%2Findex"]'],
+    [/*da2%2F*//useItemComplete/, 'aJ', 'a[href*="%2Findex"]'],
     [/da2%2FuseItem\b/, 'aJ', 'a[href*="da2%2FuseItem"]'],
     [/friend%2FacceptList/, 'aJ', 'a[href*="friend%2FacceptOrderConfirm"]'],
     [/friend%2FacceptOrderConfirm/, 'aJ', 'input[name="yes"]'],
@@ -62,10 +62,10 @@ var actions = [
             var apall = res ? +res[2] : 0;
             GM_log("hp = " + hp);
             if (hp > 10) {
-                return /*$('a[href*="Da2%2FeventTop"]').clickJ().length > 0 ||*/$('a[href*="quest"]').clickJ();
+                return $('a[href*="Da2%2FeventTop"]').clickJ().length > 0 || $('a[href*="quest"]').clickJ().length > 0;
             }
             if (ap === apall) {
-                return $('a[href*="playerBattle%2Fbattle"]').clickJ();
+                return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
             }
         }]
     ]],
