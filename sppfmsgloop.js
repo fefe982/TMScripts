@@ -18,7 +18,8 @@ var succ = (function () {
             siteT = Date.now() + 60 * 1000 * sites[siteI][1];
             setCookie("site_loop_index", siteI, 60 * 60 * 24 * 7);
             setCookie("site_timeout", siteT, 60 * 60 * 24 * 7);
-            window.location = sites[siteI][0];
+            //debugger;
+            window.location.href = sites[siteI][0];
             return true;
         }
         return false;
