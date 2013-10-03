@@ -105,7 +105,7 @@ function clickLink(link) {
                              0, null);
         var cancelled = !link.dispatchEvent(event);
         if (!cancelled) {
-            window.location = link.href;
+            window.location.href = link.href;
         }
     }, 2000);
 }
@@ -129,7 +129,7 @@ $.fn.simMouseEvent = function (eveName, xoff, yoff) {
                          false, false, false, false,
                          0, this[0]);
     if (this[0].dispatchEvent(eve) && this[0].tagName === 'a') {
-        window.location = this[0].href;
+        window.location.href = this[0].href;
     }
     return this;
 };
@@ -185,6 +185,7 @@ $.fn.clickFlash = function (xoff, yoff) {
     }
     var flash = $(this);
     setInterval(function () {
+        flash.simMouseEvent("mousemove", xoff, yoff);
         flash.simMouseEvent("mousedown", xoff, yoff);
         flash.simMouseEvent("mouseup", xoff, yoff);
         flash.simMouseEvent("click", xoff, yoff);

@@ -92,8 +92,8 @@ function handleMypage() {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
-        //succ = succ || clickA('//a[@href="http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fisland%2FIslandTop%2F"]');
-        //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
+        succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
+        succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
     }
     succ = succ || setTimeout(function () {location.reload(true); }, 60000);
@@ -258,6 +258,13 @@ var actions = [
         ['form', '//*[@id="contents"]/form'],
         ['a', '//*[@id="raid_help"]/a'],
         ['a', '//a[text()="イベントレイドボス応援一覧に戻る"]'],
+        ['funcR', function () {
+            var magic = $('div#summon_btn a').clickJ();
+            if (magic.length === 0) {
+                return false;
+            }
+            return $('#summon_popup a').filter(':contains("召喚する")').clickJ(2000).length > 0;
+        }],
         ['a', '//*[@id="attack_btn"]/div/a']]],
     [/island%2FIslandTop%2F/, 'list', [
         ['funcR', function () {

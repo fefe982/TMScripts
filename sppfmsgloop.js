@@ -6,7 +6,8 @@ var succ = (function () {
             ["http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F", 5], // avalon
             ["http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2Fmypage%2FIndex",          5], // hunter
             ["http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fmypage%2FIndex",       5], //ragnarok
-            ["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage",           5]  // to aru
+            ["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage",           5], // to aru
+            ["http://sp.pf.mbga.jp/12012329?url=http%3A%2F%2Fmdrabre.croozsocial.jp%2Fmypage%2FIndex",         5]
         ];
         //debugger;
         var siteI = +(getCookie("site_loop_index") || 0);
@@ -103,7 +104,7 @@ for (i = 0; i < actions.length; i++) {
                 succ = $(list_action[j][1]).clickFlash().length > 0;
                 break;
             case 'flashJT':
-                succ = $(list_action[j][1]).touchFlash().length > 0;
+                succ = $(list_action[j][1]).touchFlash().clickFlash().length > 0;
                 break;
             case 'dbg':
                 if (!succ) {debugger; }

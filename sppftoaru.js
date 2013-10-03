@@ -30,9 +30,11 @@ var actions = [
     [/friend%2FsearchFriends/, 'formJ', 'form'],
 
     //fusion
+    [/fusion%2Fconfirm%/, 'aJ', 'a[href*="fusion%2Ffusion%"]'],
     [/fusion%2Fevolution_confirm%/, 'aJ', 'a[href*="fusion%2Fevolution%"]'],
     [/fusion%2Fevolution_result%/, 'aJ', "a[href*='fusion%2Fevolution_select']"],
     [/fusion%2Fevolution%/, 'flashJ', "#container"],
+    [/fusion%2Ffusion%/, 'flashJ', '#container'],
     [/fusion%2Flimit_result%/, 'aJ', "a[href*='fusion%2Flimit_select']"],
     [/fusion%2Flimit%/, 'flashJ', "#container"],
     [/item%2FpresentList/, 'formJ', 'form'],

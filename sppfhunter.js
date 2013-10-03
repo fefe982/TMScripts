@@ -167,12 +167,12 @@ function handlemypage() {
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
-    if (ap_gauge && ap_gauge.dataset.width > 10) {
+    if (!succ && ap_gauge && ap_gauge.dataset.width > 10) {
         var eventL = $('a[href*="EventTop"]');
-        //if (eventL.length > 0 && !eventL.text().match(/終了/)) {
-        //    eventL.clickJ();
-        //    succ = true;
-        //}
+        if (eventL.length > 0 && !eventL.text().match(/終了/)) {
+            eventL.clickJ();
+            succ = true;
+        }
         //succ = succ || clickA(xpathevent);
         succ = succ || clickA("//div[@class='mission']/a");
     }
@@ -726,6 +726,9 @@ var actions = [
     [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
+    [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
+    [/eventQuestRaidBoss%2FEventQuestRaidBossTop/, 'aJ', 'a[href*="eventQuestRaidBoss%2FDoEventQuestRaidBossBattleResult%"]'],
+    [/eventQuestRaidBoss%2FEventQuestRaidBossBattleResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
     [/eventStageRaidBoss%2FRaidBossBattleLose/, 'a', '//a[contains(@href,"eventStageRaidBoss%2FDoMissionExecutionCheck")]'],
 
     //[/eventCollection%2FRaidBossBattleResult\b/, 'list', [

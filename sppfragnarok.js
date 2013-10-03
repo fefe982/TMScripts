@@ -133,8 +133,8 @@ function handleMyPage() {
     succ = succ || clickA('//a[text()="贈り物が届いてます"]');
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
+    succ = succ || clickA(xpathevent);
     if (ap > 10 && !mission_error) {
-        succ = succ || clickA(xpathevent);
         succ = succ || clickA(xpathquest);
     }
     //succ = succ || clickA(xpathevent);
@@ -342,11 +342,23 @@ var actions = [
         ['a', '//a[div[@id="MissionAreaMap"]]'],
         ['a', '//a[div[@id="area_map_image_in"]]'],
         ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'], //text()="七夕ツアーズに行く"]'],
-        ['flash', '//*[@id="container"]|//div[@id="gamecanvas"]/canvas']]],
+        ['flash', '//div[@id="gamecanvas"]/canvas']]],
     [/island%2FIslandMissionStoryResult%2F/, 'a', '//a[text()="イベントを進める"]'],
     [/island%2FTeamCompItemTop/, 'a', '//*[@id="navigate_comp"]/div[@class="tour_btns"]/a[last()]'],
     [/island%2FTop/, 'list', [
         ['a', '//a[contains(@href, "island%2FTeamCompItemTop") and .//*[@id="TourLastTime"]]'],
+        ['funcR', function () {
+            var slot = $('a[href*="island%2FIslandSlotTop%2F"]');
+            if (slot.length === 0) {
+                return false;
+            }
+            if (slot.find('div:not(:has(*))').text() === "00") {
+                return false;
+            }
+            slot.clickJ();
+            return true;
+            //debugger;
+        }],
         ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'], //div[contains(@class,"sprites-event-top-quest")]/a'],
         ['flash', '//*[@id="container"]']]],
     [/mission%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
