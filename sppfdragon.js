@@ -16,7 +16,19 @@ var actions = [
         ['hold']]],
 
     //story
-    [/story%2FStoryActionHistorySwf%/, 'flashJT', 'canvas'],
+    [/story%2FStoryActionHistorySwf%/, 'list', [
+        ['funcR', function hdlswf() {
+            var ld = $('.loading'), cvs = $('canvas');
+            if (ld.length > 0) {
+                setTimeout(hdlswf, 1000);
+                return true;
+            }
+            if (cvs.length > 0) {
+                cvs.clickFlash();
+                return true;
+            }
+            return false;
+        }]]],
     [/story%2FStoryAreaList%2F/, 'aJ', 'a[href*="story%2FDoStoryOrder%2F"]'],
     [/story%2FStoryBossBattleResult%/, 'aJ', 'a[href*="story%2FDoStoryOrder%2F"]'],
     [/story%2FStoryBossConf%/, 'list', [
