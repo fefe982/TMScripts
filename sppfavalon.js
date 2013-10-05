@@ -297,10 +297,10 @@ var actions = [
     [/mission%2FBossBattleResult%2F/, "a", "//*[@id=\"contents\"]/div[4]/a"],
     [/mission%2FMissionError%2F/, 'func', handleMissionError], //"a",  "//*[@id=\"global_menu\"]/ul/li[1]/div[5]/a"],
     [/mission%2FMissionListSwf%2F/, "link", "http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F"],
-    [/multiguildbattle%2FMultiGuildbattleResult%2F/, 'a', '//*[@id="btn_magic"]/a'],
+    [/multiguildbattle%2FMultiGuildbattleResult%2F/, 'a', '//*[@id="btn_force"]/a'],
     [/multiguildbattle%2FMultiGuildbattleSelectAttackType%2F/, 'list', [
         ['a', '//*[@id="btn_start"]/a'],
-        ['a', '//*[@id="btn_magic"]/a']]
+        ['a', '//*[@id="btn_force"]/a']]
         ],
     [/multiguildbattle%2FMultiGuildbattleSelectTarget%2F/, 'a', '//div[div[text()="ターゲット選択"]]/ul/li[1]//a'],
     [/multiguildbattle%2FMultiGuildbattleTop%2F/, 'a', xpathmypage],
