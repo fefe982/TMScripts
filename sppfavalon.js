@@ -92,6 +92,7 @@ function handleMypage() {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
+		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
         succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
         succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
@@ -160,7 +161,7 @@ function handleMissionError() {
     succ = succ || clickA(xpathmypage);
 }
 
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FLoginBonusResult%2F%3FhistoryId%3D27931745%26loginBonusCategoryId%3D27%26registCampaignSr%3D0%26registCampaignSrMax%3D0%26jobPegasus%3D0%26jobDancer%3D0
+//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2FsummonHunt%2FRaidbossTop%2F%3FuserRaidbossId%3D18781951
 var actions = [
     [/arrangement%2FArrangementEdit%2F/, 'form', '//*[@id="contents"]/div/div[2]/ul/li[3]/form'],
     [/arrangement%2FArrangementEnd%2F/, 'a', xpathmypage],
@@ -319,16 +320,20 @@ var actions = [
     [/raidboss%2FRaidbossBattleResult%2F/, "func", handleRaidbossBattleResult],
     [/raidboss%2FRaidbossBattleResultList%2F/, 'a', '//*[@id="contents"]/div[1]/ul/li/a'],
     [/shop%2FItemUseEnd%/, 'a', '//a[contains(@href, "island%2FMissionActionLot")]'],
-    [/story%2FDoStoryEpisodeSwf2%2F/, "flash", "//*[@id=\"container\"]"],
-    [/story%2FDoStoryEpisodeSwfClear%2F/, "flash", "//*[@id=\"container\"]"],
-    [/story%2FDoStoryEpisodeSwfEd%2F/, "flash", "//*[@id=\"container\"]"],
-    [/story%2FDoStoryEpisodeSwfOp%2F/, "flash", "//*[@id=\"container\"]"],
-    [/story%2FMissionResult%2F/, "func", handleStoryMission],
-    [/story%2FStoryAreaResult%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
-    [/story%2FStoryBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
-    [/story%2FStoryBossBattleFlash%2F/, "flash", "//*[@id=\"container\"]", 160, 290],
-    [/story%2FStoryMain%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
-    [/story%2FStoryTop%2F/, "flash", "//*[@id=\"main_view\"]/div[2]/div/div[1]/a/div"],
+    [/story(ex)?%2FDoStoryEpisodeSwf2%2F/, "flash", "//*[@id=\"container\"]"],
+    [/story(ex)?%2FDoStoryEpisodeSwfClear%2F/, "flash", "//*[@id=\"container\"]"],
+    [/story(ex)?%2FDoStoryEpisodeSwfEd%2F/, "flash", "//*[@id=\"container\"]"],
+    [/story(ex)?%2FDoStoryEpisodeSwfOp%2F/, "flash", "//*[@id=\"container\"]"],
+    [/story(ex)?%2FMissionResult%2F/, "func", handleStoryMission],
+    [/story(ex)?%2FStoryAreaResult%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
+    [/story(ex)?%2FStoryBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
+    [/story(ex)?%2FStoryBossBattleFlash%2F/, "flash", "//*[@id=\"container\"]", 160, 290],
+    [/story(ex)?%2FStoryMain%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
+    [/story(ex)?%2FStoryTop%2F/, 'list', [
+		//['dbg'],
+		['flashJT', 'div.area_list.portrait div.floor_base.on.btn_base a div'],
+		["flash", "//*[@id=\"main_view\"]//div[contains(@class, 'on')]/a/div"]
+		]],
     [/subjugation%2FMissionResult%2F/, 'a', '//a[text()="討伐戦TOPへ"]'],
     [/subjugation%2FSubjugationSelectHelpTarget/, 'list', [
         ['a', '//a[text()="救助する"]'],
@@ -344,6 +349,24 @@ var actions = [
         ['a', '//a[contains(@href, "subjugation%2FMissionActionLot")]'],
         ['a', '//a[text()="討伐戦報酬を受け取る"]'],
         ['hold']]],
+	[/summonHunt%2FMissionResult%2F/, 'list', [
+		['aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
+		['aJ', 'a[href*="summonHunt%2FSummonHuntTop"]'],
+		['hold']]],
+	[/summonHunt%2FSummonHuntTop%2F/, 'aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
+	
+	[/summonHunt%2FSummonCaptureTop%2F/, 'list', [
+		['aJ', 'a[href*="summonHunt%2FDoSummonCaptureResult%2F"]']]],
+	[/summonHunt%2FSummonCaptureResult%2F/, 'list', [
+		['aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
+		['aJ', 'a[href*="summonHunt%2FSummonHuntTop%2F"]']]],
+	[/summonHunt%2FSummonHuntRaidbossAssistList%2F/, 'aJ', 'li:has(span[class="icon_new"]) a'], //'//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
+	[/summonHunt%2FRaidbossBattleResult%2F/, 'aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
+	[/summonHunt%2FRaidbossTop/, 'list', [
+		['formJ', '#contents form:has(#assist_btn)'],
+		['aJ', 'a[href*="summonHunt%2FDoRequestRaidbossHelp%2F"]'],
+		['aJ', 'a[href*="summonHunt%2FDoRaidbossBattleResult%2F"]']]],
+	[/summonHunt%2FRaidbossHelpResult%2F/, 'aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
     [/subjugation%2FSubjugationTeamAnalytics%2F/, 'a', '//a[text()="討伐戦報酬を受け取る"]'],
     [/towerRaid%2FTowerRaidRaidbossBattleResult%2F/, 'a', '//a[text()="再びボーグを探しに行く"]'],
     [/towerRaid%2FTowerRaidTop%2F/, 'list', [
@@ -357,6 +380,7 @@ var actions = [
         ['a', '//*[@id="contents"]/div[contains(@class, "section_main") and .//div[@id="towerraid_remainder"]]/div[2]/div/a'],
         ['hold']]],
     [/Swf%2F/, "flash", "//*[@id=\"container\"]"],
+	[/SwfOp%2F/, 'flash', '//*[@id="container"]'],
     [/xxxxxxxxxxxxxxxxx/]
 ];
 

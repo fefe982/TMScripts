@@ -134,10 +134,15 @@ $.fn.simMouseEvent = function (eveName, xoff, yoff) {
     return this;
 };
 $.fn.simTouchEvent = function (eveName, xoff, yoff) {
-    var rect, x, y;
+
+	var customEvent;
+ 
+	// check taget
     if (this.length === 0) {
         return this;
     }
+    var rect, x, y;
+
     if (this[0].getBoundingClientRect) {
         rect = this[0].getBoundingClientRect();
         x = xoff ? rect.left + xoff : (rect.left + rect.right) / 2;
@@ -146,12 +151,79 @@ $.fn.simTouchEvent = function (eveName, xoff, yoff) {
         x = 0;
         y = 0;
     }
-    var eve = new CustomEvent(eveName);//document.createEvent("TouchEvent");
-    this[0].dispatchEvent(eve);
+	//if(eveName === 'touchstart' || eveName === 'touchmove') {
+	//	if(touches.length === 0) {
+	//		//Y.error('simulateTouchEvent(): No touch object in touches');
+	//	}
+	//} else if(eveName === 'touchend') {
+	//	if(changedTouches.length === 0) {
+	//		//Y.error('simulateTouchEvent(): No touch object in changedTouches');
+	//	}
+	//}
+ 
+	// setup default values
+	//if (!Y.Lang.isBoolean(bubbles)) { bubbles = true; } // bubble by default.
+	//if (!Y.Lang.isBoolean(cancelable)) {
+	//	cancelable = (type !== "touchcancel"); // touchcancel is not cancelled
+	//}
+	//if (!Y.Lang.isObject(view)) { view = Y.config.win; }
+	//if (!Y.Lang.isNumber(detail)) { detail = 1; } // usually not used. defaulted to # of touch objects.
+	//if (!Y.Lang.isNumber(screenX)) { screenX = 0; }
+	//if (!Y.Lang.isNumber(screenY)) { screenY = 0; }
+	//if (!Y.Lang.isNumber(clientX)) { clientX = 0; }
+	//if (!Y.Lang.isNumber(clientY)) { clientY = 0; }
+	//if (!Y.Lang.isBoolean(ctrlKey)) { ctrlKey = false; }
+	//if (!Y.Lang.isBoolean(altKey)) { altKey = false; }
+	//if (!Y.Lang.isBoolean(shiftKey)){ shiftKey = false; }
+	//if (!Y.Lang.isBoolean(metaKey)) { metaKey = false; }
+	//if (!Y.Lang.isNumber(scale)) { scale = 1.0; }
+	//if (!Y.Lang.isNumber(rotation)) { rotation = 0.0; }
+ 
+	//check for DOM-compliant browsers first
+	
+	//customEvent = Y.config.doc.createEvent("TouchEvent");
+ 
+	// Andoroid isn't compliant W3C initTouchEvent method signature.
+	//customEvent.initTouchEvent(touches, targetTouches, changedTouches,
+	//type, view,
+	//screenX, screenY, clientX, clientY,
+	//ctrlKey, altKey, shiftKey, metaKey);
+	//}
+	
+	var customEvent = document.createEvent("MouseEvent");
+	customEvent.touches = [{clientX: x, clientY: y}];
+ 
+	// Available iOS 2.0 and later
+	customEvent.initMouseEvent(eveName, /*bubbles*/true, /*cancelable*/true, window/*view*/, /*detail*/1,
+	x, y, x, y,
+	false, false, false, false);
+	//customEvent.createTouchList(
+	//	customEvent.createTouch(window, this[0], 12345, x, y, x, y, x, y)));
+	//new TouchList(), new TouchList(), new TouchList()
+	//);
+	//touches, targetTouches, changedTouches,
+	//1.0, 0.0);
+	
+ 
+	//fire the event
+	//target.dispatchEvent(customEvent);
+
+    //var eve = new CustomEvent(eveName);//document.createEvent("TouchEvent");
+    this[0].dispatchEvent(customEvent);
     return this;
 };
 
 $.fn.clickJ = function (timeout) {
+	GM_log("clickJ : " + this.length);
+	for (var i = 0; i < this.length; i++)
+	{
+		var tagN = this.get(i).tagName.toLowerCase();
+		var tagHref = '';
+		if (tagN == 'a') {
+			tagHref = this.get(i).href;
+		}
+		GM_log("clickJ : " + i + " " + tagN + ' ' + tagHref);
+	}
     if (this.length === 0) {
         return this;
     }
@@ -198,9 +270,11 @@ $.fn.touchFlash = function (xoff, yoff) {
         return this;
     }
     var flash = $(this);
+	//alert(flash.text());
     setInterval(function () {
         flash.simTouchEvent("touchstart", xoff, yoff);
         flash.simTouchEvent("touchmove", xoff, yoff);
+		flash.simTouchEvent("touchend", xoff, yoff);
     }, 1000);
     return this;
 };
@@ -208,11 +282,14 @@ $.fn.touchFlash = function (xoff, yoff) {
 var url = document.URL;
 
 function clickA(xpath) {
+	GM_log("clickA : " + xpath);
     var a = getXPATH(xpath);
     if (a) {
         clickLink(a);
+		GM_log("clickA : success");
         return true;
     } //else {
+	GM_log("clickA : fail");
     return false;
     //}
 }

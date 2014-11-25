@@ -1,5 +1,5 @@
-var xpathmypage = '//*[@id="header"]/ul/li[1]/a';
-
+var xpathmypage = '//*[@id="top_btn"]/a';
+//http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2FAs4%2FeventTop
 var actions = [
     [/battleAnimation/, 'flashJ', '#container'],
     [/battle_animation/, 'flashJ', '#container'],
@@ -49,7 +49,7 @@ var actions = [
         ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
         //['dbg'],
         ['aJ', 'div.contents_info a[href*="mypage%2FsetParameter"]'], // status point
-        ['aJ', 'div.contents_info a[href*="item%2FpresentList"]'],   // present
+        ['aJ', $('#present_number > a').filter(function(){return this.innerHTML!='0';})],   // present
         ['aJ', 'div.contents_info a[href*="cardBook%2Fbonus"]'], // card book
         ['aJ', 'div.contents_info a[href*="friend%2FacceptList"]'],
         //['aJ', 'div.contents_info a[href*="shortStory%2Findex"]'], // story
@@ -64,7 +64,7 @@ var actions = [
             var apall = res ? +res[2] : 0;
             GM_log("hp = " + hp);
             if (hp > 10) {
-                return $('a[href*="Da2%2FeventTop"]').clickJ().length > 0 || $('a[href*="quest"]').clickJ().length > 0;
+                return /*$('a[href*="%2FeventTop"]').clickJ().length > 0 ||*/ $('a[href*="quest"]').clickJ().length > 0;
             }
             if (ap === apall) {
                 return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
@@ -79,7 +79,8 @@ var actions = [
         ['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
         ['flashJ', 'canvas']]],
     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
-        ['aJ', 'a[href*="pick%2Frun%2Fpremium%2Fmedal"]'],
+        ['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
+		// ['hold'],
         ['flashJ', '#container']]],
 
     //player_battle
@@ -111,17 +112,51 @@ var actions = [
     [/quest%2FshowBoss/, 'list', [
         ['aJ', 'a[href*="battleAnimation"]'],
         ['flashJT', document]]],
-    [/quest%2FsogeFlash/, 'flashJ', '#container'],
+
     [/quest%2Ftop/, 'list', [
         ['aJ', 'a[href*="quest%2FshowBoss"]'],
         ['aJ', 'a[href*="quest%2Findex"]']]],
-    [/quest%2Ftreasure/, 'flashJ', '#container'],
+    [/quest%2Ftreasure/, 'list', [
+		['flashJ', '#container'],
+		['aJ', 'a[href*="quest%2Fevent"]']]],
     [/quest%2FuseItem\b/, 'aJ', 'a[href*="quest%2FuseItem"]'],
     [/quest%2FwinRare/, 'aJ', 'a[href*="quest%2Findex"]'],
     [/scenario%2Fquest/, 'flashJT', document],
+	[/scenario2%2Fs%2Fmorinaga_end/, 'flashJT', document],
     [/shortStory%2Fstory/, 'list', [
         ['flashJT', document]
     ]],
+	
+	//[/Flash\b/, 'flashJ', 
+	[/(soge|FrSkill)Flash/, 'flashJ', '#container'],
+	[/%2FuseItem%2F/, 'aJ', 'a[href*="%2FuseItem%2F"]'],
+	//wd2014%2FuseItem%2F1%2F1%2F6%2F3%2Fconfirm 
+	//event Wd2014
+	[/Wd2014%2FeventTop/, 'aJ', 'a[href*="Wd2014%2Findex%2F' + Math.floor((Math.random() * 2 + 1)) + '"]'],
+
+	[/Wd2014%2FwinRare/, 'list', [
+		['aJ', 'a[href*="%2Fdefeat%2F"]'],
+		['aJ', 'a[href*="%2Fbattle%2F"]']]],
+	[/Wd2014%2FrSkill/, 'list', [
+		['aJ', '#bg > div.bg_event2 > div.bg_detail > div:nth-child(3) > ul > li:nth-child(1) > a'],
+		['aJ', '#bg > div.bg_event2 > div.bg_detail > div:nth-child(3) > ul > li:nth-child(2) > a']]],
+		
+	[/%2FeventTop/, 'aJ', 'a[href*="%2Findex"]'],
+	[/%2Findex%2F/, 'func', function () {
+        setInterval(function () {
+            //debugger;
+            return $('input#do_quest[disabled!="disabled"]').clickJ(0).length > 0 ||
+                $('button#card_ok').clickJ(0).length > 0 ||
+                $('input#go_next').clickJ(0).length > 0 ||
+                $('button#friend_order_button').clickJ(0);
+        }, 1000);
+    }],
+	[/%2FraidBoss%2F/, 'list', [
+		['flashJ', '#container']]],
+	[/%2Fraid%2F/, 'list', [
+		['aJ', $('a[href*="battle_animation%2Fleague%2F"]').last()],
+		['aJ', 'a[href*="eventTop"]']]],
+	[/%2Fattack_result/, 'aJ', 'a[href*="eventTop"]'],
     [/[\s\S]*/, 'hold'],
     [/xxxxxxxxxxxxxxxxxxx/]
 ];

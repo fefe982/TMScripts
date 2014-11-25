@@ -1,8 +1,10 @@
 var i, j;
 var list_action;
 GM_log(Date() + url);
+GM_log("REF: " + document.referrer);
 var succ = (function () {
-        var sites = [
+        return false;
+		var sites = [
             ["http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F", 5], // avalon
             ["http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2Fmypage%2FIndex",          5], // hunter
             ["http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fmypage%2FIndex",       5], //ragnarok
@@ -124,4 +126,4 @@ for (i = 0; i < actions.length; i++) {
 }
 
 //setTimeout(function () {location.reload(true); }, 600000);
-reload_page(60000);
+reload_page(120000);

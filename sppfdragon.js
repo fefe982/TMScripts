@@ -34,12 +34,15 @@ var actions = [
 
     //mypage
     [/mypage%2FIndex/, 'func', function () {
-        if ($("ul.lst_main a[href*='campaign%2FBoardCampaign%2F']").clickJ().length > 1 ||
-                $("ul.lst_main a[href*='prizeReceive%2FPrizeReceiveTop%2F']").clickJ().length > 1 ||
-                $("ul.lst_main a[href*='apology%2FApologyList%2F']").clickJ().length > 1) {
+		return;
+        if ($("ul.lst_main a[href*='campaign%2FBoardCampaign%2F']").clickJ().length > 0 ||
+                $("ul.lst_main a[href*='prizeReceive%2FPrizeReceiveTop%2F']").clickJ().length > 0 ||
+                $("ul.lst_main a[href*='apology%2FApologyList%2F']").clickJ().length > 0) {
             return;
         }
-        $('a[href*="story%2FStoryStateList%2F"]').clickJ();
+        if ($('dd.ap_gauge').data('value') > 10) {
+            $('a[href*="story%2FStoryStateList%2F"]').clickJ();
+        }
     }],
 
     //prizeReceive
@@ -77,14 +80,15 @@ var actions = [
         ['hold']
     ]],
     [/story%2FStoryHome%/, 'funcR', function () {
-        $('a[href="#recover101"]').clickJ();
+        if ($('a[href="#recover101"]').clickJ().length === 0) {
+            return false;
+        }
         setTimeout(function () {
             $('a[href*="story%2FDoStoryActionHistory"]').clickJ();
         }, 1000);
     }],
     [/story%2FStoryRegionList/, 'aJ', 'a[href*="story%2FStoryAreaList%2F"]'],
-    //http://sp.pf.mbga.jp/12012329?url=http%3A%2F%2Fmdrabre.croozsocial.jp%2Fstory%2FStoryActionHistorySwf%2F%3FhistoryId%3D4985531%26hitStoryBossFlg%3D0%26storyOrderId%3D2958326%26hitRaidbossId%3D%26bossExecFlg%3D1%26afterSwfFlg%3D1%26boardType%3D0
-
+    [/story%2FStoryResult/, 'aJ', 'a[href*="story%2FStoryAreaList%2F"]'],
     [/unitfusion%2FBulkUnitFusionConfirm/, 'formJ', 'form[action*="unitfusion%2FUnitFusion"]'],
     [/unitfusion%2FUnitFusionEnd%2F/, 'aJ', 'a[href*="unit%2FUnitList%2F%3FbulkFusion%3D1"]'],
     [/unitfusion%2FUnitFusionSwfStart%2F/, 'funcR', hdlswf],

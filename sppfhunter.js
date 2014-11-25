@@ -162,6 +162,7 @@ function handlemypage() {
         succ = succ || clickA('//div[@class="btn_boss_wrap"]/a');
     }
     succ = succ || clickA('//a[text()="未使用のガチャアイテムがあります"]');
+	succ = succ || clickA('//a[text()="無料で友達ガチャが引けます"]');
     succ = succ || clickA("//a[contains(text(), '冒険から帰って来ました')]");
     succ = succ || clickA("//a[contains(text(), '冒険に行けます')]");
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
@@ -169,9 +170,11 @@ function handlemypage() {
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
     if (!succ && ap_gauge && ap_gauge.dataset.width > 10) {
         var eventL = $('a[href*="EventTop"]');
-        if (eventL.length > 0 && !eventL.text().match(/終了/)) {
-            eventL.clickJ();
-            succ = true;
+		//alert(eventL.length);
+		//alert(eventL.text());
+        if (eventL.length > 0 && !$(eventL[0]).text().match(/\[終了\]/)) {
+            //eventL.clickJ();
+            //succ = true;
         }
         //succ = succ || clickA(xpathevent);
         succ = succ || clickA("//div[@class='mission']/a");
@@ -194,6 +197,9 @@ function handlemypage() {
 function handleBattleTop() {
     var free_text = getXPATH("//*[@id=\"btn_entry\"]/a/div");
     //alert(free_text);
+	if ($('a[href*="battleTower%2FDoEntryChallenge"]').clickJ().length > 0) {
+        return;
+    }
     if (free_text) {
         //alert(free_text.innerText);
         var res  = free_text.innerText.match(/ [\s\S]*残り([0-9]*)回/);
@@ -299,7 +305,7 @@ function handleFusionResult() {
         form.submit();
         succ = true;
     }
-    //succ = succ || clickA('//a[text()="Nカード一括強化"]');
+    succ = succ || clickA('//a[text()="Nカード一括強化"]');
     succ = succ || clickA(xpathmypage);
 }
 
@@ -637,8 +643,10 @@ function handleERBBattle() {
         i,
         attacked = false;
     setInterval(function () {
+		//debugger;
         $('div#do_battle_btn').filter(":visible").click();
-    }, wait);
+		$('div.btn_main_small.bp_select_button').filter(':visible').click();
+	}, wait);
 
     //setInterval(function(){
     //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
@@ -655,7 +663,17 @@ function handleERBBattle() {
 
     var reload = false;
     setInterval(function () {
-        if (reload === false && getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
+		var ele = $('div#do_battle_btn');
+		var recharge = false;
+		if (ele.length > 0) {
+			if (ele.filter(':visible').length == 0) {
+				recharge = true;
+			}
+		} else {
+			recharge = $('div.btn_main_off_small.ui_attack1').length > 0;
+		}
+		//alert(ele.length);
+        if (reload === false && recharge === true) {//getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
             //debugger;
             var ele, ele_s;//*[@id="bp_recovery"]/div/div[2]
             var ok = getXPATH('//*[@id="bp_recovery"]/div/div[text()="OK"]');//"//*[@id=\"bp_recovery\"]/div/div[2]");
@@ -686,7 +704,8 @@ function handleERBBattle() {
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventTop
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FMissionResult%2F%3FautoSellFlg%3D0%26recoveryPoint%3D%26firstCardGetFlg%3D%26firstFairyHitFlg%3D%26firstBattleCostFlg%3D%26firstTreasureDropFlg%3D%26missionId%3D478%26attackBefore%3D0%26defenceBefore%3D0%26turnEndType%3D10%26recoverMaxFlg%3D%26recoveryPercent%3D%26firstTournamentFlg%3D%26addEventPoint%3D62
 //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FRescueList%2F%3FrescueId%3D784510
-var eventName = "QuestRaidBoss";
+//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventRaidBoss2%2FEventTop
+var eventName = "Tower";
 
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
@@ -713,19 +732,26 @@ var actions = [
     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
     [new RegExp("event" + eventName + "%2FEventTop"), 'list', [
+		//s['dbg'],
         ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+		['aJ', 'a[href*="event' + eventName  + '%2FMissionList"]'],
+        ['hold']]],
+    [new RegExp("event" + eventName + "%2FMissionList"), 'list', [
+        ['a', '//a[contains(@href, "event' + eventName + '%2FDoMissionExecutionCheck")]'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
         //['dbg'],
         ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+		['aJ', 'a[href*="event' + eventName + '%2FMissionList"]'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
+	[/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]'],
     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
     [/eventQuestRaidBoss%2FEventQuestRaidBossTop/, 'aJ', 'a[href*="eventQuestRaidBoss%2FDoEventQuestRaidBossBattleResult%"]'],
     [/eventQuestRaidBoss%2FEventQuestRaidBossBattleResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -817,6 +843,7 @@ var actions = [
         ['a', '//a[contains(@href, "eventStoryMission%2FMissionList")]'],
         ['hold']]],
     [/eventStoryMission%2FRescueList%2F/, 'a', '//a[text()="応援"]'],
+	
     //[/eventTeamBattle%2FEventBattleConf%2F/, 'func', handleTeamBattle],
     //[/eventTeamBattle%2FEventBattleResult%2F/, 'list', [
     //    ['a', '//a[img[contains(@src, "btn_quest.png")]]'],
@@ -833,10 +860,17 @@ var actions = [
         ['a', '//a[@href="http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleConf"]'],
 		['hold']]],
 	[/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
-    [/event[a-zA-Z]*%2FRaidBossTop/, 'func', handleEventRaid],
+    [/event[a-zA-Z0-9]*%2FRaidBossTop/, 'func', handleEventRaid],
     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
     [/fusion%2FFusionEnd%2F/, "func", handleFusionEnd],
     //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],
+	[/fusion%2FFusionTop/, 'func', function () {
+		if (document.referrer.match(/fusion%2FMaterialFusionTop/)) {
+			$('a[href*="mypage%2FIndex"]').clickJ();
+		} else {
+			$('a[href*="fusion%2FMaterialFusionTop"]').clickJ();
+		}
+	}],
     [/fusion%2FMaterialFusionTop/, "func", handleFusionResult],
     [/fusion%2FMaterialFusionConfirm%2F/, "form", '//*[@id=\"main\"]/div[@class="section_sub"]/form'],
     [/gacha%2FGachaCharacterCoinTop/, 'a', '//a[contains(text(),"ガチャをする")]'],
@@ -844,26 +878,26 @@ var actions = [
     [/gacha%2FGachaFlash%2F/, 'a', '//a[text()="マイページへ"]'],
     //[/gacha%2FGachaResult%2F/, "func", handleCoinGacha],
     [/gacha%2FGachaResult%2F%3FgachaThemeId%3D3%26themeId%3D3/, 'list', [
-        ['a', '//a[contains(@href, "skipFlg%3D1")]'], //''//a[text()="バトルをスキップしてガチャをする"]'],
+        ['a', '//a[contains(@href, "FGachaFlash%2F")]'], //''//a[text()="バトルをスキップしてガチャをする"]'],
         ['a', '//a[contains(@href, "prizeReceive%2FPrizeReceiveTop%2F")]']]], //text()="贈り物BOX"]']]],
     [/gacha%2FGachaResult%2F%3FgachaId%3D/, "a", '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
-    [/gacha%2FGachaSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
+    [/gacha%2FGachaSwf%2F/, 'flash', "//*[@id=\"container\"]"],// 372, 62],
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/, 'a', '(//a[contains(text(), "ガチャをする")])[last()]'],
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D2/, 'a', '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
-    [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'a', '//a[contains(@href, "skipFlg%3D1")]'], //text(), "ガチャをする")])[last()]'],
+    [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'a', '//a[contains(@href, "FGachaFlash%2F")]'], //text(), "ガチャをする")])[last()]'],
     //[/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, "a", "//*[@id=\"main\"]/section[1]/div[2]/div/ul/li[2]/a"],
     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
     [/mission%2FMissionResult%2F/, "func", handleMissionResult],
     [/mission%2FMissionList/, "func", handleMissionList],
-    [/mission%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
+    [/mission%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]"],//, 372, 62],
     [/mission%2FBossAppear/, "form", "//*[@id=\"main\"]/div[3]/form"],
     [/mission%2FBossBattleResult%2F/, "a", "//*[@id=\"to_latest_mission\"]/a"],
     [/mypage%2FGreetEnd%2F/, 'a', xpathmypage],
     [/mypage%2FIndex/,  "func", handlemypage],
     [/mypage%2FLoginBonusSpecial%2F/, 'a', "//div[contains(@class, 'btn_present')]/a"],
     [/prizeReceive%2FPrizeReceiveTop/, 'list', [
-        ['a', '//a[text()="売却する"]'],
+        //['a', '//a[text()="強化する"]'],
         ['form', "//*[@id=\"main\"]/div[2]/div/form"],
         ['a', "//a[span[@class='badge fnt_normal']]"]]],
     [/questRaidBoss%2FQuestDeck%2F/, 'list', [
@@ -893,7 +927,7 @@ var actions = [
     //[/eventBattle%2FMissionResult%2F/, 'func', handleEventRes],
     //[/eventBattle%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372,62],
     [/FusionFlash/, "flash", "//*[@id=\"container\"]"],
-    [/%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372, 62],
+    [/%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]"],// 372, 62],
     [/Swf\b/, "flash", "//*[@id=\"container\"]|//*[@id='stage']"],
     [/xxxxxxxxxxxxxxxxx/]
 ];
