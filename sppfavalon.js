@@ -92,7 +92,7 @@ function handleMypage() {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
-		succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
+		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
         succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
         succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
@@ -269,20 +269,12 @@ var actions = [
         ['a', '//*[@id="attack_btn"]/div/a']]],
     [/island%2FIslandTop%2F/, 'list', [
         ['funcR', function () {
-            var hasmedal = false;
-            $('li.medal>div>div:nth-child(2)').each(
-                function (index, ele) {
-                    if (!$(this).text().match(/\b0枚/)) {
-                        hasmedal = true;
-                        return false;
-                    }
-                }
-            );
-            return hasmedal && clickA('//a[img[contains(@src, "casino_on.png")]]');
+			return $('div.medal_num > span > span.number_island_gold_2_0').length == 0
+            && $('a.link_casino').clickJ().length > 0;
         }],
         //['a', '//a[img[contains(@src, "casino_on.png")]]'],
         ['a', '//a[img[@alt="エクストラステージを探索"]]'],
-        ['a', '//a[img[@alt="イベントクエストを探索"]]']]],
+        ['aJ', 'a.link_quest']]],
     [/island%2FMissionResult%2F/, 'list', [
         ['a', '//a[img[@alt="エクストラステージを探索"]]'],
         ['a', '//a[img[@alt="イベントクエストを探索"]]'],
