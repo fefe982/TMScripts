@@ -1,3 +1,4 @@
+function msgloop(actions){
 var i, j;
 var list_action;
 GM_log(Date() + url);
@@ -127,3 +128,4 @@ for (i = 0; i < actions.length; i++) {
 
 //setTimeout(function () {location.reload(true); }, 600000);
 reload_page(120000);
+};

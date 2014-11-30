@@ -92,7 +92,7 @@ function handleMypage() {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
-		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
+		succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
         succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
         succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
