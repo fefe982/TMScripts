@@ -255,6 +255,10 @@ var actions = [
 	[/arena%2FContinuousParticipation%2F/, 'aJ', 'a[href*="arena%2FTop"]'],
     [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
 	[/arena%2FDoMissionExecution%2F/, 'aJ', 'a[href*="mypage%2FIndex"]'],
+	[/arena%2FMissionDetail%2F/, 'list', [
+		['aJV', '#raidBossBtn > a'],
+		['flashJT', '#execBtn']
+	]],
     [/arena%2FMissionError%2F/, 'func', handleMissionError],
     [/arena%2FMissionResult%2F%/, 'list', [
         //['aJ', '#arenaOpenButton a'],

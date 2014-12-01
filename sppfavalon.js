@@ -208,6 +208,9 @@ var actions = [
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D8/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D15[567]/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
+	[/gacha%2FitemBox%2F/, 'list', [
+	    ['formJ', 'div.top_main>form'],
+		['aJ', 'a[href*="island%2FIslandTop%2F"']]],
     [/giftBingo%2FGiftBingoDetail%2F/, 'a', '//a[text()="カムバックビンゴTOPへ"]'],
     [/giftBingo%2FGiftBingoTop%2F/, 'a', '(//a[contains(text(), "引く")])[last()]'],
     [/giftBingo%2FGiftBingoHitResult%2F/, 'a', '(//a[contains(text(), "引く")])[last()]'],

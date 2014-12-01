@@ -29,7 +29,7 @@ var succ = (function () {
         return false;
     }());
 for (i = 0; i < actions.length; i++) {
-    if (url.match(actions[i][0])) {
+    if (url !== undefined && url.match(actions[i][0])) {
         GM_log(actions[i][0]);
         if (actions[i][1] === 'list') {
             list_action = actions[i][2];
@@ -98,7 +98,8 @@ for (i = 0; i < actions.length; i++) {
                 $(list_action[j][1]).clickJ();
                 break;
             case 'aJV':
-                succ = $(list_action[j][1]).filter(':first').filter(':visible').click().length > 0;
+                succ = $(list_action[j][1]).filter(':first').filter(':visible').clickJ().length > 0;
+				GM_log('aJV ' + list_action[j][1] + ' ' + succ);
                 break;
             case 'formJ':
                 succ = $(list_action[j][1]).submitJ().length > 0;
