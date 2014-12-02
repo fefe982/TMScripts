@@ -84,15 +84,15 @@ function handleStrongBossTop() {
     var succ = false, attack;
     succ = succ || clickA('//*[@id="requestChain"]/a');
     if (!succ) {
-
-        var owner = getXPATH('//*[@id="damage_box"]/div/div[2]/div[1]/div[text()="ヴィル"]');
-        var attacked = getXPATH('//*[@id="damage_box"]/ul/li/a/div/div[2]/div[text()="ヴィル"]');
+        //var owner = getXPATH('//*[@id="damage_box"]/div/div[2]/div[1]/div[text()="' + USERNAME + '"]');
+		var owner = $('#damage_box > div > div.no_flex > img').attr('src').match(new RegExp(USERID));
+        var attacked = getXPATH('//*[@id="damage_box"]/ul/li/a/div/div[2]/div[text()="' + USERNAME +'"]');
         if (!owner && !attacked) {
-            owner = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/div//*[text()="ヴィル"]');
-            attacked = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/ul/li/a//span[text()="ヴィル"]');
+            owner = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/div//*[text()="' + USERNAME + '"]');
+            attacked = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/ul/li/a//span[text()="' + USERNAME +'"]');
         }
         //debugger;
-        if (!owner && attacked) {
+        if (!owner && attacked && !url.match(/island%2FPunchingBossTop/)) {
             succ = succ || clickA('//a[text()="ボス一覧へ戻る"]');
             succ = succ || clickA(xpathmypage);
             return;
@@ -326,17 +326,21 @@ var actions = [
     [/island%2FBeatdownBossBattle%2F/, 'func', handleStrongBossTop],
     [/island%2FBeatdownBossBattleList/, 'list', [
         ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div]//a[text()="バトル"]'],
+		['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括受け取り")]'],
         ['a', '//a[contains(text(),"討伐完了")]']]],
     [/island%2FBeatdownBossBattleResult%2F/, 'list', [
         ['a', '//a[text()="報酬を受け取る"]'],
         ['a', '//a[text()="イベントを進める"]']]],
-    [/island%2FBeatdownBossBattleHelpRequestEnd%2F/, 'a', '//a[text()="イベントTOP"]'],
+    [/island%2FBeatdownBossBattleHelpRequestEnd%2F/, 'aJ', 'a:contains("ボス一覧へ戻る")'],
     [/island%2FBeatdownBossRewardAllGetEnd%2F/, 'a', '//a[text()="イベントを進める"]'],
     [/island%2FBeatdownBossRewardEnd%2F/, 'a', '//a[text()="イベントを進める"]'],
+	[/island%2FBeatdownError%2F/, 'aJ', 'a[href*="island%2FTop"]'],
+	[/island%2FBeatdownPunchingBossBattleResult%2F/, 'aJ', 'a:contains("イベントを進める")'],
     [/island%2FBossBattleFlash%2F/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],
     [/island%2FBossBattleResult%2F/, 'list', [
+		['aJ', 'a[href*="island%2FPunchingBossTop"]'],
         ['a', '//a[text()="報酬を受け取る"]'],
         ['a', '//a[text()="次のエリアへ進む"]'],
         ['flash', '//*[@id="container"]']]],
@@ -359,10 +363,41 @@ var actions = [
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
     [/island%2FIslandMissionStoryResult%2F/, 'a', '//a[text()="イベントを進める"]'],
 	[/island%2FMissionDetail/, 'list', [
-		['flashJT', '#execBtn']]],
+		['func', function(){
+			setInterval(function(){
+				GM_log('island MissionDetail');
+				GM_log('' + $('#excBtnOff').filter(':visible').length);
+				GM_log('' + $('#execBtn').filter(':visible').length);
+				if ($('#raidBossBtn > a').filter(':visible').length > 0) {
+					$('#raidBossBtn > a').clickJ();
+				} else if ($('#excBtnOff').filter(':visible').length === 0) {
+					excBtn = $('#execBtn');
+					if (excBtn.length == 0)
+					{
+						excBtn = $('#execClear');
+					}
+					setTimeout(function () {excBtn.simTouchEvent("touchstart");}, 10);
+					setTimeout(function () {excBtn.simTouchEvent("touchend");}, 20);
+					setTimeout(function () {excBtn.simMouseEvent("mousedown");}, 30);
+					setTimeout(function () {excBtn.simMouseEvent("mousemove");}, 40);
+					setTimeout(function () {excBtn.simMouseEvent("mouseup");}, 50);
+					setTimeout(function () {excBtn.simMouseEvent("click");}, 60);
+				} else if ($('#recoveryContainer > div > div.box_extend.js_recovery_btn > div:nth-child(1) > img').filter(':visible').length > 0) {
+					var addAp = $('#recoveryContainer > div > div.box_extend.js_recovery_btn > div:nth-child(1) > img').filter(':visible').filter(':first');
+					setTimeout(function () {addAp.simTouchEvent("touchstart");}, 10);
+					setTimeout(function () {addAp.simTouchEvent("touchend");}, 20);
+					setTimeout(function () {addAp.simMouseEvent("mousedown");}, 30);
+					setTimeout(function () {addAp.simMouseEvent("mousemove");}, 40);
+					setTimeout(function () {addAp.simMouseEvent("mouseup");}, 50);
+					setTimeout(function () {addAp.simMouseEvent("click");}, 60);
+				}
+			}, 3000);
+		}]]],
+	[/island%2FPunchingBossTop/, 'func', handleStrongBossTop],
     [/island%2FTeamCompItemTop/, 'a', '//*[@id="navigate_comp"]/div[@class="tour_btns"]/a[last()]'],
     [/island%2FTop/, 'list', [
         ['a', '//a[contains(@href, "island%2FTeamCompItemTop") and .//*[@id="TourLastTime"]]'],
+		['aJ', 'a[href*="island%2FPunchingBossTop"'],
         ['funcR', function () {
             var slot = $('a[href*="island%2FIslandSlotTop%2F"]');
             if (slot.length === 0) {
