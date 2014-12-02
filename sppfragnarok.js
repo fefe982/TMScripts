@@ -358,6 +358,8 @@ var actions = [
         ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'], //text()="七夕ツアーズに行く"]'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
     [/island%2FIslandMissionStoryResult%2F/, 'a', '//a[text()="イベントを進める"]'],
+	[/island%2FMissionDetail/, 'list', [
+		['flashJT', '#execBtn']]],
     [/island%2FTeamCompItemTop/, 'a', '//*[@id="navigate_comp"]/div[@class="tour_btns"]/a[last()]'],
     [/island%2FTop/, 'list', [
         ['a', '//a[contains(@href, "island%2FTeamCompItemTop") and .//*[@id="TourLastTime"]]'],
@@ -373,7 +375,9 @@ var actions = [
             return true;
             //debugger;
         }],
-        ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'], //div[contains(@class,"sprites-event-top-quest")]/a'],
+        ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'],
+		['aJ', 'a[href*="island%2FMissionDetail%2F"]'],
+		//div[contains(@class,"sprites-event-top-quest")]/a'],
         ['flash', '//*[@id="container"]']]],
     [/mission%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
     [/mission%2FBossBattleFlash/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],

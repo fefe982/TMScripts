@@ -273,9 +273,13 @@ $.fn.touchFlash = function (xoff, yoff) {
 	//alert(flash.text());
     setInterval(function () {
         flash.simTouchEvent("touchstart", xoff, yoff);
+	}, 1000);
+    setInterval(function () {
         flash.simTouchEvent("touchmove", xoff, yoff);
+	}, 1100);
+    setInterval(function () {
 		flash.simTouchEvent("touchend", xoff, yoff);
-    }, 1000);
+    }, 1200);
     return this;
 };
 
