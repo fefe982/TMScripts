@@ -44,25 +44,6 @@ function handleMissionRes() {
     }
 }//'//*[@id="containerBox"]/div[4]/ul/li[1]/div[3]/div[2]/div/a'
 
-//function handleArenaMissionRes() {
-//    var ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
-//        bp_gauge = getXPATH('//*[@id="header_bp_gauge"]');
-//    var ap = 0, bp = 0, succ = false;
-//    if (ap_gauge) {
-//        ap = ap_gauge.dataset.value;
-//    }
-//    if (bp_gauge) {
-//        bp = bp_gauge.dataset.value;
-//    }
-//    if (ap > 10) {
-//        succ = succ || clickA(xpathquest);
-//    }
-//    if (bp > 20) {
-//        succ = succ || clickA('//*[@id="arenaOpenButton"]/a');
-//    }
-//    succ = succ || clickA("//*[@id='containerBox']/div[@class='section margin_bottom_20']/div/a");
-//}
-
 function handleArenaUserList() {
     var min = 10000, i, minid = 0;
     for (i = 1; i <= 5; i++) {
@@ -97,12 +78,14 @@ function handleStrongBossTop() {
             succ = succ || clickA(xpathmypage);
             return;
         }
-        attack = getXPATH('//*[@id="rcv_submit_btns"]/ul/li/a');
-        setInterval(function () {clickSth(attack, "click"); }, 2000);
-
-        if (!attack.className.match(/enabled/)) {
-            clickA('//*[@id="rcv_items"]/ul/li/a');
-        }
+		setInterval(function() {
+			var attack = $('#rcv_submit_btns > ul > li > a.enabled');
+			if (attack.length < 2) {
+				$('#rcv_items > ul > li > a.enabled').last().clickJ();
+			} else {
+				attack.last().clickJ();
+			}
+		}, 1000);
     }
 }
 

@@ -228,11 +228,15 @@ $.fn.clickJ = function (timeout) {
         return this;
     }
     if (timeout === 0) {
+        this.simMouseEvent("mousedown");
+        this.simMouseEvent("mouseup");
         this.simMouseEvent("click");
     } else {
         var jq = $(this);
 
         setTimeout(function () {
+	        jq.simMouseEvent("mousedown");
+			jq.simMouseEvent("mouseup");
             jq.simMouseEvent("click");
         }, timeout || 1000);
     }
