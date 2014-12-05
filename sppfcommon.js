@@ -377,7 +377,7 @@ function setCookie(c_name, value, exsecs) {
     document.cookie = c_name + "=" + c_value;
 }
 function getCookie(c_name) {
-	GM_log("get cookie" + c_name);
+	GM_log("get cookie : " + c_name);
     var c_value = document.cookie;
     var c_start = c_value.indexOf(" " + c_name + "=");
     if (c_start === -1) {
@@ -393,6 +393,7 @@ function getCookie(c_name) {
         }
         c_value = unescape(c_value.substring(c_start, c_end));
     }
+	GM_log("get cookie res : " + c_name + " : " + c_value);
     return c_value;
 }
 

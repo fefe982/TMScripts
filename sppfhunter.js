@@ -445,89 +445,34 @@ function handleEventRaid() {
             boss_lvl = 0;
         }
     }
+	//debugger;
     var hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first();
 	var hp_full = hp_gauge.attr('style').match(/100/);
 	var help_record = $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
     var last_attack = $('div.tactical_situation_detail').first();
-    var bp_need, bp_need_cookie;
+    var bp_need = 1;
     if (!hp_full && $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:nth-child(2) > div > div > div.padding_left > span > a').text() != USERNAME) { 
-        bp_need = 1;
         if (help_record) {
             clickA(xpathmypage);
             return;
         }
-    } else {
-        bp_need_cookie = getCookie("__my_boss_" + boss_n);
-        if (!bp_need_cookie) {
-            bp_need_cookie = 1;
-            bp_need = 1;
-        } else if (bp_need_cookie < 0) {
-            if (hp_full) {
-                bp_need = 3;
-            } else {
-                bp_need = 1;
-            }
-        } else {
-            bp_need = bp_need_cookie;
-        }
-        bp_need = 1;
-
-        if (!hp_full) {
-            var metBoss = getCookie("__ht_event_boss_" + boss_n + "lv" + boss_lvl);
-            if (!metBoss) {
-                if (bp_need_cookie > 0 && bp_need_cookie < 3) {
-                    bp_need_cookie++;
-                } else {
-                    //alert(boss_n);
-                    bp_need_cookie = -1;
-                }
-                setCookie("__my_boss_" + boss_n, bp_need_cookie, 3600 * 24);
-            }
-            setCookie("__ht_event_boss_" + boss_n + "lv" + boss_lvl, 1, 60 * 10);
-            if (last_attack.length > 0 && last_attack.text().match(new RegExp(USERNAME))) {
-                //clickA(back_xpath);
-                var succ = false;
-                succ = succ || clickA('//a[contains(text(), "他の仲間を助けよう！！")]');
-                setCookie("__ht_myboss_wait", 1, 300);
-                succ = succ || clickA(xpathmypage);
-                //clickA('//div[@class="event_help_button"]//a'); // no bp for boss
-            }
-            bp_need = 1;
-            //alert("long_wait");
-            var countdown = getXPATH('//*[@id="stage"]//span[@class="countdown"]');
-            var time_left;
-            if (countdown) {
-                time_left = countdown.dataset.end_unixtime - Date.now() / 1000;
-            }
-            if (time_left > 60 * 10) {
-                //wait = 5 * 60 * 1000;
-                wait = 10000;
-            } else {
-                wait = 10000;
-            }
-        }
     }
 
+	var attack_num = 0;
     setInterval(function () {
         var attack = $('#do_battle_btn_' + bp_need).filter(':visible');
         if (attack.length > 0 && !attack.hasClass('btn_main_off_small')) {
-			attack.clickJ();
+			if (attack_num == 0) {
+				attack.clickJ();
+			}
+			attack_num ++;
+			attack_num = attack_num % 5;
 			return;
 		}
 		if (attack.length == 0) {
 			$('#stage_front').clickJ();
 			return;
 		}
-		bp_gauge = $('#main > span').first();
-        var bp_now = 0;
-		if (bp_gauge.length > 0) {
-			if (bp_gauge.hasClass('bp_gauge_1')) {
-				bp_now = 1;
-			} else if (bp_gauge.hasClass('bp_gauge_2')) {
-				bp_now = 2;
-			}
-		}
-		GM_log("bp_now " + bp_now);
 		add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
 		GM_log("bp_candy : " + add_bp.length);
 		if (add_bp.length == 0) {
@@ -649,19 +594,7 @@ function handleERBBattle() {
         }
     }, 2000);
 }
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleResult%3FhistoryId%3D1019502%26getMoney%3D2600%26addEventPoint%3D669%26_timestamp%3D1376098213654
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FMissionResult%3FhistoryId%3D2624521
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleResult%3FhistoryId%3D1027476%26getMoney%3D2700%26addEventPoint%3D673%26_timestamp%3D1376098473724/
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FEventTop
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleConf
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventTop
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventTop
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventTop
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FMissionResult%2F%3FautoSellFlg%3D0%26recoveryPoint%3D%26firstCardGetFlg%3D%26firstFairyHitFlg%3D%26firstBattleCostFlg%3D%26firstTreasureDropFlg%3D%26missionId%3D478%26attackBefore%3D0%26defenceBefore%3D0%26turnEndType%3D10%26recoverMaxFlg%3D%26recoveryPercent%3D%26firstTournamentFlg%3D%26addEventPoint%3D62
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FRescueList%2F%3FrescueId%3D784510
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventRaidBoss2%2FEventTop
 var eventName = "TeamRaidBoss";
-
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
 	[/arena%2FArenaBattleConf%2F/, 'aJ', 'a:contains("対戦結果を見る")'],
@@ -701,7 +634,8 @@ var actions = [
         ['hold']]],
     [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
         //['dbg'],
-        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
+        //['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
+		['a', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
 		['aJ', 'a[href*="event' + eventName + '%2FMissionList"]'],

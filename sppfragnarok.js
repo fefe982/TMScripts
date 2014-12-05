@@ -65,7 +65,6 @@ function handleStrongBossTop() {
     var succ = false, attack;
     succ = succ || clickA('//*[@id="requestChain"]/a');
     if (!succ) {
-        //var owner = getXPATH('//*[@id="damage_box"]/div/div[2]/div[1]/div[text()="' + USERNAME + '"]');
 		var owner = $('#damage_box > div > div.no_flex > img').attr('src').match(new RegExp(USERID));
         var attacked = getXPATH('//*[@id="damage_box"]/ul/li/a/div/div[2]/div[text()="' + USERNAME +'"]');
         if (!owner && !attacked) {
@@ -73,7 +72,7 @@ function handleStrongBossTop() {
             attacked = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/ul/li/a//span[text()="' + USERNAME +'"]');
         }
         //debugger;
-        if (!owner && attacked && !url.match(/island%2FPunchingBossTop/)) {
+        if (/*!owner &&*/ attacked && !url.match(/island%2FPunchingBossTop/)) {
             succ = succ || clickA('//a[text()="ボス一覧へ戻る"]');
             succ = succ || clickA(xpathmypage);
             return;
@@ -308,6 +307,7 @@ var actions = [
     [/island%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
     [/island%2FBeatdownBossBattle%2F/, 'func', handleStrongBossTop],
     [/island%2FBeatdownBossBattleList/, 'list', [
+		['hold'],
         ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div]//a[text()="バトル"]'],
 		['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
@@ -351,9 +351,9 @@ var actions = [
 				GM_log('island MissionDetail');
 				GM_log('' + $('#excBtnOff').filter(':visible').length);
 				GM_log('' + $('#execBtn').filter(':visible').length);
-				if ($('#raidBossBtn > a').filter(':visible').length > 0) {
+				/*if ($('#raidBossBtn > a').filter(':visible').length > 0) {
 					$('#raidBossBtn > a').clickJ();
-				} else if ($('#excBtnOff').filter(':visible').length === 0) {
+				} else*/ if ($('#excBtnOff').filter(':visible').length === 0) {
 					excBtn = $('#execBtn');
 					if (excBtn.length == 0)
 					{
