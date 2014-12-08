@@ -451,7 +451,7 @@ function handleEventRaid() {
 	var help_record = $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
     var last_attack = $('div.tactical_situation_detail').first();
     var bp_need = 1;
-    if (!hp_full && $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:nth-child(2) > div > div > div.padding_left > span > a').text() != USERNAME) { 
+    if (!hp_full && $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text() != USERNAME) { 
         if (help_record) {
             clickA(xpathmypage);
             return;
