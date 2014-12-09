@@ -217,12 +217,9 @@ $.fn.clickJ = function (timeout) {
 	GM_log("clickJ : " + this.length);
 	for (var i = 0; i < this.length; i++)
 	{
-		var tagN = this.get(i).tagName.toLowerCase();
-		var tagHref = '';
-		if (tagN == 'a') {
-			tagHref = this.get(i).href;
-		}
-		GM_log("clickJ : " + i + " " + tagN + ' ' + tagHref);
+		$(this.get(i).attributes).each(function() {
+			GM_log(i + " " + this.nodeName + ' : ' + this.value);
+		});
 	}
     if (this.length === 0) {
         return this;

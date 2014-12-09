@@ -4,102 +4,6 @@ var xpathevent = '//a[contains(@href, "EventTop")]';
 var xpatheventnext = '//*[@id="mainCommand_quest"]/a';
 var xpathgiftbox = '//a[.//i[@class="sprite_menu3 menu_btn_prize"]]';
 
-function handleRaidBoss() {
-	GM_log("handle Raid Boss");
-    var boss_info = $('#main > div.subtitle').first();
-    var boss_n, boss_lvl;
-    if (boss_info.length > 0) {
-        var res = boss_info.text().match(/(\S+)[\s\S]*Lv([0-9]+)/);
-        if (res && res.length >= 3) {
-            boss_n = res[1];
-            boss_lvl = res[2];
-        } else {
-            boss_n = boss_info.innerText;
-            boss_lvl = 0;
-        }
-    }
-	GM_log(boss_info.length);
-	GM_log(boss_info.text());
-    var bp_need, bp_need_cookie;
-    if (document.URL.match(/isHelpUser/)) {
-        bp_need = 1;
-    } else {
-        bp_need_cookie = getCookie("__my_boss_" + boss_n);
-        if (!bp_need_cookie) {
-            bp_need_cookie = 1;
-            bp_need = 1;
-        } else if (bp_need_cookie < 0) {
-            bp_need = 1;
-        } else {
-            bp_need = bp_need_cookie;
-        }
-
-        if (document.URL.match(/sentHelpFlg%3D1/)) {
-            if (bp_need_cookie  > 0 && bp_need_cookie < 3) {
-                bp_need_cookie++;
-            } else {
-                bp_need_cookie = -1;
-            }
-            setCookie("__my_boss_" + boss_n, bp_need_cookie, 3600 * 24);
-            clickA('//div[@class="event_help_button"]//a');
-            return;
-        }
-    }
-    var i;
-    setInterval(function () {
-        var attack = getXPATH("//*[@id=\"bp_attack\"]/div[" + bp_need + "]/div[3]");
-        if (attack && getComputedStyle(attack).getPropertyValue("display") !== "none") {
-            clickSth(attack, "click");
-            attack.style.display = "none";
-        }
-    }, 2000);
-
-    setInterval(function () {
-        var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
-        if (res_wrapper && getComputedStyle(res_wrapper).getPropertyValue("display") !== "none") {
-            var result = getXPATH("//*[@id=\"battle_result_btn\"]/a");
-            if (result) {clickSth(result, "click"); }
-        }
-    }, 1000);
-
-    setInterval(function () {
-        var ff = getXPATH("//*[@id=\"stage_front\"]");
-        if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {clickSth(ff, "click"); }
-    }, 1000);
-
-    setInterval(function () {
-        var bp_now = 0;
-        var battle_bp = [];
-        for (i = 1; i <= 3; i++) {
-            battle_bp[i] = getXPATH("//*[@id=\"bp_attack\"]/div[" + i + "]/div[1]");
-            if (battle_bp[i] && getComputedStyle(battle_bp[i]).getPropertyValue("display") !== "none") {
-                bp_now++;
-            }
-        }
-        if (bp_now < bp_need) {
-            var gap = bp_need - bp_now;
-            var ele;
-            var ok = getXPATH("//*[@id=\"bp_recovery\"]/div/div[2]");
-            if (gap >= 3) {
-                ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[1]/div[1]");
-                if (ele &&  ele.dataset.life > 0) {
-                    clickSth(ele, "click");
-                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
-                }
-            }
-            if (gap < 3 || !ele || ele.dataset.life === 0) {
-                ele = getXPATH("//*[@id=\"bp_recovery\"]/ul/li[2]/div[1]");
-                if (ele && ele.dataset.life >= gap) {
-                    for (i = 0; i < gap; i++) {
-                        clickSth(ele, "click");
-                    }
-                    setTimeout(function () {clickSth(ok, "click"); }, 1000);
-                }
-            }
-        }
-    }, 2000);
-}
-
 function handleMissionResult() {
     var succ = false;
     succ = succ || clickA("//*[@id=\"go\"]/a");
@@ -180,7 +84,7 @@ function handlemypage() {
             succ = eventL.last().clickJ().length > 0;
         }
         //succ = succ || clickA(xpathevent);
-        succ = succ || clickA("//div[@class='mission']/a");
+        succ = succ || ($('a[href*="MissionList"]').last().clickJ().length > 0);
     }
     if (!succ) {
         if (getXPATH('//div[@class="battle"]/a/div[@class="mypage_battleOlympia"]')) {
@@ -320,8 +224,9 @@ function handlePrizeTop() {
 }
 
 function handleCaveAreaSelect() {
-    var areaID = Math.floor(Math.random() * 5) + 1;
-    clickA('(//a[text()="選択"])[' + areaID + ']');
+	var l = $('a:contains("選択")');
+    var areaID = Math.floor(Math.random() * l.length);
+	l.eq(areaID).clickJ();
 }
 
 function handleCardSelect() {
@@ -332,7 +237,7 @@ function handleCardSelect() {
     }
 
     setInterval(function () {
-        clickA('//li[//td[@class="aura" and contains(text(), 24)]]/div[2]/a');
+        clickA('//li[//td[@class="aura"]]/div[2]/a');
     }, 2000);
 }
 
@@ -447,13 +352,16 @@ function handleEventRaid() {
     }
 	//debugger;
     var hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first();
+	GM_log("hp_gauge : " + hp_gauge.attr('style'));
 	var hp_full = hp_gauge.attr('style').match(/100/);
 	var help_record = $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
+	GM_log("help_record : " + help_record);
     var last_attack = $('div.tactical_situation_detail').first();
     var bp_need = 1;
+	GM_log("discover : " + $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text());
     if (!hp_full && $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text() != USERNAME) { 
         if (help_record) {
-            clickA(xpathmypage);
+            clickA(back_xpath);
             return;
         }
     }
@@ -594,7 +502,7 @@ function handleERBBattle() {
         }
     }, 2000);
 }
-var eventName = "TeamRaidBoss";
+var eventName = "GiDimension";
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
 	[/arena%2FArenaBattleConf%2F/, 'aJ', 'a:contains("対戦結果を見る")'],
@@ -643,7 +551,7 @@ var actions = [
     [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
         ['hold']]],
-	[/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]'],
+	[/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
     [/eventQuestRaidBoss%2FEventQuestRaidBossTop/, 'aJ', 'a[href*="eventQuestRaidBoss%2FDoEventQuestRaidBossBattleResult%"]'],
     [/eventQuestRaidBoss%2FEventQuestRaidBossBattleResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -780,9 +688,12 @@ var actions = [
     //[/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, "a", "//*[@id=\"main\"]/section[1]/div[2]/div/ul/li[2]/a"],
     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
-    [/mission%2FMissionResult%2F/, "func", handleMissionResult],
+    [/mission%2FMissionResult%2F/, 'list', [
+		['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+		['a', "//*[@id=\"go\"]/a"],
+		['a', "//*[@id=\"next\"]/a"]]],
     [/mission%2FMissionList/, "func", handleMissionList],
-    [/mission%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]"],//, 372, 62],
+    //[/mission%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]"],//, 372, 62],
     [/mission%2FBossAppear/, "form", "//*[@id=\"main\"]/div[3]/form"],
     [/mission%2FBossBattleResult%2F/, "a", "//*[@id=\"to_latest_mission\"]/a"],
     [/mypage%2FGreetEnd%2F/, 'a', xpathmypage],
