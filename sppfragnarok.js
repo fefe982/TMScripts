@@ -73,7 +73,7 @@ function handleStrongBossTop() {
         }
         //debugger;
         if (/*!owner &&*/ attacked && !url.match(/island%2FPunchingBossTop/)) {
-            succ = succ || clickA('//a[text()="ボス一覧へ戻る"]');
+            succ = succ || clickA('//a[contains(text(),"ボス一覧へ戻る")]');
             succ = succ || clickA(xpathmypage);
             return;
         }

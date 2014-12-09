@@ -93,7 +93,7 @@ function handleMypage() {
     }
     if (ap > 10) {
 		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
-        succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
+        //succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
         succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
     }
@@ -310,9 +310,10 @@ var actions = [
     [/prizeReceive%2FPrizeReceiveTop%2F/, "func", handleGiftBox],
     [/raidboss%2FRaidbossCollectionDetail%2F/, "a", '//a[text()="受け取る"]'],
     [/raidboss%2FRaidbossTop%2F/, 'list', [
-        //['dbg'],
+        //['hold'],
         ['form', '//*[@id="contents"]/form'],
         ['a', '//a[contains(@href, "raidboss%2FRaidbossAssistList")]'], //text()="レイドボス応援一覧に戻る"]'],
+		['aJ', '#summon_btn > div > a'],
         ['a', "//*[@id=\"raid_help\"]/a"],
         ['a', "//*[@id=\"attack_btn\"]/div/a"],
         ['a', '//*[@id="bp_recovery_popup"]//a[text()="使用する"]'],
