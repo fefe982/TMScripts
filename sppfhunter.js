@@ -359,15 +359,19 @@ function handleEventRaid() {
     var last_attack = $('div.tactical_situation_detail').first();
     var bp_need = 1;
 	GM_log("discover : " + $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text());
-    if (!hp_full && $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text() != USERNAME) { 
-        if (help_record) {
-            clickA(back_xpath);
-            return;
-        }
+    if (!hp_full &&
+		$('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text() != USERNAME &&
+		help_record &&
+		!url.match(/GiDimension/)) {
+        clickA(back_xpath);
+        return;
     }
 
 	var attack_num = 0;
     setInterval(function () {
+		//if (url.match(/GiDimension/)) {
+		//	return;
+		//}
         var attack = $('#do_battle_btn_' + bp_need).filter(':visible');
         if (attack.length > 0 && !attack.hasClass('btn_main_off_small')) {
 			if (attack_num == 0) {
@@ -414,18 +418,6 @@ function handleTeamBattle() {
         attacked = attacked || clickA('//*[@id="do_battle_btn" and not(@style="display:none")]/a');
     }, wait);
 
-    //setInterval(function(){
-    //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
-    //    if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
-    //        var result = getXPATH("//*[@id=\"battle_result_btn\"]/a");
-    //        if (result) {clickSth(result, "click");}
-    //    }
-    //}, 1000);
-
-    //setInterval(function(){
-    //    var ff = getXPATH("//*[@id=\"stage_front\"]");
-    //    if (ff && getComputedStyle(ff) .getPropertyValue("display")!="none") {clickSth(ff, "click");}
-    //}, 5000);
     setInterval(function () {
         if (getXPATH('//*[@id="do_battle_btn" and @style="display:none"]')) {
             var ele, ele_s;
