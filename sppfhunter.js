@@ -77,7 +77,7 @@ function handlemypage() {
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
 	GM_log(ap_gauge.css('width'));
     if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9].px|[89]px/)) {
-        var eventL = $('a[href*="EventTop"]');
+        var eventL = $('#main > div > a[href*="EventTop"]');
 		//alert(eventL.length);
 		//alert(eventL.text());
         if (eventL.length > 0 && !$(eventL[0]).text().match(/\[終了\]/)) {
@@ -337,7 +337,7 @@ function handleEventRaid() {
     if (url.match(/%2FraidBoss%2F/)) {
         back_xpath = '//a[text()="クエストに戻る"]';
     } else {
-        back_xpath = xpatheventnext;
+        back_xpath = '//*[@id="main"]/div[9]/div[1]/div/p/a';//xpatheventnext;
     }
     if (boss_info.length > 0) {
         //alert(boss_info.innerText);
@@ -358,12 +358,15 @@ function handleEventRaid() {
 	GM_log("help_record : " + help_record);
     var last_attack = $('div.tactical_situation_detail').first();
     var bp_need = 1;
-	GM_log("discover : " + $('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text());
+	GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
+	//"#main > div:nth-child(14) > div:nth-child(1) > div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a"
+	//#main > div.raidboss_module  div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a
     if (!hp_full &&
-		$('#main > div.raidboss_module > div > div.margin_top_10 > ul > li:last() > div > div > div.padding_left > span > a').text() != USERNAME &&
+		$('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() != USERNAME &&
 		help_record &&
 		!url.match(/GiDimension/)) {
-        clickA(back_xpath);
+		$('a[href*="DoMissionExecutionCheck"]').clickJ();
+        //clickA(back_xpath);
         return;
     }
 
@@ -395,6 +398,7 @@ function handleEventRaid() {
 				no_bp_candy = 1;
 			}
 			setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
+			$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
 		} else {
 			add_bp.first().clickJ();
 		}
@@ -494,10 +498,12 @@ function handleERBBattle() {
         }
     }, 2000);
 }
-var eventName = "GiDimension";
+var eventName = "Capture2";
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
-	[/arena%2FArenaBattleConf%2F/, 'aJ', 'a:contains("対戦結果を見る")'],
+	[/arena%2FArenaBattleConf%2F/, 'list', [
+		//['aJV', '#do_battle_btn'],
+		['aJ', 'a:contains("対戦結果を見る")']]],
 	[/arena%2FArenaBattleResult%2F/, 'aJ', 'a:contains("次の相手")'],
 	[/arena%2FArenaTop/, 'aJ', '#btn_entry > a'],
     [/battleOlympia%2FBattleConf%2F/, 'a', '//a[contains(text(), "対戦結果を見る")]'],
@@ -653,6 +659,8 @@ var actions = [
 		['hold']]],
 	[/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
     [/event[a-zA-Z0-9]*%2FRaidBossTop/, 'func', handleEventRaid],
+	[/eventCapture2%2FCaptureBossTop%2F/, 'aJ', $('#bp_attack > div > div > div > div > a').last()],
+	[/eventCapture2%2FCaptureBossBattleResult%2F/, 'a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'], 
     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
     [/fusion%2FFusionEnd%2F/, "func", handleFusionEnd],
     //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],

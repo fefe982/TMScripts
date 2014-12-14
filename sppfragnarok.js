@@ -65,13 +65,18 @@ function handleStrongBossTop() {
     var succ = false, attack;
     succ = succ || clickA('//*[@id="requestChain"]/a');
     if (!succ) {
-		var owner = $('#damage_box > div > div.no_flex > img').attr('src').match(new RegExp(USERID));
+		var ownerbox = $('#damage_box > div > div.no_flex > img');
+		var owner = false;
+		if (ownerbox.attr('src') && ownerbox.attr('src').match(new RegExp(USERID))) {
+			owner = true;
+		}
         var attacked = getXPATH('//*[@id="damage_box"]/ul/li/a/div/div[2]/div[text()="' + USERNAME +'"]');
         if (!owner && !attacked) {
             owner = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/div//*[text()="' + USERNAME + '"]');
             attacked = getXPATH('//*[@id="popup_content"]/div[1]/div[2]/ul/li/a//span[text()="' + USERNAME +'"]');
         }
         //debugger;
+		GM_log(url);
         if (/*!owner &&*/ attacked && !url.match(/island%2FPunchingBossTop/)) {
             succ = succ || clickA('//a[contains(text(),"ボス一覧へ戻る")]');
             succ = succ || clickA(xpathmypage);
@@ -197,7 +202,13 @@ var actions = [
     [/arena%2FArenaBossBattle%2F/, 'func', handleStrongBossTop],
 	[/arena%2FArenaBossBattleHelpRequestEnd%2F/, 'a', '//a[text()="イベントTOP"]'],
     [/arena%2FArenaBossBattleList\b/, 'list', [
-        ['a', '//*[@id="containerBox"]/div[5]/ul/li[.//img[contains(@src, "new3.gif")]]/div[2]/div/a'],
+		['hold'],
+        //['a', '//*[@id="containerBox"]/div[5]/ul/li[.//img[contains(@src, "new3.gif")]]/div[2]/div/a'],
+		['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
+		['funcR', function(){
+			
+			return false;
+		}],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括で受け取る")]'],
         ['a', '//a[contains(text(),"討伐完了")]']]],
@@ -216,23 +227,24 @@ var actions = [
         ['aJV', 'a[href*="arena%2FDoArenaUseAdvantageItem%2F"]'],
         //['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
         //['aJP', '#rcv_items a'],
-        ['func', function () {
-            setInterval(function () {
-                if ($('#current_worker').text() < 20) {
-                    clickLink($('#rcv_items a').filter(":first")[0]);
-                }
-            }, 1000);
-            setInterval(function () {
-                clickMinMax('//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a');
-            }, 1000);
-            return false;
-        }],
-        //['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
+        //['func', function () {
+        //    //setInterval(function () {
+        //    //    if ($('#current_worker').text() < 20) {
+        //    //        clickLink($('#rcv_items a').filter(":first")[0]);
+        //    //    }
+        //    //}, 1000);
+        //    setInterval(function () {
+        //        clickMinMax('//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a');
+        //    }, 1000);
+        //    return false;
+        //}],
+        ['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
         ['hold']]],
     [/arena%2FBossAppear%2F/, 'a',  "//a[text()='ボスと戦う']"],
     [/arena%2FBossBattleResult%2F/, 'list', [
+		['aJ', 'a[href*="arena%2FMissionDetail%2F"]'],
         ['a', '//a[contains(@href, "arena%2FDoMissionExecutionCheck%2F")]'],
-        ['flash', '//*[@id="gamecanvas"]/canvas']]],//"//a[text()='次のエリアに進む']"]]],
+        ['flash', '//*[@id="gamecanvas"]/canvas']]],//"//a[text()='次のエリアへ進む']"]]],
     [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="gamecanvas"]/canvas', 79, 346],
 	[/arena%2FContinuousParticipation%2F/, 'aJ', 'a[href*="arena%2FTop"]'],
     [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
@@ -308,7 +320,7 @@ var actions = [
     [/island%2FBeatdownBossBattle%2F/, 'func', handleStrongBossTop],
     [/island%2FBeatdownBossBattleList/, 'list', [
 		//['hold'],
-		//['aJ', 'a:contains("討伐完了")'],
+		['aJ', 'a:contains("討伐完了")'],
         ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
 		//['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
