@@ -541,6 +541,8 @@ var actions = [
     [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
         //['dbg'],
         //['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
+		//['hold'],
+		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
 		['a', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
@@ -570,44 +572,6 @@ var actions = [
         ['a', '//a[contains(@href,"eventCollection%2FDoMissionExecutionCheck")]'],
         ['hold']]],
         //'func', handleEvent], //'//p[@class="block_flex btn_base radius"]/a'],
-    //[/eventRaidBoss%2FEventBattleConf/, 'list', [
-    //    ['av', '//*[@id="skip_battle_btn"][div/a]', '//*[@id="skip_battle_btn"]/div/a'],
-    //    //['dbg'],
-    //    ['func', handleERBBattle]]],
-    //[/eventRaidBoss%2FEventBattleResult/, 'list', [
-    //    ['a', '//a[text()="餌を探す"]'],
-    //    ['a', '//a[div[@id="btn_quest_fever"]]'],
-    //    ['hold']]], 
-    //[/eventRaidBoss%2FEventTop/, 'list', [
-    //    ['a', '//*[@id="main"]/div[2]/p/a']]],
-    //[/eventRaidBoss%2FMissionResult%2F/, 'list', [ //'func', handleEvent],
-    //    ['a', '//div[@class="btn_help_wrap"]/a'],
-    //    ['a', '//a[.//*[contains(text(), "逃亡まで")]]'],
-    //    ['a', '//a[text()="餌を探す"]'],
-    //    ['a', '//a[div[@id="btn_quest_fever"]]'],
-    //    ['a', '//a[text()="対戦相手と戦う"]'],
-    //    ['hold']]],
-    //[/eventRaidBoss%2FRaidBossBattleResult/, 'list', [
-    //    ['a', '//a[contains(text(), "撃破者にあいさつする")]'],
-    //    ['a', '//a[contains(text(), "ヘルプ一覧")]'],
-    //    ['a', '//a[text()="餌を探す"]'],
-    //    ['a', '//a[div[@id="btn_quest_fever"]]'],
-    //    ['hold']]],
-    //    ['func', handleEvent]]],
-    //[/eventSelection%2FBattleConf/, 'func', handleERBBattle],
-    //[/eventSelection%2FEventTop/, 'list', [
-    //    ['a', '//a[contains(@href, "eventSelection%2FDoMissionExecutionCheck")]'],
-    //    ['a', '//a[contains(@href, "eventSelection%2FRaidBossTop")]'],
-    //    ['hold']]],
-    //[/eventSelection%2FMissionResult/, 'a', '//*[@id="go"]/a'],
-    //[/eventSelection%2FSelectTarget/, 'minmax', 
-    //    '//*[@id="main"]/section[1]/ul/li[', ']/a/div/div[2]/table/tbody/tr[3]/td',
-    //    ']/a'],
-
-    //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FEventBattleResult%2F%3FhistoryId%3D31544057%26matchingId%3D0%26getRewardItemId%3D%26addEventPoint%3D100
-    //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FRaidBossBattleResult%2F%3FhistoryId%3D216333568%26userRaidbossDefeatLogId%3D200389035%26userRaidbossId%3D208829328%26sentHelpFlg%3D0%26addEventPoint%3D500%26isMultiRaid%3D0
-    //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSelection%2FRaidBossTop
-    //http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventStoryMission%2FMissionList
     [/eventStoryMission%2FEventBattleConf/, 'list', [
         ['a', '//*[@id="skip_battle_btn"]/div/a'],
         ['func', handleERBBattle],
@@ -660,7 +624,9 @@ var actions = [
 	[/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
     [/event[a-zA-Z0-9]*%2FRaidBossTop/, 'func', handleEventRaid],
 	[/eventCapture2%2FCaptureBossTop%2F/, 'aJ', $('#bp_attack > div > div > div > div > a').last()],
-	[/eventCapture2%2FCaptureBossBattleResult%2F/, 'a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'], 
+	[/eventCapture2%2FCaptureBossBattleResult%2F/, 'list', [
+		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
+		['a', '//a[contains(@href,"eventCapture2%2FDoMissionExecutionCheck")]']]],
     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
     [/fusion%2FFusionEnd%2F/, "func", handleFusionEnd],
     //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],
