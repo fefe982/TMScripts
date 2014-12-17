@@ -200,18 +200,19 @@ var actions = [
         ['a', '//div[@class="battle_btn"]/a'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
     [/arena%2FArenaBossBattle%2F/, 'func', handleStrongBossTop],
-	[/arena%2FArenaBossBattleHelpRequestEnd%2F/, 'a', '//a[text()="イベントTOP"]'],
+	[/arena%2FArenaBossBattleHelpRequestEnd%2F/, 'aJ', 'a[href*="arena%2FArenaBossBattleList"]'],
     [/arena%2FArenaBossBattleList\b/, 'list', [
-		['hold'],
+		//['hold'],
         //['a', '//*[@id="containerBox"]/div[5]/ul/li[.//img[contains(@src, "new3.gif")]]/div[2]/div/a'],
-		['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
+		['a', '//ul[@class="lst_info"]/li[.//img[contains(@src,"g_s_raid_100.png")]]//a[text()="バトル"]'],
 		['funcR', function(){
 			
 			return false;
 		}],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括で受け取る")]'],
-        ['a', '//a[contains(text(),"討伐完了")]']]],
+        ['a', '//a[contains(text(),"討伐完了")]'],
+		['aJ', 'a[href*="arena%2FTop"]']]],
     [/arena%2FArenaBossBattleResult%2F/, 'list', [
         ['a', '//a[text()="報酬を受け取る"]'],
         ['a', '//a[text()="イベントを進める"]']]],
