@@ -1,8 +1,8 @@
 var xpathmypage = '//*[@id="top_btn"]/a';
 //http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2FAs4%2FeventTop
 var actions = [
-    [/battleAnimation/, 'flashJT', '#canvas'],
-    [/battle_animation/, 'flashJT', '#canvas'],
+    [/battleAnimation/, 'flashJT', document],
+    [/battle_animation/, 'flashJT', document, 20, 2500],
     [/cardBook%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
     [/card_book%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
     [/Da2%2FeventTop/, 'aJ', 'a[href*="Da2%2Findex"]'],
@@ -74,7 +74,7 @@ var actions = [
 
     //pick
     [/pick%2Fresult%2Ffree/, 'aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
-    [/pick%2Frun/, 'flashJT', '#canvas', 20, 2500],
+    [/pick%2Frun/, 'flashJT', '#box', 20, 2500],
     [/pick%2Ftop%2Ffree/, 'list', [
         ['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
         ['flashJ', 'canvas']]],

@@ -121,7 +121,7 @@ for (i = 0; i < actions.length; i++) {
                 break;
             }
         }
-        //succ = succ || clickA(xpathmypage);
+        succ = succ || clickA(xpathmypage);
         break;
     }
 }
