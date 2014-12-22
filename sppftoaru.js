@@ -1,8 +1,8 @@
 var xpathmypage = '//*[@id="top_btn"]/a';
 //http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2FAs4%2FeventTop
 var actions = [
-    [/battleAnimation/, 'flashJ', '#container'],
-    [/battle_animation/, 'flashJ', '#container'],
+    [/battleAnimation/, 'flashJT', '#canvas'],
+    [/battle_animation/, 'flashJT', '#canvas'],
     [/cardBook%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
     [/card_book%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
     [/Da2%2FeventTop/, 'aJ', 'a[href*="Da2%2Findex"]'],
@@ -64,7 +64,7 @@ var actions = [
             var apall = res ? +res[2] : 0;
             GM_log("hp = " + hp);
             if (hp > 10) {
-                return /*$('a[href*="%2FeventTop"]').clickJ().length > 0 ||*/ $('a[href*="quest"]').clickJ().length > 0;
+                return $('#event_area > a[href*="%2FeventTop"]').clickJ().length > 0 || $('a[href*="quest"]').clickJ().length > 0;
             }
             if (ap === apall) {
                 return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
@@ -74,7 +74,7 @@ var actions = [
 
     //pick
     [/pick%2Fresult%2Ffree/, 'aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
-    [/pick%2Frun/, 'flashJ', '#container', 20, 2500],
+    [/pick%2Frun/, 'flashJT', '#canvas', 20, 2500],
     [/pick%2Ftop%2Ffree/, 'list', [
         ['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
         ['flashJ', 'canvas']]],
@@ -87,11 +87,11 @@ var actions = [
     [/playerBattle%2Fbattle\b/, 'aJ', 'a[href*="player_battle%2Fbattle_confirm"]'],
     [/player_battle%2Fbattle_confirm%/, 'aJ', 'a[href*="battle_animation"]'],
     [/player_battle%2Fbattle_result%/, 'aJ', 'a[href*="mypage"]'],
-    [/player_battle%2Fcomplete%/, 'flashJ', "#container"],
+    [/player_battle%2Fcomplete%/, 'flashJ', "#canvas"],
 
     //quest
     [/quest%2FbossSuccess/, 'aJ', 'a[href*="scenario%2Fquest"]'],
-    [/*quest%2F*//clearAreaFlash/, 'flashJ', '#container'],
+    [/*quest%2F*//clearAreaFlash/, 'flashJ', '#canvas'],
     [/quest%2Findex/, 'func', function () {
         setInterval(function () {
             //debugger;
@@ -104,7 +104,7 @@ var actions = [
     [/quest%2Fed/, 'list', [
         ['aJ', 'a[href*="quest%2Findex"]'],
         ['flashJT', document]]],
-    [/*quest%2F*//levelUp/, 'flashJ', '#container'],
+    [/*quest%2F*//levelUp/, 'flashJT', '#canvas'],
     [/*quest%2F*//noAction/, 'aJ', 'a[href*="%2FuseItem"]'],
     [/quest%2FrSkill/, 'list', [
         ['aJ', 'a[href*="quest%2FrSkill%2Fdefeat"]'],
@@ -117,10 +117,11 @@ var actions = [
         ['aJ', 'a[href*="quest%2FshowBoss"]'],
         ['aJ', 'a[href*="quest%2Findex"]']]],
     [/quest%2Ftreasure/, 'list', [
-		['flashJ', '#container'],
-		['aJ', 'a[href*="quest%2Fevent"]']]],
+		['aJ', 'a[href*="quest%2Fevent"]'],
+		['flashJT', document]]],
     [/quest%2FuseItem\b/, 'aJ', 'a[href*="quest%2FuseItem"]'],
     [/quest%2FwinRare/, 'aJ', 'a[href*="quest%2Findex"]'],
+	[/quest_story%2Fquest%2Fop/, 'flashJT', document],
     [/scenario%2Fquest/, 'flashJT', document],
 	[/scenario2%2Fs%2Fmorinaga_end/, 'flashJT', document],
     [/shortStory%2Fstory/, 'list', [
@@ -128,19 +129,26 @@ var actions = [
     ]],
 	
 	//[/Flash\b/, 'flashJ', 
-	[/(soge|FrSkill)Flash/, 'flashJ', '#container'],
+	[/(soge|FrSkill)Flash/, 'flashJ', '#canvas'],
 	[/%2FuseItem%2F/, 'aJ', 'a[href*="%2FuseItem%2F"]'],
 	//wd2014%2FuseItem%2F1%2F1%2F6%2F3%2Fconfirm 
 	//event Wd2014
 	[/Wd2014%2FeventTop/, 'aJ', 'a[href*="Wd2014%2Findex%2F' + Math.floor((Math.random() * 2 + 1)) + '"]'],
-
 	[/Wd2014%2FwinRare/, 'list', [
 		['aJ', 'a[href*="%2Fdefeat%2F"]'],
 		['aJ', 'a[href*="%2Fbattle%2F"]']]],
 	[/Wd2014%2FrSkill/, 'list', [
 		['aJ', '#bg > div.bg_event2 > div.bg_detail > div:nth-child(3) > ul > li:nth-child(1) > a'],
 		['aJ', '#bg > div.bg_event2 > div.bg_detail > div:nth-child(3) > ul > li:nth-child(2) > a']]],
-		
+	[/Xmas2%2FeventTop/, 'aJ', 'a[href*="xmas2%2Fquest"]'],
+	[/[xX]mas2%2Fquest/, 'func', function(){
+		setInterval(function(){
+			GM_log($('#but4.on').length);
+			if ($('#but4.on').clickJ().length == 0) {
+				$('#but3.on').clickJ();
+			}
+		}, 2000);
+	}],
 	[/%2FeventTop/, 'aJ', 'a[href*="%2Findex"]'],
 	[/%2Findex%2F/, 'func', function () {
         setInterval(function () {

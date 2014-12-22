@@ -204,11 +204,7 @@ var actions = [
     [/arena%2FArenaBossBattleList\b/, 'list', [
 		//['hold'],
         //['a', '//*[@id="containerBox"]/div[5]/ul/li[.//img[contains(@src, "new3.gif")]]/div[2]/div/a'],
-		['a', '//ul[@class="lst_info"]/li[.//img[contains(@src,"g_s_raid_100.png")]]//a[text()="バトル"]'],
-		['funcR', function(){
-			
-			return false;
-		}],
+		['a', '//ul[@class="lst_info"]/li[.//img[contains(@src, "new3.gif")] or .//img[contains(@src,"g_s_raid_100.png")]]//a[text()="バトル"]'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括で受け取る")]'],
         ['a', '//a[contains(text(),"討伐完了")]'],
@@ -246,12 +242,12 @@ var actions = [
 		['aJ', 'a[href*="arena%2FMissionDetail%2F"]'],
         ['a', '//a[contains(@href, "arena%2FDoMissionExecutionCheck%2F")]'],
         ['flash', '//*[@id="gamecanvas"]/canvas']]],//"//a[text()='次のエリアへ進む']"]]],
-    [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="gamecanvas"]/canvas', 79, 346],
+    [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="container"]/canvas', 79, 346],
 	[/arena%2FContinuousParticipation%2F/, 'aJ', 'a[href*="arena%2FTop"]'],
     [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
 	[/arena%2FDoMissionExecution%2F/, 'aJ', 'a[href*="mypage%2FIndex"]'],
 	[/arena%2FMissionDetail%2F/, 'list', [
-		['aJV', '#raidBossBtn > a'],
+		//['aJV', '#raidBossBtn > a'],
 		['flashJT', '#execBtn']
 	]],
     [/arena%2FMissionError%2F/, 'func', handleMissionError],

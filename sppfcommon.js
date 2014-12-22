@@ -273,14 +273,13 @@ $.fn.touchFlash = function (xoff, yoff) {
     var flash = $(this);
 	//alert(flash.text());
     setInterval(function () {
-        flash.simTouchEvent("touchstart", xoff, yoff);
+        setTimeout(function () {flash.simTouchEvent("touchstart", xoff, yoff);}, 10);
+		setTimeout(function () {flash.simTouchEvent("touchend", xoff, yoff);}, 20);
+		setTimeout(function () {flash.simMouseEvent("mousedown", xoff, yoff);}, 30);
+		setTimeout(function () {flash.simMouseEvent("mousemove", xoff, yoff);}, 40);
+		setTimeout(function () {flash.simMouseEvent("mouseup", xoff, yoff);}, 50);
+		setTimeout(function () {flash.simMouseEvent("click", xoff, yoff);}, 60);
 	}, 1000);
-    setInterval(function () {
-        flash.simTouchEvent("touchmove", xoff, yoff);
-	}, 1100);
-    setInterval(function () {
-		flash.simTouchEvent("touchend", xoff, yoff);
-    }, 1200);
     return this;
 };
 
