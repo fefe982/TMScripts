@@ -77,7 +77,7 @@ function handlemypage() {
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
 	GM_log(ap_gauge.css('width'));
     if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9].px|[89]px/)) {
-        var eventL = $('#main > div > a[href*="event%2FDoSetClickCount%3F"]');
+        var eventL = $('#main > div > a[href*="event%2FDoSetClickCount%3F"]:first()');
 		//alert(eventL.length);
 		//alert(eventL.text());
         if (eventL.length > 0 && !$(eventL[0]).text().match(/\[終了\]/)) {
@@ -498,7 +498,7 @@ function handleERBBattle() {
         }
     }, 2000);
 }
-var eventName = "StageRaidBoss";
+var eventName = "Anniversary";
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
 	[/arena%2FArenaBattleConf%2F/, 'list', [

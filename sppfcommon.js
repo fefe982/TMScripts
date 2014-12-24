@@ -128,7 +128,9 @@ $.fn.simMouseEvent = function (eveName, xoff, yoff) {
                          0, x, y, x, y,
                          false, false, false, false,
                          0, this[0]);
-    if (this[0].dispatchEvent(eve) && this[0].tagName === 'a') {
+	GM_log("sim mouse " + eveName);
+    if (this[0].dispatchEvent(eve) && eveName === "click" && this[0].tagName === 'A') {
+		GM_log("click : "+ this[0].href);
         window.location.href = this[0].href;
     }
     return this;
@@ -217,6 +219,7 @@ $.fn.clickJ = function (timeout) {
 	GM_log("clickJ : " + this.length);
 	for (var i = 0; i < this.length; i++)
 	{
+		GM_log(i + ' tagname : ' + this.get(i).tagName);
 		$(this.get(i).attributes).each(function() {
 			GM_log(i + " " + this.nodeName + ' : ' + this.value);
 		});

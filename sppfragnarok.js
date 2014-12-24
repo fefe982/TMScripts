@@ -117,10 +117,10 @@ function handleMyPage() {
     succ = succ || clickA('//a[text()="MPが割り振れます"]');
     succ = succ || clickA('//a[text()="無料ガチャが出来ます"]');
     succ = succ || clickA('//a[text()="トレジャーの結果が出ています"]');
-    succ = succ || clickA('//a[text()="贈り物が届いてます"]');
+    //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
-    succ = succ || clickA(xpathevent);
+    //succ = succ || clickA(xpathevent);
     if (ap > 10 && !mission_error) {
         succ = succ || clickA(xpathquest);
     }
@@ -421,7 +421,7 @@ var actions = [
     [/mypage%2FIndex/, "func", handleMyPage],
 	[/newMission%2FAreaList%2F/, 'aJ', $('a[href*="newMission%2FMissionList%2F"]').last()],
 	[/newMission%2FBossAppear/, 'aJ', 'a[href*="newMission%2FBossBattleFlash%2F"]'],
-	[/newMission%2FMissionDetail%2F/, 'flashJ', '#execBtn'],
+	[/newMission%2FMissionDetail%2F/, 'flashJT', '#execBtn'],
 	[/newMission%2FMissionList%2F/, 'aJ', 'a[href*="newMission%2FMissionDetail%2F"]'],
     [/mypage%2FMaterialCollection%2F/, 'a', '//a[text()="図鑑報酬を受け取る"]'],
     [/mypage%2FMaterialCollectionCompEnd%2F/, 'a', '//a[text()="コンプマテリアル図鑑"]'],
