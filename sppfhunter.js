@@ -529,7 +529,9 @@ var actions = [
     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
     [new RegExp("event" + eventName + "%2FEventTop"), 'list', [
-		//s['dbg'],
+		//['hold'],
+		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
+		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
         ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
@@ -629,6 +631,35 @@ var actions = [
 	[/eventCapture2%2FCaptureBossBattleResult%2F/, 'list', [
 		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
 		['a', '//a[contains(@href,"eventCapture2%2FDoMissionExecutionCheck")]']]],
+	[/eventAnniversary%2FEventQuestEntryList/, 'list', [
+		['aJ', '#main > section.section_main > div > div.btn_main_large > a:nth(' + Math.floor(Math.random() * 8) + ')'],
+		['hold']]],
+	[/eventAnniversary%2FEventQuestEntryConfirm/, 'list', [
+		['aJ', 'a:contains("出発する")'],
+		['aJ', 'a:contains("エピソードエリア")'],
+		['hold']]],
+	[/eventAnniversary%2FEventQuestRaidBossTop/, 'list', [
+		['aJ', 'a:contains("対戦結果を見る")'],
+		['hold']]],
+	[/eventAnniversary%2FEventQuestRaidBossBattleResult/, 'list', [
+		['aJ', 'a:contains("先へ進む")'],
+		//['aJ', 'a:contains("キャラ育成")'],
+		['aJ', 'a:contains("もう一度挑戦!")'],
+		['hold']]],
+	[/eventAnniversary%2FEventQuestResult/, 'list', [
+		['aJ', 'a:contains("先へ進む")'],
+		['hold']]],
+	[/eventAnniversary%2FMaterialFusionTop/, 'list', [
+		['aJ', 'a:contains("全ての秘伝書を使う")'],
+		['aJ', 'a:contains("エピソードエリア")'],
+		['hold']]],
+	[/event%2FeventFusion%2FFusionEnd/, 'list', [
+		['aJ', 'a:contains("エピソードエリア")'],
+		['hold']]],
+	[/eventAnniversary%2FEventDeckTop/, 'list', [
+		['aJ', 'a:contains("選択する"):last()'],
+		['aJ', 'a:contains("エピソードエリア")'],
+		['hold']]],
     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
     [/fusion%2FFusionEnd%2F/, "func", handleFusionEnd],
     //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],

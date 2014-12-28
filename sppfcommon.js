@@ -104,7 +104,7 @@ function clickLink(link) {
                              false, false, false, false,
                              0, null);
         var cancelled = !link.dispatchEvent(event);
-        if (!cancelled) {
+        if (cancelled) {
             window.location.href = link.href;
         }
     }, 2000);
@@ -129,9 +129,9 @@ $.fn.simMouseEvent = function (eveName, xoff, yoff) {
                          false, false, false, false,
                          0, this[0]);
 	GM_log("sim mouse " + eveName);
-    if (this[0].dispatchEvent(eve) && eveName === "click" && this[0].tagName === 'A') {
+    if (!this[0].dispatchEvent(eve) && eveName === "click" && this[0].tagName === 'A') {
 		GM_log("click : "+ this[0].href);
-        window.location.href = this[0].href;
+        //window.location.href = this[0].href;
     }
     return this;
 };
