@@ -162,9 +162,10 @@ var actions = [
 	[/%2FraidBoss%2F/, 'list', [
 		['flashJ', '#container']]],
 	[/%2Fraid%2F/, 'list', [
-		['aJ', $('a[href*="battle_animation%2Fleague%2F"]').last()],
+		['aJ', 'a[href*="battle_animation%2F"]:last()'],
+		['aJ', '#bg > div.btn_blue > a'],
 		['aJ', 'a[href*="eventTop"]']]],
-	[/%2Fattack_result/, 'aJ', 'a[href*="eventTop"]'],
+	[/%2Fattack_result/, 'aJ', '#bg > div.btn_blue > a'],
     [/[\s\S]*/, 'hold'],
     [/xxxxxxxxxxxxxxxxxxx/]
 ];

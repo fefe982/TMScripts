@@ -1,4 +1,5 @@
 var xpathmypage = '//*[@id="header_left_button"]/a';
+var cssmypage = '#header_left_button > a';
 var xpathquest = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]';
 var xpathevent = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_event_image"]]';
 
@@ -120,7 +121,7 @@ function handleMyPage() {
     //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
-    //succ = succ || clickA(xpathevent);
+    succ = succ || clickA(xpathevent);
     if (ap > 10 && !mission_error) {
         succ = succ || clickA(xpathquest);
     }
@@ -283,6 +284,29 @@ var actions = [
 		['aJ', 'a[href*="beatdown%2FDoMissionExecutionCheck%2F"]'],
         ['flash', '//div[@id="gamecanvas"]/canvas'],
         ['hold']]],
+	[/caravan%2FDiceEventTop%2F/, 'list', [
+		['aJ', '#diceEventHeader > a']]],
+	[/caravan%2FGoalBossAttackResult/, 'aJ', 'a[href*="caravan%2FDoResetDeck%2F%3Froute%3Dtop"]'],
+	[/caravan%2FMapTop/, 'list', [
+		['aJ', '#mapFooter > div.btn_dice > a']]],
+	[/caravan%2FRaidBattleResult%2F/, 'list', [
+		['aJ', 'a[href*="caravan%2FMapTop"]']]],
+	[/caravan%2FRaidBattleTop%2F/, 'list', [
+		['func', function(){
+			setInterval(function() {
+				var attack = $('#rcv_submit_btns > ul > li > a.enabled');
+				if (attack.length < 2) {
+					if ($('#rcv_items > ul > li > a.enabled').last().clickJ() === 0) {
+						attack.last().clickJ();
+					}
+				} else {
+					attack.last().clickJ();
+				}
+			}, 1000);
+		}],
+		['aJ', '#rcv_submit_btns > ul > li:nth-child(1) > a.enabled']]],
+	[/caravan%2FTop/, 'list', [
+		['aJ', '#eventHeader > a']]],
     [/card%2FMaterialCardList%2F%3FbulkFusion%3D1/, 'func', handleBulkFusion],
     [/companion%2FCompanionApplicationAccept%2F/, 'form', '//form[.//input[@value="承認する"]]'],
     [/companion%2FCompanionApprovalList%2F/, 'a', '//a[text()="承認する"]'],
@@ -300,8 +324,12 @@ var actions = [
     [/gacha%2FGachaFlashResult%2F/, 'list', [
         //['flash', '//div[@id="gamecanvas"]/canvas'],
         ['func', handleGachaFlashResult]]],
-    [/gacha%2FGachaTop%2F%3FpageNum%3D2/, 'a', '(//a[contains(text(), "ガチャ")])[last()]'],
-    [/gacha%2FGachaTop%2F%3FpageNum%3D3/, 'a', '(//a[contains(text(), "ガチャ")])[last()]'],
+    [/gacha%2FGachaTop%2F%3FpageNum%3D2/, 'list', [ //エールガチャ
+		['a', '(//a[contains(text(), "ガチャ")])[last()]'],
+		['aJ', cssmypage]]],
+    [/gacha%2FGachaTop%2F%3FpageNum%3D3/, 'list', [ // レイドガチャ
+		['a', '(//a[contains(text(), "ガチャ")])[last()]'],
+		['aJ', cssmypage]]],
     [/gacha%2FGachaTop%2F%3FpageNum%3D4%26thema%3Dregend/, 'aJ', 'a[href$="gacha%2FGachaTop%2F%3FpageNum%3D4"]'],
 	[/gacha%2FGachaTop%2F%3FpageNum%3D4$/, 'list', [
 		['a', '(//a[.//span[text()="ガチャをする"]])[last()]'],
@@ -442,7 +470,9 @@ var actions = [
         ['a', '//*[@id="area_progress_status"]/div[4]/a'],
         ['a', '//*[@id="area_progress_status"]/div[' + Math.floor(Math.random() * 3 + 1) + ']/a'],
     ]],
-    [/treasure%2FTreasureStatus%2F/, 'a', '//a[text()="探索結果確認"]'],
+    [/treasure%2FTreasureStatus%2F/, 'list', [
+		['a', '//a[text()="探索結果確認"]'],
+		['aJ', cssmypage]]],
     [/treasure%2FTreasureTop%2F/, 'a', '//a[text()="探索先を選ぶ"]'],
     [/Swf\b/, 'flash',  '//*[@id="btn_exec"]|//canvas|//*[@id="container"]|//*[@id="canvas"]'],
     [/Flash\b/, 'flash',  "//div[@id='gamecanvas']/canvas|//*[@id='btn_exec']|//*[@id='container']"],

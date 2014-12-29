@@ -233,12 +233,13 @@ $.fn.clickJ = function (timeout) {
         this.simMouseEvent("click");
     } else {
         var jq = $(this);
-
+		GM_log(Date() + ' wait clickJ ' + (timeout || 1000));
         setTimeout(function () {
+			GM_log(Date() + ' click func ');
 	        jq.simMouseEvent("mousedown");
 			jq.simMouseEvent("mouseup");
             jq.simMouseEvent("click");
-        }, timeout || 1000);
+        }, timeout || 500);
     }
     return this;
 };

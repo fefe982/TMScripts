@@ -121,9 +121,14 @@ for (i = 0; i < actions.length; i++) {
                 break;
             }
         }
-        succ = succ || clickA(xpathmypage);
+		if (!succ) alert('no action');
         break;
     }
+}
+
+if (i === actions.length)
+{
+	alert('no match');
 }
 
 //setTimeout(function () {location.reload(true); }, 600000);

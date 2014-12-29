@@ -1,4 +1,5 @@
 var xpathmypage = "//header/div[@class='sprite btn_base header_left']/a";
+var cssmypage = '#main_container > header > div.sprite.btn_base.header_left > a'
 //var xpathevent = '//a[text()="oopserr"]';
 var xpathevent = '//a[contains(@href, "EventTop")]';
 var xpatheventnext = '//*[@id="mainCommand_quest"]/a';
@@ -525,7 +526,7 @@ var actions = [
     [/cave%2FIndex/, "a", "//*[@id=\"main_btn_area\"]/a"],
     [/cave%2FItemSelect/, "form", "//*[@id=\"main\"]/form"],
     [/cave%2FQuestConfirm/, "a", "//*[@id=\"main\"]/div[3]/a"],
-    [/cave%2FQuestResult%2F/, 'a', '//a[@text="トレハンTOP"]'],
+    [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
     [new RegExp("event" + eventName + "%2FEventTop"), 'list', [
@@ -632,7 +633,7 @@ var actions = [
 		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
 		['a', '//a[contains(@href,"eventCapture2%2FDoMissionExecutionCheck")]']]],
 	[/eventAnniversary%2FEventQuestEntryList/, 'list', [
-		['aJ', '#main > section.section_main > div > div.btn_main_large > a:nth(' + Math.floor(Math.random() * 8) + ')'],
+		['aJ', '#main > section.section_main > div > div.btn_main_large > a:nth(' + Math.floor(Math.random() * 4 + 4) + ')'],
 		['hold']]],
 	[/eventAnniversary%2FEventQuestEntryConfirm/, 'list', [
 		['aJ', 'a:contains("出発する")'],
@@ -679,7 +680,9 @@ var actions = [
     [/gacha%2FGachaResult%2F%3FgachaThemeId%3D3%26themeId%3D3/, 'list', [
         ['a', '//a[contains(@href, "FGachaFlash%2F")]'], //''//a[text()="バトルをスキップしてガチャをする"]'],
         ['a', '//a[contains(@href, "prizeReceive%2FPrizeReceiveTop%2F")]']]], //text()="贈り物BOX"]']]],
-    [/gacha%2FGachaResult%2F%3FgachaId%3D/, "a", '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
+    [/gacha%2FGachaResult%2F%3FgachaId%3D/, 'list', [
+		["a", '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
+		['aJ', cssmypage]]],
     [/gacha%2FGachaSwf%2F/, 'flash', "//*[@id=\"container\"]"],// 372, 62],
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/, 'a', '(//a[contains(text(), "ガチャをする")])[last()]'],
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D2/, 'a', '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
@@ -701,7 +704,8 @@ var actions = [
     [/prizeReceive%2FPrizeReceiveTop/, 'list', [
         //['a', '//a[text()="強化する"]'],
         ['form', "//*[@id=\"main\"]/div[2]/div/form"],
-        ['a', "//a[span[@class='badge fnt_normal']]"]]],
+        ['a', "//a[span[@class='badge fnt_normal']]"],
+		['aJ', cssmypage]]],
     [/questRaidBoss%2FQuestDeck%2F/, 'list', [
         ['form', '//*[@id="deck_box"]//form'],
         ['a', '//a[contains(text(),"敵と戦う")]'],

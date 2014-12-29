@@ -1,5 +1,6 @@
 
 var xpathmypage = "//*[@id=\"main_header_menu\"]/ul/li[1]/a";
+var cssmypage = "#main_header_menu > ul > li:nth-child(1) > a";
 var xpathquest = "//*[@id=\"main_header_menu\"]/ul/li[2]/a";
 
 function handleMissionResult() {
@@ -186,7 +187,9 @@ var actions = [
         ['hold']]],
     [/battleTower%2FBattleTowerTop%2F/, 'func', handleBattleTowerTop],
     [/battleTower%2FBattleTowerEnemyList/, 'minmax', '//div[div[text()="対戦相手選択"]]/ul/li[', ']//table/tbody/tr[1]/td', ']//a[text()="バトルする"]'],
-    [/battleTower%2FBattleTowerResult%2F/, 'a', '//a[contains(text(),"対戦相手選択")]'],
+    [/battleTower%2FBattleTowerResult%2F/, 'list', [
+		['a', '//a[contains(text(),"対戦相手選択")]'],
+		['aJ', cssmypage]]],
     [/campaign%2FcmStory%2FCmStoryTop%2F/, 'a', '//a[text()="最新ストーリーを進める"]'],
     [/companion%2FCompanionApplicationEnd%2F/, 'a', '//a[text()="さらに探す"]'],
     [/companion%2FCompanionMultiApplication%2F/, 'form',  '//*[@id="contents"]/div[1]/form'],
@@ -202,7 +205,9 @@ var actions = [
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D7\b/, "a", "(//div[contains(@class, 'btn_base block_flex')]//a)[last()]"],
     [/gacha%2FGachaTop%2F%3FthemeId%3D154/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, "a", "(//div[@class='btn_base block_flex']/a)[last()]"],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D2/, "formN", '//form[@name="gacha"]'],
+    [/gacha%2FGachaResult%2F%3FthemeId%3D[234]/, 'list', [
+		["formN", '//form[@name="gacha"]'],
+		['aJ', cssmypage]]],
     [/gacha%2FGachaResult%2F%3FthemeId%3D3/, 'formN', '//form[@name="gacha"]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D4/, 'formN', '//form[@name="gacha"]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
@@ -291,13 +296,13 @@ var actions = [
         ['a', '//a[text()="使用する"]']]],
     [/mypage%2FIndex%2F/, "func", handleMypage],
     [/mypage%2FLoginBonusResult%2F/, 'a', '//a[text()="贈り物BOXへ"]'],
-    [/mypage%2FLoginBonusSpecial%2F/, 'a', '//a[text()="今日のログボを受け取る"]'],
+    [/mypage%2FLoginBonusSpecial%2F/, 'aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop"]'],
     [/mission%2FRegionList%2F/, "a", "//div[@class='section_main']/div[2]/div[2]/div/a"],//*[@id="contents"]/div[3]/div[2]/div[2]/div/a
     [/mission%2FMissionActionLot%2F/, "flash", "//*[@id=\"container\"]"],
     [/mission%2FBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[2]/a"],
     [/mission%2FBossBattleFlash%2F/, "flash", "//*[@id=\"container\"]", 161, 293],
     [/mission%2FMissionResult%2F/, "func", handleMissionResult],
-    [/mission%2FBossBattleResult%2F/, "a", "//*[@id=\"contents\"]/div[4]/a"],
+    [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のエリアへ進む"):first()'],
     [/mission%2FMissionError%2F/, 'func', handleMissionError], //"a",  "//*[@id=\"global_menu\"]/ul/li[1]/div[5]/a"],
     [/mission%2FMissionListSwf%2F/, "link", "http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F"],
     [/multiguildbattle%2FMultiGuildbattleResult%2F/, 'a', '//*[@id="btn_force"]/a'],
