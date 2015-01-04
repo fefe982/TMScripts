@@ -353,13 +353,13 @@ var actions = [
         ['a', '//a[contains(text(),"討伐完了")]'],
 		['aJ', 'a:contains("イベントTOP")']]],
     [/island%2FBeatdownBossBattleResult%2F/, 'list', [
-		['aJ', 'a:contains("ボス一覧へ戻る")'],
         ['a', '//a[text()="報酬を受け取る"]'],
+		['aJ', 'a:contains("ボス一覧へ戻る")'],
         ['a', '//a[text()="イベントを進める"]']]],
     [/island%2FBeatdownBossBattleHelpRequestEnd%2F/, 'aJ', 'a:contains("ボス一覧へ戻る")'],
     [/island%2FBeatdownBossRewardAllGetEnd%2F/, 'a', '//a[text()="イベントを進める"]'],
     [/island%2FBeatdownBossRewardEnd%2F/, 'list', [
-		['hold'],
+		['aJ', 'a:contains("ボス一覧へ戻る")'],
 		['a', '//a[text()="イベントを進める"]']]],
 	[/island%2FBeatdownError%2F/, 'aJ', 'a[href*="island%2FTop"]'],
 	[/island%2FBeatdownPunchingBossBattleResult%2F/, 'list', [
