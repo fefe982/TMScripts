@@ -350,8 +350,10 @@ var actions = [
 		//['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括受け取り")]'],
-        ['a', '//a[contains(text(),"討伐完了")]']]],
+        ['a', '//a[contains(text(),"討伐完了")]'],
+		['aJ', 'a:contains("イベントTOP")']]],
     [/island%2FBeatdownBossBattleResult%2F/, 'list', [
+		['aJ', 'a:contains("ボス一覧へ戻る")'],
         ['a', '//a[text()="報酬を受け取る"]'],
         ['a', '//a[text()="イベントを進める"]']]],
     [/island%2FBeatdownBossBattleHelpRequestEnd%2F/, 'aJ', 'a:contains("ボス一覧へ戻る")'],
@@ -360,7 +362,8 @@ var actions = [
 		['hold'],
 		['a', '//a[text()="イベントを進める"]']]],
 	[/island%2FBeatdownError%2F/, 'aJ', 'a[href*="island%2FTop"]'],
-	[/island%2FBeatdownPunchingBossBattleResult%2F/, 'aJ', 'a:contains("イベントを進める")'],
+	[/island%2FBeatdownPunchingBossBattleResult%2F/, 'list', [
+		['aJ', 'a:contains("イベントを進める")']]],
     [/island%2FBossBattleFlash%2F/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],
     [/island%2FBossBattleResult%2F/, 'list', [
 		['aJ', 'a[href*="island%2FPunchingBossTop"]'],
@@ -373,7 +376,9 @@ var actions = [
     [/island%2FChoiceSpAreaSelectEnd%2F/, 'list', [
         ['a', '//*[@id="containerBox"]/div[5]/a'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
-    [/island%2FIslandSlotResult/, 'a', '(//a[contains(@href, "DoIslandSlot")])[last()]'],
+    [/island%2FIslandSlotResult/, 'list', [
+		['a', '(//a[contains(@href, "DoIslandSlot")])[last()]'],
+		['aJ', 'a:contains("イベントTOP")']]],
     [/island%2FIslandSlotTop%2F/, 'list', [
         ['a', '(//a[contains(@href, "DoIslandSlot")])[last()]']]],
     [/island%2FMissionError%2F/, 'func', handleMissionError], //'list', [

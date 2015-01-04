@@ -69,7 +69,7 @@ function handlemypage() {
     if (!no_bp_candy && !raid_my_boss_wait) {
         succ = succ || clickA('//div[@class="btn_boss_wrap"]/a');
     }
-    succ = succ || clickA('//a[text()="未使用のガチャアイテムがあります"]');
+    //succ = succ || clickA('//a[text()="未使用のガチャアイテムがあります"]');
 	succ = succ || clickA('//a[text()="無料で友達ガチャが引けます"]');
     succ = succ || clickA("//a[contains(text(), '冒険から帰って来ました')]");
     succ = succ || clickA("//a[contains(text(), '冒険に行けます')]");
