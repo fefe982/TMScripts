@@ -378,17 +378,17 @@ var actions = [
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
     [/island%2FIslandSlotResult/, 'list', [
 		['a', '(//a[contains(@href, "DoIslandSlot")])[last()]'],
-		['aJ', 'a:contains("イベントTOP")']]],
+		['aJ', 'a:contains("イベントTOP"):last()']]],
     [/island%2FIslandSlotTop%2F/, 'list', [
         ['a', '(//a[contains(@href, "DoIslandSlot")])[last()]']]],
     [/island%2FMissionError%2F/, 'func', handleMissionError], //'list', [
         //['setCookie', '__my_rg_m_error', 1, 600],
         //['a', xpathmypage]]],
-    [/island%2FMissionResult%2F/, 'list', [
+    [/island%2[Ff]MissionResult%2[Ff]/, 'list', [
         ['a', '//a[div[@id="MissionAreaMap"]]'],
         ['a', '//a[div[@id="area_map_image_in"]]'],
         ['a', '//a[contains(@href, "island%2FDoMissionExecutionCheck")]'], //text()="七夕ツアーズに行く"]'],
-        ['flash', '//div[@id="gamecanvas"]/canvas']]],
+        ['flashJT', '#container > canvas']]],
     [/island%2FIslandMissionStoryResult%2F/, 'a', '//a[text()="イベントを進める"]'],
 	[/island%2FMissionDetail/, 'list', [
 		['func', function(){

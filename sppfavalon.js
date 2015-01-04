@@ -204,7 +204,9 @@ var actions = [
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/,
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D7\b/, "a", "(//div[contains(@class, 'btn_base block_flex')]//a)[last()]"],
     [/gacha%2FGachaTop%2F%3FthemeId%3D154/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, "a", "(//div[@class='btn_base block_flex']/a)[last()]"],
+    [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, 'list', [
+		["a", "(//div[@class='btn_base block_flex']/a)[last()]"],
+		['aJ', 'a:contains("ガチャをする")']]],
     [/gacha%2FGachaResult%2F%3FthemeId%3D[234]/, 'list', [
 		["formN", '//form[@name="gacha"]'],
 		['aJ', cssmypage]]],
