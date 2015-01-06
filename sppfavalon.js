@@ -267,7 +267,9 @@ var actions = [
         ['a', '//a[text()="シルバースロット"]'],
         ['a', '//*[@id="global_menu"]/ul/li[4]/div[4]/a']]], //giftbox
         //['hold']]],
-    [/island%2FIslandRaidbossAssistList%2F/, 'a', '//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
+    [/island%2FIslandRaidbossAssistList%2F/, 'list', [
+		['a', '//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
+		['aJ', cssmypage]]],
     [/island%2FIslandRaidbossBattleResult%2F/, 'list', [
         ['a', '//a[img[@alt="エクストラステージを探索"]]'],
         ['a', '//a[img[@alt="イベントクエストを探索"]]']]],

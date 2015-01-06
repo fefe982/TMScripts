@@ -307,6 +307,18 @@ var actions = [
 		['aJ', '#rcv_submit_btns > ul > li:nth-child(1) > a.enabled']]],
 	[/caravan%2FTop/, 'list', [
 		['aJ', '#eventHeader > a']]],
+	[/card%2FBulkCardSell\b/, 'list', [
+		['aJ', 'a:contains("さらに売却する")'],
+		['hold']]],
+	[/card%2FBulkCardSellConfirm%2F/, 'list', [
+		//['hold'],
+		['funcR', function(){
+			if (document.referrer.match(/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/)) {
+				$('#containerBox > div > div > form').submitJ();
+			}
+			return 1;
+		}],
+		['hold']]],
     [/card%2FMaterialCardList%2F%3FbulkFusion%3D1/, 'func', handleBulkFusion],
     [/companion%2FCompanionApplicationAccept%2F/, 'form', '//form[.//input[@value="承認する"]]'],
     [/companion%2FCompanionApprovalList%2F/, 'a', '//a[text()="承認する"]'],
@@ -459,7 +471,47 @@ var actions = [
     [/mypage%2FMaterialCollection%2F/, 'a', '//a[text()="図鑑報酬を受け取る"]'],
     [/mypage%2FMaterialCollectionCompEnd%2F/, 'a', '//a[text()="コンプマテリアル図鑑"]'],
     [/prizeReceive%2FPrizeReceiveAllEnd%2F/, 'a', '//a[text()="贈り物BOX TOP"]'], //xpathmypage],
-    [/prizeReceive%2FPrizeReceiveTop%2F/, 'form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'], //'func',handlePrizeTop],
+	[/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
+		['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])']]],
+	[/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
+		['funcR', function() {
+			var sell = false;
+			$("#containerBox > div:nth-child(12) > ul > li").each(function (index){
+				var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text();
+				if (mres = name.match(/.*\s(.*)\s.*/)) {
+					var cardname = mres[1]; 
+					if (setSellCard.has(cardname)) {
+						GM_log(cardname + " sell");
+						$(this).find("form").submitJ();
+						sell = true;
+						return false;
+					} else {
+						GM_log(cardname + " keep");
+					}
+				} else {
+					GM_log("bad name " + name);
+				}
+				return true;
+			});
+			if (sell) {
+				return 1;
+			} else {
+				return 0;
+			}
+		}],
+		['aJ', '#containerBox > div > div.page_number:first() > div.current + div > a'],
+		['funcR', function() {
+			GM_log("fall through");
+			return 0;
+		}],
+		['hold']]],
+	[/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2/, 'list', [
+		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2%26bulkSellFlg%3D1"]'],
+		['hold']]],
+    [/prizeReceive%2FPrizeReceiveTop\b/, 'list', [
+		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'],
+		['hold'],
+		['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]']]], //'func',handlePrizeTop],
     [/strongBoss%2FStrongBossBattleResult%2F/, 'a', '//a[text()="クエストを進める"]'],
     [/strongBoss%2FStrongBossHelpResult%2F/, 'a', xpathquest],
     [/strongBoss%2FStrongBossTop%2F/, 'func', handleStrongBossTop],
