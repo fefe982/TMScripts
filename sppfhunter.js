@@ -78,10 +78,11 @@ function handlemypage() {
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
 	GM_log(ap_gauge.css('width'));
     if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9].px|[89]px/)) {
-        var eventL = $('#main > div > a[href*="event%2FDoSetClickCount%3F"]:first()');
+        var eventL = $('#main > div > a[href*="EventTop"]:first()');
 		//alert(eventL.length);
 		//alert(eventL.text());
-        if (eventL.length > 0 && !$(eventL[0]).text().match(/\[終了\]/)) {
+		//GM_log(eventL.text());
+        if (eventL.length > 0 && !$(eventL[0]).text().match(/終了しました/)) {
             succ = eventL.last().clickJ().length > 0;
         }
         //succ = succ || clickA(xpathevent);
@@ -499,7 +500,7 @@ function handleERBBattle() {
         }
     }, 2000);
 }
-var eventName = "Anniversary";
+var eventName = "Capture2";
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
 	[/arena%2FArenaBattleConf%2F/, 'list', [
