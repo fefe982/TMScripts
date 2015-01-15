@@ -500,7 +500,7 @@ function handleERBBattle() {
         }
     }, 2000);
 }
-var eventName = "Capture2";
+var eventName = "GiDimension";
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
 	[/arena%2FArenaBattleConf%2F/, 'list', [
@@ -701,6 +701,7 @@ var actions = [
     [/mission%2FMissionResult%2F/, 'list', [
 		['aJ', 'a[href*="eventGiDimension%2FMemoryCardUserList"]'],
 		['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+		['aJ', 'a[href*="eventGiDimension%2FMemoryCardUserList"]'],
 		['a', "//*[@id=\"go\"]/a"],
 		['a', "//*[@id=\"next\"]/a"]]],
     [/mission%2FMissionList/, "func", handleMissionList],
