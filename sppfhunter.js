@@ -662,6 +662,13 @@ var actions = [
 		['aJ', 'a:contains("選択する"):last()'],
 		['aJ', 'a:contains("エピソードエリア")'],
 		['hold']]],
+	[/eventGiDimension%2FGiftMemoryCardEnd/, 'list', [
+		['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
+		['hold']]],
+	[/eventGiDimension%2FMemoryCardUserList/, 'list', [
+		['aJ', 'a:contains("プレゼントする"):first()'],
+		['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
+		['hold']]],
     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
     [/fusion%2FFusionEnd%2F/, "func", handleFusionEnd],
     //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],
@@ -692,6 +699,7 @@ var actions = [
     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
     [/mission%2FMissionResult%2F/, 'list', [
+		['aJ', 'a[href*="eventGiDimension%2FMemoryCardUserList"]'],
 		['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
 		['a', "//*[@id=\"go\"]/a"],
 		['a', "//*[@id=\"next\"]/a"]]],

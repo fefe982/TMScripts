@@ -78,7 +78,7 @@ function handleStrongBossTop() {
         }
         //debugger;
 		GM_log(url);
-        if (/*!owner &&*/ attacked && !url.match(/island%2FPunchingBossTop/)) {
+        if (!owner && attacked && !url.match(/island%2FPunchingBossTop/)) {
             succ = succ || clickA('//a[contains(text(),"ボス一覧へ戻る")]');
             succ = succ || clickA(xpathmypage);
             return;
@@ -358,7 +358,8 @@ var actions = [
     [/island%2FBeatdownBossBattleList/, 'list', [
 		//['hold'],
 		['aJ', 'a:contains("討伐完了")'],
-        ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
+        //['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
+		['aJ', 'a:contains("バトル")'],
 		//['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括受け取り")]'],
@@ -408,9 +409,9 @@ var actions = [
 				GM_log('island MissionDetail');
 				GM_log('' + $('#excBtnOff').filter(':visible').length);
 				GM_log('' + $('#execBtn').filter(':visible').length);
-				/*if ($('#raidBossBtn > a').filter(':visible').length > 0) {
+				if ($('#raidBossBtn > a').filter(':visible').length > 0) {
 					$('#raidBossBtn > a').clickJ();
-				} else*/ if ($('#excBtnOff').filter(':visible').length === 0) {
+				} else if ($('#excBtnOff').filter(':visible').length === 0) {
 					excBtn = $('#execBtn');
 					if (excBtn.length == 0)
 					{
@@ -478,7 +479,7 @@ var actions = [
 			var sell = false;
 			$("#containerBox > div:nth-child(12) > ul > li").each(function (index){
 				var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text();
-				if (mres = name.match(/.*\s(.*)\s.*/)) {
+				if (mres = name.match(/.\s(.*)\s.*/)) {
 					var cardname = mres[1]; 
 					if (setSellCard.has(cardname)) {
 						GM_log(cardname + " sell");
@@ -505,12 +506,36 @@ var actions = [
 			return 0;
 		}],
 		['hold']]],
-	[/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2/, 'list', [
+	[/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2|bulkSellFlg%3D0%26sortKey%3D1%26receiveCategory%3D2%26page|receiveId%3D)/, 'list', [
+		['funcR', function() {
+			var get = false;
+			$("#containerBox > div.section > ul > li").each(function (index){
+				var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text();
+				if (mres = name.match(/.\s(.*)\s.*/)) {
+					var cardname = mres[1]; 
+					if (setGetCard.has(cardname)) {
+						GM_log(cardname + " get");
+						$(this).find("form").submitJ();
+						get = true;
+						return false;
+					} else {
+						GM_log(cardname + " pass");
+					}
+				} else {
+					GM_log("bad name " + name);
+				}
+				return true;
+			});
+			if (!get) {
+				$('#containerBox > div > div.page_number:first() > div.current + div > a').clickJ();
+			}
+			return 1;
+		}],
 		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2%26bulkSellFlg%3D1"]'],
 		['hold']]],
     [/prizeReceive%2FPrizeReceiveTop\b/, 'list', [
-		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'],
 		['hold'],
+		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'],
 		['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]']]], //'func',handlePrizeTop],
     [/strongBoss%2FStrongBossBattleResult%2F/, 'a', '//a[text()="クエストを進める"]'],
     [/strongBoss%2FStrongBossHelpResult%2F/, 'a', xpathquest],
