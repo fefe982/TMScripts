@@ -78,7 +78,7 @@ function handlemypage() {
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
 	GM_log(ap_gauge.css('width'));
     if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9].px|[89]px/)) {
-        var eventL = $('#main > div > a[href*="EventTop"]:first()');
+        var eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first()');
 		//alert(eventL.length);
 		//alert(eventL.text());
 		//GM_log(eventL.text());
@@ -308,13 +308,6 @@ function handleEventBattle() {
         if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {clickSth(ff, "click"); }
     }, 1000);
 }
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventRaidBoss%2FRaidBossTop%2F%3FuserRaidbossId%3D141239245%26isHelpUser%3D1
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FitemBox%2FGachaItemList%2F%3FitemManageId%3D3
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventCollection%2FRaidBossTop%2F%3FmissionId%3D1
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventCollection%2FRaidBossBattleResult%2F%3F
-//historyId%3D132067221%26userRaidbossDefeatLogId%3D158357577%26userRaidbossId%3D165736712%26sentHelpFlg%3D0%26addEventPoint%3D2940%26winEventPoint%3D240%26itemEventPoint%3D1500%26attackEventPoint%3D1200%26getEventItem%3D663%26isEventPointOnly%3D1%26specialRewardHistory%3D%26winFlg%3D1%26isFever%3D0%26isMultiRaid%3D0
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventCollection%2FRaidBossBattleResult%2F%3FuserRaidbossDefeatLogId%3D158351315
-//http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventRaidBoss%2FEventTop
 function handleEvent() {
     var succ = false;
     var raid_clear = getCookie("__myraid_clear");
@@ -505,7 +498,8 @@ var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
 	[/arena%2FArenaBattleConf%2F/, 'list', [
 		//['aJV', '#do_battle_btn'],
-		['aJ', 'a:contains("対戦結果を見る")']]],
+		['aJ', 'a:contains("対戦結果を見る")'],
+		['aJ', cssmypage]]],
 	[/arena%2FArenaBattleResult%2F/, 'aJ', 'a:contains("次の相手")'],
 	[/arena%2FArenaTop/, 'aJ', '#btn_entry > a'],
     [/battleOlympia%2FBattleConf%2F/, 'a', '//a[contains(text(), "対戦結果を見る")]'],
@@ -530,32 +524,32 @@ var actions = [
     [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
-    [new RegExp("event" + eventName + "%2FEventTop"), 'list', [
+    ["event[a-zA-Z0-9]*%2FEventTop", 'list', [
 		//['hold'],
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
         ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
-        ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
-		['aJ', 'a[href*="event' + eventName  + '%2FMissionList"]'],
+        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecutionCheck)'],
+		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FMissionList"), 'list', [
         ['a', '//a[contains(@href, "event' + eventName + '%2FDoMissionExecutionCheck")]'],
         ['hold']]],
-    [new RegExp("event" + eventName + "%2FMissionResult%2F"), 'list', [
+    ["event[a-zA-Z0-9]*%2FMissionResult%2F", 'list', [
         //['dbg'],
         //['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
 		//['hold'],
 		['aJ', 'a[href*="%2FDoGetMissionReward%2F"]'],
 		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
 		['aJ', 'a[href*="%2FDoMissionExecutionCheck%3"]:contains("使う")'],
-		['a', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
+		['aJ', 'a[href*="%2F%2FRaidBossTop"]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
-        ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
-		['aJ', 'a[href*="event' + eventName + '%2FMissionList"]'],
+        ['aJ', 'a[href*="%2FDoMissionExecutionCheck"]'],
+		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
         ['hold']]],
-    [new RegExp("event" + eventName + "%2FRaidBossBattleResult"), 'list', [
-        ['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
+    ["event[a-zA-Z0-9]*%2FRaidBossBattleResult", 'list', [
+        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecutionCheck)'],
         ['hold']]],
 	[/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -700,6 +694,7 @@ var actions = [
     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
     [/mission%2FMissionResult%2F/, 'list', [
 		['aJ', 'a[href*="eventGiDimension%2FMemoryCardUserList"]'],
+		['aJNC', '__ht_no_bp', 'a[href*="raidBoss%2FRaidBossTop"]'],
 		['a', '//a[contains(@href,"' + "event" + eventName + "%2FDoMissionExecutionCheck" + '")]'],
 		['a', "//*[@id=\"go\"]/a"],
 		['a', "//*[@id=\"next\"]/a"]]],

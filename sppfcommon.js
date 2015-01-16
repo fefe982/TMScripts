@@ -110,6 +110,19 @@ function clickLink(link) {
     }, 2000);
 }
 
+$.expr[':'].regex = function(elem, index, match) {
+    var matchParams = match[3].split(','),
+        validLabels = /^(data|css):/,
+        attr = {
+            method: matchParams[0].match(validLabels) ? 
+                        matchParams[0].split(':')[0] : 'attr',
+            property: matchParams.shift().replace(validLabels,'')
+        },
+        regexFlags = 'ig',
+        regex = new RegExp(matchParams.join('').replace(/^\s+|\s+$/g,''), regexFlags);
+    return regex.test(jQuery(elem)[attr.method](attr.property));
+}
+
 $.fn.simMouseEvent = function (eveName, xoff, yoff) {
     var rect, x, y;
     if (this.length === 0) {
@@ -239,6 +252,33 @@ $.fn.clickJ = function (timeout) {
 	        jq.simMouseEvent("mousedown");
 			jq.simMouseEvent("mouseup");
             jq.simMouseEvent("click");
+        }, timeout || 500);
+    }
+    return this;
+};
+
+$.fn.touchJ = function (timeout) {
+	GM_log("touchJ : " + this.length);
+	for (var i = 0; i < this.length; i++)
+	{
+		GM_log(i + ' tagname : ' + this.get(i).tagName);
+		$(this.get(i).attributes).each(function() {
+			GM_log(i + " " + this.nodeName + ' : ' + this.value);
+		});
+	}
+    if (this.length === 0) {
+        return this;
+    }
+    if (timeout === 0) {
+        this.simTouchEvent("touchstart");
+        this.simMouseEvent("touchend");
+    } else {
+        var jq = $(this);
+		GM_log(Date() + ' wait clickJ ' + (timeout || 1000));
+        setTimeout(function () {
+			GM_log(Date() + ' touch func ');
+	        jq.simTouchEvent("touchstart");
+			jq.simTouchEvent("touchend");
         }, timeout || 500);
     }
     return this;

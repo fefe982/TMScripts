@@ -196,7 +196,15 @@ var actions = [
         ["a", '//a[contains(@href, "arena%2FArenaUserSelectList")]'],//text()="戦いを続ける"]'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]], //*[@id="container"]']]],
     //[/arena%2FArenaBattleSwf%2F/, 'flash', ''],
-    [/arena%2FArenaBattleTop%2F/,  'list', [
+    [/arena%2FArenaBattleTop/,  'list', [
+		['func', function() {
+			if ($("#header_bp_gauge").data('value') >= 20 || $('.battle_btn:contains("BP消費0")').length > 0) {
+				$(".battle_btn > a").clickJ();
+			} else {
+				$('a[href*="arena%2FMissionDetail"]').clickJ();
+			}
+		}],
+		['aJ', 'a[href*="arena%2FMissionDetail"]'],
 		['aJ', 'a[href*="Farena%2FDoMissionExecutionCheck%2F"]'],
         ['a', '//div[@class="battle_btn"]/a'],
         ['flash', '//div[@id="gamecanvas"]/canvas']]],
@@ -222,21 +230,8 @@ var actions = [
     [/arena%2FArenaError%2F/, 'a', '//a[text()="イベントTOP"]'],
     [/arena%2FArenaUserSelectList/, 'list', [  // 'func', handleArenaUserList],
         //['dbg'],
-        ['aJV', 'a[href*="arena%2FDoArenaUseAdvantageItem%2F"]'],
-        //['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
-        //['aJP', '#rcv_items a'],
-        //['func', function () {
-        //    //setInterval(function () {
-        //    //    if ($('#current_worker').text() < 20) {
-        //    //        clickLink($('#rcv_items a').filter(":first")[0]);
-        //    //    }
-        //    //}, 1000);
-        //    setInterval(function () {
-        //        clickMinMax('//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a');
-        //    }, 1000);
-        //    return false;
-        //}],
         ['minmax', '//*[@id="rcv_submit_btns"]/ul/li[', ']/table/tbody/tr/td[3]/div/span[2]', ']/table/tbody/tr/td[3]/div/div/a'],
+		['aJ', 'a[href*="arena%2FTop%2F"]'],
         ['hold']]],
     [/arena%2FBossAppear%2F/, 'a',  "//a[text()='ボスと戦う']"],
     [/arena%2FBossBattleResult%2F/, 'list', [
@@ -248,9 +243,28 @@ var actions = [
     [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
 	[/arena%2FDoMissionExecution%2F/, 'aJ', 'a[href*="mypage%2FIndex"]'],
 	[/arena%2FMissionDetail%2F/, 'list', [
-		//['aJV', '#raidBossBtn > a'],
-		['flashJT', '#execBtn']
-	]],
+		['func', function(){
+			setInterval(function(){
+				var text = $('#containerBox > div > div.eventPopupWrap.js_eventPopup > div > div > div.margin_left_10').text();
+				GM_log(text);
+				//BPが100→100に回復しました
+				if (text.match(/BPが[0-9]*→(100|[2-9].)に回復しました/) && $('#battleBtn > a').filter(':visible').length > 0) {
+					$('#battleBtn > a:visible').clickJ();
+				} else if (text.match(/BPが[0-9]*→100に回復しました/) && $('#raidBossBtn > a').filter(':visible').length > 0) {
+					$('#raidBossBtn > a').clickJ();
+				} else if ($('#excBtnOff').filter(':visible').length === 0) {
+					excBtn = $('#execBtn');
+					if (excBtn.length == 0)
+					{
+						excBtn = $('#execClear');
+					}
+					excBtn.clickJ().touchJ();
+				} else if ($('#recoveryContainer > div > div.box_extend.js_recovery_btn > div:nth-child(1) > img').filter(':visible').length > 0) {
+					var addAp = $('#recoveryContainer > div > div.box_extend.js_recovery_btn > div:nth-child(1) > img').filter(':visible').filter(':first');
+					addAp.clickJ().touchJ();
+				}
+			}, 1000);
+		}]]],
     [/arena%2FMissionError%2F/, 'func', handleMissionError],
     [/arena%2FMissionResult%2F%/, 'list', [
         //['aJ', '#arenaOpenButton a'],

@@ -100,6 +100,13 @@ for (i = 0; i < actions.length; i++) {
                 succ = $(list_action[j][1]).filter(':first').filter(':visible').clickJ().length > 0;
 				GM_log('aJV ' + list_action[j][1] + ' ' + succ);
                 break;
+			case 'aJNC':
+				if (!succ) {
+                    var CCC = getCookie(list_action[j][1]);
+                    if (!CCC) {
+                        succ = $(list_action[j][2]).clickJ().length > 0;
+                    }
+                }
             case 'formJ':
                 succ = $(list_action[j][1]).submitJ().length > 0;
                 break;
