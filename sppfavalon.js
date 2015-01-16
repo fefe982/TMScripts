@@ -326,7 +326,7 @@ var actions = [
         ['a', "//*[@id=\"raid_help\"]/a"],
         ['a', "//*[@id=\"attack_btn\"]/div/a"],
         ['aJV', '#bp_recovery_popup > a:contains("使用する")'],
-		['aJ', 'a[href*="mission%2FMissionActionLot"]'],
+		['aJ', 'a[href*="%2FMissionActionLot"]'],
         ['hold']]],
     [/raidboss%2FRaidbossHelpResult%2F/, "a", "//*[@id=\"contents\"]/div[2]/a"],
     [/raidboss%2FRaidbossAssistList%2F/, "func", handleRaidAssist],

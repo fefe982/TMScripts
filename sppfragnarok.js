@@ -2,7 +2,7 @@ var xpathmypage = '//*[@id="header_left_button"]/a';
 var cssmypage = '#header_left_button > a';
 var xpathquest = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]';
 var xpathevent = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_event_image"]]';
-
+KILLBOSS = false;
 function handleArenaTop() {
     var succ = false;
     var bp_gauge = getXPATH('//*[@id="header_bp_gauge"]'), bp;
@@ -78,7 +78,7 @@ function handleStrongBossTop() {
         }
         //debugger;
 		GM_log(url);
-        if (!owner && attacked && !url.match(/island%2FPunchingBossTop/)) {
+        if ((!owner || !KILLBOSS) && attacked && !url.match(/island%2FPunchingBossTop/)) {
             succ = succ || clickA('//a[contains(text(),"ボス一覧へ戻る")]');
             succ = succ || clickA(xpathmypage);
             return;
@@ -214,11 +214,13 @@ var actions = [
 		//['hold'],
         //['a', '//*[@id="containerBox"]/div[5]/ul/li[.//img[contains(@src, "new3.gif")]]/div[2]/div/a'],
 		['a', '//ul[@class="lst_info"]/li[.//img[contains(@src, "new3.gif")] or .//img[contains(@src,"g_s_raid_100.png")]]//a[text()="バトル"]'],
+		//['aJ', 'a:contains("バトル")'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括で受け取る")]'],
         ['a', '//a[contains(text(),"討伐完了")]'],
 		['aJ', 'a[href*="arena%2FTop"]']]],
     [/arena%2FArenaBossBattleResult%2F/, 'list', [
+		['a', '//a[text()="ボス一覧へ戻る"]'],
         ['a', '//a[text()="報酬を受け取る"]'],
         ['a', '//a[text()="イベントを進める"]']]],
     [/arena%2FArenaBossRewardAllGetEnd%2F/, 'list', [
@@ -371,9 +373,10 @@ var actions = [
     [/island%2FBeatdownBossBattle%2F/, 'func', handleStrongBossTop],
     [/island%2FBeatdownBossBattleList/, 'list', [
 		//['hold'],
+		['a', '//a[contains(text(),"一括受け取り")]'],
 		['aJ', 'a:contains("討伐完了")'],
-        //['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
-		['aJ', 'a:contains("バトル")'],
+		KILLBOSS?['aJ', 'a:contains("バトル")']:
+        ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
 		//['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括受け取り")]'],
@@ -493,7 +496,7 @@ var actions = [
 			var sell = false;
 			$("#containerBox > div:nth-child(12) > ul > li").each(function (index){
 				var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text();
-				if (mres = name.match(/.\s(.*)\s.*/)) {
+				if (mres = name.match(/^.\s(.*)\s1.*/)) {
 					var cardname = mres[1]; 
 					if (setSellCard.has(cardname)) {
 						GM_log(cardname + " sell");
