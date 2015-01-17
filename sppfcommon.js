@@ -295,6 +295,34 @@ $.fn.submitJ = function (timeout) {
     return this;
 };
 
+$.fn.minmaxJ = function (compare, target, minmaxflag) {
+	var minmax = 1000000, id = -1, ele, nres, num;
+    if (minmaxflag) {
+        minmax = -minmax;
+    }
+	var p = this;
+	if (p.length == 0) {
+		return p;
+	}
+    for (i=0; i<p.length; i++) {
+		var p1 = $(p[i]);
+	    GM_log(i + ", " + id + ", " + p.length + ", " + compare + ", " + target);
+		if (p1.find(compare).length == 0 || p1.find(target).length == 0) {
+			continue;
+		}
+        nres = p1.find(compare).text().match(/([0-9]+)/);
+        num = parseInt(nres[1], 10);
+        if ((minmaxflag && num > minmax) || (!minmaxflag && num < minmax)) {
+            minmax = num;
+            id = i;
+        }
+    }
+    if (id >= 0) {
+        return $(p[id]).find(target).clickJ();
+    }
+    return $();
+}
+
 $.fn.clickFlash = function (xoff, yoff) {
     //debugger;
     if (this.length === 0) {

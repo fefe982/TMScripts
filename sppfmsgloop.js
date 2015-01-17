@@ -40,6 +40,7 @@ for (i = 0; i < actions.length; i++) {
             if (succ) {
                 break;
             }
+			GM_log("action: " + list_action[j][0]);
             switch (list_action[j][0]) {
             case "a":
                 succ = succ || clickA(list_action[j][1]);
@@ -86,6 +87,9 @@ for (i = 0; i < actions.length; i++) {
             case 'minmax':
                 succ = succ || clickMinMax(list_action[j][1], list_action[j][2], list_action[j][3], list_action[j][4]);
                 break;
+			case 'minmaxJ':
+				succ = $(list_action[j][1]).minmaxJ(list_action[j][2], list_action[j][3], list_action[j][4]).length;
+				break;
             case 'link':
                 if (!succ) {window.location.href = list_action[j][1]; }
                 succ = true;
@@ -127,6 +131,7 @@ for (i = 0; i < actions.length; i++) {
                 alert("msgloop - unknown msg - " + list_action[j][0]);
                 break;
             }
+			GM_log("succ : " + succ);
         }
 		if (!succ) alert('no action');
         break;
