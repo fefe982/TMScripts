@@ -11,6 +11,7 @@ var succ = (function () {
             //["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage",           5] // to aru
             //["http://sp.pf.mbga.jp/12012329?url=http%3A%2F%2Fmdrabre.croozsocial.jp%2Fmypage%2FIndex",         5]
         ];
+		return false;
         //debugger;
         var siteI = +(getCookie("site_loop_index") || 0);
         var siteT = +(getCookie("site_timeout") || (Date.now() - 10));

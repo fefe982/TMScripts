@@ -3,20 +3,7 @@ var cssmypage = '#header_left_button > a';
 var xpathquest = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]';
 var xpathevent = '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_event_image"]]';
 KILLBOSS = false;
-function handleArenaTop() {
-    var succ = false;
-    var bp_gauge = getXPATH('//*[@id="header_bp_gauge"]'), bp;
-    if (bp_gauge) {
-        bp = bp_gauge.dataset.value;
-    }
-    //if (bp > 20) {
-    succ = succ || clickA('//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]');
-    //}
-    succ = succ || clickA("//div[@class='event_btn']/a");
-    if (!succ && getXPATH('//*[@id="container"]')) {
-        clickS('//*[@id="container"]');
-    }
-}
+
 function handleMissionRes() {
     var title_ele = getXPATH('//p[@class="section_title"]'), title;
     if (title_ele) {
@@ -152,14 +139,6 @@ function handlePrizeTop() {
     clickForm('//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]');
 }
 
-function handleChoiceCoin() {
-    //clickS('//div[@class="popup_btn symbol"]');
-    //setTimeout(function () {
-    //    var succ = false;
-    //    succ = succ || clickA('(//div[@id="overrayArea" and not(@class="hide")]//div[contains(@class, "targetSymbolList") and @style="display: block;"]//a)[last()]');
-    //},2000);
-}
-
 function handleArrangement() {
     clickS('//div[text()="自動割り振り"]');
     //clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
@@ -243,7 +222,12 @@ var actions = [
         ['flash', '//*[@id="gamecanvas"]/canvas']]],//"//a[text()='次のエリアへ進む']"]]],
     [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="container"]/canvas', 79, 346],
 	[/arena%2FContinuousParticipation%2F/, 'aJ', 'a[href*="arena%2FTop"]'],
-    [/arena%2FChoiceCoinSetResult%2F/, 'func', handleChoiceCoin],
+	[/arena%2FChoiceCoinItemTop/, 'list', [
+		['aJ', 'a[href*="arena%2FDoChoiceCoinSetCheck"]:last()'],
+		['aJ', 'a[href*="arena%2FTop"]']]],
+    [/arena%2FChoiceCoinSetResult%2F/, 'list', [
+		['aJ', 'a[href*="arena%2FDoChoiceCoinSetCheck"]:last()'],
+		['aJ', 'a[href*="arena%2FTop"]']]],
 	[/arena%2FDoMissionExecution%2F/, 'aJ', 'a[href*="mypage%2FIndex"]'],
 	[/arena%2FMissionDetail%2F/, 'list', [
 		['func', function(){
@@ -273,7 +257,12 @@ var actions = [
         //['aJ', '#arenaOpenButton a'],
         ['aJ', 'a[href*="arena%2FDoMissionExecutionCheck"]']]],
         //'func', handleArenaMissionRes],
-    [/arena%2FTop/, 'func', handleArenaTop],
+    [/arena%2FTop/, 'list', [
+		//['hold'],
+		['aJ', '#containerBox > div > a[href*="arena%2FChoiceCoinItemTop"]:regexText(^0*[1-9][0-9]*$)'],
+		['a', '//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]'],
+		['a', "//div[@class='event_btn']/a"],
+		['flash', '//*[@id="container"]']]],
     [/arrangement%2FArrangementEdit%2F/, 'func', handleArrangement],
 	[/beatdown%2FBigRaidTop%2F/, 'aJ', 'a[href*="beatdown%2FDoMissionExecutionCheck%2F"]'], 
     [/beatdown%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],

@@ -393,7 +393,7 @@ function handleEventRaid() {
 				no_bp_candy = 1;
 			}
 			setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
-			$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
+			//$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
 		} else {
 			add_bp.first().clickJ();
 		}
@@ -543,7 +543,7 @@ var actions = [
 		['aJ', 'a[href*="%2FDoGetMissionReward%2F"]'],
 		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
 		['aJ', 'a[href*="%2FDoMissionExecutionCheck%3"]:contains("使う")'],
-		['aJ', 'a[href*="%2F%2FRaidBossTop"]'],
+		['aJ', 'a[href*="%2FRaidBossTop"]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['aJ', 'a[href*="%2FDoMissionExecutionCheck"]'],
 		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
