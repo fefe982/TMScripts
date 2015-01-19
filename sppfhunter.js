@@ -392,7 +392,7 @@ function handleEventRaid() {
 			} else {
 				no_bp_candy = 1;
 			}
-			setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
+			//setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
 			//$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
 		} else {
 			add_bp.first().clickJ();

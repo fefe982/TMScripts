@@ -124,7 +124,7 @@ $.expr[':'].regex = function(elem, index, match) {
 }
 
 $.expr[':'].regexText = function(elem, index, match) {
-	//GM_log(elem.innerText);
+	//GM_log(":" + elem.innerText + ":");
 	//GM_log(elem.innerText.match(match[3]));
 	//GM_log(match[3]);
 	//GM_log((new RegExp(match[3])).test(elem.innerText));

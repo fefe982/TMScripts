@@ -259,7 +259,7 @@ var actions = [
         //'func', handleArenaMissionRes],
     [/arena%2FTop/, 'list', [
 		//['hold'],
-		['aJ', '#containerBox > div > a[href*="arena%2FChoiceCoinItemTop"]:regexText(^0*[1-9][0-9]*$)'],
+		['aJ', '#containerBox > div > a[href*="arena%2FChoiceCoinItemTop"]:regexText(\s?0*[1-9][0-9]*\s?)'],
 		['a', '//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]'],
 		['a', "//div[@class='event_btn']/a"],
 		['flash', '//*[@id="container"]']]],
