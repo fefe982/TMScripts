@@ -95,7 +95,8 @@ function handleMypage() {
     if (ap > 10) {
 		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
         //succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
-        succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
+        //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
+		//succ = succ || $('a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
     }
     succ = succ || setTimeout(function () {location.reload(true); }, 60000);
@@ -332,7 +333,7 @@ var actions = [
     [/raidboss%2FRaidbossAssistList%2F/, "func", handleRaidAssist],
     [/raidboss%2FRaidbossBattleResult%2F/, "func", handleRaidbossBattleResult],
     [/raidboss%2FRaidbossBattleResultList%2F/, 'a', '//*[@id="contents"]/div[1]/ul/li/a'],
-    [/shop%2FItemUseEnd%/, 'a', '//a[contains(@href, "island%2FMissionActionLot")]'],
+    [/shop%2FItemUseEnd%/, 'a', '//a[contains(@href, "MissionActionLot")]'],
     [/story(ex)?%2FDoStoryEpisodeSwf2%2F/, "flash", "//*[@id=\"container\"]"],
     [/story(ex)?%2FDoStoryEpisodeSwfClear%2F/, "flash", "//*[@id=\"container\"]"],
     [/story(ex)?%2FDoStoryEpisodeSwfEd%2F/, "flash", "//*[@id=\"container\"]"],
@@ -393,6 +394,20 @@ var actions = [
     [/towerRaid%2FMissionResult/, 'list', [
         ['a', '//*[@id="contents"]/div[contains(@class, "section_main") and .//div[@id="towerraid_remainder"]]/div[2]/div/a'],
         ['hold']]],
+	[/unitBattle%2FMissionResult/, 'list', [
+		['aJ', 'a[href*="unitBattle%2FUnitBattleRaidbossTop"]'],
+		['aJ', 'a[href*="unitBattle%2FMissionActionLot"]'],
+		['a', '//a[text()="使用する"]']]],
+	[/unitBattle%2FRaidbossBattleResult/, 'list', [
+		['aJ', 'a[href*="unitBattle%2FUnitBattleRaidbossTop"]']]],
+	[/unitBattle%2FRaidbossTop/, 'list', [
+		['aJ', 'div.ub_inBattleButtons > div > div > a[href*="unitBattle%2FDoRaidbossBattleResult"]:last()'],
+		['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
+	[/unitBattle%2FUnitBattleTop/, 'list', [
+		['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
+	[/unitBattle%2FUnitBattleRaidbossTop/, 'list', [
+		['aJ', 'a[href*="unitBattle%2FRaidbossTop"]'],
+		['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
     [/Swf%2F/, "flash", "//*[@id=\"container\"]"],
 	[/SwfOp%2F/, 'flash', '//*[@id="container"]'],
     [/xxxxxxxxxxxxxxxxx/]

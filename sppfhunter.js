@@ -530,7 +530,7 @@ var actions = [
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
         ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
-        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecutionCheck)'],
+        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
 		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
         ['hold']]],
     [new RegExp("event" + eventName + "%2FMissionList"), 'list', [
@@ -545,11 +545,11 @@ var actions = [
 		['aJ', 'a[href*="%2FDoMissionExecutionCheck%3"]:contains("使う")'],
 		['aJ', 'a[href*="%2FRaidBossTop"]'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
-        ['aJ', 'a[href*="%2FDoMissionExecutionCheck"]'],
+        ['aJ', 'a[href*="%2FDoMissionExecution"]'],
 		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
         ['hold']]],
     ["event[a-zA-Z0-9]*%2FRaidBossBattleResult", 'list', [
-        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecutionCheck)'],
+        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
         ['hold']]],
 	[/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
