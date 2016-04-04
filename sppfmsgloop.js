@@ -7,11 +7,11 @@ var succ = (function () {
 		var sites = [
             ["http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F", 5], // avalon
             ["http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2Fmypage%2FIndex",          5], // hunter
-            ["http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fmypage%2FIndex",       5]  //ragnarok
-            //["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage",           5] // to aru
+            ["http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fmypage%2FIndex",       5],  //ragnarok
+            ["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage",           5] // to aru
             //["http://sp.pf.mbga.jp/12012329?url=http%3A%2F%2Fmdrabre.croozsocial.jp%2Fmypage%2FIndex",         5]
         ];
-		return false;
+		//return false;
         //debugger;
         var siteI = +(getCookie("site_loop_index") || 0);
         var siteT = +(getCookie("site_timeout") || (Date.now() - 10));
@@ -119,7 +119,21 @@ for (i = 0; i < actions.length; i++) {
                 succ = $(list_action[j][1]).clickFlash().length > 0;
                 break;
             case 'flashJT':
-                succ = $(list_action[j][1]).touchFlash().length > 0;
+				var j_save = j;
+				function time_wait() {
+					var canvas = $(list_action[j_save][1]);
+					var x = list_action[j_save][2];
+					var y = list_action[j_save][3];
+					if (canvas.length > 0) {
+						GM_log(canvas);
+						canvas.touchFlash(x, y);
+					} else {
+						GM_log('wait flash');
+						setTimeout(time_wait, 1000);
+					}
+				}
+				time_wait();
+				succ = true;
                 break;
             case 'dbg':
                 if (!succ) {debugger; }
@@ -129,19 +143,19 @@ for (i = 0; i < actions.length; i++) {
                 succ = true;
                 break;
             default:
-                alert("msgloop - unknown msg - " + list_action[j][0]);
+                unsafeWindow.alert("msgloop - unknown msg - " + list_action[j][0]);
                 break;
             }
 			GM_log("succ : " + succ);
         }
-		if (!succ) alert('no action');
+		if (!succ) unsafeWindow.alert('no action');
         break;
     }
 }
 
 if (i === actions.length)
 {
-	alert('no match');
+	unsafeWindow.alert('no match');
 }
 
 //setTimeout(function () {location.reload(true); }, 600000);

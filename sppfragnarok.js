@@ -353,7 +353,7 @@ var actions = [
 		['aJ', cssmypage]]],
     [/gacha%2FGachaTop%2F%3FpageNum%3D4%26thema%3Dregend/, 'aJ', 'a[href$="gacha%2FGachaTop%2F%3FpageNum%3D4"]'],
 	[/gacha%2FGachaTop%2F%3FpageNum%3D4$/, 'list', [
-		['a', '(//a[.//span[text()="ガチャをする"]])[last()]'],
+		//['a', '(//a[.//span[text()="ガチャをする"]])[last()]'],
         ['aJ', 'a[href*="gacha%2FGachaTop%2F%3FpageNum%3D3"]']]],
     [/gacha%2FGachaTop%2F/, 'list', [
         ['a', '//*[@id="info"]/div[3]/a'],
@@ -362,14 +362,15 @@ var actions = [
     [/guildbattle%2FGuildbattleMenu%2F/, 'list', [
         ['flash', '//*[@id="gamecanvas"]/canvas'],
         ['hold']]],
+	[/info%2FInformation/, 'aJ', '#header_left_button > a'],
     [/island%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
     [/island%2FBeatdownBossBattle%2F/, 'func', handleStrongBossTop],
     [/island%2FBeatdownBossBattleList/, 'list', [
 		//['hold'],
 		['a', '//a[contains(text(),"一括受け取り")]'],
 		['aJ', 'a:contains("討伐完了")'],
-		KILLBOSS?['aJ', 'a:contains("バトル")']:
-        ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="バトル"]'],
+		KILLBOSS?['aJ', 'a:contains("戦う")']:
+        ['a', '//ul[@class="lst_info"]/li[.//div[@class="relative"]/div or .//img[contains(@src,"g_s_raid_2_100.png")]]//a[text()="戦う"]'],
 		//['aJ', 'a[href*="island%2FBeatdownBossBattle%2F"'],
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', '//a[contains(text(),"一括受け取り")]'],
@@ -387,6 +388,36 @@ var actions = [
 	[/island%2FBeatdownError%2F/, 'aJ', 'a[href*="island%2FTop"]'],
 	[/island%2FBeatdownPunchingBossBattleResult%2F/, 'list', [
 		['aJ', 'a:contains("イベントを進める")']]],
+	[/island%2FBigRaidBattle%2F/, 'list', [
+		['func', function(){
+			var btns = [$('#recovery > div.attack_patterns > div.sprites-bigraid-btn_1_1'),
+			$('#recovery > div.attack_patterns > div.sprites-bigraid-btn_2_1'),
+			$('#recovery > div.attack_patterns > div.sprites-bigraid-btn_3_1')];
+			GM_log(btns);
+			var hasBtn = false;
+			for (var i = 0; i < 3; i++) {
+				var btn = btns[i];
+				if (btn.length > 0) {
+					btn.clickJ();
+					hasBtn = true;
+					break;
+				}
+			}
+			if (!hasBtn) {
+				$('#recovery > div.attack_patterns > div.sprites-bigraid-btn_' + Math.floor(Math.random() * 3 + 1) + '_2').clickJ();
+			}
+			setInterval(function() {
+				var attack = $('#rcv_submit_btns > ul > li > div > a.enabled');
+				if (attack.length === 0) {
+					if ($('#rcv_items > ul > li > a.enabled').last().clickJ() === 0) {
+						attack.last().clickJ();
+					}
+				} else {
+					attack.last().clickJ();
+				}
+			}, 1000);
+		}],
+		['aJ', '#rcv_submit_btns > ul > li:nth-child(1) > a.enabled']]],
     [/island%2FBossBattleFlash%2F/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],
     [/island%2FBossBattleResult%2F/, 'list', [
 		['aJ', 'a[href*="island%2FPunchingBossTop"]'],
@@ -397,8 +428,8 @@ var actions = [
         ['a', '//*[@id="choiceArea"]/div[1]/div[4]/a'],
         ['a', '//*[@id="choiceArea"]/div[1]/div[' + Math.floor(Math.random() * 3 + 1) + ']/a']]],
     [/island%2FChoiceSpAreaSelectEnd%2F/, 'list', [
-        ['a', '//*[@id="containerBox"]/div[5]/a'],
-        ['flash', '//div[@id="gamecanvas"]/canvas']]],
+        ['aJ', '#containerBox > div.section > div.box_center > a'],
+        ['flashJT', '#container > canvas']]],
     [/island%2FIslandSlotResult/, 'list', [
 		['a', '(//a[contains(@href, "DoIslandSlot")])[last()]'],
 		['aJ', 'a:contains("イベントTOP"):last()']]],
@@ -417,31 +448,31 @@ var actions = [
 		['func', function(){
 			setInterval(function(){
 				GM_log('island MissionDetail');
-				GM_log('' + $('#excBtnOff').filter(':visible').length);
-				GM_log('' + $('#execBtn').filter(':visible').length);
-				if ($('#raidBossBtn > a').filter(':visible').length > 0) {
+				//GM_log($('#execBtnOff.sprites-common-btn_nomal').length);
+				//GM_log('' + $('#excBtnOff').filter(':visible').length);
+				//GM_log('' + $('#execBtn').filter(':visible').length);
+				//GM_log($('#raidBossBtn:not([style])'));
+				if (KILLBOSS && $('#raidBossBtn:not([style]) > a').length > 0) {
 					$('#raidBossBtn > a').clickJ();
-				} else if ($('#excBtnOff').filter(':visible').length === 0) {
+				} else if ($('#excBtnOff[style*="block"]').length === 0) {
 					excBtn = $('#execBtn');
 					if (excBtn.length == 0)
 					{
 						excBtn = $('#execClear');
 					}
-					setTimeout(function () {excBtn.simTouchEvent("touchstart");}, 10);
-					setTimeout(function () {excBtn.simTouchEvent("touchend");}, 20);
-					setTimeout(function () {excBtn.simMouseEvent("mousedown");}, 30);
-					setTimeout(function () {excBtn.simMouseEvent("mousemove");}, 40);
-					setTimeout(function () {excBtn.simMouseEvent("mouseup");}, 50);
-					setTimeout(function () {excBtn.simMouseEvent("click");}, 60);
-				} else if ($('#recoveryContainer > div > div.box_extend.js_recovery_btn > div:nth-child(1) > img').filter(':visible').length > 0) {
-					var addAp = $('#recoveryContainer > div > div.box_extend.js_recovery_btn > div:nth-child(1) > img').filter(':visible').filter(':first');
-					setTimeout(function () {addAp.simTouchEvent("touchstart");}, 10);
-					setTimeout(function () {addAp.simTouchEvent("touchend");}, 20);
-					setTimeout(function () {addAp.simMouseEvent("mousedown");}, 30);
-					setTimeout(function () {addAp.simMouseEvent("mousemove");}, 40);
-					setTimeout(function () {addAp.simMouseEvent("mouseup");}, 50);
-					setTimeout(function () {addAp.simMouseEvent("click");}, 60);
+					//GM_log("==========");
+					//GM_log(excBtn);
+					excBtn.clickJ();
+					excBtn.touchJ();
+				} else if ($('#recoveryContainer > div > div.box_extend.js_recovery_btn > div > img.js_on[style*="block"]').length > 0) {
+					//GM_log("++++++++++");
+					var addAp = $('#recoveryContainer > div > div.box_extend.js_recovery_btn > div > img.js_on[style*="block"]:first');
+					GM_log(addAp);
+					addAp.clickJ();
+					addAp.touchJ();
 				}
+				//GM_log("__________");
+				//GM_log($('#recoveryContainer > div > div.box_extend.js_recovery_btn > div > img.js_on[style*="block"]').length);
 			}, 3000);
 		}]]],
 	[/island%2FPunchingBossTop/, 'func', handleStrongBossTop],
@@ -523,7 +554,7 @@ var actions = [
 				var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text();
 				if (mres = name.match(/.\s(.*)\s.*/)) {
 					var cardname = mres[1]; 
-					if (setGetCard.has(cardname)) {
+					if (!setGetCard.has(cardname)) {
 						GM_log(cardname + " get");
 						$(this).find("form").submitJ();
 						get = true;
@@ -544,7 +575,8 @@ var actions = [
 		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2%26bulkSellFlg%3D1"]'],
 		['hold']]],
     [/prizeReceive%2FPrizeReceiveTop\b/, 'list', [
-		['hold'],
+		//['hold'],
+		//['formJ', '#containerBox > form:nth-child(7)'],
 		['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'],
 		['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]']]], //'func',handlePrizeTop],
     [/strongBoss%2FStrongBossBattleResult%2F/, 'a', '//a[text()="クエストを進める"]'],

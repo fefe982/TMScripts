@@ -94,7 +94,7 @@ function handleMypage() {
     }
     if (ap > 10) {
 		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
-        //succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
+        succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
         //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
 		//succ = succ || $('a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
@@ -191,6 +191,7 @@ var actions = [
     [/battleTower%2FBattleTowerResult%2F/, 'list', [
 		['a', '//a[contains(text(),"対戦相手選択")]'],
 		['aJ', cssmypage]]],
+	[/comebackContinuation%2FComebackGacha%2F/, 'aJ', 'a:contains("贈り物ボックスへ")'],
     [/campaign%2FcmStory%2FCmStoryTop%2F/, 'a', '//a[text()="最新ストーリーを進める"]'],
     [/companion%2FCompanionApplicationEnd%2F/, 'a', '//a[text()="さらに探す"]'],
     [/companion%2FCompanionMultiApplication%2F/, 'form',  '//*[@id="contents"]/div[1]/form'],
@@ -208,6 +209,9 @@ var actions = [
     [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, 'list', [
 		["a", "(//div[@class='btn_base block_flex']/a)[last()]"],
 		['aJ', 'a:contains("ガチャをする")']]],
+	[/gacha%2FGachaResult%2F%3FthemeId%3D1[45][567]/, "formN", '//form[@name="gacha"]'],
+	//'sth', 
+		//'//form//input[@value="ガチャをする" and @onclick="submit();"]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D[234]/, 'list', [
 		["formN", '//form[@name="gacha"]'],
 		['aJ', cssmypage]]],
@@ -215,7 +219,6 @@ var actions = [
     [/gacha%2FGachaResult%2F%3FthemeId%3D4/, 'formN', '//form[@name="gacha"]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D8/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D15[567]/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
 	[/gacha%2FitemBox%2FGachaBoxResetConf/, 'aJ', 'a[href*="gacha%2FitemBox%2FDoGachaBoxReset%2F"]'],
 	[/gacha%2FitemBox%2FGachaBoxResetEnd/, 'aJ', 'a[href*="gacha%2FitemBox%2FGachaTop%2F"'],
 	[/gacha%2FitemBox%2FGachaResult/, 'list', [
@@ -408,7 +411,7 @@ var actions = [
 	[/unitBattle%2FUnitBattleRaidbossTop/, 'list', [
 		['aJ', 'a[href*="unitBattle%2FRaidbossTop"]'],
 		['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
-    [/Swf%2F/, "flash", "//*[@id=\"container\"]"],
+    [/Swf%2F/, "flashJT", '#container > canvas'],
 	[/SwfOp%2F/, 'flash', '//*[@id="container"]'],
     [/xxxxxxxxxxxxxxxxx/]
 ];

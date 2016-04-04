@@ -57,7 +57,7 @@ function handleCoinGacha() {
 
 function handlemypage() {
     //alert("mypage");
-    var ap_gauge = $('div.gauge.stamina > div.bar'),
+    var ap_gauge = $('#main > div.apbp > div.inner.box_horizontal.box_center > div.gauge.stamina > div.bar'), //$('div.status_gauge > div > div'),
         raid_help_clear = getCookie("__myraid_clear"),
         no_bp_candy = getCookie("__ht_no_bp"),
         battle_olympia_over = getCookie("__ht_bo_over"),
@@ -370,7 +370,10 @@ function handleEventRaid() {
 		//if (url.match(/GiDimension/)) {
 		//	return;
 		//}
-        var attack = $('#do_battle_btn_' + bp_need).filter(':visible');
+		GM_log(bp_need);
+		GM_log($('#do_battle_btn_' + bp_need));
+        var attack = $('#do_battle_btn_' + bp_need + ':not([style*="none"])');
+		GM_log(attack);
         if (attack.length > 0 && !attack.hasClass('btn_main_off_small')) {
 			if (attack_num == 0) {
 				attack.clickJ();
@@ -379,10 +382,12 @@ function handleEventRaid() {
 			attack_num = attack_num % 5;
 			return;
 		}
+		GM_log("yyyyyyyyyy");
 		if (attack.length == 0) {
 			$('#stage_front').clickJ();
 			return;
 		}
+		GM_log("zzzzzzzzzz");
 		add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
 		GM_log("bp_candy : " + add_bp.length);
 		if (add_bp.length == 0) {
@@ -495,7 +500,9 @@ function handleERBBattle() {
 }
 var eventName = "GiDimension";
 var actions = [
-    [/apology%2FApologyList%2F/, 'form', '//*[@id="main"]/div[1]/ul/li/form'],
+    [/apology%2FApologyList%2F/, 'list', [
+		['formJ', '#main > div:nth-child(1) > ul > li:nth-child(1) > form'],
+		['aJ', '#main > div.btn_sub_medium.margin_top_20 > a']]],
 	[/arena%2FArenaBattleConf%2F/, 'list', [
 		//['aJV', '#do_battle_btn'],
 		['aJ', 'a:contains("対戦結果を見る")'],
@@ -656,6 +663,7 @@ var actions = [
 		['aJ', 'a:contains("選択する"):last()'],
 		['aJ', 'a:contains("エピソードエリア")'],
 		['hold']]],
+
 	[/eventGiDimension%2FGiftMemoryCardEnd/, 'list', [
 		['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
 		['hold']]],
@@ -663,6 +671,7 @@ var actions = [
 		['aJ', 'a:contains("プレゼントする"):first()'],
 		['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
 		['hold']]],
+	[/eventRaidBossLoop%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > div.txt_center.margin_y_10 > a'],
     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
     [/fusion%2FFusionEnd%2F/, "func", handleFusionEnd],
     //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],
@@ -708,7 +717,7 @@ var actions = [
     [/mypage%2FLoginBonusSpecial%2F/, 'a', "//div[contains(@class, 'btn_present')]/a"],
     [/prizeReceive%2FPrizeReceiveTop/, 'list', [
         //['a', '//a[text()="強化する"]'],
-        ['form', "//*[@id=\"main\"]/div[2]/div/form"],
+        ['form', "//*[@id=\"main\"]/div[3]/div/form"],
         ['a', "//a[span[@class='badge fnt_normal']]"],
 		['aJ', cssmypage]]],
     [/questRaidBoss%2FQuestDeck%2F/, 'list', [
@@ -739,8 +748,7 @@ var actions = [
     //[/eventBattle%2FMissionSwf%2F/, 'flash', "//*[@id=\"container\"]", 372,62],
     [/FusionFlash/, "flash", "//*[@id=\"container\"]"],
     [/%2FMissionSwf%2F/, 'flashJT', '#container'],// 372, 62],
-    [/Swf\b/, 'list', [
-		["flash", "//*[@id=\"container\"]|//*[@id='stage']"],
+    [/Swf(Ed)?\b/, 'list', [
 		['flashJT', '#container > canvas']]],
     [/xxxxxxxxxxxxxxxxx/]
 ];

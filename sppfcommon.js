@@ -85,7 +85,7 @@ function clickSth(obj, eventname, xoff, yoff) {
     }
     if (document.createEvent && obj.dispatchEvent) {
         var event = document.createEvent("MouseEvents");
-        event.initMouseEvent(eventname, true, true, window,
+        event.initMouseEvent(eventname, true, true, unsafeWindow,
                              0, x, y, x, y,
                              false, false, false, false,
                              0, obj);
@@ -99,13 +99,13 @@ function clickSth(obj, eventname, xoff, yoff) {
 function clickLink(link) {
     setTimeout(function () {
         var event = document.createEvent("MouseEvents");
-        event.initMouseEvent("click", true, true, window,
+        event.initMouseEvent("click", true, true, unsafeWindow,
                              0, 0, 0, 0, 0,
                              false, false, false, false,
                              0, null);
         var cancelled = !link.dispatchEvent(event);
         if (cancelled) {
-            window.location.href = link.href;
+            unsafeWindow.location.href = link.href;
         }
     }, 2000);
 }
@@ -145,14 +145,14 @@ $.fn.simMouseEvent = function (eveName, xoff, yoff) {
         y = 0;
     }
     var eve = document.createEvent("MouseEvents");
-    eve.initMouseEvent(eveName, true, true, window,
+    eve.initMouseEvent(eveName, true, true, unsafeWindow,
                          0, x, y, x, y,
                          false, false, false, false,
                          0, this[0]);
 	GM_log("sim mouse " + eveName);
     if (!this[0].dispatchEvent(eve) && eveName === "click" && this[0].tagName === 'A') {
 		GM_log("click : "+ this[0].href);
-        //window.location.href = this[0].href;
+        //unsafeWindow.location.href = this[0].href;
     }
     return this;
 };
@@ -214,14 +214,14 @@ $.fn.simTouchEvent = function (eveName, xoff, yoff) {
 	//}
 	
 	var customEvent = document.createEvent("MouseEvent");
-	customEvent.touches = [{clientX: x, clientY: y}];
+	customEvent.touches = [{clientX: x, clientY:y, pageX:x, pageY:y, screenX:x, screenY:y}];
  
 	// Available iOS 2.0 and later
-	customEvent.initMouseEvent(eveName, /*bubbles*/true, /*cancelable*/true, window/*view*/, /*detail*/1,
+	customEvent.initMouseEvent(eveName, /*bubbles*/true, /*cancelable*/true, unsafeWindow/*view*/, /*detail*/1,
 	x, y, x, y,
 	false, false, false, false);
 	//customEvent.createTouchList(
-	//	customEvent.createTouch(window, this[0], 12345, x, y, x, y, x, y)));
+	//	customEvent.createTouch(unsafeWindow, this[0], 12345, x, y, x, y, x, y)));
 	//new TouchList(), new TouchList(), new TouchList()
 	//);
 	//touches, targetTouches, changedTouches,
@@ -237,7 +237,8 @@ $.fn.simTouchEvent = function (eveName, xoff, yoff) {
 };
 
 $.fn.clickJ = function (timeout) {
-	GM_log("clickJ : " + this.length);
+	GM_log("clickJ : ");
+	GM_log(this);
 	for (var i = 0; i < this.length; i++)
 	{
 		GM_log(i + ' tagname : ' + this.get(i).tagName);
@@ -352,6 +353,7 @@ $.fn.touchFlash = function (xoff, yoff) {
         return this;
     }
     var flash = $(this);
+	GM_log(flash);
 	//alert(flash.text());
     setInterval(function () {
         setTimeout(function () {flash.simTouchEvent("touchstart", xoff, yoff);}, 10);
