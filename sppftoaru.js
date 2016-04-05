@@ -96,7 +96,9 @@ var actions = [
     [/player_battle%2Fbattle_confirm%/, 'aJ', 'a[href*="battle_animation"]'],
     [/player_battle%2Fbattle_result%/, 'aJ', 'a[href*="mypage"]'],
     [/player_battle%2Fcomplete%/, 'flashJ', "#canvas"],
-	[/present%2Fconfirm%2F[01]%2F/, 'formJ', '#bg > section > article > div > form'],
+	[/present%2Fconfirm%2F[01]%2F/, 'list', [
+		['formJ', '#bg > section > article > div > form'],
+		['aJ', '#top_btn > a']]],
 	[/present%2Findex/, 'list', [
 		['aJ', '#bg > section > article > form > div > div > input[type="submit"]'],
 		//['sth', '//*[@id="bg"]/section/article/form/div/div/input'],

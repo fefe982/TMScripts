@@ -149,7 +149,7 @@ $.fn.simMouseEvent = function (eveName, xoff, yoff) {
                          0, x, y, x, y,
                          false, false, false, false,
                          0, this[0]);
-	GM_log("sim mouse " + eveName);
+	//GM_log("sim mouse " + eveName);
     if (!this[0].dispatchEvent(eve) && eveName === "click" && this[0].tagName === 'A') {
 		GM_log("click : "+ this[0].href);
         //unsafeWindow.location.href = this[0].href;
@@ -269,6 +269,7 @@ $.fn.clickJ = function (timeout) {
 
 $.fn.touchJ = function (timeout) {
 	GM_log("touchJ : " + this.length);
+	GM_log(this);
 	for (var i = 0; i < this.length; i++)
 	{
 		GM_log(i + ' tagname : ' + this.get(i).tagName);
@@ -335,6 +336,8 @@ $.fn.minmaxJ = function (compare, target, minmaxflag) {
 
 $.fn.clickFlash = function (xoff, yoff) {
     //debugger;
+	GM_log("clickFlash: ");
+	GM_log(this);
     if (this.length === 0) {
         return this;
     }
@@ -353,7 +356,8 @@ $.fn.touchFlash = function (xoff, yoff) {
         return this;
     }
     var flash = $(this);
-	GM_log(flash);
+	GM_log("touchFlash: ");
+	GM_log(this);
 	//alert(flash.text());
     setInterval(function () {
         setTimeout(function () {flash.simTouchEvent("touchstart", xoff, yoff);}, 10);
