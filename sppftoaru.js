@@ -38,6 +38,7 @@ var actions = [
     [/fusion%2Flimit_result%/, 'aJ', "a[href*='fusion%2Flimit_select']"],
     [/fusion%2Flimit%/, 'flashJ', "#container"],
     [/item%2FpresentList/, 'formJ', 'form'],
+	[/judge%2ForderHelpSelect/, 'aJ', '#bg > section > ul > li > dl > dd:nth-child(3) > div > div > a'],
     [/login%2Fperiod/, 'flashJT', '#canvas'],
     [/mypage%2FsetParameter/, 'func', function () {
         $("#auto_select").clickJ();
@@ -80,14 +81,14 @@ var actions = [
 
     //pick
     [/pick%2Fresult%2Ffree/, 'list', [
-		['aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
+		//['aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
 		['aJ', '#bg > article > section:nth-child(1) > article > div > div > a']]],
-    [/pick%2Frun/, 'flashJT', '#canvas', 20, 440],
+    [/pick%2Frun/, 'flashJT', '#canvas', 40, 410],
     [/pick%2Ftop%2Ffree/, 'list', [
         ['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
         ['flashJ', 'canvas']]],
     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
-        ['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
+        //['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
 		// ['hold'],
         ['flashJ', '#container']]],
 
@@ -169,8 +170,8 @@ var actions = [
 	}],
 	[/%2FeventTop/, 'list', [
 		['aJ', 'div.questAction > a'],
-		['aJ', 'div.questAction ul > li:nth-child(2) > a[href*="%2Fraid%2F"]'],
-		['aJ', 'div.questAction ul > li:nth-child(1) > div > a']]],
+		['aJ', 'div.questAction ul > li a[href*="%2Fraid%2F"]'],
+		['aJ', 'div.questAction ul > li a[href*="%2Fjudge%2Findex%2F1"]']]],
 	[/%2Findex%2F/, 'func', function () {
         setInterval(function () {
             //debugger;
