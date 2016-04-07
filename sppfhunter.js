@@ -75,6 +75,7 @@ function handlemypage() {
     succ = succ || clickA("//a[contains(text(), '冒険に行けます')]");
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
+	succ = succ || $('#mypage_news > ul > li > a[href*="arena%2FArenaTop"]').clickJ().length > 0;
     succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
 	GM_log(ap_gauge.css('width'));
     if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9].px|[89]px/)) {
@@ -535,7 +536,7 @@ var actions = [
 		//['hold'],
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
-        ['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + eventName + '%2FRaidBossTop")]'],
+        ['aJNC', '__ht_myboss_wait', 'a:regex(href, event[a-zA-Z0-9]*%2FRaidBossTop)'],
         ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
 		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],

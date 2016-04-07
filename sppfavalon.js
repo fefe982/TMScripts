@@ -80,7 +80,7 @@ function handleMypage() {
     if (bp > 20) {
         succ = succ || clickA('//a[contains(@href, "battleTower%2FBattleTowerTop%")]');
     }
-    succ = succ || clickA("//a[text()='無料ガチャが回せます']");
+    //succ = succ || clickA("//a[text()='無料ガチャが回せます']");
     succ = succ || clickA("//a[text()='振り分けポイントがあります']");
     //succ = succ || clickA("//a[text()='バトル結果がでています']");
     succ = succ || clickA("//a[text()='ストーリーモードを進められます']");
@@ -93,8 +93,9 @@ function handleMypage() {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
-		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ();
-        succ = succ || clickA('//a[contains(@href, "island%2FIslandTop")]');
+		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0;
+		succ = succ || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
+        succ = succ || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0;
         //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
 		//succ = succ || $('a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
