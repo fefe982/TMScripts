@@ -47,15 +47,15 @@ var actions = [
     }],
     [/mypage/, 'list', [
         //['dbg'],
-        ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
+        //['aJ', 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
         //['dbg'],
-        ['aJ', 'div.contents_info a[href*="mypage%2FsetParameter"]'], // status point
+        ['aJ', 'section.eventArea > article a[href*="mypage%2FsetParameter"]'], // status point
         ['aJ', $('.present_number > a').filter(function(){return this.innerHTML!='0';})],   // present
         ['aJ', 'div.contents_info a[href*="cardBook%2Fbonus"]'], // card book
         ['aJ', 'div.contents_info a[href*="friend%2FacceptList"]'],
         //['aJ', 'div.contents_info a[href*="shortStory%2Findex"]'], // story
         //['aJ', 'div.contents_info a[href*="mission%2Fbeginner"]'], // story
-        //['aJ', 'div.contents_info a[href*="pick%2Ftop%2Fpremium"]'], // story
+        ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Fpremium"]'], // story
         //['aJ', 'div.contents_info a[href*="quiz%2Findex"]'], // story
         ['func', function () {
             var res = $('div#graph_hp div.graph_text_detail').text().match(/([0-9]*)\s*\/\s*[0-9]*/);
