@@ -148,7 +148,7 @@ var actions = [
     ]],
 	
 	//[/Flash\b/, 'flashJ', 
-	[/(soge|FrSkill)Flash/, 'flashJ', '#canvas'],
+	[/(soge|FrSkill)Flash/, 'flashJT', '#canvas'],
 	[/%2FuseItem%2F/, 'aJ', 'a[href*="%2FuseItem%2F"]'],
 	//wd2014%2FuseItem%2F1%2F1%2F6%2F3%2Fconfirm 
 	//event Wd2014
@@ -169,26 +169,30 @@ var actions = [
 		}, 2000);
 	}],
 	[/%2FeventTop/, 'list', [
-		['aJ', 'div.questAction > a'],
-		['aJ', 'div.questAction ul > li a[href*="%2Fraid%2F"]'],
-		['aJ', 'div.questAction ul > li a[href*="%2Fjudge%2Findex%2F1"]']]],
-	[/%2Findex%2F/, 'func', function () {
-        setInterval(function () {
-            //debugger;
-            return $('input#do_quest[disabled!="disabled"]').clickJ(0).length > 0 ||
-                $('button#card_ok').clickJ(0).length > 0 ||
-                $('input#go_next').clickJ(0).length > 0 ||
-				$('button#friend_order_button:visible()').clickJ(0).length > 0 ||
-				$('#bg > div.footer_menu > ul > li:nth-child(1) > a').clickJ(0).length > 0;
-        }, 1000);
-    }],
+		['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
+		['aJ', 'div.questAction a[href*="%2Fraid%2F"]'],
+		['aJ', 'div.questAction a[href*="%2Fjudge%2Findex%2F1"]']]],
+	[/%2Findex%2F/, 'list', [
+        ['aJ', 'div.bossEncountNow > a'],
+        ['func', function () {
+            setInterval(function () {
+                //debugger;
+                return $('input#do_quest[disabled!="disabled"]').clickJ(0).length > 0 ||
+                    $('button#card_ok').clickJ(0).length > 0 ||
+                    $('input#go_next').clickJ(0).length > 0 ||
+                    $('button#friend_order_button:visible()').clickJ(0).length > 0 ||
+                    $('#bg > div.footer_menu > ul > li:nth-child(1) > a').clickJ(0).length > 0;
+            }, 1000);
+        }]]],
 	[/%2FraidBoss%2F/, 'list', [
 		['flashJT', '#canvas']]],
 	[/%2Fraid%2F/, 'list', [
-		['aJ', 'a[href*="battle_animation%2F"]:last()'],
-		['aJ', '#bg > div.btn_blue > a'],
-		['aJ', 'a[href*="eventTop"]']]],
+		['aJ', 'a[href*="battle_animation%2F"]:visible():last()'],
+        ['aJ', 'div.btn_blue > a[href*="%2Findex%2F"]'],
+		['aJ', 'ul.contentLink > li > aa[href*="eventTop"]']]],
 	[/%2Fattack_result/, 'aJ', '#bg > div > div.btn_blue > a'],
+    [/%2FrSkill%2F/, 'aJ', 'a[href*="%2FrSkillProc%2F"]'],
+    [/%2FrSkillResult/, 'aJ', 'a[href*="%2Findex%2F"]'],
     [/[\s\S]*/, 'hold'],
     [/xxxxxxxxxxxxxxxxxxx/]
 ];

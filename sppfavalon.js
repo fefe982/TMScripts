@@ -84,6 +84,7 @@ function handleMypage() {
     succ = succ || clickA("//a[text()='振り分けポイントがあります']");
     //succ = succ || clickA("//a[text()='バトル結果がでています']");
     succ = succ || clickA("//a[text()='ストーリーモードを進められます']");
+    succ = succ || $('#button > a[href*="storyex%2FStoryBackNumberIndex"]').clickJ().length > 0;
     succ = succ || clickA("//a[text()='戦友上限が増えました']");
     succ = succ || clickA("//a[text()='戦友候補が見つかりました']");
     succ = succ || clickA("//a[text()='完全討伐報酬が受け取れます']");
@@ -338,17 +339,19 @@ var actions = [
     [/raidboss%2FRaidbossBattleResult%2F/, "func", handleRaidbossBattleResult],
     [/raidboss%2FRaidbossBattleResultList%2F/, 'a', '//*[@id="contents"]/div[1]/ul/li/a'],
     [/shop%2FItemUseEnd%/, 'a', '//a[contains(@href, "MissionActionLot")]'],
-    [/story(ex)?%2FDoStoryEpisodeSwf2%2F/, "flash", "//*[@id=\"container\"]"],
-    [/story(ex)?%2FDoStoryEpisodeSwfClear%2F/, "flash", "//*[@id=\"container\"]"],
+    [/story(ex)?%2FDoStoryEpisodeSwf2%2F/, 'flashJT', '#container > canvas'],
+    [/story(ex)?%2FDoStoryEpisodeSwfClear%2F/, 'flashJT', '#container > canvas'],
     [/story(ex)?%2FDoStoryEpisodeSwfEd%2F/, "flash", "//*[@id=\"container\"]"],
     [/story(ex)?%2FDoStoryEpisodeSwfOp%2F/, "flash", "//*[@id=\"container\"]"],
     [/story(ex)?%2FMissionResult%2F/, "func", handleStoryMission],
     [/story(ex)?%2FStoryAreaResult%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
+    [/story(ex)?%2FStoryBackNumberIndex/, 'aJ', '#story_backnum_bg > div > div > div > div.padding_x_10 > a'],
     [/story(ex)?%2FStoryBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
     [/story(ex)?%2FStoryBossBattleFlash%2F/, "flash", "//*[@id=\"container\"]", 160, 290],
     [/story(ex)?%2FStoryMain%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
     [/story(ex)?%2FStoryTop%2F/, 'list', [
 		//['dbg'],
+        ['aJ', '#main_view > div > div > div.floor_base.on.btn_base > a'],
 		['flashJT', 'div.area_list.portrait div.floor_base.on.btn_base a div'],
 		["flash", "//*[@id=\"main_view\"]//div[contains(@class, 'on')]/a/div"]
 		]],

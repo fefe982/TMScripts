@@ -392,12 +392,12 @@ function handleEventRaid() {
 		add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
 		GM_log("bp_candy : " + add_bp.length);
 		if (add_bp.length == 0) {
-		    var no_bp_candy = getCookie("__ht_no_bp");
-            if (no_bp_candy) {
-				no_bp_candy++;
-			} else {
-				no_bp_candy = 1;
-			}
+		    //var no_bp_candy = getCookie("__ht_no_bp");
+            //if (no_bp_candy) {
+			//	no_bp_candy++;
+			//} else {
+			//	no_bp_candy = 1;
+			//}
 			//setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
 			//$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
 		} else {

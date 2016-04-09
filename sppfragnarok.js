@@ -108,6 +108,7 @@ function handleMyPage() {
     //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
     succ = succ || clickA('//a[text()="運営からのお詫び"]');
     succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
+    succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
     succ = succ || clickA(xpathevent);
     if (ap > 10 && !mission_error) {
         succ = succ || clickA(xpathquest);
@@ -121,6 +122,7 @@ function handleGachaFlashResult() {
         clickFlash('//div[@id="gamecanvas"]/canvas|//*[@id="container"]');
     } else {
         var succ = false;
+        succ = succ || $('#containerBox > div.txt_center.fnt_medium > div > div > a[href$="gacha%2FGachaFlash%2F%3FthemaId%3D4"]').clickJ().length > 0;
         succ = succ || clickA('(//a[contains(text(), "エールガチャ")])[last()]');
         //succ = succ || clickA('//a[text()="エールガチャ"]');
         succ = succ || clickA('//a[text()="ガチャTOPへ戻る"]');
@@ -353,6 +355,7 @@ var actions = [
 		['aJ', cssmypage]]],
     [/gacha%2FGachaTop%2F%3FpageNum%3D4%26thema%3Dregend/, 'aJ', 'a[href$="gacha%2FGachaTop%2F%3FpageNum%3D4"]'],
 	[/gacha%2FGachaTop%2F%3FpageNum%3D4$/, 'list', [
+		['aJ', '#containerBox > div > div.txt_center > div > a[href*="gacha%2FGachaFlash%2F%3FthemaId%3D4"]'],
 		//['a', '(//a[.//span[text()="ガチャをする"]])[last()]'],
         ['aJ', 'a[href*="gacha%2FGachaTop%2F%3FpageNum%3D3"]']]],
     [/gacha%2FGachaTop%2F/, 'list', [
@@ -379,7 +382,8 @@ var actions = [
     [/island%2FBeatdownBossBattleResult%2F/, 'list', [
         ['a', '//a[text()="報酬を受け取る"]'],
 		['aJ', 'a:contains("ボス一覧へ戻る")'],
-        ['a', '//a[text()="イベントを進める"]']]],
+        ['a', '//a[text()="イベントを進める"]'],
+        ['flashJT', '#container > canvas']]],
     [/island%2FBeatdownBossBattleHelpRequestEnd%2F/, 'aJ', 'a:contains("ボス一覧へ戻る")'],
     [/island%2FBeatdownBossRewardAllGetEnd%2F/, 'a', '//a[text()="イベントを進める"]'],
     [/island%2FBeatdownBossRewardEnd%2F/, 'list', [
@@ -585,6 +589,13 @@ var actions = [
     [/strongBoss%2FStrongBossNoWinList%2F/, 'list', [
         ['setCookie', '__my_r_boss_clear', 1, 60],
         ['a', xpathmypage]]],
+    [/supernova%2FSupernovaBattleHistory%/, 'list', [
+        ['aJ', 'a.sprites-event_result-btn_result:last()'],
+        ['aJ', '#header_left_button > a']]],
+    [/supernova%2FSupernovaBattleHistoryDetail%/, 'list', [
+        ['aJ', '#containerBox > div > a[href*="supernova%2FSupernovaTop"]']]],
+    [/supernova%2FSupernovaTop/, 'list', [
+        ['aJ', '#navi > div > a']]],
     [/treasure%2FCardList%2F/, 'a', '//a[text()="メンバーに追加"]'],
     [/treasure%2FTreasureConf%2F/, 'a', '//a[text()="出発させる"]'],
     [/treasure%2FTreasureEnd%2F/, 'a', '//a[text()="スカウトする" or text()="マップ選択に戻る"]'],
