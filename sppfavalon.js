@@ -2,6 +2,7 @@
 var xpathmypage = "//*[@id=\"main_header_menu\"]/ul/li[1]/a";
 var cssmypage = "#main_header_menu > ul > li:nth-child(1) > a";
 var xpathquest = "//*[@id=\"main_header_menu\"]/ul/li[2]/a";
+var no_gift_delay = 10 * 60;
 
 function handleMissionResult() {
     //debugger;
@@ -90,7 +91,7 @@ function handleMypage() {
     succ = succ || clickA("//a[text()='完全討伐報酬が受け取れます']");
     succ = succ || clickA("//a[text()='ビンゴチケットが届いています']");
     succ = succ || clickA("//a[contains(text(), 'を討伐してくれました')]");
-    if (GM_getValue("__ava_no_gift") + no_gift_delay * 1000 > Data.now()) {
+    if (GM_getValue("__ava_no_gift") + no_gift_delay * 1000 > Date.now()) {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {

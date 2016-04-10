@@ -1,6 +1,7 @@
 function msgloop(actions){
 var i, j;
 var list_action;
+GM_log('--------------------------------------------');
 GM_log(Date() + url);
 GM_log("REF: " + document.referrer);
 var succ = (function () {
@@ -11,18 +12,12 @@ var succ = (function () {
             ["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage",           5], // to aru
             ["http://sp.pf.mbga.jp/12007686/?guid=ON&url=http%3A%2F%2Fakr.konaminet.jp%2Fakr%2Fmain%2Fmypage%2Fmain%2F%3Fu%3D146021083384%26i%3D63358373",         5] // dream_nine
         ];
-		//return false;
-        //debugger;
+        return false;
         var siteI = GM_getValue("site_loop_index", 0);
-        var siteT = GM_getValue("site_timeout", Date.now() - 10);
-        GM_log(siteI + " -:- " + new Date(+siteT));
-        //GM_log("Now :" + new Date(Date.now()));
+        var siteT = GM_getValue("site_timeout");
         if (Date.now() > siteT) {
             siteI = (siteI + 1) % sites.length;
             siteT = Date.now() + 60 * 1000 * sites[siteI][1];
-            GM_setValue("site_loop_index", siteI);
-            GM_setValue("site_timeout", siteT);
-            //debugger;
             window.location.href = sites[siteI][0];
             return true;
         }
