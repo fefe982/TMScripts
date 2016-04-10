@@ -296,6 +296,8 @@ $.fn.touchJ = function (timeout) {
 };
 
 $.fn.submitJ = function (timeout) {
+    GM_log("submitJ");
+    GM_log(this);
     if (this.length === 0) {
         return this;
     }
