@@ -1,10 +1,12 @@
 var xpathmypage = '//*[@id="top_btn"]/a';
-//http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2FAs4%2FeventTop
+var selector_mypage = '#top_btn > a';
 var actions = [
     [/battleAnimation/, 'flashJT', '#canvas'],
     [/battle_animation/, 'flashJT', '#canvas', 20, 440],
     [/cardBook%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
-    [/card_book%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
+    [/card_book%2Fbonus/, 'list', [
+        ['aJ', 'a[href*="card_book%2FgetBonus%"]'],
+        ['aJ', selector_mypage]]],
     [/Da2%2FeventTop/, 'aJ', 'a[href*="Da2%2Findex"]'],
     [/[dD]a2%2Findex/, 'func', function () {
         setInterval(function () {
@@ -66,7 +68,7 @@ var actions = [
             GM_log("hp = " + hp);
 			GM_log("ap = " + ap + "/" + apall);
             if (hp > 10) {
-                return $('#bg > section.eventArea > div > a[href*="%2FeventTop"]').clickJ().length > 0 || $('a[href*="quest"]').clickJ().length > 0;
+                return $('#bg > section.eventArea > div.mypage_banner > a[href*="%2FeventTop"]').clickJ().length > 0 || $('a[href*="quest"]').clickJ().length > 0;
             }
             if (ap === apall) {
                 return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
@@ -85,8 +87,9 @@ var actions = [
 		['aJ', '#bg > article > section:nth-child(1) > article > div > div > a']]],
     [/pick%2Frun/, 'flashJT', '#canvas', 40, 410],
     [/pick%2Ftop%2Ffree/, 'list', [
-        ['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
-        ['flashJ', 'canvas']]],
+        ['hold'],
+        //['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
+        ['flashJT', 'canvas']]],
     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
         //['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
 		// ['hold'],
@@ -168,7 +171,14 @@ var actions = [
 			}
 		}, 2000);
 	}],
+    [/%2Fbox_flash%2F/, 'flashJT', '#canvas'],
+    [/%2Fbox_result%2F/, 'list', [
+        ['aJ', '#bg > section > div.btn_blue > a']]],
+    [/%2Fbox_select/, 'list', [
+        ['aJ', 'a[href*="%2Fbox%2F"]:last()'],
+        ['aJ', selector_mypage]]],
 	[/%2FeventTop/, 'list', [
+        ['aJ', 'div.btn_blue > a[href*="box_select"]'],
 		['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
 		['aJ', 'div.questAction a[href*="%2Fraid%2F"]'],
 		['aJ', 'div.questAction a[href*="%2Fjudge%2Findex%2F1"]']]],

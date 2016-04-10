@@ -125,10 +125,9 @@ for (i = 0; i < actions.length; i++) {
 					var x = list_action[j_save][2];
 					var y = list_action[j_save][3];
 					if (canvas.length > 0) {
-						GM_log(canvas);
 						canvas.touchFlash(x, y);
 					} else {
-						GM_log('wait flash');
+						GM_log('flashJT, wait flash');
 						setTimeout(time_wait, 1000);
 					}
 				}
