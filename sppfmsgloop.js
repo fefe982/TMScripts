@@ -13,15 +13,15 @@ var succ = (function () {
         ];
 		//return false;
         //debugger;
-        var siteI = +(getCookie("site_loop_index") || 0);
-        var siteT = +(getCookie("site_timeout") || (Date.now() - 10));
+        var siteI = GM_getValue("site_loop_index", 0);
+        var siteT = GM_getValue("site_timeout", Date.now() - 10);
         GM_log(siteI + " -:- " + new Date(+siteT));
         //GM_log("Now :" + new Date(Date.now()));
         if (Date.now() > siteT) {
             siteI = (siteI + 1) % sites.length;
             siteT = Date.now() + 60 * 1000 * sites[siteI][1];
-            setCookie("site_loop_index", siteI, 60 * 60 * 24 * 7);
-            setCookie("site_timeout", siteT, 60 * 60 * 24 * 7);
+            GM_setValue("site_loop_index", siteI);
+            GM_setValue("site_timeout", siteT);
             //debugger;
             window.location.href = sites[siteI][0];
             return true;
@@ -51,7 +51,7 @@ for (i = 0; i < actions.length; i++) {
                 break;
             case 'aNC':
                 if (!succ) {
-                    var CCC = getCookie(list_action[j][1]);
+                    var CCC = GM_getValue(list_action[j][1]);
                     if (!CCC) {
                         succ = clickA(list_action[j][2]);
                     }
@@ -80,7 +80,7 @@ for (i = 0; i < actions.length; i++) {
                 succ = succ || clickForm(list_action[j][1], true);
                 break;
             case 'setCookie':
-                if (!succ) {setCookie(list_action[j][1], list_action[j][2], list_action[j][3]); }
+                if (!succ) {GM_setValue(list_action[j][1], list_action[j][2]); }
                 break;
             case 'hold':
                 succ = true;
@@ -107,7 +107,7 @@ for (i = 0; i < actions.length; i++) {
                 break;
 			case 'aJNC':
 				if (!succ) {
-                    var CCC = getCookie(list_action[j][1]);
+                    var CCC = GM_getValue(list_action[j][1]);
                     if (!CCC) {
                         succ = $(list_action[j][2]).clickJ().length > 0;
                     }

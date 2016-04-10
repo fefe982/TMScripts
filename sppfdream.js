@@ -63,11 +63,9 @@ var actions = [
     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
     //[/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
-    [/main%2Freward%2Fmain%2Freceive%3F/, 'list', [
-        ['aJ', '#shortCutForm input[type="submit"]'],
-        ['aJ', selector_mypage]]],
-    [/main%2Freward%2Fmain%3F/, 'list', [
-        ['aJ', '#shortCutForm input[type="submit"]'],
+    [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
+    [/main%2Freward%2Fmain/, 'list', [
+        ['aJ', '#shortCutForm input[type="submit"]:last()'],
         ['aJ', selector_mypage]]],
     [/%2Fflash%2F/, 'flashJT', '#tween_b_root'],
     [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],

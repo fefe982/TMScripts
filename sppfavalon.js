@@ -54,7 +54,7 @@ function handleGiftBox() {
     succ = succ || clickForm("//*[@id=\"contents\"]/form");
     succ = succ || clickA('//*[@id="contents"]/ul[@class="btn_tabs margin_top_10"]/li/a[not(contains(text(), "(0)"))]');
     if (getXPATH('//div[@class="txt_block_center" and text()="所持武具が上限数に達しています"]')) {
-        setCookie("__ava_no_gift", 1, 3600);
+        GM_setValue("__ava_no_gift", Date.now());
     }
     succ = succ || clickA(xpathmypage);
 }
@@ -90,7 +90,7 @@ function handleMypage() {
     succ = succ || clickA("//a[text()='完全討伐報酬が受け取れます']");
     succ = succ || clickA("//a[text()='ビンゴチケットが届いています']");
     succ = succ || clickA("//a[contains(text(), 'を討伐してくれました')]");
-    if (!getCookie("__ava_no_gift")) {
+    if (GM_getValue("__ava_no_gift") + no_gift_delay * 1000 > Data.now()) {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {

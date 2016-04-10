@@ -58,12 +58,12 @@ function handleCoinGacha() {
 function handlemypage() {
     //alert("mypage");
     var ap_gauge = $('#main > div.apbp > div.inner.box_horizontal.box_center > div.gauge.stamina > div.bar'), //$('div.status_gauge > div > div'),
-        raid_help_clear = getCookie("__myraid_clear"),
-        no_bp_candy = getCookie("__ht_no_bp"),
-        battle_olympia_over = getCookie("__ht_bo_over"),
-		raid_my_boss_wait = getCookie("__ht_myboss_wait"),
+        raid_help_clear = GM_getValue("__myraid_clear"),
+        no_bp_candy = GM_getValue("__ht_no_bp"),
+        battle_olympia_over = GM_getValue("__ht_bo_over"),
+		raid_my_boss_wait = GM_getValue("__ht_myboss_wait"),
         succ = false;
-    if (!raid_help_clear && !no_bp_candy) {
+    if (raid_help_clear + 60 * 1000 > Date.now() && !no_bp_candy) {
         succ = succ || clickA("//a[div[@class='sprite_mypage2 btn_help']]");
     }
     if (!no_bp_candy && !raid_my_boss_wait) {
@@ -95,7 +95,7 @@ function handlemypage() {
                 succ = clickA('//div[@class="battle"]/a');
             }
         } else if (getXPATH("//div[@class='battle']/div/div[@class='badge']") || getXPATH("//div[@class='sprite gauge_bp bp1']")) {
-            setCookie("__mybattle_bp", "1", 60);
+            GM_setValue("__mybattle_bp", 1);
             succ = clickA("//div[@class='battle']/a");
         }
     }
@@ -114,9 +114,9 @@ function handleBattleTop() {
         //alert(free_text.innerText);
         var res  = free_text.innerText.match(/ [\s\S]*残り([0-9]*)回/);
         //alert(res[1]);
-        setCookie("__mybattle_free", res[1], 60);
+        GM_setValue("__mybattle_free", res[1]);
         clickA("//*[@id=\"btn_entry\"]/a");
-    } else if (getCookie("__mybattle_bp")  > 0) {
+    } else if (GM_getValue("__mybattle_bp")  > 0) {
         var succ = false;
         succ = succ || clickA("//*[@id=\"btn_entry\"]/a");
         succ = succ || clickA("//*[@id=\"main\"]/div/div[1]/div[3]/div[2]/ul/li[3]/div/a");
@@ -127,7 +127,7 @@ function handleBattleTop() {
 }
 
 function handleBattleResult() {
-    if (getCookie("__mybattle_free") > 0 || getCookie("__mybattle_bp") > 0) {
+    if (GM_getValue("__mybattle_free") > 0 || GM_getValue("__mybattle_bp") > 0) {
         clickA("//*[@id=\"main\"]/nav[1]//a");
     } else {
         clickA(xpathmypage);
@@ -137,7 +137,7 @@ function handleBattleResult() {
 function handleBattleTower() {
     // "//*[@id=\"first_action_box\"]/div[1]/div[3]/a"
     //alert("battletower");
-    var free = getCookie("__mybattle_free");
+    var free = GM_getValue("__mybattle_free");
     var bp = 0;
     var n_use_bp = 1;
     var bp_use = getXPATH("//*[@id=\"do_battle_btn\"]/div[2]");
@@ -151,7 +151,7 @@ function handleBattleTower() {
         if (!free) {free = 1; }
     }
     if (free) {
-        setCookie("__mybattle_free", free > 0 ? free - 1 : 0, 60);
+        GM_setValue("__mybattle_free", free > 0 ? free - 1 : 0);
     }
     var bp_gauge;// = getXPATH("//div[@class='sprite gauge_bp bp_gauge3']");
     var style;// = getComputedStyle(bp_gauge);
@@ -167,9 +167,9 @@ function handleBattleTower() {
     }
     //alert(bp);
     if (free > 0) {
-        setCookie("__mybattle_bp", bp, 60);
+        GM_setValue("__mybattle_bp", bp);
     } else {
-        setCookie("__mybattle_bp", bp - 1, 60);
+        GM_setValue("__mybattle_bp", bp - 1);
     }
     //alert(free);
     //alert(bp);
@@ -246,7 +246,7 @@ function handleCardSelect() {
 
 function handleRaidBossAssistList() {
     if (!clickA('//a[.//span[@class="sprite txt_new"]]')) {
-        setCookie("__myraid_clear", 1, 60);
+        GM_setValue("__ht_myraid_clear", Date.now());
         clickA(xpathmypage);
     }
 }
@@ -311,11 +311,11 @@ function handleEventBattle() {
 }
 function handleEvent() {
     var succ = false;
-    var raid_clear = getCookie("__myraid_clear");
-    var no_bp_candy = getCookie("__ht_no_bp");
+    var raid_clear = GM_getValue("__ht_myraid_clear", 0);
+    var no_bp_candy = GM_getValue("__ht_no_bp");
     if (!no_bp_candy || no_bp_candy < 5) {
         succ = succ || clickA('//a[.//p[contains(text(), "逃亡まで")]]');
-        //if (!raid_clear){
+        //if (raid_clear + 60 * 1000 > Date.now()){
         //    succ = succ || clickA('//div[@class="event_help_button"]//div[contains(@class, "icon_raidboss_help")]//a');
         //}
     }
@@ -392,13 +392,13 @@ function handleEventRaid() {
 		add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
 		GM_log("bp_candy : " + add_bp.length);
 		if (add_bp.length == 0) {
-		    //var no_bp_candy = getCookie("__ht_no_bp");
+		    //var no_bp_candy = GM_getValue("__ht_no_bp");
             //if (no_bp_candy) {
 			//	no_bp_candy++;
 			//} else {
 			//	no_bp_candy = 1;
 			//}
-			//setCookie("__ht_no_bp", no_bp_candy, 60 * 10);
+			//GM_setValue("__ht_no_bp", no_bp_candy, 60 * 10);
 			//$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
 		} else {
 			add_bp.first().clickJ();
@@ -515,7 +515,7 @@ var actions = [
     [/battleOlympia%2FTargetSelect%2F/, 'minmax', '//*[@id="main"]/section/ul/li[', ']/a/div/div[2]/table/tbody/tr[2]/td', ']/a'],
     [/battleOlympia%2FTop/, 'list', [
         ['a', '//div[@class="battle_entry"]/a'],
-        ['setCookie', '__ht_bo_over', 1, 3600 * 24]]],
+        ['GM_setValue', '__ht_bo_over', 1, 3600 * 24]]],
     [/battleTower%2FBattleConf%2F/, "func", handleBattleTower],
     [/battleTower%2FBattleResult%2F/, "func", handleBattleResult],
     [/battleTower%2FBattleTop/, "func", handleBattleTop],
@@ -537,7 +537,13 @@ var actions = [
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
 		['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
         ['aJNC', '__ht_myboss_wait', 'a:regex(href, event[a-zA-Z0-9]*%2FRaidBossTop)'],
-        ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
+        ['funcR', function() {
+            var raid_clear = GM_getValue('__ht_myraid_clear');
+            if (raid_clear + 60 * 1000 > Date.now()) {
+                return $('a[href*="RaidBossAssistList"]').clickJ().length > 0;
+            }
+            return false;
+        }],
         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
 		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
         ['hold']]],
@@ -552,7 +558,13 @@ var actions = [
 		['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
 		['aJ', 'a[href*="%2FDoMissionExecutionCheck%3"]:contains("使う")'],
 		['aJ', 'a[href*="%2FRaidBossTop"]'],
-        ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
+        ['funcR', function() {
+            var raid_clear = GM_getValue('__ht_myraid_clear');
+            if (raid_clear + 60 * 1000 > Date.now()) {
+                return $('a[href*="RaidBossAssistList"]').clickJ().length > 0;
+            }
+            return false;
+        }],
         ['aJ', 'a[href*="%2FDoMissionExecution"]'],
 		['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
         ['hold']]],
@@ -569,7 +581,13 @@ var actions = [
     //    ['a', '//a[contains(text(), "撃破者にあいさつする")]'],
     //    ['a', '//p[@class="block_flex btn_base radius"]/a']]],
     [/eventCollection%2FEventTop/, 'list', [
-        ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
+        ['funcR', function() {
+            var raid_clear = GM_getValue('__ht_myraid_clear');
+            if (raid_clear + 60 * 1000 > Date.now()) {
+                return $('a[href*="RaidBossAssistList"]').clickJ().length > 0;
+            }
+            return false;
+        }],
         ['a', '//a[contains(@href,"eventCollection%2FDoMissionExecutionCheck")]'],
         ['hold']]], //@class="block_flex btn_base radius"]/a'],
     [/eventCollection%2FMissionResult%2F/, 'list', [
@@ -592,7 +610,13 @@ var actions = [
         ['a', '//a[contains(@href, "eventStoryMission%2FDoMissionExecutionCheck")]'],
         ['hold']]],
     [/eventStoryMission%2FEventTop/, 'list', [
-        ['aNC', '__myraid_clear', '//a[contains(@href, "RaidBossAssistList")]'],
+        ['funcR', function() {
+            var raid_clear = GM_getValue('__ht_myraid_clear');
+            if (raid_clear + 60 * 1000 > Date.now()) {
+                return $('a[href*="RaidBossAssistList"]').clickJ().length > 0;
+            }
+            return false;
+        }],
         ['a', '//a[contains(@href, "eventStoryMission%2FMissionList")]'],
         ['a', '//*[@id="eventstorymission_top"]/div/div[2]/a'],
         ['a', '//a[contains(@href, "eventStoryMission%2FRaidBossTop")]'],
@@ -603,7 +627,13 @@ var actions = [
         ['a', '//*[@id="mission_wrap"]/div/div/p/a'], //go
         ['a', '//*[@id="mission_wrap"]/div[2]/div/a'], //feebar
         ['a', '//*[@id="mission_wrap"]/div[1]/a'], //reorio
-        ['aNC', '__myraid_clear', '//*[@id="main"]/div[2]/div/a'], //help
+        ['funcR', function() {
+            var raid_clear = GM_getValue('__ht_myraid_clear');
+            if (raid_clear + 60 * 1000 > Date.now()) {
+                return clickA('//*[@id="main"]/div[2]/div/a');
+            }
+            return false;
+        }], //help
         ['a', '//*[@id="mission_wrap"]/a'],
         //['a', '//*[@id="mission_wrap"]/div/div/p/a'],
         //['a', '//a[contains(@href, "eventStoryMission%2FDoMissionExecutionCheck")]'],
