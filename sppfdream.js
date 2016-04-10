@@ -1,8 +1,9 @@
 var selector_mypage = '#naviheader > ul > li:nth-child(1) > a';
 var actions = [
+    [/%2Fflash%2F/, 'flashJT', '#tween_b_root'],
+    [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],
     [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
     [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
-    [/main%2Farena%2Fmain%3F/, 'aJ', '#arena_back > div.arena_btn_only > a'],
     [/main%2Fscout%2Fmain%2Fboss%3F/, 'aJ', 'a#shortCut'],
     [/main%2Fscout%2Fmain%2Fboss_result%3/, 'list', [
         ['aJ', 'a#shortCut']]],
@@ -13,6 +14,7 @@ var actions = [
     [/main%2Farena%2Fmain%2Fgame_detail%3F/, 'list', [
         ['aJ', '#arena_body a:contains("次の試合へ")'],
         ['aJ', selector_mypage]]],
+    [/main%2Farena%2Fmain/, 'aJ', '#arena_back > div.arena_btn_only > a'],
     [/main%2Fscout%2Fmain%2Fscout_flash/, 'flashJT', '#tween_b_root'],
     [/main%2Fscout%2Fmain%2Fspecial%3/, 'list', [
         ['aJ', '#bg_scout a:contains("挑戦する")']]],
@@ -61,13 +63,11 @@ var actions = [
         ['aJ', '#d9-main a:regexText(期限あり(.*[^0].*))'],
         ['aJ', '#d9-main a:regexText(期限なし(.*[^0].*))']]],
     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
-    //[/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
+    [/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
     [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
     [/main%2Freward%2Fmain/, 'list', [
         ['aJ', '#shortCutForm input[type="submit"]:last()'],
         ['aJ', selector_mypage]]],
-    [/%2Fflash%2F/, 'flashJT', '#tween_b_root'],
-    [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],
     [/XXXXXXXXXXXXX/]
 ];

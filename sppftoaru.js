@@ -90,6 +90,9 @@ var actions = [
         ['hold'],
         //['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
         ['flashJT', 'canvas']]],
+    [/pick%2F(top|result)%2Fpremium2/, 'list', [
+        ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],
+        ['aJ', selector_mypage]]],
     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
         //['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
 		// ['hold'],

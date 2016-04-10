@@ -81,9 +81,10 @@ function handleMypage() {
     if (bp > 20) {
         succ = succ || clickA('//a[contains(@href, "battleTower%2FBattleTowerTop%")]');
     }
+    // with more points for free gacha, we can do a premium gacha.
     //succ = succ || clickA("//a[text()='無料ガチャが回せます']");
     succ = succ || clickA("//a[text()='振り分けポイントがあります']");
-    //succ = succ || clickA("//a[text()='バトル結果がでています']");
+    succ = succ || clickA("//a[text()='バトル結果がでています']");
     succ = succ || clickA("//a[text()='ストーリーモードを進められます']");
     succ = succ || $('#button > a[href*="storyex%2FStoryBackNumberIndex"]').clickJ().length > 0;
     succ = succ || clickA("//a[text()='戦友上限が増えました']");
@@ -91,7 +92,7 @@ function handleMypage() {
     succ = succ || clickA("//a[text()='完全討伐報酬が受け取れます']");
     succ = succ || clickA("//a[text()='ビンゴチケットが届いています']");
     succ = succ || clickA("//a[contains(text(), 'を討伐してくれました')]");
-    if (GM_getValue("__ava_no_gift") + no_gift_delay * 1000 > Date.now()) {
+    if (GM_getValue("__ava_no_gift", Date.now()) + no_gift_delay * 1000 > Date.now()) {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
@@ -208,18 +209,14 @@ var actions = [
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D1\b/, "func", handleEllGacha],
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/,
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D7\b/, "a", "(//div[contains(@class, 'btn_base block_flex')]//a)[last()]"],
-    [/gacha%2FGachaTop%2F%3FthemeId%3D154/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, 'list', [
-		["a", "(//div[@class='btn_base block_flex']/a)[last()]"],
-		['aJ', 'a:contains("ガチャをする")']]],
-	[/gacha%2FGachaResult%2F%3FthemeId%3D1[45][567]/, "formN", '//form[@name="gacha"]'],
-	//'sth', 
-		//'//form//input[@value="ガチャをする" and @onclick="submit();"]'],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D[234]/, 'list', [
-		["formN", '//form[@name="gacha"]'],
-		['aJ', cssmypage]]],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D3/, 'formN', '//form[@name="gacha"]'],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D4/, 'formN', '//form[@name="gacha"]'],
+    [/gacha%2FGachaTop%2F%3FthemeId%3D[0-9]/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
+    [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, 'list', [ // yell gacha result
+        ['hold'],
+        ['aJ', 'a:contains("ガチャをする")']]],
+    [/gacha%2FGachaResult%2F%3FthemeId%3D[0-9]/, 'list', [ // ticket gacha
+        ['aJ', 'form[name="gacha"] input[name="isMaxValue"]'],
+        ['formJ', 'form[name="gacha"]'],
+        ['aJ', cssmypage]]],
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D8/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
 	[/gacha%2FitemBox%2FGachaBoxResetConf/, 'aJ', 'a[href*="gacha%2FitemBox%2FDoGachaBoxReset%2F"]'],
