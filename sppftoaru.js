@@ -35,10 +35,10 @@ var actions = [
     [/fusion%2Fconfirm%/, 'aJ', 'a[href*="fusion%2Ffusion%"]'],
     [/fusion%2Fevolution_confirm%/, 'aJ', 'a[href*="fusion%2Fevolution%"]'],
     [/fusion%2Fevolution_result%/, 'aJ', "a[href*='fusion%2Fevolution_select']"],
-    [/fusion%2Fevolution%/, 'flashJ', "#container"],
-    [/fusion%2Ffusion%/, 'flashJ', '#container'],
+    [/fusion%2Fevolution%/, 'flashJT', "#canvas"],
+    [/fusion%2Ffusion%/, 'flashJT', '#canvas'],
     [/fusion%2Flimit_result%/, 'aJ', "a[href*='fusion%2Flimit_select']"],
-    [/fusion%2Flimit%/, 'flashJ', "#container"],
+    [/fusion%2Flimit%/, 'flashJT', "#canvas"],
     [/item%2FpresentList/, 'formJ', 'form'],
 	[/judge%2ForderHelpSelect/, 'aJ', '#bg > section > ul > li > dl > dd:nth-child(3) > div > div > a'],
     [/login%2Fperiod/, 'flashJT', '#canvas'],
@@ -49,7 +49,7 @@ var actions = [
     }],
     [/mypage/, 'list', [
         //['dbg'],
-        //['aJ', 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
+        ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
         //['dbg'],
         ['aJ', 'section.eventArea > article a[href*="mypage%2FsetParameter"]'], // status point
         ['aJ', $('.present_number > a').filter(function(){return this.innerHTML!='0';})],   // present
@@ -83,12 +83,13 @@ var actions = [
 
     //pick
     [/pick%2Fresult%2Ffree/, 'list', [
-		//['aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
-		['aJ', '#bg > article > section:nth-child(1) > article > div > div > a']]],
+        //['aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
+        ['aJ', selector_mypage]        //['aJ', '#bg > article > section:nth-child(1) > article > div > div > a']
+        ]],
     [/pick%2Frun/, 'flashJT', '#canvas', 40, 410],
     [/pick%2Ftop%2Ffree/, 'list', [
-        ['hold'],
-        //['aJ', 'a[href*="pick%2Frun%2Ffree%"]'],
+        //['hold'],
+        ['aJ', 'a[href*="pick%2Frun%2Ffree%2Fdaily%3F"]'],
         ['flashJT', 'canvas']]],
     [/pick%2F(top|result)%2Fpremium2/, 'list', [
         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],

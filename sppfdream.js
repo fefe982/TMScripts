@@ -28,7 +28,8 @@ var actions = [
         ['aJ', '#howto_icon_back_gacha > a.enable']]],
     [/main%2Fgacha%2Fmain%2Fmulti_result%3/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
     [/main%2Fgacha%2Fmain%2Fresult%3F/, 'list', [
-        ['aJ', 'div.gacha_frame:first() form:last()']]],
+        ['aJ', 'div.gacha_frame:first() form:last()'],
+        ['aJ', selector_mypage]]],
     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
     [/main%2Fmypage/, 'list', [
         ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],

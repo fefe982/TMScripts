@@ -596,7 +596,9 @@ var actions = [
         ['aJ', '#containerBox > div > a[href*="supernova%2FSupernovaTop"]']]],
     [/supernova%2FSupernovaTop/, 'list', [
         ['aJ', '#navi > div > a']]],
-    [/treasure%2FCardList%2F/, 'a', '//a[text()="メンバーに追加"]'],
+    [/treasure%2FCardList%2F/, 'list', [
+        ['a', '//a[text()="メンバーに追加"]'],
+        ['aJ', 'a:contains("マップ選択画面へ")']]],
     [/treasure%2FTreasureConf%2F/, 'a', '//a[text()="出発させる"]'],
     [/treasure%2FTreasureEnd%2F/, 'a', '//a[text()="スカウトする" or text()="マップ選択に戻る"]'],
     [/Ftreasure%2FFriendTreasureBoxList%/, 'aJ', 'a[href*="treasure%2FDoOpenTreasureBox"]'],
