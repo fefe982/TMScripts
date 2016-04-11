@@ -55,10 +55,11 @@ var actions = [
         ['formJ', '#shortCutForm'],
         ['aJ', selector_mypage]]],
     [/main%2Fpresent%2Freceive%2Fmain%2Fbulk_list/, 'list', [
+        ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
         ['formJ', '#shortCutForm'],
         ['aJ', selector_mypage]]],
     [/main%2Fpresent%2Freceive%2Fmain%2Fgacha_result/, 'aJ', '#shortCut'],
-    [/main%2Fpresent%2Freceive%2Fmain%3F/, 'list', [
+    [/main%2Fpresent%2Freceive%2Fmain(%2Findex|%3F)/, 'list', [
         ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
         ['formJ', '#shortCutForm'],
         ['aJ', '#d9-main a:regexText(期限あり(.*[^0].*))'],

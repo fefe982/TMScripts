@@ -90,6 +90,7 @@ var actions = [
     [/pick%2Ftop%2Ffree/, 'list', [
         //['hold'],
         ['aJ', 'a[href*="pick%2Frun%2Ffree%2Fdaily%3F"]'],
+        ['aJ', 'a[href*="pick%2Frun%2Ffree%2Flunch%3F"]'],
         ['flashJT', 'canvas']]],
     [/pick%2F(top|result)%2Fpremium2/, 'list', [
         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],
@@ -150,6 +151,7 @@ var actions = [
 	[/quest_story%2Fquest%2Fop/, 'flashJT', document],
     [/scenario%2Fquest/, 'flashJT', document],
 	[/scenario2%2Fs%2Fmorinaga_end/, 'flashJT', document],
+    [/scenario3%2F/, 'flashJT', '#skip'],
     [/shortStory%2Fstory/, 'list', [
         ['flashJT', document]
     ]],
@@ -181,11 +183,23 @@ var actions = [
     [/%2Fbox_select/, 'list', [
         ['aJ', 'a[href*="%2Fbox%2F"]:last()'],
         ['aJ', selector_mypage]]],
+    [/%2FclearArea%/, 'aJ', 'div.eventStageResultButton > div > a'],
 	[/%2FeventTop/, 'list', [
-        ['aJ', 'div.btn_blue > a[href*="box_select"]'],
+        ['funcR', function(){
+            var res = $('#bg > section.py5 > article:visible() dd').text().match(/([0-9]+)/);
+            if (res === undefined) {
+                return false;
+            }
+            res = +res[1];
+            if (res > 10) {
+                return $('div.btn_blue > a[href*="box_select"]').clickJ().length > 0;
+            }
+            return false;
+        }],
+        //['aJ', 'div.btn_blue > a[href*="box_select"]'],
 		['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
 		['aJ', 'div.questAction a[href*="%2Fraid%2F"]'],
-		['aJ', 'div.questAction a[href*="%2Fjudge%2Findex%2F1"]']]],
+		['aJ', 'div.questAction a:regex(href, %2F[a-zA-Z]+%2Findex%2F1)']]],
 	[/%2Findex%2F/, 'list', [
         ['aJ', 'div.bossEncountNow > a'],
         ['func', function () {

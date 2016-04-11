@@ -41,9 +41,6 @@ function handleStoryMission() {
     }
 }
 
-function handleEllGacha() {
-    clickA("//div[@class='btn_base block_flex']/a");
-}
 //gacha%2FGachaResult%2F%3FthemeId%3D1/
 function handleEllGachaRes() {
     //*[@id="contents"]/div[1]/ul/li[1]/div[2]/div/a
@@ -191,7 +188,9 @@ var actions = [
         ['a', '//a[text()="探索TOPへ"]'],
         ['hold']]],
     [/battleTower%2FBattleTowerTop%2F/, 'func', handleBattleTowerTop],
-    [/battleTower%2FBattleTowerEnemyList/, 'minmax', '//div[div[text()="対戦相手選択"]]/ul/li[', ']//table/tbody/tr[1]/td', ']//a[text()="バトルする"]'],
+    [/battleTower%2FBattleTowerEnemyList/, 'list', [
+        ['minmax', '//div[div[text()="対戦相手選択"]]/ul/li[', ']//table/tbody/tr[1]/td', ']//a[text()="バトルする"]'],
+        ['aJ', cssmypage]]],
     [/battleTower%2FBattleTowerResult%2F/, 'list', [
 		['a', '//a[contains(text(),"対戦相手選択")]'],
 		['aJ', cssmypage]]],
@@ -203,19 +202,28 @@ var actions = [
     [/evolution%2FEvolutionConfirm%2F/, 'form', '//*[@id="contents"]/form'],
     [/evolution%2FEvolutionEnd%2F/, 'a', '//a[text()="限界突破TOPへ"]'],
     [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="container"]'],
-    [/gacha%2FGachaTop%2F$/, 'list', [
+    // gacha theme id
+    // 1 エールガチャ
+    // 2 レジェンドガチャ
+    // 7 レイドガチャ
+    // 8 レアレイドガチャ
+    // 9 無料ガチャ
+    [/gacha%2FGachaTop%2F$/, 'list', [ // default, 2, legend
         ["sth", "//form[@name='gacha']//input[@class='btn_base']"],
         ['sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]']]],
-    [/gacha%2FGachaTop(%2F)?%3FthemeId%3D1\b/, "func", handleEllGacha],
+    [/gacha%2FGachaTop(%2F)?%3FthemeId%3D1\b/, 'list', [
+        ['hold'],
+        ['aJ', 'a[href*="gacha%2FDoGachaExec%2F%3FthemeId%3D9"]']]],
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/,
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D7\b/, "a", "(//div[contains(@class, 'btn_base block_flex')]//a)[last()]"],
     [/gacha%2FGachaTop%2F%3FthemeId%3D[0-9]/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D1\b/, 'list', [ // yell gacha result
         ['hold'],
         ['aJ', 'a:contains("ガチャをする")']]],
-    [/gacha%2FGachaResult%2F%3FthemeId%3D[0-9]/, 'list', [ // ticket gacha
+    [/gacha%2FGachaResult%2F(%3FthemeId%3D[0-9]+%26.*)?$/, 'list', [ // ticket gacha
         ['aJ', 'form[name="gacha"] input[name="isMaxValue"]'],
         ['formJ', 'form[name="gacha"]'],
+        ['aJ', 'div.btn_base.block_flex > a:not([href*="gacha%2FDoGachaExec%2F%3FthemeId%3D9"]):last()'],
         ['aJ', cssmypage]]],
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D8/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
