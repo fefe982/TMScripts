@@ -173,9 +173,11 @@ function handleMissionError() {
 
 var actions = [
     [/apology%2FApologyList%2F/, 'form', '//*[@id="containerBox"]//form'],
+    [/arena%2FArenaBattleEntry%2F/, 'aJ', '#containerBox > div > a[href*="arena%2FDoArenaBattleEntry%2F"]'],
+    [/Farena%2FArenaBattleEntryEnd%2F/, 'aJ', '#containerBox > div > a:contains("イベントを進める")'],
     [/arena%2FArena(Sub)?BattleResult%2F/, 'list', [
         ["a", '//a[contains(@href, "UserSelectList")]'],//text()="戦いを続ける"]'],
-        ['flash', '//div[@id="gamecanvas"]/canvas']]], //*[@id="container"]']]],
+        ['flashJT', '#container > canvas']]], //*[@id="container"]']]],
     //[/arena%2FArenaBattleSwf%2F/, 'flash', ''],
     [/arena%2FArena(Sub)?BattleTop/,  'list', [
 		['func', function() {
@@ -221,7 +223,7 @@ var actions = [
     [/arena%2FBossBattleResult%2F/, 'list', [
 		['aJ', 'a[href*="arena%2FMissionDetail%2F"]'],
         ['a', '//a[contains(@href, "arena%2FDoMissionExecutionCheck%2F")]'],
-        ['flash', '//*[@id="gamecanvas"]/canvas']]],//"//a[text()='次のエリアへ進む']"]]],
+        ['flashJT', '#container > canvas']]],//"//a[text()='次のエリアへ進む']"]]],
     [/arena%2FBossBattleFlash%2F/, 'flash', '//*[@id="container"]/canvas', 79, 346],
 	[/arena%2FContinuousParticipation%2F/, 'aJ', 'a[href*="arena%2FTop"]'],
 	[/arena%2FChoiceCoinItemTop/, 'list', [
@@ -233,7 +235,9 @@ var actions = [
 	[/arena%2FDoMissionExecution%2F/, 'aJ', 'a[href*="mypage%2FIndex"]'],
 	[/arena%2FMissionDetail%2F/, 'list', [
 		['func', function(){
+            var click = 0;
 			setInterval(function(){
+                ++click;
 				var text = $('#containerBox > div > div.eventPopupWrap.js_eventPopup > div > div > div.margin_left_10').text();
 				GM_log(text);
 				//BPが100→100に回復しました
@@ -244,9 +248,13 @@ var actions = [
 				} else if (text.match(/BPが[0-9]*→100に回復しました/) && $('#raidBossBtn > a').filter(':visible').length > 0) {
 					$('#raidBossBtn > a').clickJ();
 				} else if ($('#excBtnOff').filter(':visible').length === 0) {
-					excBtn = $('#execBtn');
-					if (excBtn.length == 0)
-					{
+					var excBtn = $('#execBtn');
+                    var excBossBtn = $('#raidBossBtn > a:contains("5")');
+                    if (excBtn.length == 0 || (click >= 20 && excBossBtn.length > 0)) {
+                        click = 0;
+                        excBtn = excBossBtn;
+                    }
+					if (excBtn.length == 0) {
 						excBtn = $('#execClear');
 					}
 					excBtn.clickJ().touchJ();

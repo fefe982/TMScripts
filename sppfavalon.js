@@ -89,7 +89,7 @@ function handleMypage() {
     succ = succ || clickA("//a[text()='完全討伐報酬が受け取れます']");
     succ = succ || clickA("//a[text()='ビンゴチケットが届いています']");
     succ = succ || clickA("//a[contains(text(), 'を討伐してくれました')]");
-    if (GM_getValue("__ava_no_gift", Date.now()) + no_gift_delay * 1000 > Date.now()) {
+    if (GM_getValue("__ava_no_gift", 0) + no_gift_delay * 1000 < Date.now()) {
         succ = succ || clickA("//a[text()='贈り物が届いています']");
     }
     if (ap > 10) {
