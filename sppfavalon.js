@@ -220,8 +220,8 @@ var actions = [
     [/gacha%2FGacha(?:Result|Top)(?:%2F)?(?:%3FthemeId%3D[0-9]+.*)?$/, 'list', [
         ['aJ', 'form[name="gacha"] input[name="isMaxValue"]'],
         ['formJ', 'form[name="gacha"]'],
-        ['aJ', 'div.btn_base.block_flex > a:not([href*="gacha%2FDoGachaExec%2F%3FthemeId%3D9"]):last()'],
-        ['hold'],
+        ['aJ', 'div.btn_base > a:regex(href, gacha%2FDoGachaExec%2F%3FthemeId%3D([0-8]|9[0-9]))'],
+        //['hold'],
         ['aJ', cssmypage]]],
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
     [/gacha%2FGachaResult%2F%3FthemeId%3D8/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
