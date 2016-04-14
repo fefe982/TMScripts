@@ -249,8 +249,9 @@ var actions = [
 					$('#raidBossBtn > a').clickJ();
 				} else if ($('#excBtnOff').filter(':visible').length === 0) {
 					var excBtn = $('#execBtn');
-                    var excBossBtn = $('#raidBossBtn > a:contains("5")');
-                    if (excBtn.length == 0 || (click >= 20 && excBossBtn.length > 0)) {
+                    var excBossBtn = $('#raidBossBtn > a');
+                    var t = excBossBtn.text().match(/[0-9]+/);
+                    if (excBtn.length == 0 || (click >= 20 && t >= 5)) {
                         click = 0;
                         excBtn = excBossBtn;
                     }

@@ -66,6 +66,8 @@ var actions = [
         ['formJ', '#shortCutForm'],
         ['aJ', '#d9-main a:regexText(期限あり(.*[^0].*))'],
         ['aJ', '#d9-main a:regexText(期限なし(.*[^0].*))']]],
+    [/main%2Freinforce%2Fmain%3Ferror_no/, 'list', [
+        ['aJ', selector_mypage]]],
     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
     [/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
@@ -73,5 +75,6 @@ var actions = [
     [/main%2Freward%2Fmain/, 'list', [
         ['aJ', '#shortCutForm input[type="submit"]:last()'],
         ['aJ', selector_mypage]]],
+    [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
     [/XXXXXXXXXXXXX/]
 ];
