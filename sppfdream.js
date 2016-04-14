@@ -31,6 +31,7 @@ var actions = [
         ['aJ', '#shortCutForm > input.btnLM.blue'],
         ['aJ', 'div.gacha_frame:first() form:last()'],
         ['aJ', selector_mypage]]],
+    [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', selector_mypage],
     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
     [/main%2Fmypage/, 'list', [
         ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
