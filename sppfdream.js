@@ -4,6 +4,7 @@ var actions = [
     [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],
     [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
     [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
+    [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', selector_mypage],
     [/main%2Fscout%2Fmain%2Fboss%3F/, 'aJ', 'a#shortCut'],
     [/main%2Fscout%2Fmain%2Fboss_result%3/, 'list', [
         ['aJ', 'a#shortCut']]],
@@ -23,6 +24,29 @@ var actions = [
     [/main%2Fscout%2Fmain%3F/, 'list', [
         ['aJ', 'a#shortCut'],
         ['aJ', '#bg_scout a:contains("最新エリア")']]],
+    [/main%2Fevent%2Fbox%2Fmain%2Fdtraining_list/, 'list', [
+        ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
+        ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]']]],
+    [/main%2Fevent%2Fbox%2Fmain%2Fresult/, 'list' [
+        ['hold'],
+        ['aJ', '']]],
+    [/main%2Fevent%2Fdtraining%2Finfo/, 'list', [
+        ['aJ', '#content_body a[href*="main%2Fevent%2Fdtraining%2Fmain"]']]],
+    [/main%2Fevent%2Fdtraining%2Fmain/, 'list', [
+        ['funcR', function () {
+            var item = $('#dtraining_back_mou > div:nth-child(4) > div:nth-child(4) > div');
+            if (item.length == 0) {
+                item = $('#dtraining_back_normal > div:nth-child(4) > div:nth-child(4) > div');
+            }
+            if (item.length == 0) return false;
+            var matchres = item.text().match(/所持チケット:([0-9]+)枚/);
+            if (matchres && (+matchres[1]) >= 3) {
+                return $('a[href*="main%2Fevent%2Fbox%2Fmain%2Fdtraining_list"]').clickJ().length > 0;
+            }
+            return false;
+        }],
+        ['aJ', 'a[href*="main%2Fevent%2Farea%2Fdtraining%2Fexe"]'],
+        ['aJ', selector_mypage]]],
     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'], 
     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
         ['aJ', '#howto_icon_back_gacha > a.enable']]],
@@ -31,7 +55,6 @@ var actions = [
         ['aJ', '#shortCutForm > input.btnLM.blue'],
         ['aJ', 'div.gacha_frame:first() form:last()'],
         ['aJ', selector_mypage]]],
-    [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', selector_mypage],
     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
     [/main%2Fmypage/, 'list', [
         ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
@@ -42,7 +65,8 @@ var actions = [
             var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/);
             var ap = match_res ? +match_res[1] : 0;
             if (ap > 10) {
-                return $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
+                return $('#gacha_link_area a[href*="main%2Fevent%2Fdtraining%2Finfo"]').clickJ().length > 0
+                    || $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
             }
             return false;
         }],

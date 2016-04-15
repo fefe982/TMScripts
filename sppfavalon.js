@@ -97,7 +97,6 @@ function handleMypage() {
 		succ = succ || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
         succ = succ || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0;
         //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
-		//succ = succ || $('a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
         succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
     }
     succ = succ || setTimeout(function () {location.reload(true); }, 60000);
@@ -199,6 +198,16 @@ var actions = [
     [/companion%2FCompanionApplicationEnd%2F/, 'a', '//a[text()="さらに探す"]'],
     [/companion%2FCompanionMultiApplication%2F/, 'form',  '//*[@id="contents"]/div[1]/form'],
     [/companion%2FSearchCompanion%2F/, 'form', '//*[@id="contents"]/form'],
+    [/eventRaidboss%2FRaidbossBattleResult/, 'list', [
+        ['aJ', '#contents > div > a[href*="mission%2FMissionActionLot"]']]],
+    [/eventRaidboss%2FRaidbossCollectionDetail/, 'list', [
+        ['aJ', '#contents > div > a[href*="eventRaidboss%2FRaidbossTop"]']]],
+    [/eventRaidboss%2FRaidbossHelpResult/, 'list', [
+        ['aJ', '#contents a[href*="mission%2FMissionActionLot%"]']]],
+    [/eventRaidboss%2FRaidbossTop/, 'list', [
+        ['aJ', '#raid_help > a'],
+        ['aJ', '#small_btn_raid_attack > div > a'],
+        ['hold']]],
     [/evolution%2FEvolutionConfirm%2F/, 'form', '//*[@id="contents"]/form'],
     [/evolution%2FEvolutionEnd%2F/, 'a', '//a[text()="限界突破TOPへ"]'],
     [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="container"]'],

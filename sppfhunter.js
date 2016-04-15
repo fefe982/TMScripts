@@ -720,7 +720,7 @@ var actions = [
     [/gacha%2FGachaFlash%2F/, 'a', '//a[text()="マイページへ"]'],
     //[/gacha%2FGachaResult%2F/, "func", handleCoinGacha],
     [/gacha%2FGachaResult%2F%3FgachaThemeId%3D3%26themeId%3D3/, 'list', [
-        ['a', '//a[contains(@href, "FGachaFlash%2F")]'], //''//a[text()="バトルをスキップしてガチャをする"]'],
+        ['aJ', 'a[href*="gacha%2FGachaFlash%2F%3FgachaId%3D5%26themeId%3D3"]'], //''//a[text()="バトルをスキップしてガチャをする"]'],
         ['a', '//a[contains(@href, "prizeReceive%2FPrizeReceiveTop%2F")]']]], //text()="贈り物BOX"]']]],
     [/gacha%2FGachaResult%2F%3FgachaId%3D/, 'list', [
 		["a", '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
@@ -728,8 +728,7 @@ var actions = [
     [/gacha%2FGachaSwf%2F/, 'flash', "//*[@id=\"container\"]"],// 372, 62],
     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/, 'a', '(//a[contains(text(), "ガチャをする")])[last()]'],
     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D2/, 'a', '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
-    [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'a', '//a[contains(@href, "FGachaFlash%2F")]'], //text(), "ガチャをする")])[last()]'],
-    //[/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, "a", "//*[@id=\"main\"]/section[1]/div[2]/div/ul/li[2]/a"],
+    [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'aJ', 'a[href*="gacha%2FGachaFlash%2F%3FgachaId%3D5%26themeId%3D3"]'], //text(), "ガチャをする")])[last()]'],
     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
     [/mission%2FMissionResult%2F/, 'list', [

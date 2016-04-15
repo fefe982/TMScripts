@@ -142,8 +142,8 @@ function handlePrizeTop() {
 }
 
 function handleArrangement() {
-    clickS('//div[text()="自動割り振り"]');
-    //clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
+    //clickS('//div[text()="自動割り振り"]');
+    clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
     setInterval(function () {
         if (getXPATH('//div[@id="overrayArea" and not(@class="hide")]')) {
             clickForm('//*[@id="containerBox"]/form');
