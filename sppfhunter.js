@@ -375,7 +375,7 @@ function handleEventRaid() {
 		GM_log($('#do_battle_btn_' + bp_need));
         var attack = $('#do_battle_btn_' + bp_need + ':not([style*="none"])');
 		GM_log(attack);
-        if (attack.length > 0 && !attack.hasClass('btn_main_off_small')) {
+        if (attack.length > 0 && !attack.hasClass('btn_main_off_small') && !attack.hasClass('btn_select_' + bp_need + '_off')) {
 			if (attack_num == 0) {
 				attack.clickJ();
 			}

@@ -295,17 +295,16 @@ $.fn.touchJ = function (timeout) {
     return this;
 };
 
-$.fn.submitJ = function (timeout) {
+$.fn.submitJ = function (timeout, nocheck) {
     GM_log("submitJ");
     GM_log(this);
-    if (this.length === 0) {
-        return this;
-    }
-    var jq = $(this);
+    if (this.length === 0) { return this; }
+    var jq = nocheck ? this : this.filter(':has(input)');
+    if (jq.length === 0) { return jq; }
     setTimeout(function () {
         jq.submit();
     }, timeout || 1000);
-    return this;
+    return jq;
 };
 
 $.fn.minmaxJ = function (compare, target, minmaxflag) {

@@ -4,128 +4,6 @@ var cssmypage = "#main_header_menu > ul > li:nth-child(1) > a";
 var xpathquest = "//*[@id=\"main_header_menu\"]/ul/li[2]/a";
 var no_gift_delay = 10 * 60;
 
-function handleMissionResult() {
-    //debugger;
-    //*[@id="contents"]/div[2]/div[1]
-    //*[@id="contents"]/div[2]/div[1]
-    var sub = getXPATH("//*[@id=\"contents\"]/div/div[@class='subtitle']");
-    //alert(sub.innerText);
-	var succ = false;
-	succ = succ || clickA('//*[@id="#towerraid_announce"]/div/div[2]/a');
-    //var canvas = getXPATH("//*[@id=\"resultMovie\"]/canvas");
-    succ = succ || clickA("//*[@id=\"contents\"]/div[@class='btn_main_large margin_top_10']/a");//*[@id="contents"]/div[5]/a //*[@id="contents"]/div[5]/a
-    succ = succ || clickA('//a[text()="レイドボス出現中"]');
-    succ = succ || clickA('//a[text()="さらにクエストする"]');
-    succ = succ || clickA('//a[text()="次のエリアへ"]');
-    succ = succ || clickA(xpathmypage);
-}
-
-function handleStoryMission() {
-    var ap_status = getXPATH('//div[div[contains(text(),"のステータス")]]/div[2]/table/tbody/tr[2]/td[1]'), ap_c = 0, ap_full = 1, res;
-    if (ap_status) {
-        res = ap_status.innerText.match(/([0-9]+)\/([0-9]+)/);
-        if (res) {
-            ap_c = parseInt(res[1], 10);
-            ap_full = parseInt(res[2], 10);
-        }
-    }
-    if (ap_c > ap_full * 0.5) {
-        clickA(xpathquest);
-        return;
-    }
-    if (!clickA("//*[@id=\"contents\"]/div[2]/a")) {
-        var text = getXPATH("//*[@id=\"progress_area\"]/div");
-        if (text && text.innerText.match(/レベル[\S]*上がった/)) {
-            clickA(xpathquest);
-        }
-    }
-}
-
-//gacha%2FGachaResult%2F%3FthemeId%3D1/
-function handleEllGachaRes() {
-    //*[@id="contents"]/div[1]/ul/li[1]/div[2]/div/a
-    clickA("(//div[@class='btn_base block_flex']/a)[last()]");
-}
-
-function handleGiftBox() {
-    var succ = false;
-    succ = succ || clickForm("//*[@id=\"contents\"]/form");
-    succ = succ || clickA('//*[@id="contents"]/ul[@class="btn_tabs margin_top_10"]/li/a[not(contains(text(), "(0)"))]');
-    if (getXPATH('//div[@class="txt_block_center" and text()="所持武具が上限数に達しています"]')) {
-        GM_setValue("__ava_no_gift", Date.now());
-    }
-    succ = succ || clickA(xpathmypage);
-}
-
-function handleRaidGacha() {
-    var succ = false;
-    succ = succ || clickA('(//div[@class="btn_base block_flex"]/a[img])[last()]');
-}
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F#
-
-function handleRaidAssist() {
-    //*[@id="contents"]/div[1]/div[2]/ul/li/div[1]/span/span
-    if (!clickA("//div[@class='section_main']/ul/li[div[1]/span/span[@class=\"icon_new\"]]/div[3]/div/div/div[2]/div/a")) {
-        clickA(xpathmypage);
-    }
-}
-
-function handleRaidbossBattleResult() {
-    var succ = false;
-    if (document.referrer.match(/raidboss%2FRaidbossBattleResultList%2F/)) {
-        window.location.href = document.referrer;
-        return;
-    }
-    //alert("oo");
-    succ = succ || clickA("//div[@class='btn_main_large']/a");
-    succ = succ || clickA("//a[text()='応援一覧へ戻る']");
-    succ = succ || clickA(xpathmypage);
-}
-
-function handleBattleTowerTop() {
-    if (getXPATH('//div[contains(@class, "last_free_cnt")]') || getXPATH('//div[@id="gauge_bp"]').dataset.value > 0) {
-        //clickA('//*[@id="entaku_main"]/div[2]/div[3]/div[1]/a');
-        $("a[href*='battleTower%2FBattleTowerEnemyList']").clickJ();
-    } else {
-        clickA(xpathmypage);
-    }
-}
-
-function handleBattleTowerEnemyList() {
-    var min = 10000, i, minid = 0;
-    //if (getXPATH('//div[@class="fnt_emphasis blink" and text()="BPが不足しています"]')) {
-    //    clickA(xpathevent);
-    //    return;
-    //}
-    for (i = 1; i <= 5; i++) {
-        var t = getXPATH('//*[@id="contents"]/div[2]/div[3]/ul/li[' + i + ']/div[1]/div[2]/table/tbody/tr/td');
-        if (t && parseInt(t.innerText, 10) < min) {
-            min = parseInt(t.innerText, 10);
-            minid = i;
-        }
-    }
-    if (minid > 0) {
-        clickA('//*[@id="contents"]/div[2]/div[3]/ul/li[' + minid + ']/div[2]/div[2]/a');
-    }
-}
-
-function handleBattleTowerResult() {
-    clickA('//a[contains(text(),"対戦相手選択")]');
-}
-
-function handleArrangement() {
-    clickForm('//*[@id="contents"]/div/div[2]/ul/li[3]/form');
-}
-
-function handleMissionError() {
-    var succ = false;
-    if (succ && document.referrer.match(/island%2F/)) {
-        succ = clickA('//a[text()="使用する"]');
-    }
-    succ = succ || clickA(xpathmypage);
-}
-
-//http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2FsummonHunt%2FRaidbossTop%2F%3FuserRaidbossId%3D18781951
 var actions = [
     [/arrangement%2FArrangementEdit%2F/, 'form', '//*[@id="contents"]/div/div[2]/ul/li[3]/form'],
     [/arrangement%2FArrangementEnd%2F/, 'a', xpathmypage],
@@ -148,7 +26,13 @@ var actions = [
         ['a', '//*[@id="high_attack_btn"]/div/a'],
         ['a', '//a[text()="探索TOPへ"]'],
         ['hold']]],
-    [/battleTower%2FBattleTowerTop%2F/, 'func', handleBattleTowerTop],
+    [/battleTower%2FBattleTowerTop%2F/, 'list', [
+        ['funcR', function () {
+            if ($('div.last_free_cnt').length > 0 || $('div#gauge_bp')[0].dataset.value > 0) {
+                return $("a[href*='battleTower%2FBattleTowerEnemyList']").clickJ().length > 0;
+            }
+        }],
+        ['aJ', cssmypage]]],
     [/battleTower%2FBattleTowerEnemyList/, 'list', [
         ['minmax', '//div[div[text()="対戦相手選択"]]/ul/li[', ']//table/tbody/tr[1]/td', ']//a[text()="バトルする"]'],
         ['aJ', cssmypage]]],
@@ -335,9 +219,21 @@ var actions = [
     [/mission%2FMissionActionLot%2F/, "flash", "//*[@id=\"container\"]"],
     [/mission%2FBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[2]/a"],
     [/mission%2FBossBattleFlash%2F/, "flash", "//*[@id=\"container\"]", 161, 293],
-    [/mission%2FMissionResult%2F/, "func", handleMissionResult],
+    [/mission%2FMissionResult%2F/, 'list', [
+        ['aJ', '#towerraid_announce > div > div:nth-child(2) > a'],//'//*[@id="#towerraid_announce"]/div/div[2]/a');
+        ['aJ', '#contents > div.btn_main_large.margin_top_10 > a'],//succ = succ || clickA("//*[@id=\"contents\"]/div[@class='btn_main_large margin_top_10']/a");//*[@id="contents"]/div[5]/a //*[@id="contents"]/div[5]/a
+        ['aJ', 'a:contains("レイドボス出現中")'],//succ = succ || clickA('//a[text()="レイドボス出現中"]');
+        ['aJ', 'a:contains("さらにクエストする")'], //succ = succ || clickA('//a[text()="さらにクエストする"]');
+        ['aJ', 'a:contains("次のエリアへ")'], //('//a[text()="次のエリアへ"]');
+        ['aJ', cssmypage]]],//(xpathmypage);]]],
     [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のエリアへ進む"):first()'],
-    [/mission%2FMissionError%2F/, 'func', handleMissionError], //"a",  "//*[@id=\"global_menu\"]/ul/li[1]/div[5]/a"],
+    [/mission%2FMissionError%2F/, 'list', [
+        ['funcR', function () {
+            if (document.referrer.match(/island%2F/)) {
+                return $('a:contains("使用する")').clickJ().length > 0;
+        }
+        }],
+        ['aJ', cssmypage]]], //"a",  "//*[@id=\"global_menu\"]/ul/li[1]/div[5]/a"],
     [/mission%2FMissionListSwf%2F/, "link", "http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F"],
     [/multiguildbattle%2FMultiGuildbattleResult%2F/, 'a', '//*[@id="btn_force"]/a'],
     [/multiguildbattle%2FMultiGuildbattleSelectAttackType%2F/, 'list', [
@@ -346,7 +242,17 @@ var actions = [
         ],
     [/multiguildbattle%2FMultiGuildbattleSelectTarget%2F/, 'a', '//div[div[text()="ターゲット選択"]]/ul/li[1]//a'],
     [/multiguildbattle%2FMultiGuildbattleTop%2F/, 'a', xpathmypage],
-    [/prizeReceive%2FPrizeReceiveTop%2F/, "func", handleGiftBox],
+    [/prizeReceive%2FPrizeReceiveTop%2F/, 'list', [
+        ['formJ', '#contents > form'], //succ = succ || clickForm("//*[@id=\"contents\"]/form");
+        ['aJ', '#contents > ul.btn_tabs.margin_top_10 > li > a:not(:contains("(0)"))'],//    succ = succ || clickA('//*[@id="contents"]/ul[@class="btn_tabs margin_top_10"]/li/a[not(contains(text(), "(0)"))]');
+        ['funcR', function () {
+            if ($('div.txt_block_center:contains("所持武具が上限数に達しています")').length > 0) {
+                GM_setValue("__ava_no_gift", Date.now());
+                return true;
+            }
+            return false;
+        }],
+        ['aJ', cssmypage]]],
     [/raidboss%2FRaidbossCollectionDetail%2F/, "a", '//a[text()="受け取る"]'],
     [/raidboss%2FRaidbossTop%2F/, 'list', [
         //['hold'],
@@ -359,15 +265,45 @@ var actions = [
 		['aJ', 'a[href*="%2FMissionActionLot"]'],
         ['hold']]],
     [/raidboss%2FRaidbossHelpResult%2F/, "a", "//*[@id=\"contents\"]/div[2]/a"],
-    [/raidboss%2FRaidbossAssistList%2F/, "func", handleRaidAssist],
-    [/raidboss%2FRaidbossBattleResult%2F/, "func", handleRaidbossBattleResult],
+    [/raidboss%2FRaidbossAssistList%2F/, 'list', [
+        ['aJ', 'div.section_main > ul > li:has(div:nth-child(1) > span > span.icon_new) > div:nth-child(3) > div > div > div:nth-child(2) > div > a'], // //div[@class='section_main']/ul/li[div[1]/span/span[@class=\"icon_new\"]]/div[3]/div/div/div[2]/div/a
+        ['aJ', cssmypage]]],
+    [/raidboss%2FRaidbossBattleResult%2F/, 'list', [
+        ['funcR', function () {
+            if (document.referrer.match(/raidboss%2FRaidbossBattleResultList%2F/)) {
+                window.location.href = document.referrer;
+            return true;
+            }
+        }],
+        ['aJ', 'div.btn_main_large > a'],
+        ['aJ', 'a:contains("応援一覧へ戻る")'],
+        ['aJ', cssmypage]]],
     [/raidboss%2FRaidbossBattleResultList%2F/, 'a', '//*[@id="contents"]/div[1]/ul/li/a'],
     [/shop%2FItemUseEnd%/, 'a', '//a[contains(@href, "MissionActionLot")]'],
     [/story(ex)?%2FDoStoryEpisodeSwf2%2F/, 'flashJT', '#container > canvas'],
     [/story(ex)?%2FDoStoryEpisodeSwfClear%2F/, 'flashJT', '#container > canvas'],
     [/story(ex)?%2FDoStoryEpisodeSwfEd%2F/, "flash", "//*[@id=\"container\"]"],
     [/story(ex)?%2FDoStoryEpisodeSwfOp%2F/, "flash", "//*[@id=\"container\"]"],
-    [/story(ex)?%2FMissionResult%2F/, "func", handleStoryMission],
+    [/story(ex)?%2FMissionResult%2F/, 'func', function () {
+        var ap_status = getXPATH('//div[div[contains(text(),"のステータス")]]/div[2]/table/tbody/tr[2]/td[1]'), ap_c = 0, ap_full = 1, res;
+        if (ap_status) {
+            res = ap_status.innerText.match(/([0-9]+)\/([0-9]+)/);
+            if (res) {
+                ap_c = parseInt(res[1], 10);
+                ap_full = parseInt(res[2], 10);
+            }
+        }
+        if (ap_c > ap_full * 0.5) {
+            clickA(xpathquest);
+            return;
+        }
+        if (!clickA("//*[@id=\"contents\"]/div[2]/a")) {
+            var text = getXPATH("//*[@id=\"progress_area\"]/div");
+            if (text && text.innerText.match(/レベル[\S]*上がった/)) {
+                clickA(xpathquest);
+            }
+        }
+    }],
     [/story(ex)?%2FStoryAreaResult%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
     [/story(ex)?%2FStoryBackNumberIndex/, 'aJ', '#story_backnum_bg > div > div > div > div.padding_x_10 > a'],
     [/story(ex)?%2FStoryBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[3]/a"],
