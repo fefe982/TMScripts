@@ -60,47 +60,9 @@ function handleGiftBox() {
 function handleRaidGacha() {
     var succ = false;
     succ = succ || clickA('(//div[@class="btn_base block_flex"]/a[img])[last()]');
-    //succ = succ || clickA("(//*/div[@id='wrap' or @id='contents']/div[@class='section_sub section_margin'])[2]/div[2]/div[2]/div[2]/div[1]/a");
-    //succ = succ || clickA("(//*/div[@id='wrap' or @id='contents']/div[@class='section_sub section_margin'])[2]/div[2]/div[2]/div[1]/div[1]/a");
-    //*[@id="contents"]/div[5]/ul/li[1]/div[4]/div/a
-    //succ = succ || clickA("(//*/div[@id='wrap' or @id='contents']/div[@class='section_sub section_margin'])[1]/ul/li[1]/div[4]/div/a");
-    //succ = succ || clickA("(//*/div[@id='wrap' or @id='contents']/div[@class='section_sub section_margin'])[1]/ul/li[1]/div[2]/div/a");
 }
 //http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F#
-function handleMypage() {
-    var new_raid = getXPATH("//*[@id=\"boss_appear_btn\"]/span");
-    var ap = getXPATH("//*[@id=\"gauge_ap\"]/div[1]").dataset.value;
-    var bp = getXPATH("//*[@id=\"gauge_bp\"]/div[1]").dataset.value;
-    var guild_battle = getXPATH('//a[span[@id="battle_name"]]');
-    var succ = false;
-    succ = succ || clickA('//a[span[@id="battle_name"]]');
-    succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
-    if (bp > 20) {
-        succ = succ || clickA('//a[contains(@href, "battleTower%2FBattleTowerTop%")]');
-    }
-    // with more points for free gacha, we can do a premium gacha.
-    //succ = succ || clickA("//a[text()='無料ガチャが回せます']");
-    succ = succ || clickA("//a[text()='振り分けポイントがあります']");
-    succ = succ || clickA("//a[text()='バトル結果がでています']");
-    succ = succ || clickA("//a[text()='ストーリーモードを進められます']");
-    succ = succ || $('#button > a[href*="storyex%2FStoryBackNumberIndex"]').clickJ().length > 0;
-    succ = succ || clickA("//a[text()='戦友上限が増えました']");
-    succ = succ || clickA("//a[text()='戦友候補が見つかりました']");
-    succ = succ || clickA("//a[text()='完全討伐報酬が受け取れます']");
-    succ = succ || clickA("//a[text()='ビンゴチケットが届いています']");
-    succ = succ || clickA("//a[contains(text(), 'を討伐してくれました')]");
-    if (GM_getValue("__ava_no_gift", 0) + no_gift_delay * 1000 < Date.now()) {
-        succ = succ || clickA("//a[text()='贈り物が届いています']");
-    }
-    if (ap > 10) {
-		//succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0;
-		succ = succ || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0;
-        succ = succ || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0;
-        //succ = succ || clickA('//a[contains(@href, "TowerRaidTop")]');
-        succ = succ || clickA("//*[@id=\"quest_btn\"]/a");
-    }
-    succ = succ || setTimeout(function () {location.reload(true); }, 60000);
-}
+
 function handleRaidAssist() {
     //*[@id="contents"]/div[1]/div[2]/ul/li/div[1]/span/span
     if (!clickA("//div[@class='section_main']/ul/li[div[1]/span/span[@class=\"icon_new\"]]/div[3]/div/div/div[2]/div/a")) {
@@ -206,7 +168,11 @@ var actions = [
         ['aJ', '#contents a[href*="mission%2FMissionActionLot%"]']]],
     [/eventRaidboss%2FRaidbossTop/, 'list', [
         ['aJ', '#raid_help > a'],
+        ['aJ', '#small_btn_raid_free_item > div > a'],
+        ['aJ', '#small_btn_raid_hight_attack > div > a'],
         ['aJ', '#small_btn_raid_attack > div > a'],
+        ['aJ', '#small_btn_raid_high_attack_recovery > div > a'],
+        ['aJ', '#small_btn_raid_attack_recovery > div > a'],
         ['hold']]],
     [/evolution%2FEvolutionConfirm%2F/, 'form', '//*[@id="contents"]/form'],
     [/evolution%2FEvolutionEnd%2F/, 'a', '//a[text()="限界突破TOPへ"]'],
@@ -229,7 +195,7 @@ var actions = [
     [/gacha%2FGacha(?:Result|Top)(?:%2F)?(?:%3FthemeId%3D[0-9]+.*)?$/, 'list', [
         ['aJ', 'form[name="gacha"] input[name="isMaxValue"]'],
         ['formJ', 'form[name="gacha"]'],
-        ['aJ', 'div.btn_base > a:regex(href, gacha%2FDoGachaExec%2F%3FthemeId%3D([0-8]|9[0-9]))'],
+        ['aJ', 'div.btn_base > a:regex(href, gacha%2FDoGachaExec%2F%3FthemeId%3D([0-8]|9[0-9])):last'],
         //['hold'],
         ['aJ', cssmypage]]],
     [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
@@ -254,6 +220,7 @@ var actions = [
         //['a', '//*[@id="btn_command"]/a'],
         ['a', '//*[@id="use_bp_gp_recovery"]/a'],
         ['hold']]],
+    [/guildbattle%2FGuildbattleRecordList%2F/, 'aJ', cssmypage],
     [/guildbattle%2FGuildbattleResult%2F/, 'list', [
         ['aJ', 'div#btn_magic a'],
         ['a', '//*[@id="btn_force"]/a'],
@@ -317,7 +284,51 @@ var actions = [
         ['a', '//a[img[@alt="エクストラステージを探索"]]'],
         ['a', '//a[img[@alt="イベントクエストを探索"]]'],
         ['a', '//a[text()="使用する"]']]],
-    [/mypage%2FIndex%2F/, "func", handleMypage],
+    [/mypage%2FIndex%2F/, 'list', [
+        ['aJ', '#header > a:not(:contains("ギルドバトルまで"))'],
+        ['aJ', 'a:has(span#battle_name)'], //succ = succ || clickA('//a[span[@id="battle_name"]]');
+        ['aJ', '#boss_appear_btn:has(span) > div > a'],//succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
+        ['funcR', function () {
+            //var bp = getXPATH("//*[@id=\"gauge_bp\"]/div[1]").dataset.value;
+            var bp = $('#gauge_bp > div:nth-child(1)')[0].dataset.value;
+            GM_log(bp);
+            if (bp > 20) {
+                return $('a[href*="battleTower%2FBattleTowerTop%"]').clickJ().length > 0; //clickA('//a[contains(@href, "battleTower%2FBattleTowerTop%")]');
+            }
+            return false;
+        }],
+        ['aJ', 'a:contains("振り分けポイントがあります")'],
+        ['aJ', 'a:contains("バトル結果がでています")'],
+        ['aJ', 'a:contains("ストーリーモードを進められます")'],
+        ['aJ', '#button > a[href*="storyex%2FStoryBackNumberIndex"]'],
+        ['aJ', 'a:contains("戦友上限が増えました")'],
+        ['aJ', 'a:contains("戦友候補が見つかりました")'],
+        ['aJ', 'a:contains("完全討伐報酬が受け取れます")'],
+        ['aJ', 'a:contains("ビンゴチケットが届いています")'],
+        ['aJ', 'a:contains("を討伐してくれました")'],
+        ['funcR', function () {
+            if (GM_getValue("__ava_no_gift", 0) + no_gift_delay * 1000 < Date.now()) {
+                return $('a:contains("贈り物が届いています")').clickJ().length > 0;
+            }
+            return false;
+        }],
+        ["func", function () {
+            //var new_raid = getXPATH("//*[@id=\"boss_appear_btn\"]/span");
+            var ap = getXPATH("//*[@id=\"gauge_ap\"]/div[1]").dataset.value;
+            //var bp = getXPATH("//*[@id=\"gauge_bp\"]/div[1]").dataset.value;
+            //var guild_battle = getXPATH('//a[span[@id="battle_name"]]');
+            var succ = false;
+            // with more points for free gacha, we can do a premium gacha.
+            //succ = succ || clickA("//a[text()='無料ガチャが回せます']");
+
+            if (ap > 10) {
+                //succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0;
+                return $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0
+                    || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0
+                    //|| clickA('//a[contains(@href, "TowerRaidTop")]');
+                    || clickA("//*[@id=\"quest_btn\"]/a");
+            }
+        }]]],
     [/mypage%2FLoginBonusResult%2F/, 'a', '//a[text()="贈り物BOXへ"]'],
     [/mypage%2FLoginBonusSpecial%2F/, 'aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop"]'],
     [/mission%2FRegionList%2F/, "a", "//div[@class='section_main']/div[2]/div[2]/div/a"],//*[@id="contents"]/div[3]/div[2]/div[2]/div/a

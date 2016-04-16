@@ -61,6 +61,7 @@ var actions = [
         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
         ['aJ', '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
+        ['aJ', '#news_user_info_area a:contains("新しく獲得した称号があります")'],
         ['funcR', function() {
             var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/);
             var ap = match_res ? +match_res[1] : 0;
@@ -100,5 +101,6 @@ var actions = [
         ['aJ', '#shortCutForm input[type="submit"]:last()'],
         ['aJ', selector_mypage]]],
     [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
+    [/main%2Ftitle%2Fmain/, 'aJ', selector_mypage],
     [/XXXXXXXXXXXXX/]
 ];
