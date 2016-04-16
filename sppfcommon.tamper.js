@@ -15,7 +15,7 @@
 (function () {
     'use strict';
 
-    var url = document.URL, setSellCard, handler, match_app_id, action_handler;
+    var url = document.URL, handler, match_app_id, action_handler;
 
     function getXPATH(xpath) {
         return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
@@ -451,254 +451,7 @@
         }, timeout);
     }
     ///////////
-    setSellCard = new Set([
-        "月兎忍らびぃ",
-        "バラ姫マリー",
-        "神馬バリオス",
-        "光妖精アールヴァル",
-        "フロッグラップラー",
-        "インジール",
-        "子鬼",
-        "オーク鬼兵",
-        "アークドワーフ ディル",
-        "アーチャーエルフ",
-        "アイランディア",
-        "アガレス",
-        "アキレウス",
-        "アストー・ウィーザートゥ",
-        "アストレーア",
-        "アダマンタイト",
-        "アナーヒター",
-        "アマツキ",
-        "アマテラス",
-        "アラクネ",
-        "イカロス",
-        "イシュタル",
-        "イセリア",
-        "ヴァンパイアプリンセス",
-        "ウンディーネ",
-        "エメラルド",
-        "エルフサモナー",
-        "お助け天使クピト",
-        "カーバンクル",
-        "カッパー",
-        "かまいたち",
-        "ガルム",
-        "ガロード",
-        "ギガース",
-        "キャンディーガール",
-        "ギリメカラ",
-        "ギルマンナイト",
-        "グール",
-        "クサナギノツルギ",
-        "クジャタモドキ",
-        "クジャタリッター",
-        "クノイチかえで",
-        "クノイチしおん",
-        "クラウソラス",
-        "グリフォン",
-        "クレナイ",
-        "コカトリス",
-        "ココロン",
-        "ゴブリン",
-        "ゴブリンソルジャー",
-        "サラマンドラ",
-        "サルワ",
-        "シーサーペント",
-        "シズカ",
-        "シャウラ",
-        "ジングル・ベル",
-        "スノーピジョン",
-        "スプレッドドラゴン",
-        "ダークホース",
-        "タイタンハンド",
-        "ツヴァイ",
-        "ツクヨミ",
-        "デドライ",
-        "デビルプリンセス",
-        "デビルマーメイド",
-        "ドーラ",
-        "トムキャット",
-        "ドラゴンハンター見習いムジカ",
-        "トランプ兵ポーン",
-        "トレジャーハンターメイ",
-        "ナイトウォーリアー",
-        "ニーナ",
-        "バグベア",
-        "ハザード",
-        "バジリスク",
-        "ハニープリンセス",
-        "バルガス",
-        "ハロウィン・ジニー",
-        "パンドラ",
-        "ヒュプノス",
-        "フィル・ウルフ",
-        "プーチャン",
-        "フェアリープリンセス",
-        "フェルディア",
-        "ブラッドサッカー",
-        "フラワーラミア",
-        "プリンシパリティ",
-        "フロッグサムライ",
-        "フロッグナイト",
-        "プロメテウス",
-        "フンババ",
-        "ペガサス",
-        "ベビードラゴン",
-        "ベヒモス",
-        "ポカホンタス",
-        "マガツカミ",
-        "マミーソーサリー",
-        "マンドレイク",
-        "ミノス",
-        "メガロドン",
-        "メルポメネー",
-        "やまたのおろち",
-        "リアン・ノン",
-        "リーンハルト",
-        "リンクス",
-        "リンディスファー",
-        "ルーチェ",
-        "ルナーリア",
-        "レイニー・パドル",
-        "レヴィス",
-        "レオキング",
-        "ロザリー",
-        "ロックンローラースケルトン",
-        "ワイバーン",
-        "白虎",
-        "白拍子ミケ",
-        "白薔薇姫フィアナ",
-        "百合薔薇の騎士リリアーヌ",
-        "保安官ニッキィ",
-        "氷龍騎士オリガ",
-        "波乙女ラーン",
-        "次元神官ソーテール",
-        "大地神ガイア",
-        "大剣騎士ローランド",
-        "盗賊団長ガゼル",
-        "笛吹き少女ユナ",
-        "地獄烏",
-        "東海火龍太子",
-        "闘神騎士クリストフ",
-        "髑髏騎士デュラハン",
-        "悪魔を狩る者ラース",
-        "悪魔召喚師オデット",
-        "番犬龍バラム",
-        "放浪の戦士サラ",
-        "飛天ダエーワ",
-        "斧戦士ドゥエルグ",
-        "根源者アイン・ソフ",
-        "工作員ノンナ",
-        "古代獣師ルキア",
-        "古代邪術師イーヴォン",
-        "雇われ小悪魔パニシュ",
-        "海兵隊長ガルディガス",
-        "海波神リル",
-        "海底鍛冶アリマスポイ",
-        "海竜戦士メリッサ",
-        "海神宰相ミルディン",
-        "海賊女傑アルビダ",
-        "黒天使徒ホノリウス",
-        "虹精霊イビリア",
-        "幻夢人魚ミラージュ",
-        "荒神スサノオ",
-        "荒野の姫君ハイアワサ",
-        "黄泉神",
-        "穢天術師ネウロイ",
-        "極雷鳥",
-        "記録天使リピカ",
-        "奸知天使ペネエル",
-        "見習い踊り子シーラ",
-        "剣騎姫シルヴィア",
-        "剣獣姫スラングパイン",
-        "九朗右衞門",
-        "鎧騎士ガラフ",
-        "鎧騎士ザルド",
-        "雷竜エルヴァルド",
-        "錬金術士ジーベル",
-        "劣等魔導師ユーシス",
-        "竜神王ヴァーン",
-        "龍殺神兵ワルキューレ",
-        "猫騎士チェシャ",
-        "猛き戦慄のアッシュ",
-        "猛虎牙マーゼルグ",
-        "冥夜聖女ネクロミカ",
-        "魔導剣士ユージーン",
-        "魔導少女セリーナ",
-        "魔導司書グリモアール",
-        "魔道化モージ",
-        "魔法剣士レイナ",
-        "魔女狩り将軍マシュー",
-        "魔球部主将ブレンダ",
-        "砲天使ミシェル",
-        "麒麟",
-        "槍兵リザードマン",
-        "清竜護士ソニア",
-        "清竜巫女ユーリー",
-        "拳闘士オルガ",
-        "群召喚士トリリオン",
-        "人造天使ザキエル",
-        "森の妖精ローゼン",
-        "僧兵兎ウラル",
-        "少女死神アンヌマリー",
-        "深海の魔女ヴェルデ",
-        "勝利の女神ニケ",
-        "聖騎士ルーク",
-        "聖翼女神テティス",
-        "屍武者",
-        "獅子武人ナラシンハ",
-        "時騎士見習いバクスター",
-        "世話師パンジー",
-        "獣医トンムル",
-        "双槍の英雄レグラス",
-        "双蛇姫スキュラ",
-        "双子邪神ナルヴィ･ネルヴィ",
-        "水の妖精エアリス",
-        "死霊魔法使い",
-        "死神",
-        "特務副官ゲルダ",
-        "天罰天使マスティマ",
-        "天甲騎士アクパラ",
-        "天軍参謀長ミーミル",
-        "天蓬元帥 猪八戒",
-        "跳澗虎陳達",
-        "兎魔女ラビィ",
-        "兎僧侶ラパン",
-        "兎学生バニッシュ",
-        "吸血修道女クラリモンド",
-        "稀代女王メイヴ",
-        "小公女ヴァネッサ",
-        "小天使ティエル",
-        "小烏丸",
-        "邪軍竜ガルグイユ",
-        "星導少女ダイアナ",
-        "星導術師ルナ",
-        "旋風剣のザーラ",
-        "炎の巨人ヴォーグ",
-        "妖刀剣士ムライ",
-        "妖精戦士ベアトリス",
-        "妖魔エピキュリア",
-        "妖魔女アルチーナ",
-        "野生少女アヴァロス",
-        "夜魔ライリ",
-        "異端審問官ロザイナ",
-        "義賊エリシール",
-        "翼風龍レイガンド",
-        "桜精霊よしの",
-        "円陣護剣士ミナ",
-        "戦乙女エリア",
-        "戦乙女シグルーン",
-        "招福獣ワフワフ",
-        "召喚軍師ベルティウス",
-        "隻眼のディアナ",
-        "隻眼剣士正宗",
-        "凪巫女しずか",
-        "治癒委員長フレーレンス",
-        "自動人形コッペリア",
-        "自由海賊ロック",
-        "使い魔竜ドラコ"
-    ]);
+
     handler = {
         "12010455" : {
             xpathmypage : "//*[@id=\"main_header_menu\"]/ul/li[1]/a",
@@ -791,11 +544,12 @@
                     [/gacha%2FitemBox%2FGachaBoxResetConf/, 'aJ', 'a[href*="gacha%2FitemBox%2FDoGachaBoxReset%2F"]'],
                     [/gacha%2FitemBox%2FGachaBoxResetEnd/, 'aJ', 'a[href*="gacha%2FitemBox%2FGachaTop%2F"'],
                     [/gacha%2FitemBox%2FGachaResult/, 'list', [
-                        ['formJ', 'div.top_main>form'],
+                        ['formJ', '#bg_box_gacha_info > form'],
                         ['aJ', 'a[href*="gacha%2FitemBox%2FGachaBoxResetConf"]'],
-                        ['aJ', 'a[href*="island%2FIslandTop%2F"']]],
-                    [/gacha%2FitemBox%2FGachaTop/, 'list', [
-                        ['formJ', 'div.top_main>form'],
+                        ['aJ', 'a[href*="island%2FIslandTop%2F"'],
+                        ['aJ', '#contents > div.btn_main_large.margin_top_10 > a']]],
+                    [/^gacha%2FitemBox%2FGachaTop/, 'list', [
+                        ['formJ', '#bg_box_gacha_info > form'],
                         //['aJ', 'a[href*="gacha%2FitemBox%2FGachaBoxResetConf"]'],
                         ['aJ', 'a[href*="island%2FIslandTop%2F"']]],
                     [/giftBingo%2FGiftBingoDetail%2F/, 'a', '//a[text()="カムバックビンゴTOPへ"]'],
@@ -872,7 +626,7 @@
                         ['a', '//a[img[@alt="エクストラステージを探索"]]'],
                         ['a', '//a[img[@alt="イベントクエストを探索"]]'],
                         ['a', '//a[text()="使用する"]']]],
-                    [/mypage%2FIndex%2F/, 'list', [
+                    [/^mypage%2FIndex%2F/, 'list', [
                         ['aJ', '#header > a:not(:contains("ギルドバトルまで"))'],
                         ['aJ', 'a:has(span#battle_name)'], //succ = succ || clickA('//a[span[@id="battle_name"]]');
                         ['aJ', '#boss_appear_btn:has(span) > div > a'], //succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
@@ -894,7 +648,7 @@
                         ['aJ', 'a:contains("完全討伐報酬が受け取れます")'],
                         ['aJ', 'a:contains("ビンゴチケットが届いています")'],
                         ['aJ', 'a:contains("を討伐してくれました")'],
-                        ['funcR', function () {
+                        ['funcR', () => {
                             if (GM_getValue("__ava_no_gift", 0) + this.no_gift_delay * 1000 < Date.now()) {
                                 return $('a:contains("贈り物が届いています")').clickJ().length > 0;
                             }
@@ -940,14 +694,13 @@
                     [/multiguildbattle%2FMultiGuildbattleSelectTarget%2F/, 'a', '//div[div[text()="ターゲット選択"]]/ul/li[1]//a'],
                     [/multiguildbattle%2FMultiGuildbattleTop%2F/, 'a', this.xpathmypage],
                     [/prizeReceive%2FPrizeReceiveTop%2F/, 'list', [
-                        ['formJ', '#contents > form'], //succ = succ || clickForm("//*[@id=\"contents\"]/form");
+                        ['formJ', '#contents > form:first'], //succ = succ || clickForm("//*[@id=\"contents\"]/form");
                         ['aJ', '#contents > ul.btn_tabs.margin_top_10 > li > a:not(:contains("(0)"))'], //    succ = succ || clickA('//*[@id="contents"]/ul[@class="btn_tabs margin_top_10"]/li/a[not(contains(text(), "(0)"))]');
                         ['funcR', function () {
+                            GM_log($('div.txt_block_center:contains("所持武具が上限数に達しています")'));
                             if ($('div.txt_block_center:contains("所持武具が上限数に達しています")').length > 0) {
                                 GM_setValue("__ava_no_gift", Date.now());
-                                return true;
                             }
-                            return false;
                         }],
                         ['aJ', this.cssmypage]]],
                     [/raidboss%2FRaidbossCollectionDetail%2F/, "a", '//a[text()="受け取る"]'],
@@ -1084,7 +837,7 @@
                 ];
             }
         },
-        "12011562" : {
+        "12011562" : { //toaru
             xpathmypage : '//*[@id="top_btn"]/a',
             selector_mypage : '#top_btn > a',
             get_actions : function () {
@@ -1288,7 +1041,7 @@
                         }],
                         //['aJ', 'div.btn_blue > a[href*="box_select"]'],
                         ['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
-                        ['aJ', 'div.questAction a[href*="%2Fraid%2F"]'],
+                        ['aJ', 'div.questAction a[href*="%2Fraid%2F"]:last'],
                         ['aJ', 'div.questAction a:regex(href, %2F[a-zA-Z]+%2Findex%2F1)']]],
                     [/%2Findex%2F/, 'list', [
                         ['aJ', 'div.bossEncountNow > a'],
@@ -1605,7 +1358,7 @@
                     [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
                     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
                     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
-                    ["event[a-zA-Z0-9]*%2FEventTop", 'list', [
+                    [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
                         //['hold'],
                         ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
                         ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
@@ -1731,7 +1484,7 @@
                         ['a', '//a[@href="http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleConf"]'],
                         ['hold']]],
                     [/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
-                    [/event[a-zA-Z0-9]*%2FRaidBossTop/, 'func', this.handleEventRaid],
+                    [/^event[a-zA-Z0-9]*%2FRaidBossTop/, 'func', this.handleEventRaid],
                     [/eventCapture2%2FCaptureBossTop%2F/, 'aJ', $('#bp_attack > div > div > div > div > a').last()],
                     [/eventCapture2%2FCaptureBossBattleResult%2F/, 'list', [
                         ['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
@@ -2384,7 +2137,7 @@
                     [/mypage%2FCollectionComp%2F/, 'form', '//form[.//input[@value="報酬を受け取る"]]'],
                     [/mypage%2FCollectionCompEnd%2F/, 'a', '//a[text()="図鑑報酬へ"]'],
                     [/mypage%2FGreetList%2F/, 'a', this.xpathmypage],
-                    [/mypage%2FIndex/, "func", function () {
+                    [/mypage%2FIndex/, "func", () => {
                         var txt = $('input[name="keUrl"][type="text"]'),
                             ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
                             ap = 0,
@@ -2436,13 +2189,17 @@
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
                         ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])']]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
-                        ['funcR', function () {
+                        ['funcR', () => {
                             var sell = false, name, cardname;
-                            $("#containerBox > div:nth-child(12) > ul > li").each(function (index) {
-                                var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres;
+                            $("#containerBox > div.section > ul.lst_info > li").each(function (index) {
+                                var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres, setSellCard;
+                                if (typeof setSellCard_local === 'undefined') {
+                                    return false;
+                                }
+                                setSellCard = setSellCard_local;
                                 if ((mres = name.match(/^\S\s(\S*)\s1\S*/)) !== undefined) {
                                     cardname = mres[1];
-                                    if (setSellCard.has(cardname)) {
+                                    if (this.setSellCard.has(cardname)) {
                                         GM_log(cardname + " sell");
                                         $(this).find("form").submitJ();
                                         sell = true;
@@ -2466,10 +2223,14 @@
                         ['funcR', function () {
                             var get = false;
                             $("#containerBox > div.section > ul > li").each(function (index) {
-                                var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres, cardname;
+                                var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres, cardname, setGetCard;
+                                if (typeof setGetCard_local === 'undefined') {
+                                    return;
+                                }
+                                setGetCard = setGetCard_local;
                                 if ((mres = name.match(/\S\s(\S*)\s\S*/)) !== undefined) {
                                     cardname = mres[1];
-                                    if (!setSellCard.has(cardname)) {
+                                    if (setGetCard.has(cardname)) {
                                         GM_log(cardname + " get");
                                         $(this).find("form").submitJ();
                                         get = true;
@@ -2637,6 +2398,55 @@
                     [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
                     [/main%2Ftitle%2Fmain/, 'aJ', this.selector_mypage],
                     [/XXXXXXXXXXXXX/]
+                ];
+            }
+        },
+        "12006884" : {
+            selector_mypage : '#ctl00_HeaderNavi_hl_top',
+            get_actions : function () {
+                return [
+                    [/^duty%2Fseries_success%2Fseries_success_top\.aspx/, 'list', [
+                        ['funcR', () => {
+                            var ap = $('#ctl00_body_DutyStaminaEmptyControl_divDutyStaminaEmpty > div.kadomaru > div.kadomaru_alltop:contains("体力が足りない")');
+                            GM_log(ap);
+                            GM_log(ap.length);
+                            if (ap.length > 0) {
+                                GM_log(this.selector_mypage);
+                                return $(this.selector_mypage).clickJ().length > 0;
+                            }
+                        }],
+                        ['aJ', '#ctl00_body_hl_chapter_progress']]],
+                    [/^gift%2Freceive_list\.aspx/, 'list', [
+                        ['aJ', '#ctl00_body_rp_navi_ctl00_btn_receive'],
+                        ['hold']]],
+                    [/^login_bonus%2Flogin_bonus_stamp\.aspx/, 'aJ', '#ctl00_body_hl_gift_top_sp'],
+                    [/^top\.aspx/, 'list', [
+                        ['funcR', function (){
+                            if ($('dd.mypowergage > div').attr('style').match(/width:(?:100|[1-9][0-9])%/)) {
+                                return $('#ctl00_body_hl_series_success').clickJ().length > 0;
+                            }
+                        }],
+                        ['hold']]],
+                    [/^user_battle%2Ftraining_battle_confirm\.aspx/, 'func', () => {
+                        var disable = $('li.bppos-1:not(.disable)').clickJ().length === 0;
+                        if (disable) {
+                            $(this.selector_mypage).clickJ();
+                            return;
+                        }
+                        (function time_wait() {
+                            var bp_button = $('#bpsubmit[value*="BP1"]');
+                            if (bp_button.length === 0) {
+                                setTimeout(time_wait, 2000);
+                            } else {
+                                bp_button.clickJ();
+                            }
+                        }());
+                    }],
+                    [/^user_battle%2Ftraining_battle_result\.aspx/, 'aJ', '#wrapper > div.txt-center-pos.mg-tb-15 > a'],
+                    [/^user_battle%2Ftraining_battle_turningpoint\.aspx/, 'aJ', '#ctl00_body_btn_choice_1'],
+                    [/^swf/, 'flashJT', '#container > canvas', 100, 100],
+                    [/[\s\S]*/, 'hold'],
+                    [/XXXXXXXXXXXXXXXXXX/]
                 ];
             }
         }
@@ -2811,11 +2621,16 @@
         reload_page(120000);
     }
 
-    match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)/);
+    match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
     if (match_app_id) {
-        if (match_app_id[1] === "12011562") { // toaru
+        if (false) {
+        //if (match_app_id[1] === "12008490") { //ragnarok 
+        //if (match_app_id[1] === "12006884") { //card
+        //if (match_app_id[1] === "12011562") { // toaru
             return;
         }
+        url = match_app_id[2];
+        GM_log("short_url: " + url);
         action_handler = handler[match_app_id[1]];
         if (action_handler) {
             msgloop(action_handler.get_actions());
