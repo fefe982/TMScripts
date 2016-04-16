@@ -1,5 +1,5 @@
 var handler = {
-    "12007686" : {
+    "12007686" : { // dream_nine
         selector_mypage: '#naviheader > ul > li:nth-child(1) > a',
         get_actions: function () {
             return [
