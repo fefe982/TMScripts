@@ -575,6 +575,7 @@
                         ['minmax', '//*[@id="contents"]/div[@class="section_sub"]/ul/li[', ']/div[1]/div[2]/div/table/tbody/tr[4]/td', ']//a[text()="攻撃する"]'],
                         ['reload', 60 * 1000]]],
                     [/guildbattle%2FGuildbattleTeamAnalytics%2F/, 'a', this.xpathmypage],
+                    [/guildbattle%2FGuildbattleTop%2F/, 'aJ', '#contents > div.btn_main_large.margin_top_10 > a'],
                     [/hugeRaidboss%2FHugeRaidbossEventTop%2F/, 'a', '//a[text()="巨龍と戦う"]'],
                     [/info%2FInformation%2F%3Ffile%3DInfoHolyWar/, 'a', '//a[text()="探索へ"]'],
                     [/island%2FIslandBossBattleFlash%2F/, 'flash', "//*[@id=\"container\"]", 161, 293],
@@ -2157,10 +2158,6 @@
                                 return;
                             }
                         }
-                        boss_clear = getCookie("__my_r_boss_clear");
-                        if (!boss_clear) {
-                            succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
-                        }
                         succ = succ || clickA('//a[contains(text(),"戦友申請が")]');
                         succ = succ || clickA('//a[text()="カード図鑑報酬が受け取れます"]');
                         succ = succ || clickA('//a[text()="マテリアル図鑑報酬が受け取れます"]');
@@ -2172,6 +2169,10 @@
                         succ = succ || clickA('//a[text()="運営からのお詫び"]');
                         succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
                         succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
+                        boss_clear = getCookie("__my_r_boss_clear");
+                        if (!boss_clear) {
+                            succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
+                        }
                         succ = succ || clickA(this.xpathevent);
                         if (ap > 10 && !mission_error) {
                             succ = succ || clickA(this.xpathquest);
@@ -2191,15 +2192,17 @@
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
                         ['funcR', () => {
                             var sell = false, name, cardname;
+                            GM_log("selling");
                             $("#containerBox > div.section > ul.lst_info > li").each(function (index) {
                                 var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres, setSellCard;
                                 if (typeof setSellCard_local === 'undefined') {
+                                    GM_log("setSellCard_local undefined");
                                     return false;
                                 }
                                 setSellCard = setSellCard_local;
                                 if ((mres = name.match(/^\S\s(\S*)\s1\S*/)) !== undefined) {
                                     cardname = mres[1];
-                                    if (this.setSellCard.has(cardname)) {
+                                    if (setSellCard.has(cardname)) {
                                         GM_log(cardname + " sell");
                                         $(this).find("form").submitJ();
                                         sell = true;
@@ -2222,6 +2225,7 @@
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2|bulkSellFlg%3D0%26sortKey%3D1%26receiveCategory%3D2%26page|receiveId%3D)/, 'list', [
                         ['funcR', function () {
                             var get = false;
+                            GM_log('getting');
                             $("#containerBox > div.section > ul > li").each(function (index) {
                                 var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres, cardname, setGetCard;
                                 if (typeof setGetCard_local === 'undefined') {
@@ -2316,21 +2320,16 @@
                     [/main%2Fscout%2Fmain%3F/, 'list', [
                         ['aJ', 'a#shortCut'],
                         ['aJ', '#bg_scout a:contains("最新エリア")']]],
-                    [/main%2Fevent%2Fbox%2Fmain%2Fdtraining_list/, 'list', [
+                    [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
-                        ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]']]],
-                    [/main%2Fevent%2Fbox%2Fmain%2Fresult/, 'list', [
-                        ['hold'],
-                        ['aJ', '']]],
-                    [/main%2Fevent%2Fdtraining%2Finfo/, 'list', [
+                        ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]'],
+                        ['aJ', 'a[href*="main%2Fevent%2Fdtraining%2Finfo"]']]],
+                    [/^akr%2Fmain%2Fevent%2Fdtraining%2Finfo/, 'list', [
                         ['aJ', '#content_body a[href*="main%2Fevent%2Fdtraining%2Fmain"]']]],
-                    [/main%2Fevent%2Fdtraining%2Fmain/, 'list', [
+                    [/^akr%2Fmain%2Fevent%2Fdtraining%2Fmain/, 'list', [
                         ['funcR', function () {
                             var item, matchres;
-                            item = $('#dtraining_back_mou > div:nth-child(4) > div:nth-child(4) > div');
-                            if (item.length === 0) {
-                                item = $('#dtraining_back_normal > div:nth-child(4) > div:nth-child(4) > div');
-                            }
+                            item = $('a[href*="main%2Fevent%2Fbox%2Fmain%2Fdtraining_list"] + div');
                             if (item.length === 0) {
                                 return false;
                             }
@@ -2405,6 +2404,7 @@
             selector_mypage : '#ctl00_HeaderNavi_hl_top',
             get_actions : function () {
                 return [
+                    [/^duty%2Fseries_success%2Fseries_success_season_start_or_end\.aspx/, 'aJ', '#ctl00_body_hl_series_success_start'],
                     [/^duty%2Fseries_success%2Fseries_success_top\.aspx/, 'list', [
                         ['funcR', () => {
                             var ap = $('#ctl00_body_DutyStaminaEmptyControl_divDutyStaminaEmpty > div.kadomaru > div.kadomaru_alltop:contains("体力が足りない")');
@@ -2416,9 +2416,12 @@
                             }
                         }],
                         ['aJ', '#ctl00_body_hl_chapter_progress']]],
+                    [/^gacha%2Fgacha_new_result\.aspx/, 'list', [
+                        ['hold'],
+                        ['aJ', '']]],
                     [/^gift%2Freceive_list\.aspx/, 'list', [
                         ['aJ', '#ctl00_body_rp_navi_ctl00_btn_receive'],
-                        ['hold']]],
+                        ['aJ', '#ctl00_HeaderNavi_hl_top']]],
                     [/^login_bonus%2Flogin_bonus_stamp\.aspx/, 'aJ', '#ctl00_body_hl_gift_top_sp'],
                     [/^top\.aspx/, 'list', [
                         ['funcR', function (){
@@ -2624,6 +2627,7 @@
     match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
     if (match_app_id) {
         if (false) {
+        //if (match_app_id[1] === "12007686") { // dream_nine
         //if (match_app_id[1] === "12008490") { //ragnarok 
         //if (match_app_id[1] === "12006884") { //card
         //if (match_app_id[1] === "12011562") { // toaru
