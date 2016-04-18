@@ -1362,6 +1362,8 @@
                     [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
                     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
                     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
+                    [/^eventStageRaidBoss%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > a'], //'a[href*="event%2FDoSetClickCount"]'],
+                    [/^eventStageRaidBoss%2FWishComplyTop/, 'aJ', 'a[href*="eventStageRaidBoss%2FDoMissionExecutionCheck"]'],
                     [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
                         //['hold'],
                         ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
@@ -1935,7 +1937,9 @@
                         clickForm('//*[@id="containerBox"]/form');
                     }],
                     [/companion%2FCompanionApplicationAccept%2F/, 'form', '//form[.//input[@value="承認する"]]'],
-                    [/companion%2FCompanionApprovalList%2F/, 'a', '//a[text()="承認する"]'],
+                    [/companion%2FCompanionApprovalList%2F/, 'list', [
+                        ['a', '//a[text()="承認する"]'],
+                        ['aJ', this.cssmypage]]],
                     [/deck%2FDeckEditTop%2F/, 'a', this.xpathmypage],
                     [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="canvas"]'],
                     [/fusion%2FBulkMaterialCardFusionConfirm%2F/, 'form', '//*[@id="containerBox"]/form'],
@@ -2631,12 +2635,7 @@
 
     match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
     if (match_app_id) {
-        if (false
-            //|| match_app_id[1] === "12007686" // dream_nine
-        //if (match_app_id[1] === "12008490") { //ragnarok 
-        //if (match_app_id[1] === "12006884") { //card
-        //if (match_app_id[1] === "12011562") { // toaru
-        ) {
+        if (typeof setStopSite_local !== "undefined" && setStopSite_local.has (match_app_id[1])) {
             return;
         }
         url = match_app_id[2];
