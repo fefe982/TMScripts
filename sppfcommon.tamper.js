@@ -628,7 +628,7 @@
                         ['a', '//a[img[@alt="イベントクエストを探索"]]'],
                         ['a', '//a[text()="使用する"]']]],
                     [/^mypage%2FIndex%2F/, 'list', [
-                        ['aJ', '#header > a:not(:contains("ギルドバトルまで"))'],
+                        ['aJ', '#header > a:not(:contains("まで"))'],
                         ['aJ', 'a:has(span#battle_name)'], //succ = succ || clickA('//a[span[@id="battle_name"]]');
                         ['aJ', '#boss_appear_btn:has(span) > div > a'], //succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
                         ['funcR', function () {
@@ -990,8 +990,10 @@
                         ['aJ', 'a[href*="quest%2Fevent"]'],
                         ['flashJT', document]]],
                     [/quest%2FuseItem\b/, 'aJ', 'a[href*="quest%2FuseItem"]'],
+                    [/^quest%2FuseItemComplete/, 'aJ', 'a[href*="quest%2Findex"]'],
                     [/quest%2FwinRare/, 'aJ', 'a[href*="quest%2Findex"]'],
                     [/quest_story%2Fquest%2Fop/, 'flashJT', document],
+                    [/^QuestStory%2Fquest_s%2/, 'flashJT', '#cv0'],
                     [/scenario%2Fquest/, 'flashJT', document],
                     [/scenario2%2Fs%2Fmorinaga_end/, 'flashJT', document],
                     [/scenario3%2F/, 'flashJT', '#skip'],
@@ -2339,6 +2341,7 @@
                             }
                             return false;
                         }],
+                        ['aJ', 'form[action*="main%2Fevent%2Fdtraining%2Fmain%2Fone_more_training_exe"] > input[type="submit"]:nth-child(2)'],
                         ['aJ', 'a[href*="main%2Fevent%2Farea%2Fdtraining%2Fexe"]'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
@@ -2385,6 +2388,7 @@
                         ['formJ', '#shortCutForm'],
                         ['aJ', '#d9-main a:regexText(期限あり(.*[^0].*))'],
                         ['aJ', '#d9-main a:regexText(期限なし(.*[^0].*))']]],
+                    [/akr%2Fmain%2Fpresent%2Freceive%2Fmain%2Ftactics_result/, 'aJ', 'a[href*="main%2Fpresent%2Freceive%2Fmain"]'],
                     [/main%2Freinforce%2Fmain%3Ferror_no/, 'list', [
                         ['aJ', this.selector_mypage]]],
                     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
@@ -2626,11 +2630,12 @@
 
     match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
     if (match_app_id) {
-        if (false) {
-        //if (match_app_id[1] === "12007686") { // dream_nine
+        if (false
+            //|| match_app_id[1] === "12007686" // dream_nine
         //if (match_app_id[1] === "12008490") { //ragnarok 
         //if (match_app_id[1] === "12006884") { //card
         //if (match_app_id[1] === "12011562") { // toaru
+        ) {
             return;
         }
         url = match_app_id[2];
