@@ -883,6 +883,7 @@
                     [/fusion%2Flimit%/, 'flashJT', "#canvas"],
                     [/item%2FpresentList/, 'formJ', 'form'],
                     [/judge%2ForderHelpSelect/, 'aJ', '#bg > section > ul > li > dl > dd:nth-child(3) > div > div > a'],
+                    [/^login%2Fgacha%2Fdx/, 'flashJT', '#canvas'],
                     [/login%2Fperiod/, 'flashJT', '#canvas'],
                     [/mypage%2FsetParameter/, 'func', function () {
                         $("#auto_select").clickJ();
