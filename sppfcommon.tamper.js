@@ -659,8 +659,8 @@
                             var ap = getXPATH("//*[@id=\"gauge_ap\"]/div[1]").dataset.value;
 
                             if (ap > 10) {
-                                //succ = succ || $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0;
-                                return $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0
+                                return  $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0
+                                    || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0
                                     || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0
                                     //|| clickA('//a[contains(@href, "TowerRaidTop")]');
                                     || clickA("//*[@id=\"quest_btn\"]/a");
@@ -795,6 +795,7 @@
                     [/summonHunt%2FSummonCaptureResult%2F/, 'list', [
                         ['aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
                         ['aJ', 'a[href*="summonHunt%2FSummonHuntTop%2F"]']]],
+                    [/^summonHunt%2FSummonHuntHowToPlay%2F%3FfirstAccessFlg%3D1/, 'aJ' ,'#contents a[href*="deck%2FDoDeckEditNumChangeAll%2F"]'],
                     [/summonHunt%2FSummonHuntRaidbossAssistList%2F/, 'aJ', 'li:has(span[class="icon_new"]) a'], //'//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
                     [/summonHunt%2FRaidbossBattleResult%2F/, 'aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
                     [/summonHunt%2FRaidbossTop/, 'list', [
