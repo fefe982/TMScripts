@@ -2402,6 +2402,7 @@
                     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
                     [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
                     [/main%2Freward%2Fmain/, 'list', [
+                        ['func', function () {alert("xxxx");}],
                         ['aJ', '#shortCutForm input[type="submit"]:last()'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
