@@ -1400,6 +1400,7 @@
                         }],
                         ['aJ', 'a[href*="%2FDoMissionExecution"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
+                        ['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
                         ['hold']]],
                     ["event[a-zA-Z0-9]*%2FRaidBossBattleResult", 'list', [
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
@@ -2401,12 +2402,20 @@
                     [/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
                     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
                     [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
-                    [/main%2Freward%2Fmain/, 'list', [
-                        ['func', function () {alert("xxxx");}],
-                        ['aJ', '#shortCutForm input[type="submit"]:last()'],
+                    [/^akr%2Fmain%2Freward%2Fmain/, 'list', [
+                        ['funcR', function () {
+                            var check = $('#shortCutForm > div.gold_back > div > input[type="checkbox"]');
+                            if (check.length > 0) {
+                                check[0].checked = true;
+                            }
+                            return $('#shortCutForm input[type="submit"]:last()').clickJ().length > 0;
+                        }],
+                        //['func', function () {alert("xxxx");}],
+                        //['aJ', '#shortCutForm input[type="submit"]:last()'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
                     [/main%2Ftitle%2Fmain/, 'aJ', this.selector_mypage],
+                    [/[\s\S]*/, 'hold'],
                     [/XXXXXXXXXXXXX/]
                 ];
             }
