@@ -1827,7 +1827,7 @@
                                 //BPが100→100に回復しました
                                 if (text.match(/BPが[0-9]*→(100|[2-9][0-9])に回復しました/) && $('#battleBtn:visible').length > 0) {
                                     if ($('#battleBtn > a:visible').clickJ().length === 0) {
-                                        $('#popup_content > div > div.section > div.box_horizontal.box_center.margin_10 > div.img_btn_m.btn_base.box_extend > a[href*="ArenaBattleTop"]').clickJ();
+                                        $('#popup_content a[href*="ArenaBattleTop"]').clickJ();
                                     }
                                 } else if (text.match(/BPが[0-9]*→100に回復しました/) && $('#raidBossBtn > a').filter(':visible').length > 0) {
                                     $('#raidBossBtn > a').clickJ();
@@ -2360,7 +2360,7 @@
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/main%2Fmypage/, 'list', [
-                        ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
+                        //['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
                         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
                         ['aJ', '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
@@ -2385,13 +2385,14 @@
                         ['formJ', '#shortCutForm'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fpresent%2Freceive%2Fmain%2Fbulk_list/, 'list', [
+                        //['hold'],
                         ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
                         ['formJ', '#shortCutForm'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fpresent%2Freceive%2Fmain%2Fgacha_result/, 'aJ', '#shortCut'],
                     [/main%2Fpresent%2Freceive%2Fmain(%2Findex|%3F)/, 'list', [
                         ['funcR', function () {
-                            if ($('#d9-main > div > table > tbody > tr > td > div > div:contains("プレゼントを受け取れませんでした")').length > 0) {
+                            if ($('#d9-main > div > table > tbody > tr > td > div:contains("プレゼントを受け取れませんでした")').length > 0) {
                                 alert("cardbox full");
                                 return true;
                             }
