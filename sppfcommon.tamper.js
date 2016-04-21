@@ -1152,90 +1152,6 @@
                     clickA(this.xpathmypage);
                 }
             },
-            handleEventRaid : function () {
-                var boss_info = $('#main > div.subtitle').first(), boss_n, boss_lvl, wait = 2000, back_xpath, res,
-                    hp_gauge, hp_full, USERNAME, help_record, last_attack, bp_need = 1,
-                    attack_num;
-                //debugger;
-                if (url.match(/%2FraidBoss%2F/)) {
-                    back_xpath = '//a[text()="クエストに戻る"]';
-                } else {
-                    back_xpath = '//*[@id="main"]/div[9]/div[1]/div/p/a'; //this.xpatheventnext;
-                }
-                if (boss_info.length > 0) {
-                    //alert(boss_info.innerText);
-                    res = boss_info.text().match(/(\S+)[\s\S]*Lv([0-9]+)/);
-                    if (res) {
-                        boss_n = res[1];
-                        boss_lvl = res[2];
-                    } else {
-                        boss_n = boss_info.innerText;
-                        boss_lvl = 0;
-                    }
-                }
-                //debugger;
-                hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first();
-                hp_full = hp_gauge.attr('style').match(/100/);
-                USERNAME = GM_getValue('__ht_USERNAME', "");
-                help_record = USERNAME !== "" && $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
-                last_attack = $('div.tactical_situation_detail').first();
-                bp_need = 1;
-                GM_log("hp_gauge : " + hp_gauge.attr('style'));
-                GM_log(USERNAME);
-                GM_log("help_record : " + help_record);
-                GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
-                //"#main > div:nth-child(14) > div:nth-child(1) > div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a"
-                //#main > div.raidboss_module  div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a
-                if (!hp_full &&
-                        USERNAME !== "" &&
-                        $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() !== USERNAME &&
-                        help_record &&
-                        !url.match(/GiDimension/)) {
-                    $('a[href*="DoMissionExecutionCheck"]').clickJ();
-                    //clickA(back_xpath);
-                    return;
-                }
-
-                attack_num = 0;
-                setInterval(function () {
-                    //if (url.match(/GiDimension/)) {
-                    //	return;
-                    //}
-                    GM_log(bp_need);
-                    GM_log($('#do_battle_btn_' + bp_need));
-                    var attack = $('#do_battle_btn_' + bp_need + ':not([style*="none"])'), add_bp;
-                    GM_log(attack);
-                    if (attack.length > 0 && !attack.hasClass('btn_main_off_small') && !attack.hasClass('btn_select_' + bp_need + '_off')) {
-                        if (attack_num === 0) {
-                            attack.clickJ();
-                        }
-                        attack_num += 1;
-                        attack_num = attack_num % 5;
-                        return;
-                    }
-                    GM_log("yyyyyyyyyy");
-                    if (attack.length === 0) {
-                        $('#stage_front').clickJ();
-                        return;
-                    }
-                    GM_log("zzzzzzzzzz");
-                    add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
-                    GM_log("bp_candy : " + add_bp.length);
-                    if (add_bp.length === 0) {
-                        GM_log("empty");
-                        //var no_bp_candy = GM_getValue("__ht_no_bp");
-                        //if (no_bp_candy) {
-                        //	no_bp_candy++;
-                        //} else {
-                        //	no_bp_candy = 1;
-                        //}
-                        //GM_setValue("__ht_no_bp", no_bp_candy, 60 * 10);
-                        //$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
-                    } else {
-                        add_bp.first().clickJ();
-                    }
-                }, wait);
-            },
             handleERBBattle : function () {
                 // player battle, BP1 only
                 var wait = 2000, bp_need = 1, i, attacked = false, reload;
@@ -1400,7 +1316,8 @@
                         }],
                         ['aJ', 'a[href*="%2FDoMissionExecution"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
-                        ['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
+                        //['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
+                        ['func', function () {alert("need invervene");}],
                         ['hold']]],
                     ["event[a-zA-Z0-9]*%2FRaidBossBattleResult", 'list', [
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
@@ -1492,7 +1409,90 @@
                         ['a', '//a[@href="http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2FeventSurvival%2FBattleConf"]'],
                         ['hold']]],
                     [/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
-                    [/^event[a-zA-Z0-9]*%2FRaidBossTop/, 'func', this.handleEventRaid],
+                    [/^(event[a-zA-Z0-9]*|raidBoss)%2FRaidBossTop/, 'func', function () {
+                        var boss_info = $('#main > div.subtitle').first(), boss_n, boss_lvl, wait = 2000, back_xpath, res,
+                            hp_gauge, hp_full, USERNAME, help_record, last_attack, bp_need = 1,
+                            attack_num;
+                        //debugger;
+                        if (url.match(/%2FraidBoss%2F/)) {
+                            back_xpath = '//a[text()="クエストに戻る"]';
+                        } else {
+                            back_xpath = '//*[@id="main"]/div[9]/div[1]/div/p/a'; //this.xpatheventnext;
+                        }
+                        if (boss_info.length > 0) {
+                            //alert(boss_info.innerText);
+                            res = boss_info.text().match(/(\S+)[\s\S]*Lv([0-9]+)/);
+                            if (res) {
+                                boss_n = res[1];
+                                boss_lvl = res[2];
+                            } else {
+                                boss_n = boss_info.innerText;
+                                boss_lvl = 0;
+                            }
+                        }
+                        //debugger;
+                        hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first();
+                        hp_full = hp_gauge.attr('style').match(/100/);
+                        USERNAME = GM_getValue('__ht_USERNAME', "");
+                        help_record = USERNAME !== "" && $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
+                        last_attack = $('div.tactical_situation_detail').first();
+                        bp_need = 1;
+                        GM_log("hp_gauge : " + hp_gauge.attr('style'));
+                        GM_log(USERNAME);
+                        GM_log("help_record : " + help_record);
+                        GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
+                        //"#main > div:nth-child(14) > div:nth-child(1) > div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a"
+                        //#main > div.raidboss_module  div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a
+                        if (!hp_full &&
+                                USERNAME !== "" &&
+                                $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() !== USERNAME &&
+                                help_record &&
+                                !url.match(/GiDimension/)) {
+                            $('a[href*="DoMissionExecutionCheck"]').clickJ();
+                            //clickA(back_xpath);
+                            return;
+                        }
+
+                        attack_num = 0;
+                        setInterval(function () {
+                            //if (url.match(/GiDimension/)) {
+                            //	return;
+                            //}
+                            GM_log(bp_need);
+                            GM_log($('#do_battle_btn_' + bp_need));
+                            var attack = $('#do_battle_btn_' + bp_need + ':not([style*="none"])'), add_bp;
+                            GM_log(attack);
+                            if (attack.length > 0 && !attack.hasClass('btn_main_off_small') && !attack.hasClass('btn_select_' + bp_need + '_off')) {
+                                if (attack_num === 0) {
+                                    attack.clickJ();
+                                }
+                                attack_num += 1;
+                                attack_num = attack_num % 5;
+                                return;
+                            }
+                            GM_log("yyyyyyyyyy");
+                            if (attack.length === 0) {
+                                $('#stage_front').clickJ();
+                                return;
+                            }
+                            GM_log("zzzzzzzzzz");
+                            add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
+                            GM_log("bp_candy : " + add_bp.length);
+                            if (add_bp.length === 0) {
+                                GM_log("empty");
+                                //var no_bp_candy = GM_getValue("__ht_no_bp");
+                                //if (no_bp_candy) {
+                                //	no_bp_candy++;
+                                //} else {
+                                //	no_bp_candy = 1;
+                                //}
+                                //GM_setValue("__ht_no_bp", no_bp_candy, 60 * 10);
+                                //$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
+                            } else {
+                                add_bp.first().clickJ();
+                            }
+                        }, wait);
+                    }],
                     [/eventCapture2%2FCaptureBossTop%2F/, 'aJ', $('#bp_attack > div > div > div > div > a').last()],
                     [/eventCapture2%2FCaptureBossBattleResult%2F/, 'list', [
                         ['aJ', 'a[href*="eventCapture2%2FCaptureBossTop%2F"]'],
@@ -1677,7 +1677,6 @@
                         }
                     }],
                     [/raidBoss%2FRaidBossBattleResult/, "a", "//*[@id=\"main\"]/div[3]/a"],
-                    [/raidBoss%2FRaidBossTop/, "func", this.handleEventRaid],
                     [/QuestEnd/, "a", "//*[@id=\"main_container\"]/header/div[2]/a"],
                     [/CompanionApplicationAcceptEnd/, "a", "//*[@id=\"main_container\"]/header/div[2]/a"],
                     [/EvolutionConfirm/, "form", "//*[@id=\"main\"]/div[2]/div[4]/div/form"],
@@ -2391,6 +2390,12 @@
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fpresent%2Freceive%2Fmain%2Fgacha_result/, 'aJ', '#shortCut'],
                     [/main%2Fpresent%2Freceive%2Fmain(%2Findex|%3F)/, 'list', [
+                        ['funcR', function () {
+                            if ($('#d9-main > div > table > tbody > tr > td > div > div:contains("プレゼントを受け取れませんでした")').length > 0) {
+                                alert("cardbox full");
+                                return true;
+                            }
+                        }],
                         ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
                         ['formJ', '#shortCutForm'],
                         ['aJ', '#d9-main a:regexText(期限あり(.*[^0].*))'],
