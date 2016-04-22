@@ -16,6 +16,8 @@
     'use strict';
 
     var url = document.URL, handler, match_app_id, action_handler;
+    
+    GM_log('-start----------------------------------------- ' + Date());
 
     function getXPATH(xpath) {
         return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
@@ -210,9 +212,9 @@
             this.simMouseEvent("click");
         } else {
             jq = $(this);
-            GM_log(Date() + ' wait clickJ ' + (timeout || 1000));
+            GM_log(/*Date() + */' wait clickJ ' + (timeout || 1000));
             setTimeout(function () {
-                GM_log(Date() + ' click func ');
+                //GM_log(Date() + ' click func ');
                 jq.simMouseEvent("mousedown");
                 jq.simMouseEvent("mouseup");
                 jq.simMouseEvent("click");
@@ -1480,6 +1482,8 @@
                             GM_log("bp_candy : " + add_bp.length);
                             if (add_bp.length === 0) {
                                 GM_log("empty");
+                                $('#main > div.margin_top_10.go_mission_button a').clickJ(); // go on with mission
+                                
                                 //var no_bp_candy = GM_getValue("__ht_no_bp");
                                 //if (no_bp_candy) {
                                 //	no_bp_candy++;
@@ -2385,9 +2389,8 @@
                         ['formJ', '#shortCutForm'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fpresent%2Freceive%2Fmain%2Fbulk_list/, 'list', [
-                        //['hold'],
                         ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
-                        ['formJ', '#shortCutForm'],
+                        //['formJ', '#shortCutForm'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fpresent%2Freceive%2Fmain%2Fgacha_result/, 'aJ', '#shortCut'],
                     [/main%2Fpresent%2Freceive%2Fmain(%2Findex|%3F)/, 'list', [
@@ -2478,14 +2481,93 @@
                     [/XXXXXXXXXXXXXXXXXX/]
                 ];
             }
+        },
+        "12018608" : { // irregular
+            cssmypage : '#bg > header > nav.buttonMypage > a',
+            get_actions : function () {
+                return [
+                    [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
+                    [/^mypage$/, 'list', [
+                        ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
+                        ['aJ', '#present > a'],
+                        ['hold']]],
+                    [/^pick%2Fresult/, 'list', [
+                        ['aJ', '#gacha > div > div > div > a:last()'],
+                        ['aJ', this.cssmypage]]],
+                    [/^pick%2Frun/, 'flashJT', '#canvas'],
+                    [/^pick%2Ftop%2Ffree/, 'aJ', '#gacha > div.p10.txC > div > a'],
+                    [/^present%2Fconfirm%2F/, 'formJ', '#bg > section > article > div > form'],
+                    [/^present%2Findex%2F/, 'list',[
+                        ['aJ', 'a.on:contains("一括で受け取る")'],
+                        ['aJ', 'div.countBeing + a'],
+                        ['aJ', this.cssmypage],
+                        ['hold']]],
+                    [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
+                    [/^quest%2Fboss/, 'aJ', 'a:contains(戦闘する)'],
+                    [/^quest%2F(clearStage|get(Card|Social)|levelUp)/, 'aJ', 'div.questNextButton > a'],
+                    [/^quest%2FclearStage/, 'aJ', 'div.questNextButton > a'],
+                    [/^quest%2Fstep/, 'flashJT', '#canvas'],
+                    [/^quest%2Ftop/, 'list', [
+                        ['aJ', 'div.questListButton.newStage > a']]],
+                    [/^questStory%2Fquest/, 'flashJT', '#cv0'],
+                    [/^tika%2Fbattle_list/, 'list', [
+                        ['aJ', 'a[href*="tika%2Fparty_select"]:contains("参戦")'],
+                        ['aJ', 'a[href*="tika%2Fbattle"]:contains("結果")']]],
+                    [/^tika%2Fbattle%2F/, 'list', [
+                        ['funcR', function () {
+                            
+                            //return false;
+                            setInterval(function () {
+                                if ($('#supportForm > div:nth-child(3) > ul > li:nth-child(1) > div > input:visible()').clickJ().length > 0 || $('#dialogRoot > section > article > div.p10.txC > div > a:visible()').clickJ().length > 0) {
+                                    return true;
+                                }
+                                $('#actionButton > a.attackWait').clickJ();
+                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible()').clickJ();
+                                $('#resultButton > div > a').clickJ();
+                            }, 1000);
+                            return true;
+                        }],
+                        ['hold']]],
+                    [/^tika%2Fjoin/, 'aJ', '#bg > ul > li > a[href*="tika%2Ftop"]'],
+                    [/^tika%2Fparty_select/, 'list', [
+                        ['funcR', function () {
+                            if (document.referrer.match(/tika%2Fparty_select/)) {
+                                $('#bg > section > article > div.whiteBand.py10.txC > div.button.main.middle > a').clickJ();//a:contains("救援する")
+                                return true;
+                            }
+                        }],
+                        ['aJ', 'a:contains("オススメ編成")']]],
+                    [/^tika%2FpickResult%2F/, 'list', [
+                        ['hold'],
+                        ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
+                    [/^tika%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
+                    [/^tika%2Fticket/, 'list', [
+                        ['aJ', 'a[href*="tika%2Fpick"]:last()']]],
+                    [/^[tT]ika%2Ftop$/, 'list', [
+                        ['funcR', function () {
+                            var count = $('dl.status.nameSelf > dt:contains("プリンセスガチャキューブ所持数") + dt').text().match(/\d+/);
+                            if (count) {
+                                count = +count[0];
+                                if (count > 10) {
+                                    return $('a[href*="tika%2Fticket"]').clickJ().length > 0;
+                                }
+                            }
+                        }],
+                        ['aJ', 'a[href*="battle_list"]'],
+                        ['hold']]],
+                    [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
+                    [/[\s\S]*/, 'hold'],
+                    [/XXXXXXXXXXXX/]
+                ];
+            }
         }
     };
 
     function msgloop(actions) {
         var i, j, list_action, succ, siteI, siteT, ele;
-        GM_log('--------------------------------------------');
-        GM_log(Date() + url);
-        GM_log("REF: " + document.referrer);
+        GM_log('-msgloop--------------------------------------- ' + Date());
+        GM_log("sURL: " + url);
+        GM_log("REF : " + document.referrer);
         succ = (function () {
             var sites = [
                 ["http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F", 5], // avalon
@@ -2651,12 +2733,16 @@
     }
 
     match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
+    if (!match_app_id) {
+        match_app_id = url.match(/http:\/\/g(\d+)\.sp\.pf\.mbga\.jp\/\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
+    }
+    //GM_log(match_app_id);
     if (match_app_id) {
         if (typeof setStopSite_local !== "undefined" && setStopSite_local.has (match_app_id[1])) {
             return;
         }
         url = match_app_id[2];
-        GM_log("short_url: " + url);
+        //GM_log("short_url: " + url);
         action_handler = handler[match_app_id[1]];
         if (action_handler) {
             msgloop(action_handler.get_actions());
