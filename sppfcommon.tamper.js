@@ -201,8 +201,8 @@
 
     $.fn.clickJ = function (timeout) {
         var jq;
-        GM_log("clickJ : ");
-        GM_log(this);
+        GM_log('clickJ : ' + this.length + ' : \'' + this.selector + '\'');
+        //GM_log(this);
         if (this.length === 0) {
             return this;
         }
@@ -456,6 +456,8 @@
 
     handler = {
         "12010455" : {
+            mypage_url : "http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F",
+            rotaion_time : 5,
             xpathmypage : "//*[@id=\"main_header_menu\"]/ul/li[1]/a",
             cssmypage : "#main_header_menu > ul > li:nth-child(1) > a",
             xpathquest : "//*[@id=\"main_header_menu\"]/ul/li[2]/a",
@@ -941,6 +943,7 @@
                         ['flashJT', 'canvas']]],
                     [/pick%2F(top|result)%2Fpremium2/, 'list', [
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],
+                        ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fsr"]'],
                         ['aJ', this.selector_mypage]]],
                     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
                         //['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
@@ -1077,6 +1080,8 @@
             }
         },
         "12011538" : {
+            mypage_url : '',
+            rotation_time : 5,
             xpathmypage : "//header/div[@class='sprite btn_base header_left']/a",
             cssmypage : '#main_container > header > div.sprite.btn_base.header_left > a',
             xpathevent : '//a[contains(@href, "EventTop")]',
@@ -1696,7 +1701,9 @@
                 ];
             }
         },
-        "12008490" : {
+        "12008490" : { // ragranok
+            mypage_url : 'http://sp.pf.mbga.jp/12008490',
+            rotation_time : 5,
             xpathmypage : '//*[@id="header_left_button"]/a',
             cssmypage : '#header_left_button > a',
             xpathquest : '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]',
@@ -1766,7 +1773,7 @@
                         ["a", '//a[contains(@href, "UserSelectList")]'], //text()="戦いを続ける"]'],
                         ['flashJT', '#container > canvas']]], //*[@id="container"]']]],
                     //[/arena%2FArenaBattleSwf%2F/, 'flash', ''],
-                    [/arena%2FArena(Sub)?BattleTop/, 'list', [
+                    [/arena%2FArena(?:Sub)?BattleTop/, 'list', [
                         ['func', function () {
                             if ($("#header_bp_gauge").data('value') >= 20 || $('.battle_btn:contains("BP消費0")').length > 0) {
                                 $(".battle_btn > a").clickJ();
@@ -1831,7 +1838,7 @@
                                 //BPが100→100に回復しました
                                 if (text.match(/BPが[0-9]*→(100|[2-9][0-9])に回復しました/) && $('#battleBtn:visible').length > 0) {
                                     if ($('#battleBtn > a:visible').clickJ().length === 0) {
-                                        $('#popup_content a[href*="ArenaBattleTop"]').clickJ();
+                                        $('#popup_content a[href*="Arena' + (Math.random() < 0.5 ? '' : 'Sub') + 'BattleTop"]').clickJ();
                                     }
                                 } else if (text.match(/BPが[0-9]*→100に回復しました/) && $('#raidBossBtn > a').filter(':visible').length > 0) {
                                     $('#raidBossBtn > a').clickJ();
@@ -1861,8 +1868,7 @@
                     [/arena%2FTop/, 'list', [
                         //['hold'],
                         ['aJ', '#containerBox > div > a[href*="arena%2FChoiceCoinItemTop"]:regexText(\\s?0*[1-9][0-9]*\\s?)'],
-                        //['a', '//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaSubBattleTop")]'],
-                        ['a', '//div[@id="bgbox_wrapper"]//a[contains(@href, "ArenaBattleTop")]'],
+                        ['a', '//div[@id="bgbox_wrapper"]//a[contains(@href, "Arena' + (Math.random() < 0.5 ? '' : 'Sub') + 'BattleTop")]'],
                         ['a', "//div[@class='event_btn']/a"],
                         ['flash', '//*[@id="container"]']]],
                     [/arrangement%2FArrangementEdit%2F/, 'func', function () {
@@ -2305,6 +2311,8 @@
             }
         },
         "12007686" : { // dream_nine
+            mypage_url : 'http://sp.pf.mbga.jp/12007686',
+            rotation_time : 5,
             selector_mypage : '#naviheader > ul > li:nth-child(1) > a',
             get_actions : function () {
                 return [
@@ -2430,6 +2438,8 @@
             }
         },
         "12006884" : {
+            mypage_url : "http://sp.pf.mbga.jp/12006884",
+            rotation_time : 5,
             selector_mypage : '#ctl00_HeaderNavi_hl_top',
             get_actions : function () {
                 return [
@@ -2446,8 +2456,8 @@
                         }],
                         ['aJ', '#ctl00_body_hl_chapter_progress']]],
                     [/^gacha%2Fgacha_new_result\.aspx/, 'list', [
-                        ['hold'],
-                        ['aJ', '']]],
+                        ['aJ', '#ctl00_body_hl_gift'],
+                        ['hold']]],
                     [/^gift%2Freceive_list\.aspx/, 'list', [
                         ['aJ', '#ctl00_body_rp_navi_ctl00_btn_receive'],
                         ['aJ', '#ctl00_HeaderNavi_hl_top']]],
@@ -2458,11 +2468,18 @@
                                 return $('#ctl00_body_hl_series_success').clickJ().length > 0;
                             }
                         }],
+                        ['funcR', () => {
+                            if ($('#ctl00_body_d_background > div.main-content > div.statusbox > dl.mybp > dd:nth-child(2) > span').text() > 0) {
+                                return $('#ctl00_body_hl_battle_sp').clickJ().length > 0;
+                            }
+                        }],
                         ['hold']]],
                     [/^user_battle%2Ftraining_battle_confirm\.aspx/, 'func', () => {
                         var disable = $('li.bppos-1:not(.disable)').clickJ().length === 0;
                         if (disable) {
-                            $(this.selector_mypage).clickJ();
+                            if (!document.referrer.match(/duty%2Fseries_success%2Fseries_success_top\.aspx/)) {
+                                $(this.selector_mypage).clickJ();
+                            }
                             return;
                         }
                         (function time_wait() {
@@ -2475,6 +2492,7 @@
                         }());
                     }],
                     [/^user_battle%2Ftraining_battle_result\.aspx/, 'aJ', '#wrapper > div.txt-center-pos.mg-tb-15 > a'],
+                    [/^user_battle%2Ftraining_battle_select\.aspx/, 'aJ', '#ctl00_body_Repeater_ctl00_hl_battle_confirm_sp'],
                     [/^user_battle%2Ftraining_battle_turningpoint\.aspx/, 'aJ', '#ctl00_body_btn_choice_1'],
                     [/^swf/, 'flashJT', '#container > canvas', 100, 100],
                     [/[\s\S]*/, 'hold'],
@@ -2483,16 +2501,34 @@
             }
         },
         "12018608" : { // irregular
+            mypage_url : "g12018608.sp.pf.mbga.jp",
+            rotation_time : 5,
             cssmypage : '#bg > header > nav.buttonMypage > a',
             get_actions : function () {
                 return [
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
+                    [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
                     [/^mypage$/, 'list', [
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
                         ['aJ', '#present > a'],
+                        ['funcR', function () {
+                            var mp = $('#mypageMenu > div.mypageMenuBg > div.event.open > div.gaugeMpBox > dl');
+                            if (mp.length === 0) return;
+                            if (mp.hasClass("cost5") || mp.hasClass("cost6")) {
+                                return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0;
+                            }
+                        }],
+                        ['funcR', function () {
+                            var st = $('#mypageMenu > div.gaugeStBox > dl > dt').text().match(/(\d+)\//);
+                            st = +st[1];
+                            if (st > 10) {
+                                return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
+                                    || $('#mypageMenu > div.mypageMenuBg > div.story > a').clickJ().length > 0;
+                            }
+                        }],
                         ['hold']]],
                     [/^pick%2Fresult/, 'list', [
-                        ['aJ', '#gacha > div > div > div > a:last()'],
+                        ['aJ', 'a[href*="pick%2Frun"]:last()'],
                         ['aJ', this.cssmypage]]],
                     [/^pick%2Frun/, 'flashJT', '#canvas'],
                     [/^pick%2Ftop%2Ffree/, 'aJ', '#gacha > div.p10.txC > div > a'],
@@ -2511,34 +2547,48 @@
                         ['aJ', 'div.questListButton.newStage > a']]],
                     [/^questStory%2Fquest/, 'flashJT', '#cv0'],
                     [/^tika%2Fbattle_list/, 'list', [
+                        ['aJ', 'a[href*="tika%2Fbattle"]:contains("結果")'],
                         ['aJ', 'a[href*="tika%2Fparty_select"]:contains("参戦")'],
-                        ['aJ', 'a[href*="tika%2Fbattle"]:contains("結果")']]],
+                        ['hold']]],
                     [/^tika%2Fbattle%2F/, 'list', [
                         ['funcR', function () {
-                            
+                            //$('body > section > article > div.coopMainCommand > div.magicButton > img#enabledMagic1').clickJ();
                             //return false;
                             setInterval(function () {
                                 if ($('#supportForm > div:nth-child(3) > ul > li:nth-child(1) > div > input:visible()').clickJ().length > 0 || $('#dialogRoot > section > article > div.p10.txC > div > a:visible()').clickJ().length > 0) {
                                     return true;
                                 }
-                                $('#actionButton > a.attackWait').clickJ();
-                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible()').clickJ();
-                                $('#resultButton > div > a').clickJ();
+                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible()').clickJ(0).length > 0 ||
+                                $('#resultButton > div > a:visible()').clickJ(0).length > 0 ||
+                                $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic0)').length > 0 ||
+                                $('img#enabledMagic0:visible').clickJ(0).length > 0 ||
+                                $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic1)').length > 0 ||
+                                $('img#enabledMagic1:visible').clickJ(0).length > 0 ||
+                                $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic2)').length > 0 ||
+                                $('img#enabledMagic2:visible').clickJ(0).length > 0 ||
+                                $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic3)').length > 0 ||
+                                $('img#enabledMagic3:visible').clickJ(0).length > 0 ||
+                                $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic4)').length > 0 ||
+                                $('img#enabledMagic4:visible').clickJ(0).length > 0 ||
+                                $('#actionButton > a.attackWait').clickJ(0).length > 0;
                             }, 1000);
                             return true;
                         }],
                         ['hold']]],
                     [/^tika%2Fjoin/, 'aJ', '#bg > ul > li > a[href*="tika%2Ftop"]'],
                     [/^tika%2Fparty_select/, 'list', [
-                        ['funcR', function () {
+                        ['funcR', () => {
                             if (document.referrer.match(/tika%2Fparty_select/)) {
-                                $('#bg > section > article > div.whiteBand.py10.txC > div.button.main.middle > a').clickJ();//a:contains("救援する")
+                                if ($('#bg > section > article > div.whiteBand.py10.txC > div.button.main.middle > a').clickJ().length === 0) {
+                                    $(this.cssmypage).clickJ();
+                                }//a:contains("救援する")
                                 return true;
                             }
                         }],
                         ['aJ', 'a:contains("オススメ編成")']]],
                     [/^tika%2FpickResult%2F/, 'list', [
-                        ['hold'],
+                        ['aJ', 'a:contains("ガチャる"):last()'],
+                        //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     [/^tika%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
                     [/^tika%2Fticket/, 'list', [
@@ -2553,6 +2603,7 @@
                                 }
                             }
                         }],
+                        ['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F0"]'],
                         ['aJ', 'a[href*="battle_list"]'],
                         ['hold']]],
                     [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
@@ -2566,8 +2617,6 @@
     function msgloop(actions) {
         var i, j, list_action, succ, siteI, siteT, ele;
         GM_log('-msgloop--------------------------------------- ' + Date());
-        GM_log("sURL: " + url);
-        GM_log("REF : " + document.referrer);
         succ = (function () {
             var sites = [
                 ["http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F", 5], // avalon
@@ -2732,16 +2781,21 @@
         reload_page(120000);
     }
 
-    match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
+    match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*)?/);
     if (!match_app_id) {
-        match_app_id = url.match(/http:\/\/g(\d+)\.sp\.pf\.mbga\.jp\/\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*/);
+        match_app_id = url.match(/http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*)?/);
     }
     //GM_log(match_app_id);
     if (match_app_id) {
+        url = match_app_id[2];
+        if (url === undefined) {
+            url = ":::";
+        }
+        GM_log("sURL: " + url);
+        GM_log("REF : " + document.referrer);        
         if (typeof setStopSite_local !== "undefined" && setStopSite_local.has (match_app_id[1])) {
             return;
         }
-        url = match_app_id[2];
         //GM_log("short_url: " + url);
         action_handler = handler[match_app_id[1]];
         if (action_handler) {
