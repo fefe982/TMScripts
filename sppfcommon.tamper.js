@@ -15,7 +15,7 @@
 (function () {
     'use strict';
 
-    var url = document.URL, handler, match_app_id, action_handler;
+    var url = document.URL, handler, match_app_id, app_id, action_handler;
     
     GM_log('-start----------------------------------------- ' + Date());
 
@@ -168,7 +168,7 @@
         return this;
     };
     $.fn.simTouchEvent = function (eveName, xoff, yoff) {
-        var customEvent, rect, x, y;
+        var customEvent, rect, x, y, touchinfo;
         if (this.length === 0) {
             return this;
         }
@@ -181,14 +181,18 @@
             y = 0;
         }
         customEvent = document.createEvent("MouseEvent");
-        customEvent.touches = [{
+        touchinfo = {
             clientX : x,
             clientY : y,
             pageX : x,
             pageY : y,
             screenX : x,
-            screenY : y
-        }];
+            screenY : y,
+            target : this[0]
+        };
+        customEvent.touches = [touchinfo];
+        customEvent.changedTouches = [touchinfo];
+        customEvent.targetTouches = [touchinfo];
 
         // Available iOS 2.0 and later
         customEvent.initMouseEvent(eveName, /*bubbles*/ true, /*cancelable*/ true, /*view*/ unsafeWindow, /*detail*/ 1,
@@ -454,9 +458,9 @@
     }
     ///////////
 
-    handler = {
-        "12010455" : {
-            mypage_url : "http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F",
+    var handler = {
+        "12010455" : { 
+            mypage_url : "http://sp.pf.mbga.jp/12010455",
             rotaion_time : 5,
             xpathmypage : "//*[@id=\"main_header_menu\"]/ul/li[1]/a",
             cssmypage : "#main_header_menu > ul > li:nth-child(1) > a",
@@ -464,6 +468,7 @@
             no_gift_delay : 10 * 60,
             get_actions : function () {
                 return [
+                    [/^:::$/, 'aJ', 'a[href*="mypage%2FIndex"]'],
                     [/arrangement%2FArrangementEdit%2F/, 'form', '//*[@id="contents"]/div/div[2]/ul/li[3]/form'],
                     [/arrangement%2FArrangementEnd%2F/, 'a', this.xpathmypage],
                     [/bossguildbattle%2FBossGuildbattleResult/, 'list', [
@@ -659,7 +664,7 @@
                             }
                             return false;
                         }],
-                        ["func", function () {
+                        ["funcR", function () {
                             var ap = getXPATH("//*[@id=\"gauge_ap\"]/div[1]").dataset.value;
 
                             if (ap > 10) {
@@ -669,7 +674,9 @@
                                     //|| clickA('//a[contains(@href, "TowerRaidTop")]');
                                     || clickA("//*[@id=\"quest_btn\"]/a");
                             }
-                        }]]],
+                        }],
+                        ['setCookie', 'switch_flag', 1],
+                        ['hold']]],
                     [/mypage%2FLoginBonusResult%2F/, 'a', '//a[text()="贈り物BOXへ"]'],
                     [/mypage%2FLoginBonusSpecial%2F/, 'aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop"]'],
                     [/mission%2FRegionList%2F/, "a", "//div[@class='section_main']/div[2]/div[2]/div/a"], //*[@id="contents"]/div[3]/div[2]/div[2]/div/a
@@ -844,10 +851,13 @@
             }
         },
         "12011562" : { //toaru
+            mypage_url : 'http://sp.pf.mbga.jp/12011562',
+            rotation_time : 5,
             xpathmypage : '//*[@id="top_btn"]/a',
             selector_mypage : '#top_btn > a',
             get_actions : function () {
                 return [
+                    [/^:::$/, 'aJ', '#bg_title > div.btn_start_area > a'],
                     [/battleAnimation/, 'flashJT', '#canvas'],
                     [/battle_animation/, 'flashJT', '#canvas', 20, 440],
                     [/cardBook%2Fbonus/, 'aJ', 'a[href*="card_book%2FgetBonus%"]'],
@@ -1079,8 +1089,8 @@
                 ];
             }
         },
-        "12011538" : {
-            mypage_url : '',
+        "12011538" : { // hunter
+            mypage_url : 'http://sp.pf.mbga.jp/12011538',
             rotation_time : 5,
             xpathmypage : "//header/div[@class='sprite btn_base header_left']/a",
             cssmypage : '#main_container > header > div.sprite.btn_base.header_left > a',
@@ -1168,14 +1178,6 @@
                     $('div.btn_main_small.bp_select_button').filter(':visible').click();
                 }, wait);
 
-                //setInterval(function(){
-                //    var res_wrapper = getXPATH("//*[@id=\"second_action_box\"]");
-                //    if (res_wrapper && getComputedStyle(res_wrapper) .getPropertyValue("display")!="none"){
-                //        var result = getXPATH("//*[@id=\"battle_result_btn\"]/a");
-                //        if (result) {clickSth(result, "click");}
-                //    }
-                //}, 1000);
-
                 setInterval(function () {
                     var ff = getXPATH("//*[@id=\"stage_front\"]");
                     if (ff && getComputedStyle(ff).getPropertyValue("display") !== "none") {
@@ -1222,6 +1224,7 @@
             eventName : "GiDimension",
             get_actions : function () {
                 return [
+                    [/^:::$/, 'aJ', '#main a[href*="%2Fmypage%2F"]'],
                     [/apology%2FApologyList%2F/, 'list', [
                         ['formJ', '#main > div:nth-child(1) > ul > li:nth-child(1) > form'],
                         ['aJ', '#main > div.btn_sub_medium.margin_top_20 > a']]],
@@ -1306,7 +1309,7 @@
                     [new RegExp("event" + this.eventName + "%2FMissionList"), 'list', [
                         ['a', '//a[contains(@href, "event' + this.eventName + '%2FDoMissionExecutionCheck")]'],
                         ['hold']]],
-                    ["event[a-zA-Z0-9]*%2FMissionResult%2F", 'list', [
+                    ["event[a-zA-Z0-9]*%2FMissionResult%.F", 'list', [
                         //['dbg'],
                         //['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + this.eventName + '%2FRaidBossTop")]'],
                         //['hold'],
@@ -1324,10 +1327,11 @@
                         ['aJ', 'a[href*="%2FDoMissionExecution"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
                         //['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
-                        ['func', function () {alert("need invervene");}],
+                        ['func', function () {alert("need intervene");}],
                         ['hold']]],
                     ["event[a-zA-Z0-9]*%2FRaidBossBattleResult", 'list', [
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
+                        ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
                         ['hold']]],
                     [/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
                     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -1766,6 +1770,7 @@
 
             get_actions : function () {
                 return [
+                    [/^:::$/, 'aJ', 'a[href*="mypage%2FIndex"]'],
                     [/apology%2FApologyList%2F/, 'form', '//*[@id="containerBox"]//form'],
                     [/arena%2FArenaBattleEntry%2F/, 'aJ', '#containerBox > div > a[href*="arena%2FDoArenaBattleEntry%2F"]'],
                     [/Farena%2FArenaBattleEntryEnd%2F/, 'aJ', '#containerBox > div > a:contains("イベントを進める")'],
@@ -2371,7 +2376,7 @@
                         ['aJ', 'div.gacha_frame:first() form:last()'],
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
-                    [/main%2Fmypage/, 'list', [
+                    [/(main%2Fmypage|:::)/, 'list', [
                         //['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
                         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
@@ -2443,6 +2448,7 @@
             selector_mypage : '#ctl00_HeaderNavi_hl_top',
             get_actions : function () {
                 return [
+                    [/^:::$/, 'aJ', '#ctl00_body_hl_mypage_sp'],
                     [/^duty%2Fseries_success%2Fseries_success_season_start_or_end\.aspx/, 'aJ', '#ctl00_body_hl_series_success_start'],
                     [/^duty%2Fseries_success%2Fseries_success_top\.aspx/, 'list', [
                         ['funcR', () => {
@@ -2501,11 +2507,12 @@
             }
         },
         "12018608" : { // irregular
-            mypage_url : "g12018608.sp.pf.mbga.jp",
+            mypage_url : "http://g12018608.sp.pf.mbga.jp",
             rotation_time : 5,
             cssmypage : '#bg > header > nav.buttonMypage > a',
             get_actions : function () {
                 return [
+                    [/^:::$/, 'aJ', '#bg a:contains("マイページ")'],
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
                     [/^mypage$/, 'list', [
@@ -2618,21 +2625,30 @@
         var i, j, list_action, succ, siteI, siteT, ele;
         GM_log('-msgloop--------------------------------------- ' + Date());
         succ = (function () {
-            var sites = [
-                ["http://sp.pf.mbga.jp/12010455?url=http%3A%2F%2Fmguildbattle.croozsocial.jp%2Fmypage%2FIndex%2F", 5], // avalon
-                ["http://sp.pf.mbga.jp/12011538?url=http%3A%2F%2Fmhunter.forgroove.com%2Fmypage%2FIndex", 5], // hunter
-                ["http://sp.pf.mbga.jp/12008490?url=http%3A%2F%2Fmragnarok.croozsocial.jp%2Fmypage%2FIndex", 5], //ragnarok
-                ["http://sp.pf.mbga.jp/12011562?guid=ON&url=http%3A%2F%2Ftoaru-index.heroz.jp%2Fmypage", 5], // to aru
-                ["http://sp.pf.mbga.jp/12007686/?guid=ON&url=http%3A%2F%2Fakr.konaminet.jp%2Fakr%2Fmain%2Fmypage%2Fmain%2F%3Fu%3D146021083384%26i%3D63358373", 5]// dream_nine
-            ];
-            return false;
+            var sites = Object.keys(handler), siteStatic = new Set(), new_app_id, now = Date.now(), switch_flag;
+            if (typeof setSiteStatic_local !== "undefined") {
+                siteStatic = setSiteStatic_local;
+            }
+            if (siteStatic.has(app_id)) {
+                return false;
+            }
             siteI = GM_getValue("site_loop_index", 0);
-            siteT = GM_getValue("site_timeout");
-            if (Date.now() > siteT) {
-                siteI = (siteI + 1) % sites.length;
-                siteT = Date.now() + 60 * 1000 * sites[siteI][1];
-                window.location.href = sites[siteI][0];
+            siteT = GM_getValue("site_timeout", 0);
+            switch_flag = GM_getValue("switch_flag", 0);
+            if (now > siteT || switch_flag === 1) {
+                do {
+                    siteI = (siteI + 1) % sites.length;
+                    new_app_id = sites[siteI];
+                } while(siteStatic.has(new_app_id));
+                siteT = now + 60 * 1000 * handler[sites[siteI]].rotation_time;
+                GM_log("switch-site " + siteI + " " + siteT);
+                GM_setValue("site_timeout", siteT);
+                GM_setValue("site_loop_index", siteI);
+                GM_setValue("switch_flag", 0);
+                window.location.href = handler[sites[siteI]].mypage_url;
                 return true;
+            } else {
+                GM_log("switch time left - " + (siteT - now) / 1000);
             }
             return false;
         }());
@@ -2792,12 +2808,14 @@
             url = ":::";
         }
         GM_log("sURL: " + url);
-        GM_log("REF : " + document.referrer);        
-        if (typeof setStopSite_local !== "undefined" && setStopSite_local.has (match_app_id[1])) {
+        GM_log("REF : " + document.referrer);
+        
+        app_id = match_app_id[1];
+        if (typeof setStopSite_local !== "undefined" && setStopSite_local.has (app_id)) {
             return;
         }
         //GM_log("short_url: " + url);
-        action_handler = handler[match_app_id[1]];
+        action_handler = handler[app_id];
         if (action_handler) {
             msgloop(action_handler.get_actions());
         }
