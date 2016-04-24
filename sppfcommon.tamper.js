@@ -459,7 +459,7 @@
     ///////////
 
     var handler = {
-        "12010455" : { 
+        "12010455" : { // avalon
             mypage_url : "http://sp.pf.mbga.jp/12010455",
             rotaion_time : 5,
             xpathmypage : "//*[@id=\"main_header_menu\"]/ul/li[1]/a",
@@ -475,20 +475,29 @@
                         ['a', '//*[@id="btn_force"]/a'],
                         ['a', '//*[@id="command_list"]/ul/li//a'],
                         ['hold']]],
-                    [/bossguildbattle%2FMissionResult%2F/, 'a', '//a[text()="さらに探索する"]'],
+                    [/^bossguildbattle%2FBossGuildbattleTop/, 'list', [
+                        ['aJ', '#contents > div.relative > div.mainBtn.banner > a']]],
+                    [/bossguildbattle%2FMissionResult%2F/, 'list', [
+                        ['aJ', 'a[href*="bossguildbattle%2FMissionActionLot"]'],
+                        ['aJ', 'a:contains("使用する")']]],
                     [/bossguildbattle%2FMissionTop%2F/, 'list', [
                         ['a', '//*[@id="raid_announce" and span]/div/a'],
                         ['a', '//*[@id="contents"]//a[contains(@href,"MissionActionLot")]'],
                         ['hold']]],
                     [/bossguildbattle%2FRaidbossAssistList%2F/, 'a', '//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
-                    [/bossguildbattle%2FRaidbossBattleResult%2F/, 'a', '//a[text()="イベントレイドボス応援一覧へ"]'],
+                    [/bossguildbattle%2FRaidbossBattleResult%2F/, 'list', [
+                        //['a', '//a[text()="イベントレイドボス応援一覧へ"]'],
+                        ['aJ', '#contents > div.raidboss_module a[href*="bossguildbattle%2FMissionActionLot"]']]],
                     [/bossguildbattle%2FRaidbossHelpResult%2F/, 'a', '//a[text()="レイドボスバトルへ"]'],
                     [/bossguildbattle%2FRaidbossTop%2F/, 'list', [
+                        //['hold'],
                         ['form', '//*[@id="contents"]/form'],
                         ['a', '//*[@id="raid_help"]/a'],
-                        ['a', '//a[text()="イベントレイドボス応援一覧に戻る"]'],
+                        ['aJ', '#summon_btn > div > a'],
+                        //['a', '//a[text()="イベントレイドボス応援一覧に戻る"]'],
                         ['a', '//*[@id="high_attack_btn"]/div/a'],
                         ['a', '//a[text()="探索TOPへ"]'],
+                        ['aJ', 'a:contains("聖戦TOPへ")'],
                         ['hold']]],
                     [/battleTower%2FBattleTowerTop%2F/, 'list', [
                         ['funcR', function () {
@@ -637,7 +646,7 @@
                         ['a', '//a[img[@alt="イベントクエストを探索"]]'],
                         ['a', '//a[text()="使用する"]']]],
                     [/^mypage%2FIndex%2F/, 'list', [
-                        ['aJ', '#header > a:not(:contains("まで"))'],
+                        ['aJ', '#header > a:not(:contains("まで")):not([href*="team%2FTeamDetail"]):regexText(.)'],
                         ['aJ', 'a:has(span#battle_name)'], //succ = succ || clickA('//a[span[@id="battle_name"]]');
                         ['aJ', '#boss_appear_btn:has(span) > div > a'], //succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
                         ['funcR', function () {
@@ -677,7 +686,9 @@
                         }],
                         ['setCookie', 'switch_flag', 1],
                         ['hold']]],
-                    [/mypage%2FLoginBonusResult%2F/, 'a', '//a[text()="贈り物BOXへ"]'],
+                    [/mypage%2FLoginBonusResult%2F/, 'list', [
+                        ['a', '//a[text()="贈り物BOXへ"]'],
+                        ['aJ', this.cssmypage]]],
                     [/mypage%2FLoginBonusSpecial%2F/, 'aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop"]'],
                     [/mission%2FRegionList%2F/, "a", "//div[@class='section_main']/div[2]/div[2]/div/a"], //*[@id="contents"]/div[3]/div[2]/div[2]/div/a
                     [/mission%2FMissionActionLot%2F/, "flash", "//*[@id=\"container\"]"],
@@ -1305,6 +1316,7 @@
                         }],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
+                        ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
                         ['hold']]],
                     [new RegExp("event" + this.eventName + "%2FMissionList"), 'list', [
                         ['a', '//a[contains(@href, "event' + this.eventName + '%2FDoMissionExecutionCheck")]'],
@@ -1492,15 +1504,6 @@
                             if (add_bp.length === 0) {
                                 GM_log("empty");
                                 $('#main > div.margin_top_10.go_mission_button a').clickJ(); // go on with mission
-                                
-                                //var no_bp_candy = GM_getValue("__ht_no_bp");
-                                //if (no_bp_candy) {
-                                //	no_bp_candy++;
-                                //} else {
-                                //	no_bp_candy = 1;
-                                //}
-                                //GM_setValue("__ht_no_bp", no_bp_candy, 60 * 10);
-                                //$('a[href*="%2FDoMissionExecutionCheck"]').last().clickJ();
                             } else {
                                 add_bp.first().clickJ();
                             }
@@ -2223,7 +2226,7 @@
                                     return false;
                                 }
                                 setSellCard = setSellCard_local;
-                                if ((mres = name.match(/^\S\s(\S*)\s1\S*/)) !== undefined) {
+                                if ((mres = name.match(/^\S\s([\S ]*)\s1\S*/)) !== null) {
                                     cardname = mres[1];
                                     if (setSellCard.has(cardname)) {
                                         GM_log(cardname + " sell");
@@ -2255,7 +2258,7 @@
                                     return;
                                 }
                                 setGetCard = setGetCard_local;
-                                if ((mres = name.match(/\S\s(\S*)\s\S*/)) !== undefined) {
+                                if ((mres = name.match(/\S\s([\S ]*)\s1\S*/)) !== undefined) {
                                     cardname = mres[1];
                                     if (setGetCard.has(cardname)) {
                                         GM_log(cardname + " get");
@@ -2512,9 +2515,10 @@
             cssmypage : '#bg > header > nav.buttonMypage > a',
             get_actions : function () {
                 return [
-                    [/^:::$/, 'aJ', '#bg a:contains("マイページ")'],
+                    [/^(:::|top)$/, 'aJ', '#bg a:contains("マイページ")'],
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
+                    [/^login%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^mypage$/, 'list', [
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
                         ['aJ', '#present > a'],
@@ -2565,7 +2569,8 @@
                                 if ($('#supportForm > div:nth-child(3) > ul > li:nth-child(1) > div > input:visible()').clickJ().length > 0 || $('#dialogRoot > section > article > div.p10.txC > div > a:visible()').clickJ().length > 0) {
                                     return true;
                                 }
-                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible()').clickJ(0).length > 0 ||
+                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible()[href*="Tika%2Ftop"]').clickJ(0).length > 0 ||
+                                $('#loseDialogRoot:visible()').length > 0 ||
                                 $('#resultButton > div > a:visible()').clickJ(0).length > 0 ||
                                 $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic0)').length > 0 ||
                                 $('img#enabledMagic0:visible').clickJ(0).length > 0 ||
@@ -2618,6 +2623,129 @@
                     [/XXXXXXXXXXXX/]
                 ];
             }
+        },
+        "12014627" : {
+            mypage_url : "http://g12014627.sp.pf.mbga.jp",
+            rotation_time : 5,
+            cssmypage : '#main > header > a.mypage',
+            wait_confirm : function(csscheck, cssconfirmArr) {
+                var idx = 0;
+                function wait () {
+                    if ($(cssconfirmArr[idx]).clickJ().length > 0) {
+                        idx += 1;
+                    }
+                    if (idx < cssconfirmArr.length) {
+                        setTimeout(wait, 1000);
+                    }
+                }
+                if ($(csscheck).clickJ(0).length > 0) {
+                    wait();
+                    return true;
+                }
+            },
+            get_actions : function () {
+                return [
+                    [/^:::$/, 'aJ', 'a:contains("マイページ")'],
+                    [/^boss%2Fwin/, 'list', [
+                        ['aJ', '#main > a.btn_type1_l']]],
+                    [/^boss%3F/, 'aJ', '#main > a.btn_battle_start'],
+                    [/^campaign%2Findex/, 'func', () => {alert("campaign!!!");}],
+                    [/^feature%2Ffloortreasurelist/, 'list', [
+                        ['aJ', '#main > a'],
+                        ['aJ', this.cssmypage]]],
+                    /*[/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'func', () => {
+                        if ($('#main > div.short_msg_navi > div:contains("に援軍依頼をしたよ")').length > 0) {
+                            $('#main > a.btn_type3_l').clickJ();
+                        } else {
+                            $('#main > a:contains("おすすめ仲間に援軍依頼を出す")').clickJ();
+                        }
+                    }],*/
+                    [/^feature%2Fmodule%2F182%2Ftowermonster%2Fdone/, 'aJ', '#main > a:contains("ダンジョンへ進む")'],
+                    [/^feature%2Fmodule%2F182%2Ftower%2Fdone/, 'list', [
+                        ['aJ', '#main > a:contains("まとめて剣礼")'],
+                        ['aJ', '#wrapper_list > footer > a.link3']]],
+                    /*[/^feature%2Fmodule%2F182%2Ftowermonster%2Findex/, 'list', [
+                        ['aJ', '#main a.btn_raid_type3'],
+                        ['aJ', '#main > a.btn_type2_l'], //援軍
+                        [
+                        ]]],*/
+                    [/^feature%2Fmodule/, 'list', [
+                        ['aJ', '#main > a.btn_quest_skip'],
+                        ['hold']]],
+                    [/^feature%2Ftowerlist%2F/, 'list', [
+                        ['aJ', '#main > div.card_list_wrapper > div.bg > div > boss_status_raid > a']]],
+                    [/^feature%2Ftreasurelist%2F/, 'aJ', '#main > a:contains("表示中の戦利品をまとめて受け取る")'],
+                    [/^feature%2Ftreasuredone/, 'aJ', this.cssmypage],
+                    [/^friend%2Faccept/, 'aJ', '#main > a'],
+                    [/^friend%2Fconfirm/, 'aJ', '#main > a:contains("盟友になる")'],
+                    [/^friend%2Fwaitfor/, 'list', [
+                        ['aJ', 'div.status_user > a:first()'],
+                        ['aJ', this.cssmypage]]],
+                    [/^gacha%2Fbronze/, 'list', [
+                        ['funcR', () => {
+                            return this.wait_confirm('a:contains("ガチャを引く"):last()', 
+                                ['#wrapper_list > div.default_popup > div > div.list_sort > a:nth-child(1)']);
+                        }],
+                        ['aJ', this.cssmypage]]],
+                    [/^gacha%2F(lump)?done/, 'list', [
+                        ['funcR', () => {
+                            return this.wait_confirm('a:contains("ガチャを引く"):last()',
+                                ['#wrapper_list > div.default_popup > div > div.list_sort > a:nth-child(1)']);
+                        }],
+                        ['aJ', 'a:contains("ガチャTOPへ")']]],
+                    [/^my%3F/, 'list', [
+                        ['aJ', 'div.bg > ul > li > a:contains("未受け取り戦利品があります")'],
+                        ['aJ', 'div.bg > ul > li > a:contains("未受け取り宝箱があります")'],
+                        ['aJ', 'div.bg > ul > li > a:contains("盟友申請が")'],
+                        ['aJ', 'div.bg > ul > li > a:contains("プレゼントが")'],
+                        ['funcR', () => {
+                            var hp = $('#mypage_bg_v2 > div.player_status > div.gauge_hp_mini > div').attr("style").match(/:(\d+)%/);
+                            if (hp) {
+                                hp = hp[1];
+                                if (hp > 10) {
+                                    return $('#mypage_bg_v2 > div.btn > a.btn_quest_boost,.btn_quest').clickJ().length > 0;
+                                }
+                            }
+                        }],
+                        ['hold']]],
+                    [/^packgacha%2Findex/, 'list', [
+                        ['aJ', 'a:contains("ブロンズ")']]],
+                    [/^present%2Flist/, 'list', [
+                        ['aJ', '#main > div.tab3_v2 > ul > li > a:contains("全て")'],
+                        ['funcR', () => {
+                            return this.wait_confirm('#main > a:contains("一括受け取り")',
+                                ['#wrapper_list > div.default_popup > div > div.list_sort > a:nth-child(1)']);}
+                        ],
+                        ['aJ', this.cssmypage]]],
+                    [/^quest%2Fdone/, 'aJ', '#main > a.btn_quest_skip'],
+                    [/^quest%2Ffriend/, 'list', [
+                        ['funcR', () => {
+                            return this.wait_confirm('#quest_dialog > div > a.btn_type1_m',
+                                ['#wrapper_list > div:nth-child(2) > div > form > div > div:nth-child(2) > input']);
+                        }],
+                        ['aJ', '#main > a.btn_quest_skip']]],
+                    [/^quest%2Ftired/, 'list', [
+                        ['funcR', () => {
+                            return this.wait_confirm('#main > div > div.bg > a.btn_type2_l:contains("使用")',
+                                ['#wrapper_list > div > div > a.btn_type2_m', '#wrapper_list > div:nth-child(2) > div > a.btn_type3_m']);
+                        }],
+                        ['aJ', this.cssmypage]]],
+                    [/^quest(%3F|$)/, 'list', [
+                        ['aJ', '#main > a.btn_type1_l'],
+                        ['aJ', '#main > div.quest_list > a']]],
+                    [/^raid%2Fdone/, 'list', [
+                        ['aJ', '#main > a.btn_raid_boss_search']]],
+                    [/^raid%2Findex/, 'list', [
+                        ['aJ', '#main > div.list_sort > a.btn_raid_type0']]],
+                    [/^raid%2Fmain/, 'list', [
+                        ['aJ', '#main > div.list_sort > a'],
+                        ['aJ', '#main > a[href*="%2Fquest%"]']]],
+                    //[/^gimmick%2Fview%2F(?:get_card|area|chapter_start)%3Ftk/, 'flashJ', 'body > div > div:has(svg) g'/*'div > svg > g > g > g > g > g:nth-child(2) > g:nth-child(12) > g > use'*//*, 20, 20*/],
+                    [/^gimmick%2Fview/, 'flashJT', '#canvas, #bg-white, #main'],//, body > div', 38, 104],
+                    [/[\s\S*]/, 'hold'],
+                    [/XXXXXXXXXX/]
+                ];
+            }
         }
     };
 
@@ -2656,12 +2784,19 @@
             (function time_wait() {
                 var canvas = $(action[1]),
                     x = action[2],
-                    y = action[3];
+                    y = action[3],
+                    cnt = 0;
                 if (canvas.length > 0) {
+                    //canvas.clickFlash(x, y);
                     canvas.touchFlash(x, y);
                 } else {
-                    GM_log('flashJT, wait flash');
-                    setTimeout(time_wait, 1000);
+                    GM_log('flashJT, wait flash ' + cnt);
+                    cnt += 1;
+                    if (cnt > 10) {
+                        alert("illegal flash");
+                    } else {
+                        setTimeout(time_wait, 1000);
+                    }
                 }
             }());
         }
@@ -2797,9 +2932,9 @@
         reload_page(120000);
     }
 
-    match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*)?/);
+    match_app_id = url.match(/http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?/);
     if (!match_app_id) {
-        match_app_id = url.match(/http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/\S*[?&]url=http%3A%2F%2F[-_a-zA-Z0-9.]+%2F([-_a-zA-Z%0-9.]+)\S*)?/);
+        match_app_id = url.match(/http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/\S*[?&]url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?/);
     }
     //GM_log(match_app_id);
     if (match_app_id) {
