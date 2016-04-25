@@ -857,6 +857,7 @@
                         ['aJ', 'a[href*="mission%2FMissionActionLot"]']]],
                     [/Swf%2F/, "flashJT", '#container > canvas'],
                     [/SwfOp%2F/, 'flash', '//*[@id="container"]'],
+                    [/[\s\S]*/, 'hold'],
                     [/xxxxxxxxxxxxxxxxx/]
                 ];
             }
@@ -2537,7 +2538,7 @@
                         ['funcR', function () {
                             var st = $('#mypageMenu > div.gaugeStBox > dl > dt').text().match(/(\d+)\//);
                             st = +st[1];
-                            if (st > 20) {
+                            if (st > 40) {
                                 return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
                                     || $('#mypageMenu > div.mypageMenuBg > div.story > a').clickJ().length > 0;
                             }
@@ -2594,6 +2595,7 @@
                             return true;
                         }],
                         ['hold']]],
+                    [/^tika%2Fbox_reset/, 'fromJ', 'form[action*="box_rest_result"]'],
                     [/^tika%2Fjoin/, 'aJ', '#bg > ul > li > a[href*="tika%2Ftop"]'],
                     [/^tika%2Fparty_select/, 'list', [
                         ['funcR', () => {
@@ -2611,6 +2613,7 @@
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     [/^tika%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
                     [/^tika%2Fticket/, 'list', [
+                        ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="tika%2Fpick"]:last()']]],
                     [/^[tT]ika%2Ftop$/, 'list', [
                         ['funcR', function () {
@@ -2622,7 +2625,7 @@
                                 }
                             }
                         }],
-                        ['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F1"]'],
+                        ['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F2"]'],
                         ['aJ', 'a[href*="battle_list"]'],
                         ['hold']]],
                     [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
