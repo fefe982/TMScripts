@@ -684,7 +684,7 @@
                                     || clickA("//*[@id=\"quest_btn\"]/a");
                             }
                         }],
-                        ['setCookie', 'switch_flag', 1],
+                        ['switch'],
                         ['hold']]],
                     [/mypage%2FLoginBonusResult%2F/, 'list', [
                         ['a', '//a[text()="贈り物BOXへ"]'],
@@ -930,6 +930,7 @@
                         //['aJ', 'div.contents_info a[href*="mission%2Fbeginner"]'], // story
                         ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Fpremium"]'], // story
                         //['aJ', 'div.contents_info a[href*="quiz%2Findex"]'], // story
+                        ['aJ', '#info_area > div > div.partner_status.on > a'],
                         ['func', function () {
                             var res, hp, ap, apall;
                             res = $('div#graph_hp div.graph_text_detail').text().match(/([0-9]*)\s*\/\s*[0-9]*/);
@@ -947,8 +948,10 @@
                             }
                         }]]],
 
-                    [/Partner%2Findex/, 'list', [
-                        ['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
+                    [/[pP]artner(%2Findex|$)/, 'list', [
+                        //['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
+                        ['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
+                        ['aJ', '#partnerCommand > li:nth-child(2) > div > div > a']]],
                     [/partner%2Findex/, 'list', [
                         ['aJ', '#top_btn > a']]],
 
@@ -2400,6 +2403,7 @@
                             }
                             return false;
                         }],
+                        ['switch'],
                         ['hold']]],
                     [/main%2Fpresent%2Fevent%2Freceive%2Fmain/, 'list', [
                         ['formJ', '#shortCutForm'],
@@ -2482,6 +2486,7 @@
                                 return $('#ctl00_body_hl_battle_sp').clickJ().length > 0;
                             }
                         }],
+                        ['switch'],
                         ['hold']]],
                     [/^user_battle%2Ftraining_battle_confirm\.aspx/, 'func', () => {
                         var disable = $('li.bppos-1:not(.disable)').clickJ().length === 0;
@@ -2532,11 +2537,12 @@
                         ['funcR', function () {
                             var st = $('#mypageMenu > div.gaugeStBox > dl > dt').text().match(/(\d+)\//);
                             st = +st[1];
-                            if (st > 10) {
+                            if (st > 20) {
                                 return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
                                     || $('#mypageMenu > div.mypageMenuBg > div.story > a').clickJ().length > 0;
                             }
                         }],
+                        ['switch'],
                         ['hold']]],
                     [/^pick%2Fresult/, 'list', [
                         ['aJ', 'a[href*="pick%2Frun"]:last()'],
@@ -2560,6 +2566,7 @@
                     [/^tika%2Fbattle_list/, 'list', [
                         ['aJ', 'a[href*="tika%2Fbattle"]:contains("結果")'],
                         ['aJ', 'a[href*="tika%2Fparty_select"]:contains("参戦")'],
+                        ['aJ', '#bg > ul > li > a:contains("イベントTOP")'],
                         ['hold']]],
                     [/^tika%2Fbattle%2F/, 'list', [
                         ['funcR', function () {
@@ -2615,7 +2622,7 @@
                                 }
                             }
                         }],
-                        ['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F0"]'],
+                        ['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F1"]'],
                         ['aJ', 'a[href*="battle_list"]'],
                         ['hold']]],
                     [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
@@ -2653,17 +2660,24 @@
                     [/^feature%2Ffloortreasurelist/, 'list', [
                         ['aJ', '#main > a'],
                         ['aJ', this.cssmypage]]],
-                    /*[/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'func', () => {
-                        if ($('#main > div.short_msg_navi > div:contains("に援軍依頼をしたよ")').length > 0) {
+                    [/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'list', [
+                        ['aJ', '#main > a:contains("盟友に援軍依頼を出す")'],
+                        ['func', () => {
+                        if (GM_getValue("dt_support_done", 0) > 0) {
+                            GM_deleteValue("dt_support_done");
                             $('#main > a.btn_type3_l').clickJ();
                         } else {
+                            GM_setValue("dt_support_done", 1);
                             $('#main > a:contains("おすすめ仲間に援軍依頼を出す")').clickJ();
                         }
-                    }],*/
+                        }]]],
                     [/^feature%2Fmodule%2F182%2Ftowermonster%2Fdone/, 'aJ', '#main > a:contains("ダンジョンへ進む")'],
                     [/^feature%2Fmodule%2F182%2Ftower%2Fdone/, 'list', [
                         ['aJ', '#main > a:contains("まとめて剣礼")'],
                         ['aJ', '#wrapper_list > footer > a.link3']]],
+                    [/^feature%2Fmodule%2F182%2Ftower%2Findex/, 'list', [
+                        ['aJ', '#popup-navi > div > a'],
+                        ['hold']]],
                     /*[/^feature%2Fmodule%2F182%2Ftowermonster%2Findex/, 'list', [
                         ['aJ', '#main a.btn_raid_type3'],
                         ['aJ', '#main > a.btn_type2_l'], //援軍
@@ -2707,6 +2721,7 @@
                                 }
                             }
                         }],
+                        ['switch'],
                         ['hold']]],
                     [/^packgacha%2Findex/, 'list', [
                         ['aJ', 'a:contains("ブロンズ")']]],
@@ -2750,19 +2765,22 @@
     };
 
     function msgloop(actions) {
-        var i, j, list_action, succ, siteI, siteT, ele;
+        var i, j, list_action, succ, siteI, siteT, ele, sites = Object.keys(handler), siteStatic = new Set()
         GM_log('-msgloop--------------------------------------- ' + Date());
-        succ = (function () {
-            var sites = Object.keys(handler), siteStatic = new Set(), new_app_id, now = Date.now(), switch_flag;
+        function switch_site() {
+            var new_app_id, now = Date.now(), switch_flag;
             if (typeof setSiteStatic_local !== "undefined") {
                 siteStatic = setSiteStatic_local;
+            }
+            if (typeof setStopSite_local != "undefined") {
+                siteStatic = new Set([...siteStatic, ...setStopSite_local]);
             }
             if (siteStatic.has(app_id)) {
                 return false;
             }
             siteI = GM_getValue("site_loop_index", 0);
             siteT = GM_getValue("site_timeout", 0);
-            switch_flag = GM_getValue("switch_flag", 0);
+            switch_flag = GM_getValue("site_switch_flag", 0);
             if (now > siteT || switch_flag === 1) {
                 do {
                     siteI = (siteI + 1) % sites.length;
@@ -2772,14 +2790,15 @@
                 GM_log("switch-site " + siteI + " " + siteT);
                 GM_setValue("site_timeout", siteT);
                 GM_setValue("site_loop_index", siteI);
-                GM_setValue("switch_flag", 0);
+                GM_setValue("site_switch_flag", 0);
                 window.location.href = handler[sites[siteI]].mypage_url;
                 return true;
             } else {
                 GM_log("switch time left - " + (siteT - now) / 1000);
             }
             return false;
-        }());
+        }
+        succ = switch_site();
         function time_wait_flashJT(action) {
             (function time_wait() {
                 var canvas = $(action[1]),
@@ -2907,6 +2926,13 @@
                         if (!succ) {
                             reload_page(list_action[j][1]);
                             /*setTimeout(function () {location.reload(true); }, list_action[j][1]);*/
+                        }
+                        succ = true;
+                        break;
+                    case 'switch':
+                        if (!succ && !siteStatic.has(app_id)) {
+                            GM_setValue("site_switch_flag", 1);
+                            switch_site();
                         }
                         succ = true;
                         break;
