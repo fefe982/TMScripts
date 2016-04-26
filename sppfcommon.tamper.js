@@ -562,12 +562,12 @@
                     [/gacha%2FitemBox%2FGachaBoxResetConf/, 'aJ', 'a[href*="gacha%2FitemBox%2FDoGachaBoxReset%2F"]'],
                     [/gacha%2FitemBox%2FGachaBoxResetEnd/, 'aJ', 'a[href*="gacha%2FitemBox%2FGachaTop%2F"'],
                     [/gacha%2FitemBox%2FGachaResult/, 'list', [
-                        ['formJ', '#bg_box_gacha_info > form'],
+                        ['formJ', 'form[action*="gacha%2FitemBox%2FDoGachaExec"]'],
                         ['aJ', 'a[href*="gacha%2FitemBox%2FGachaBoxResetConf"]'],
                         ['aJ', 'a[href*="island%2FIslandTop%2F"'],
                         ['aJ', '#contents > div.btn_main_large.margin_top_10 > a']]],
                     [/^gacha%2FitemBox%2FGachaTop/, 'list', [
-                        ['formJ', '#bg_box_gacha_info > form'],
+                        ['formJ', 'form[action*="gacha%2FitemBox%2FDoGachaExec"]'],
                         //['aJ', 'a[href*="gacha%2FitemBox%2FGachaBoxResetConf"]'],
                         ['aJ', 'a[href*="island%2FIslandTop%2F"']]],
                     [/giftBingo%2FGiftBingoDetail%2F/, 'a', '//a[text()="カムバックビンゴTOPへ"]'],
@@ -951,11 +951,13 @@
 
                     [/[pP]artner(%2Findex|$)/, 'list', [
                         //['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
-                        ['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
-                        ['aJ', '#partnerCommand > li:nth-child(2) > div > div > a']]],
+                        //['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
+                        ['aJ', '#partnerCommand > li:nth-child(2) > div > div > a[href]'],
+                        ['aJ', this.selector_mypage]]],
                     [/partner%2Findex/, 'list', [
                         ['aJ', '#top_btn > a']]],
-
+                    [/^Partner%2FquestConfirm/, 'aJ', '#bg_room > div.partner_detail > div > form > input.btn_quest_partner'],
+                    [/^partner%2FquestFlash/, 'flashJT', '#canvas'],
                     //pick
                     [/pick%2Fresult%2Ffree/, 'list', [
                         //['aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
@@ -1304,6 +1306,10 @@
                     [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
                     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
                     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
+                    [/^eventBigRaidBoss%2FBigRaidBossBattleResult/, 'aJ', '#main > div.btn_mission > a'],
+                    [/^eventBigRaidBoss%2FBigRaidBossTop/, 'list', [
+                        ['aJ', '#bigRaidBtn > div:nth-child(2) > a'],
+                        ['aJ', '#bigRaidBtn > div:nth-child(1) > a']]],
                     [/^eventStageRaidBoss%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > a'], //'a[href*="event%2FDoSetClickCount"]'],
                     [/^eventStageRaidBoss%2FWishComplyTop/, 'aJ', 'a[href*="eventStageRaidBoss%2FDoMissionExecutionCheck"]'],
                     [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
@@ -1345,7 +1351,8 @@
                         //['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
                         ['func', function () {alert("need intervene");}],
                         ['hold']]],
-                    ["event[a-zA-Z0-9]*%2FRaidBossBattleResult", 'list', [
+                    [/event[a-zA-Z0-9]*%2FRaidBossBattleResult/, 'list', [
+                        ['aJ', '#boss_battle_gauge_wrap > div > div.btn_gauge_battle > a'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
                         ['hold']]],
@@ -1507,7 +1514,7 @@
                             GM_log("bp_candy : " + add_bp.length);
                             if (add_bp.length === 0) {
                                 GM_log("empty");
-                                $('#main > div.margin_top_10.go_mission_button a').clickJ(); // go on with mission
+                                $('#main > div.go_mission_button a').clickJ(); // go on with mission
                             } else {
                                 add_bp.first().clickJ();
                             }
@@ -2168,48 +2175,51 @@
                     [/mypage%2FCollectionComp%2F/, 'form', '//form[.//input[@value="報酬を受け取る"]]'],
                     [/mypage%2FCollectionCompEnd%2F/, 'a', '//a[text()="図鑑報酬へ"]'],
                     [/mypage%2FGreetList%2F/, 'a', this.xpathmypage],
-                    [/mypage%2FIndex/, "func", () => {
-                        var txt = $('input[name="keUrl"][type="text"]'),
-                            ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
-                            ap = 0,
-                            mission_error = getCookie('__my_rg_m_error'),
-                            succ = false,
-                            matchres = txt[0].defaultValue.match(/%3D(\d+)$/),
-                            boss_clear;
-                        if (matchres) {
-                            //GM_log(matchres[1]);
-                            GM_setValue("__rg_USERID", matchres[1]);
-                        }
-                        if (ap_gauge) {
-                            ap = ap_gauge.dataset.value;
-                        } else {
-                            if (getXPATH('//*[@id="container"]')) {
-                                clickFlash('//*[@id="container"]');
-                                return;
+                    [/mypage%2FIndex/, 'list', [
+                        ["funcR", () => {
+                            var txt = $('input[name="keUrl"][type="text"]'),
+                                ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
+                                ap = 0,
+                                mission_error = getCookie('__my_rg_m_error'),
+                                succ = false,
+                                matchres = txt[0].defaultValue.match(/%3D(\d+)$/),
+                                boss_clear;
+                            if (matchres) {
+                                //GM_log(matchres[1]);
+                                GM_setValue("__rg_USERID", matchres[1]);
                             }
-                        }
-                        succ = succ || clickA('//a[contains(text(),"戦友申請が")]');
-                        succ = succ || clickA('//a[text()="カード図鑑報酬が受け取れます"]');
-                        succ = succ || clickA('//a[text()="マテリアル図鑑報酬が受け取れます"]');
-                        succ = succ || clickA('//a[text()="トレジャーに出発できます"]');
-                        succ = succ || clickA('//a[text()="MPが割り振れます"]');
-                        succ = succ || clickA('//a[text()="無料ガチャが出来ます"]');
-                        succ = succ || clickA('//a[text()="トレジャーの結果が出ています"]');
-                        //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
-                        succ = succ || clickA('//a[text()="運営からのお詫び"]');
-                        succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
-                        succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
-                        boss_clear = getCookie("__my_r_boss_clear");
-                        if (!boss_clear) {
-                            succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
-                        }
-                        succ = succ || clickA(this.xpathevent);
-                        if (ap > 10 && !mission_error) {
-                            succ = succ || clickA(this.xpathquest);
-                        }
-                        //succ = succ || clickA(this.xpathevent);
-                        //succ = succ || setTimeout(function () {location.reload(true); },  60000);
-                    }],
+                            if (ap_gauge) {
+                                ap = ap_gauge.dataset.value;
+                            } else {
+                                if (getXPATH('//*[@id="container"]')) {
+                                    clickFlash('//*[@id="container"]');
+                                    return;
+                                }
+                            }
+                            succ = succ || clickA('//a[contains(text(),"戦友申請が")]');
+                            succ = succ || clickA('//a[text()="カード図鑑報酬が受け取れます"]');
+                            succ = succ || clickA('//a[text()="マテリアル図鑑報酬が受け取れます"]');
+                            succ = succ || clickA('//a[text()="トレジャーに出発できます"]');
+                            succ = succ || clickA('//a[text()="MPが割り振れます"]');
+                            succ = succ || clickA('//a[text()="無料ガチャが出来ます"]');
+                            succ = succ || clickA('//a[text()="トレジャーの結果が出ています"]');
+                            //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
+                            succ = succ || clickA('//a[text()="運営からのお詫び"]');
+                            succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
+                            succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
+                            boss_clear = getCookie("__my_r_boss_clear");
+                            if (!boss_clear) {
+                                succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
+                            }
+                            succ = succ || clickA(this.xpathevent);
+                            if (ap > 10 && !mission_error) {
+                                succ = succ || clickA(this.xpathquest);
+                            }
+                            //succ = succ || clickA(this.xpathevent);
+                            //succ = succ || setTimeout(function () {location.reload(true); },  60000);
+                            return succ;
+                        }],
+                        ['switch']]],
                     [/newMission%2FAreaList%2F/, 'aJ', $('a[href*="newMission%2FMissionList%2F"]').last()],
                     [/newMission%2FBossAppear/, 'aJ', 'a[href*="newMission%2FBossBattleFlash%2F"]'],
                     [/newMission%2FMissionDetail%2F/, 'flashJT', '#execBtn'],
@@ -2472,6 +2482,7 @@
                     [/^gacha%2Fgacha_new_result\.aspx/, 'list', [
                         ['aJ', '#ctl00_body_hl_gift'],
                         ['hold']]],
+                    [/^general%2Fnews_detail\.aspx/, 'aJ', this.selector_mypage],
                     [/^gift%2Freceive_list\.aspx/, 'list', [
                         ['aJ', '#ctl00_body_rp_navi_ctl00_btn_receive'],
                         ['aJ', '#ctl00_HeaderNavi_hl_top']]],
@@ -2783,6 +2794,9 @@
             }
             siteI = GM_getValue("site_loop_index", 0);
             siteT = GM_getValue("site_timeout", 0);
+            if (siteT != siteT) {
+                siteT = 0;
+            }
             switch_flag = GM_getValue("site_switch_flag", 0);
             if (now > siteT || switch_flag === 1) {
                 do {
@@ -2797,6 +2811,8 @@
                 window.location.href = handler[sites[siteI]].mypage_url;
                 return true;
             } else {
+                GM_log(siteT);
+                GM_log(now);
                 GM_log("switch time left - " + (siteT - now) / 1000);
             }
             return false;
