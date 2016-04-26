@@ -677,7 +677,8 @@
                             var ap = getXPATH("//*[@id=\"gauge_ap\"]/div[1]").dataset.value;
 
                             if (ap > 10) {
-                                return  $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0
+                                return false 
+                                    //|| $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0
                                     || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0
                                     || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0
                                     //|| clickA('//a[contains(@href, "TowerRaidTop")]');
@@ -951,12 +952,13 @@
 
                     [/[pP]artner(%2Findex|$)/, 'list', [
                         //['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
-                        //['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
-                        ['aJ', '#partnerCommand > li:nth-child(2) > div > div > a[href]'],
+                        ['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
+                        //['aJ', '#partnerCommand > li:nth-child(2) > div > div > a'],
+                        //['hold'],
                         ['aJ', this.selector_mypage]]],
                     [/partner%2Findex/, 'list', [
                         ['aJ', '#top_btn > a']]],
-                    [/^Partner%2FquestConfirm/, 'aJ', '#bg_room > div.partner_detail > div > form > input.btn_quest_partner'],
+                    [/^[pP]artner%2FquestConfirm/, 'aJ', '#bg_room > div.partner_detail > div > form > input.btn_quest_partner'],
                     [/^partner%2FquestFlash/, 'flashJT', '#canvas'],
                     //pick
                     [/pick%2Fresult%2Ffree/, 'list', [
@@ -1307,6 +1309,7 @@
                     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
                     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
                     [/^eventBigRaidBoss%2FBigRaidBossBattleResult/, 'aJ', '#main > div.btn_mission > a'],
+                    [/^eventBigRaidBoss%2FBigRaidbossBattleSwf/, 'aJ', '#battle_result_btn > a'],
                     [/^eventBigRaidBoss%2FBigRaidBossTop/, 'list', [
                         ['aJ', '#bigRaidBtn > div:nth-child(2) > a'],
                         ['aJ', '#bigRaidBtn > div:nth-child(1) > a']]],
