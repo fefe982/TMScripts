@@ -702,7 +702,7 @@
                         ['aJ', 'a:contains("さらにクエストする")'], //succ = succ || clickA('//a[text()="さらにクエストする"]');
                         ['aJ', 'a:contains("次のエリアへ")'], //('//a[text()="次のエリアへ"]');
                         ['aJ', this.cssmypage]]], //(this.xpathmypage);]]],
-                    [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のエリアへ進む"):first()'],
+                    [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のフィールドへ進む"):first()'],
                     [/mission%2FMissionError%2F/, 'list', [
                         ['funcR', function () {
                             if (document.referrer.match(/island%2F/)) {
@@ -933,7 +933,7 @@
                         ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Fpremium"]'], // story
                         //['aJ', 'div.contents_info a[href*="quiz%2Findex"]'], // story
                         ['aJ', '#info_area > div > div.partner_status.on > a'],
-                        ['func', function () {
+                        ['funcR', function () {
                             var res, hp, ap, apall;
                             res = $('div#graph_hp div.graph_text_detail').text().match(/([0-9]*)\s*\/\s*[0-9]*/);
                             hp = res ? +res[1] : 0;
@@ -948,7 +948,8 @@
                             if (ap === apall) {
                                 return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
                             }
-                        }]]],
+                        }],
+                        ['switch']]],
 
                     [/[pP]artner(%2Findex|$)/, 'list', [
                         //['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
@@ -1309,7 +1310,13 @@
                     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
                     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
                     [/^eventBigRaidBoss%2FBigRaidBossBattleResult/, 'aJ', '#main > div.btn_mission > a'],
-                    [/^eventBigRaidBoss%2FBigRaidbossBattleSwf/, 'aJ', '#battle_result_btn > a'],
+                    [/^eventBigRaidBoss%2FBigRaidbossBattleSwf/, 'func', () => {
+                        setTimeout(function wait() {
+                            if ($('#battle_result_btn > a:visible').clickJ(0).length === 0) {
+                                setTimeout(wait, 1000);
+                            }
+                        }, 1000);
+                    }],
                     [/^eventBigRaidBoss%2FBigRaidBossTop/, 'list', [
                         ['aJ', '#bigRaidBtn > div:nth-child(2) > a'],
                         ['aJ', '#bigRaidBtn > div:nth-child(1) > a']]],
@@ -2552,8 +2559,9 @@
                         ['funcR', function () {
                             var st = $('#mypageMenu > div.gaugeStBox > dl > dt').text().match(/(\d+)\//);
                             st = +st[1];
-                            if (st > 40) {
-                                return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
+                            if (st > 10) {
+                                return false
+                                    //|| $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
                                     || $('#mypageMenu > div.mypageMenuBg > div.story > a').clickJ().length > 0;
                             }
                         }],
@@ -2639,7 +2647,7 @@
                                 }
                             }
                         }],
-                        ['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F2"]'],
+                        //['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F2"]'],
                         ['aJ', 'a[href*="battle_list"]'],
                         ['hold']]],
                     [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
@@ -2756,6 +2764,7 @@
                                 ['#wrapper_list > div:nth-child(2) > div > form > div > div:nth-child(2) > input']);
                         }],
                         ['aJ', '#main > a.btn_quest_skip']]],
+                    [/^quest%2Fget_princess/, 'aJ', '#main > a:contains("次の章へ進む")'],
                     [/^quest%2Ftired/, 'list', [
                         ['funcR', () => {
                             return this.wait_confirm('#main > div > div.bg > a.btn_type2_l:contains("使用")',
