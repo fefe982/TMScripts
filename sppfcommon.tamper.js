@@ -16,7 +16,7 @@
     'use strict';
 
     var url = document.URL, handler, match_app_id, app_id, action_handler;
-    
+
     GM_log('-start----------------------------------------- ' + Date());
 
     function getXPATH(xpath) {
@@ -216,7 +216,7 @@
             this.simMouseEvent("click");
         } else {
             jq = $(this);
-            GM_log(/*Date() + */' wait clickJ ' + (timeout || 1000));
+            GM_log(' wait clickJ ' + (timeout || 1000));
             setTimeout(function () {
                 //GM_log(Date() + ' click func ');
                 jq.simMouseEvent("mousedown");
@@ -458,7 +458,7 @@
     }
     ///////////
 
-    var handler = {
+    handler = {
         "12010455" : { // avalon
             mypage_url : "http://sp.pf.mbga.jp/12010455",
             rotaion_time : 5,
@@ -677,7 +677,7 @@
                             var ap = getXPATH("//*[@id=\"gauge_ap\"]/div[1]").dataset.value;
 
                             if (ap > 10) {
-                                return false 
+                                return false
                                     //|| $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0
                                     || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0
                                     || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0
@@ -758,7 +758,7 @@
                     [/story(ex)?%2FDoStoryEpisodeSwfClear%2F/, 'flashJT', '#container > canvas'],
                     [/story(ex)?%2FDoStoryEpisodeSwfEd%2F/, "flash", "//*[@id=\"container\"]"],
                     [/story(ex)?%2FDoStoryEpisodeSwfOp%2F/, "flash", "//*[@id=\"container\"]"],
-                    [/story(ex)?%2FMissionResult%2F/, 'func', function () {
+                    [/story(ex)?%2FMissionResult%2F/, 'func', () => {
                         var ap_status = getXPATH('//div[div[contains(text(),"のステータス")]]/div[2]/table/tbody/tr[2]/td[1]'),
                             ap_c = 0,
                             ap_full = 1,
@@ -818,7 +818,7 @@
                     [/summonHunt%2FSummonCaptureResult%2F/, 'list', [
                         ['aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
                         ['aJ', 'a[href*="summonHunt%2FSummonHuntTop%2F"]']]],
-                    [/^summonHunt%2FSummonHuntHowToPlay%2F%3FfirstAccessFlg%3D1/, 'aJ' ,'#contents a[href*="deck%2FDoDeckEditNumChangeAll%2F"]'],
+                    [/^summonHunt%2FSummonHuntHowToPlay%2F%3FfirstAccessFlg%3D1/, 'aJ', '#contents a[href*="deck%2FDoDeckEditNumChangeAll%2F"]'],
                     [/summonHunt%2FSummonHuntRaidbossAssistList%2F/, 'aJ', 'li:has(span[class="icon_new"]) a'], //'//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
                     [/summonHunt%2FRaidbossBattleResult%2F/, 'aJ', 'a[href*="summonHunt%2FMissionActionLot"]'],
                     [/summonHunt%2FRaidbossTop/, 'list', [
@@ -2350,28 +2350,13 @@
                 return [
                     [/%2Fflash%2F/, 'flashJT', '#tween_b_root'],
                     [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],
-                    [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
-                    [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
-                    [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.selector_mypage],
-                    [/main%2Fscout%2Fmain%2Fboss%3F/, 'aJ', 'a#shortCut'],
-                    [/main%2Fscout%2Fmain%2Fboss_result%3/, 'list', [
-                        ['aJ', 'a#shortCut']]],
-                    [/main%2Fscout%2Fmain%2Fconfirm%3F/, 'aJ', '#bg_scout a:contains("決定する")'],
-                    [/main%2Fscout%2Fmain%2Ffield%3F/, 'list', [
-                        ['aJ', 'a#shortCut'],
-                        ['aJ', this.selector_mypage]]],
                     [/main%2Farena%2Fmain%2Fgame_detail%3F/, 'list', [
                         ['aJ', '#arena_body a:contains("次の試合へ")'],
                         ['aJ', this.selector_mypage]]],
+                    [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
+                    [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
                     [/main%2Farena%2Fmain/, 'aJ', '#arena_back > div.arena_btn_only > a'],
-                    [/main%2Fscout%2Fmain%2Fscout_flash/, 'flashJT', '#tween_b_root'],
-                    [/main%2Fscout%2Fmain%2Fspecial%3/, 'list', [
-                        ['aJ', '#bg_scout a:contains("挑戦する")']]],
-                    [/main%2Fscout%2Fmain%2Fspecial_result%3/, 'list', [
-                        ['aJ', 'a#shortCut']]],
-                    [/main%2Fscout%2Fmain%3F/, 'list', [
-                        ['aJ', 'a#shortCut'],
-                        ['aJ', '#bg_scout a:contains("最新エリア")']]],
+                    [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.selector_mypage],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]'],
@@ -2394,6 +2379,18 @@
                         ['aJ', 'form[action*="main%2Fevent%2Fdtraining%2Fmain%2Fone_more_training_exe"] > input[type="submit"]:nth-child(2)'],
                         ['aJ', 'a[href*="main%2Fevent%2Farea%2Fdtraining%2Fexe"]'],
                         ['aJ', this.selector_mypage]]],
+                    [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F(menu|divide)/, 'list', [
+                        ['funcR', () => {
+                            var hpt = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("ヒーローPt") + span').text().match(/(\d+)/),
+                                hpack = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("Xヒーローパック") + span').text().match(/(\d+)/);
+                            GM_log(hpt);
+                            GM_log(hpack);
+                            if ((hpt && hpt[1] > 3000) || (hpack && hpack[1] > 0)) {
+                                return $('a:contains("ヒーローBOXを開ける")').clickJ().length > 0;
+                            }
+                        }],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fherosta"]'],
+                        ['aJ', this.selector_mypage]]],
                     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
                     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
                         ['aJ', '#howto_icon_back_gacha > a.enable']]],
@@ -2404,7 +2401,7 @@
                         ['aJ', this.selector_mypage]]],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/(main%2Fmypage|:::)/, 'list', [
-                        //['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
+                        ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
                         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
                         ['aJ', '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
@@ -2463,7 +2460,23 @@
                         //['func', function () {alert("xxxx");}],
                         //['aJ', '#shortCutForm input[type="submit"]:last()'],
                         ['aJ', this.selector_mypage]]],
+                    [/main%2Fscout%2Fmain%2Fboss%3F/, 'aJ', 'a#shortCut'],
+                    [/main%2Fscout%2Fmain%2Fboss_result%3/, 'list', [
+                        ['aJ', 'a#shortCut']]],
+                    [/main%2Fscout%2Fmain%2Fconfirm%3F/, 'aJ', '#bg_scout a:contains("決定する")'],
+                    [/main%2Fscout%2Fmain%2Ffield%3F/, 'list', [
+                        ['aJ', 'a:contains("ヒロスタへ")'],
+                        ['aJ', 'a#shortCut'],
+                        ['aJ', this.selector_mypage]]],
                     [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
+                    [/main%2Fscout%2Fmain%2Fscout_flash/, 'flashJT', '#tween_b_root'],
+                    [/main%2Fscout%2Fmain%2Fspecial%3/, 'list', [
+                        ['aJ', '#bg_scout a:contains("挑戦する")']]],
+                    [/main%2Fscout%2Fmain%2Fspecial_result%3/, 'list', [
+                        ['aJ', 'a#shortCut']]],
+                    [/main%2Fscout%2Fmain%3F/, 'list', [
+                        ['aJ', 'a#shortCut'],
+                        ['aJ', '#bg_scout a:contains("最新エリア")']]],
                     [/main%2Ftitle%2Fmain/, 'aJ', this.selector_mypage],
                     [/[\s\S]*/, 'hold'],
                     [/XXXXXXXXXXXXX/]
@@ -2582,6 +2595,7 @@
                     [/^quest%2Fboss/, 'aJ', 'a:contains(戦闘する)'],
                     [/^quest%2F(clearStage|get(Card|Social)|levelUp)/, 'aJ', 'div.questNextButton > a'],
                     [/^quest%2FclearStage/, 'aJ', 'div.questNextButton > a'],
+                    [/^quest%2FnoAction%2F/, 'aJ', this.cssmypage],
                     [/^quest%2Fstep/, 'flashJT', '#canvas'],
                     [/^quest%2Ftop/, 'list', [
                         ['aJ', 'div.questListButton.newStage > a']]],
@@ -2685,6 +2699,11 @@
                     [/^feature%2Ffloortreasurelist/, 'list', [
                         ['aJ', '#main > a'],
                         ['aJ', this.cssmypage]]],
+                    [/^feature%2Fmodule%2F183%2Farena%2Fconfirm/, 'list', [
+                        ['aJ', '#head_module > a'],
+                        ['aJ', this.cssmyapge]]],
+                    [/^feature%2Fmodule%2F183%2Farena%2Fdone/, 'aJ', '#head_module > a'],
+                    [/^feature%2Fmodule%2F183%2Farena%2Findex/, 'aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()'],
                     [/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'list', [
                         ['aJ', '#main > a:contains("盟友に援軍依頼を出す")'],
                         ['func', () => {
@@ -2708,9 +2727,9 @@
                         ['aJ', '#main > a.btn_type2_l'], //援軍
                         [
                         ]]],*/
-                    [/^feature%2Fmodule/, 'list', [
-                        ['aJ', '#main > a.btn_quest_skip'],
-                        ['hold']]],
+                    //[/^feature%2Fmodule/, 'list', [
+                    //    ['aJ', '#main > a.btn_quest_skip'],
+                    //    ['hold']]],
                     [/^feature%2Ftowerlist%2F/, 'list', [
                         ['aJ', '#main > div.card_list_wrapper > div.bg > div > boss_status_raid > a']]],
                     [/^feature%2Ftreasurelist%2F/, 'aJ', '#main > a:contains("表示中の戦利品をまとめて受け取る")'],
