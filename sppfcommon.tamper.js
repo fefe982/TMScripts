@@ -461,7 +461,7 @@
     handler = {
         "12010455" : { // avalon
             mypage_url : "http://sp.pf.mbga.jp/12010455",
-            rotaion_time : 5,
+            rotation_time : 5,
             xpathmypage : "//*[@id=\"main_header_menu\"]/ul/li[1]/a",
             cssmypage : "#main_header_menu > ul > li:nth-child(1) > a",
             xpathquest : "//*[@id=\"main_header_menu\"]/ul/li[2]/a",
@@ -984,7 +984,7 @@
                     [/playerBattle%2Fbattle\b/, 'aJ', 'a[href*="player_battle%2Fbattle_confirm"]'],
                     [/player_battle%2Fbattle_confirm%/, 'aJ', 'a[href*="battle_animation"]'],
                     [/player_battle%2Fbattle_result%/, 'aJ', 'a[href*="mypage"]'],
-                    [/player_battle%2Fcomplete%/, 'flashJ', "#canvas"],
+                    [/player_battle%2Fcomplete%/, 'flashJT', "#canvas"],
                     [/present%2Fconfirm%2F[01]%2F/, 'list', [
                         ['formJ', '#bg > section > article > div > form'],
                         ['aJ', '#top_btn > a']]],
@@ -1249,8 +1249,8 @@
                         ['formJ', '#main > div:nth-child(1) > ul > li:nth-child(1) > form'],
                         ['aJ', '#main > div.btn_sub_medium.margin_top_20 > a']]],
                     [/arena%2FArenaBattleConf%2F/, 'list', [
-                        //['aJV', '#do_battle_btn'],
                         ['aJ', 'a:contains("対戦結果を見る")'],
+                        ['aJ', '#do_battle_btn:visible()'],
                         ['aJ', this.cssmypage]]],
                     [/arena%2FArenaBattleResult%2F/, 'aJ', 'a:contains("次の相手")'],
                     [/arena%2FArenaTop/, 'aJ', '#btn_entry > a'],
@@ -2379,7 +2379,7 @@
                         ['aJ', 'form[action*="main%2Fevent%2Fdtraining%2Fmain%2Fone_more_training_exe"] > input[type="submit"]:nth-child(2)'],
                         ['aJ', 'a[href*="main%2Fevent%2Farea%2Fdtraining%2Fexe"]'],
                         ['aJ', this.selector_mypage]]],
-                    [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F(menu|divide)/, 'list', [
+                    [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F(menu|divide|vs_ready)/, 'list', [
                         ['funcR', () => {
                             var hpt = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("ヒーローPt") + span').text().match(/(\d+)/),
                                 hpack = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("Xヒーローパック") + span').text().match(/(\d+)/);
@@ -2389,8 +2389,13 @@
                                 return $('a:contains("ヒーローBOXを開ける")').clickJ().length > 0;
                             }
                         }],
+                        ['aJ', 'a[href*="event%2Fherosta%2Fbattle"]'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fherosta"]'],
+                        ['aJ', 'input[value="金のバットを使って試合!"]'],
+                        ['hold'],
                         ['aJ', this.selector_mypage]]],
+                    [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2Fvs_ready/, 'list', [
+                        ['hold']]],
                     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
                     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
                         ['aJ', '#howto_icon_back_gacha > a.enable']]],
@@ -2399,6 +2404,7 @@
                         ['aJ', '#shortCutForm > input.btnLM.blue'],
                         ['aJ', 'div.gacha_frame:first() form:last()'],
                         ['aJ', this.selector_mypage]]],
+                    [/^akr%2Fmain%2Fjpseries%2Floginbonus/, 'aJ', 'a:contains("ドリナイメインページへ")'],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/(main%2Fmypage|:::)/, 'list', [
                         ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
@@ -2701,7 +2707,7 @@
                         ['aJ', this.cssmypage]]],
                     [/^feature%2Fmodule%2F183%2Farena%2Fconfirm/, 'list', [
                         ['aJ', '#head_module > a'],
-                        ['aJ', this.cssmyapge]]],
+                        ['aJ', this.cssmypage]]],
                     [/^feature%2Fmodule%2F183%2Farena%2Fdone/, 'aJ', '#head_module > a'],
                     [/^feature%2Fmodule%2F183%2Farena%2Findex/, 'aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()'],
                     [/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'list', [
@@ -2835,6 +2841,9 @@
                     new_app_id = sites[siteI];
                 } while(siteStatic.has(new_app_id));
                 siteT = now + 60 * 1000 * handler[sites[siteI]].rotation_time;
+                if (siteT != siteT) {
+                    alert("error, no rotation_time, " + new_app_id);
+                }
                 GM_log("switch-site " + siteI + " " + siteT);
                 GM_setValue("site_timeout", siteT);
                 GM_setValue("site_loop_index", siteI);
