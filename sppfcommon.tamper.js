@@ -974,6 +974,7 @@
                     [/pick%2F(top|result)%2Fpremium2/, 'list', [
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fsr"]'],
+                        ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fssr"]'],
                         ['aJ', this.selector_mypage]]],
                     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
                         //['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
@@ -1934,6 +1935,22 @@
                         ['aJ', 'a[href*="beatdown%2FDoMissionExecutionCheck%2F"]'],
                         ['flash', '//div[@id="gamecanvas"]/canvas'],
                         ['hold']]],
+                    [/^caravan%2FCardChangeTop%2F/, 'func', () => {
+                        var atk = $('#containerBox > div.img_section.margin_bottom_10 > div.card.box_horizontal.box_center.margin_x_20.padding_x_10.margin_bottom_20 > div.box_extend.txt_left > div.fnt_xsmall.no_line_space > div > div.box_extend.margin_left.fnt_emphasis').text(), idxmin, min = 999999;
+                        $('#cardList > ul > li > ul > li:nth-child(3) > div > div.fnt_emphasis').each(function(idx, ele) {
+                            if (idx < 5) {
+                                if ($(ele).text() < min) {
+                                    min = +$(ele).text();
+                                    idxmin = idx;
+                                }
+                            }
+                        });
+                        if (min < atk) {
+                            $('#popup_content > div:nth-child(' + (idxmin + 1) + ') > div > div.box_horizontal.box_center.margin_bottom_10 > div:nth-child(2) > div > a').clickJ();
+                        } else {
+                            $('a:contains("交換しないで進む")').clickJ();
+                        }
+                    }],
                     [/caravan%2FDiceEventTop%2F/, 'list', [
                         ['aJ', '#diceEventHeader > a']]],
                     [/caravan%2FGoalBossAttackResult/, 'aJ', 'a[href*="caravan%2FDoResetDeck%2F%3Froute%3Dtop"]'],
@@ -2357,6 +2374,10 @@
                     [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
                     [/main%2Farena%2Fmain/, 'aJ', '#arena_back > div.arena_btn_only > a'],
                     [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.selector_mypage],
+                    [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
+                        //['hold'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D4"]:not(.disable)'],
+                        ['aJ', '#d9-main > div > a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]']]],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]'],
@@ -2381,21 +2402,24 @@
                         ['aJ', this.selector_mypage]]],
                     [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F(menu|divide|vs_ready)/, 'list', [
                         ['funcR', () => {
-                            var hpt = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("ヒーローPt") + span').text().match(/(\d+)/),
+                            var hpt = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("ヒーローPt") + span').text().match(/([\d,]+)/),
                                 hpack = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("Xヒーローパック") + span').text().match(/(\d+)/);
                             GM_log(hpt);
                             GM_log(hpack);
-                            if ((hpt && hpt[1] > 3000) || (hpack && hpack[1] > 0)) {
+                            if ((hpt && hpt[1].replace(',', '') > 3000) || (hpack && hpack[1] > 0)) {
                                 return $('a:contains("ヒーローBOXを開ける")').clickJ().length > 0;
                             }
                         }],
+                        //['hold'],
+                        ['aJ', '#d9-main > div > a.btnS_SP_blue.fontS'],
+                        //['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fbattle%2Fchange_battle_type"]'],
                         ['aJ', 'a[href*="event%2Fherosta%2Fbattle"]'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fherosta"]'],
                         ['aJ', 'input[value="金のバットを使って試合!"]'],
                         ['hold'],
                         ['aJ', this.selector_mypage]]],
-                    [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2Fvs_ready/, 'list', [
-                        ['hold']]],
+                    [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F/, 'list', [
+                        ['aJ', '#d9-main > div.fontS.txtC.bg_main_herosta > div:nth-child(2) > a']]],
                     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
                     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
                         ['aJ', '#howto_icon_back_gacha > a.enable']]],
@@ -2412,18 +2436,20 @@
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
                         ['aJ', '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
                         ['aJ', '#news_user_info_area a:contains("新しく獲得した称号があります")'],
+                        //['hold'],
                         ['funcR', function () {
                             var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/),
                                 ap = match_res ? +match_res[1] : 0;
                             if (ap > 10) {
-                                return $('#gacha_link_area a[href*="main%2Fevent%2Fdtraining%2Finfo"]').clickJ().length > 0
+                                return $('#gacha_link_area a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]').clickJ().length > 0
                                     || $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
                             }
                             return false;
                         }],
                         ['funcR', function () {
                             if ($('div.arena_cost_area > img[src*="icon_playcost.png"]').length > 0) {
-                                return $('#basic_menu_area a[href*="main%2Farena%2Fmain"]').clickJ().length > 0;
+                                return $('#gacha_link_area a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]').clickJ().length > 0
+                                    || $('#basic_menu_area a[href*="main%2Farena%2Fmain"]').clickJ().length > 0;
                             }
                             return false;
                         }],
@@ -2562,10 +2588,28 @@
             get_actions : function () {
                 return [
                     [/^(:::|top)$/, 'aJ', '#bg a:contains("マイページ")'],
+                    [/^battle2%2Faction%2F/, 'flashJT', '#canvas'],
+                    [/^battle2%2Fbattle/, 'list', [
+                        ['funcR', function () {
+                            if ($('#but2[commandname="復活"]').clickJ().length > 0) {
+                                return $('#useOK > div > a').clickJ().length > 0;
+                            }
+                        }],
+                        ['funcR', function () {
+                            $('#but3').clickJ();
+                            $('#dear > ul > li:nth-child(1) > div > img').clickJ();
+                            setTimeout(function f1() {
+                                if ($('#cUse[href]').clickJ().length === 0) {
+                                    setTimeout(f1, 1000);
+                                }
+                            }, 1000);
+                        }],//#cUse
+                        ['hold']]],
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
                     [/^login%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^mypage$/, 'list', [
+                        ['aJ', '#mypageMenu > div.mypageMenuBg > div.battle.open > a'],
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
                         ['aJ', '#present > a'],
                         ['funcR', function () {
@@ -2721,6 +2765,7 @@
                             $('#main > a:contains("おすすめ仲間に援軍依頼を出す")').clickJ();
                         }
                         }]]],
+                    [/^feature%2Fmodule%2F183%2Farena%2Frequestdone/, 'aJ', '#main > a.btn_type2_l'],
                     [/^feature%2Fmodule%2F182%2Ftowermonster%2Fdone/, 'aJ', '#main > a:contains("ダンジョンへ進む")'],
                     [/^feature%2Fmodule%2F182%2Ftower%2Fdone/, 'list', [
                         ['aJ', '#main > a:contains("まとめて剣礼")'],
