@@ -124,6 +124,13 @@
             }
         }, 2000);
     }
+    
+    function waitToDo(func) {
+        if (!func()) {
+            setTimeout(func, 1000);
+        }
+    }
+    
     $.expr[':'].regex = function (elem, index, match) {
         var matchParams = match[3].split(','),
             validLabels = /^(data|css):/,
@@ -2399,6 +2406,7 @@
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
                         //['hold'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D4"]:not(.disable)'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D6"]:not(.disable)'],
                         ['aJ', '#d9-main > div > a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]']]],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
@@ -2423,6 +2431,7 @@
                         ['aJ', 'a[href*="main%2Fevent%2Farea%2Fdtraining%2Fexe"]'],
                         ['aJ', this.selector_mypage]]],
                     [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F(menu|divide|vs_ready)/, 'list', [
+                        //['hold'],
                         ['funcR', () => {
                             var hpt = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("ヒーローPt") + span').text().match(/([\d,]+)/),
                                 hpack = $('div.frame_red_herosta > div:nth-child(1) > div:nth-child(2) > span:contains("Xヒーローパック") + span').text().match(/(\d+)/);
@@ -2434,7 +2443,7 @@
                         }],
                         //['hold'],
                         ['aJ', '#d9-main > div > a.btnS_SP_blue.fontS'],
-                        //['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fbattle%2Fchange_battle_type"]'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fbattle%2Fchange_battle_type"]:has(img[src*="btn_full_power_on"])'],
                         ['aJ', 'a[href*="event%2Fherosta%2Fbattle"]'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fherosta"]'],
                         ['aJ', 'input[value="金のバットを使って試合!"]'],
@@ -2631,6 +2640,7 @@
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
                     [/^login%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^mypage$/, 'list', [
+                        //['hold'],
                         ['aJ', '#mypageMenu > div.mypageMenuBg > div.battle.open > a'],
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
                         ['aJ', '#present > a'],
