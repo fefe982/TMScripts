@@ -1952,7 +1952,29 @@
                         }
                     }],
                     [/caravan%2FDiceEventTop%2F/, 'list', [
-                        ['aJ', '#diceEventHeader > a']]],
+                        ['aJ', '#diceEventHeader > a'],
+                        ['func', () => {
+                            var info=[], maxatk = 0, maxid = 0;
+                            $('#cardList > ul > li > ul > li:nth-child(3) > div > div.fnt_emphasis').each(function(idx, ele) {
+                                if (idx < 5) {
+                                    info[idx] = new Object();
+                                    info[idx].atk = $(ele).text();
+                                }
+                            });
+                            $('#cardList > ul > li > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').each(function(idx, ele) {
+                                if (idx < 5) {
+                                    info[idx].member = $(ele).text().match(/(\d+)/)[1];
+                                    if (+info[idx].member === 3000) {
+                                        info[idx].atk = 0;
+                                    }
+                                    if (info[idx].atk > maxatk) {
+                                        maxatk = info[idx].atk;
+                                        maxid = idx;
+                                    }
+                                }
+                            });
+                            $('#popup_content > div:nth-child(' + (maxid+1) + ') > div > div.card.box_horizontal.box_y_center.margin_x_10.margin_bottom > div.box_extend.txt_left > div.dice > a').clickJ();
+                        }]]],
                     [/caravan%2FGoalBossAttackResult/, 'aJ', 'a[href*="caravan%2FDoResetDeck%2F%3Froute%3Dtop"]'],
                     [/caravan%2FMapTop/, 'list', [
                         ['aJ', '#mapFooter > div.btn_dice > a']]],
@@ -2428,7 +2450,7 @@
                         ['aJ', '#shortCutForm > input.btnLM.blue'],
                         ['aJ', 'div.gacha_frame:first() form:last()'],
                         ['aJ', this.selector_mypage]]],
-                    [/^akr%2Fmain%2Fjpseries%2Floginbonus/, 'aJ', 'a:contains("ドリナイメインページへ")'],
+                    [/^akr%2Fmain%2Fjpseries%2Floginbonus/, 'aJ', 'a:contains("ドリナイマイページへ")'],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/(main%2Fmypage|:::)/, 'list', [
                         ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
