@@ -125,10 +125,12 @@
         }, 2000);
     }
     
-    function waitToDo(func) {
-        if (!func()) {
-            setTimeout(func, 1000);
-        }
+    function tryUntil(func) {
+        (function local_func () {
+            if (!func()) {
+                setTimeout(local_func, 1000);
+            }
+        }());
     }
     
     $.expr[':'].regex = function (elem, index, match) {
@@ -1961,7 +1963,7 @@
                     [/caravan%2FDiceEventTop%2F/, 'list', [
                         ['aJ', '#diceEventHeader > a'],
                         ['func', () => {
-                            var info=[], maxatk = 0, maxid = 0;
+                            var info=[], maxatk = 0, maxid = -1;
                             $('#cardList > ul > li > ul > li:nth-child(3) > div > div.fnt_emphasis').each(function(idx, ele) {
                                 if (idx < 5) {
                                     info[idx] = new Object();
@@ -1971,7 +1973,7 @@
                             $('#cardList > ul > li > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').each(function(idx, ele) {
                                 if (idx < 5) {
                                     info[idx].member = $(ele).text().match(/(\d+)/)[1];
-                                    if (+info[idx].member === 3000) {
+                                    if (+info[idx].member > 2500) {
                                         info[idx].atk = 0;
                                     }
                                     if (info[idx].atk > maxatk) {
@@ -1980,11 +1982,34 @@
                                     }
                                 }
                             });
+                            if (maxid == -1) {
+                                maxid = Math.floor(Math.random() * 5); 
+                            }
                             $('#popup_content > div:nth-child(' + (maxid+1) + ') > div > div.card.box_horizontal.box_y_center.margin_x_10.margin_bottom > div.box_extend.txt_left > div.dice > a').clickJ();
                         }]]],
                     [/caravan%2FGoalBossAttackResult/, 'aJ', 'a[href*="caravan%2FDoResetDeck%2F%3Froute%3Dtop"]'],
+                    [/^caravan%2FGoalBossTop%2F/, 'func', () => {
+                        var cnt = 0;
+                        $('#cardList > ul > li > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').each(function(idx, ele) {
+                            if (idx < 5) {
+                                if (+$(ele).text().match(/(\d+)/)[1] > 2500) {
+                                    cnt += 1;
+                                }
+                            }
+                        });
+                        if (cnt >= 5) {
+                            $('#containerBox > div.box_horizontal.box_spaced.margin_bottom_10.padding_x_10 > div:nth-child(2) > div').clickJ();
+                        } else {
+                            $('#containerBox > div.box_horizontal.box_spaced.margin_bottom_10.padding_x_10 > div:nth-child(1) > div > a').clickJ();
+                        }
+                    }],
                     [/caravan%2FMapTop/, 'list', [
-                        ['aJ', '#mapFooter > div.btn_dice > a']]],
+                        ['func', () => {tryUntil(() => {
+                            if ($('#worker_cnt').text() > 0) {
+                                $('#mapFooter > div.btn_dice > a').clickJ();
+                                return true;
+                            }
+                        })}]]],
                     [/caravan%2FRaidBattleResult%2F/, 'list', [
                         ['aJ', 'a[href*="caravan%2FMapTop"]']]],
                     [/caravan%2FRaidBattleTop%2F/, 'list', [
@@ -2881,9 +2906,22 @@
                     [/^raid%2Findex/, 'list', [
                         ['aJ', '#main > div.list_sort > a.btn_raid_type0']]],
                     [/^raid%2Fmain/, 'list', [
+                        ['aJ', '#main > div.list_sort > div > a.btn_raid_type2'],
+                        ['aJ', '#main > div.list_sort > div > a.btn_raid_type2'],
+                        ['aJ', '#main > a.btn_type2_l'],
                         ['aJ', '#main > div.list_sort > a'],
                         ['aJ', '#main > a[href*="%2Fquest%"]']]],
-                    //[/^gimmick%2Fview%2F(?:get_card|area|chapter_start)%3Ftk/, 'flashJ', 'body > div > div:has(svg) g'/*'div > svg > g > g > g > g > g:nth-child(2) > g:nth-child(12) > g > use'*//*, 20, 20*/],
+                    [/^raid%2Fsosconf/, 'list', [//
+                        ['aJ', 'div.bg > a:contains("盟友に援軍依頼を出す")'],
+                        ['func', () => {
+                        if (GM_getValue("dt_support_done", 0) > 0) {
+                            GM_deleteValue("dt_support_done");
+                            $(this.cssmypage).clickJ();
+                        } else {
+                            GM_setValue("dt_support_done", 1);
+                            $('div.bg > a:contains("オススメに援軍依頼を出す")').clickJ();
+                        }
+                        }]]],                    //[/^gimmick%2Fview%2F(?:get_card|area|chapter_start)%3Ftk/, 'flashJ', 'body > div > div:has(svg) g'/*'div > svg > g > g > g > g > g:nth-child(2) > g:nth-child(12) > g > use'*//*, 20, 20*/],
                     [/^gimmick%2Fview/, 'flashJT', '#canvas, #bg-white, #main'],//, body > div', 38, 104],
                     [/[\s\S*]/, 'hold'],
                     [/XXXXXXXXXX/]
