@@ -711,7 +711,7 @@
                         ['aJ', 'a:contains("さらにクエストする")'], //succ = succ || clickA('//a[text()="さらにクエストする"]');
                         ['aJ', 'a:contains("次のエリアへ")'], //('//a[text()="次のエリアへ"]');
                         ['aJ', this.cssmypage]]], //(this.xpathmypage);]]],
-                    [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のフィールドへ進む"):first()'],
+                    [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のエリアへ進む"):first()'],
                     [/mission%2FMissionError%2F/, 'list', [
                         ['funcR', function () {
                             if (document.referrer.match(/island%2F/)) {
@@ -955,7 +955,7 @@
                                 return $('#bg > section.eventArea > div.mypage_banner > a[href*="%2FeventTop"]').clickJ().length > 0 || $('a[href*="quest"]').clickJ().length > 0;
                             }
                             if (ap === apall) {
-                                return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
+                                //return $('a[href*="playerBattle%2Fbattle"]').clickJ() > 0;
                             }
                         }],
                         ['switch']]],
@@ -1348,8 +1348,8 @@
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
                         ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
                         ['hold']]],
-                    [new RegExp("event" + this.eventName + "%2FMissionList"), 'list', [
-                        ['a', '//a[contains(@href, "event' + this.eventName + '%2FDoMissionExecutionCheck")]'],
+                    [/^event[a-zA-Z0-9]*%2FMissionList/, 'list', [
+                        ['a', '//a[contains(@href, "%2FDoMissionExecutionCheck")]'],
                         ['hold']]],
                     ["event[a-zA-Z0-9]*%2FMissionResult%.F", 'list', [
                         //['dbg'],
@@ -1747,6 +1747,7 @@
             xpathquest : '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_quest_image"]]',
             xpathevent : '//*[@id="global_menu"]//a[i[@class="menu_sprite menu_event_image"]]',
             KILLBOSS : false,
+            rankArr: ['N', 'NN', 'R', 'RR', 'SR', 'SSR', 'LR', 'GR'],
             handleStrongBossTop : function () {
                 var succ = false, attack, USERID = GM_getValue("__rg_USERID", ""),
                     ownerbox, owner, attacked;
@@ -1945,17 +1946,23 @@
                         ['flash', '//div[@id="gamecanvas"]/canvas'],
                         ['hold']]],
                     [/^caravan%2FCardChangeTop%2F/, 'func', () => {
-                        var atk = $('#containerBox > div.img_section.margin_bottom_10 > div.card.box_horizontal.box_center.margin_x_20.padding_x_10.margin_bottom_20 > div.box_extend.txt_left > div.fnt_xsmall.no_line_space > div > div.box_extend.margin_left.fnt_emphasis').text(), idxmin, min = 999999;
-                        $('#cardList > ul > li > ul > li:nth-child(3) > div > div.fnt_emphasis').each(function(idx, ele) {
-                            if (idx < 5) {
-                                if ($(ele).text() < min) {
-                                    min = +$(ele).text();
-                                    idxmin = idx;
-                                }
+                        //return;
+                        var atk = $('#containerBox > div.img_section.margin_bottom_10 > div.card.box_horizontal.box_center.margin_x_20.padding_x_10.margin_bottom_20 > div.box_extend.txt_left > div.fnt_xsmall.no_line_space > div > div.box_extend.margin_left.fnt_emphasis').text(), idxmin, minatk = -1, rare = -1, i;
+                        for (i = 1; i <= 5; i++) {
+                            var catk = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(3) > div > div.fnt_emphasis').text(),
+                                cmem = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                                cp = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                                coatk = catk / (1 + cp/100) - cmem;
+                            GM_log(i + " : coatk : " + coatk);
+                            if (minatk < 0 || coatk < minatk) {
+                                idxmin = i;
+                                minatk = catk;
                             }
-                        });
-                        if (min < atk) {
-                            $('#popup_content > div:nth-child(' + (idxmin + 1) + ') > div > div.box_horizontal.box_center.margin_bottom_10 > div:nth-child(2) > div > a').clickJ();
+                        }
+                        GM_log(minatk);
+                        GM_log(atk);
+                        if (minatk < atk) {
+                            $('#popup_content > div:nth-child(' + idxmin + ') > div > div.box_horizontal.box_center.margin_bottom_10 > div:nth-child(2) > div > a').clickJ();
                         } else {
                             $('a:contains("交換しないで進む")').clickJ();
                         }
@@ -1963,29 +1970,27 @@
                     [/caravan%2FDiceEventTop%2F/, 'list', [
                         ['aJ', '#diceEventHeader > a'],
                         ['func', () => {
-                            var info=[], maxatk = 0, maxid = -1;
-                            $('#cardList > ul > li > ul > li:nth-child(3) > div > div.fnt_emphasis').each(function(idx, ele) {
-                                if (idx < 5) {
-                                    info[idx] = new Object();
-                                    info[idx].atk = $(ele).text();
+                            var maxatk = 0, maxid = -1, i;
+                            for (i = 1; i <= 5; i++) {
+                                var rar = 0; //this.rankArr.indexOf($('#popup_content > div:nth-child(' + i + ') > div.section.cardlist_popup > div.margin_top_10 > span').text().match(/([A-Z]+)/)[1]);
+                                GM_log(rar);
+                                if (rar < 0) {
+                                    alert("Illegal rare: " + txt);
                                 }
-                            });
-                            $('#cardList > ul > li > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').each(function(idx, ele) {
-                                if (idx < 5) {
-                                    info[idx].member = $(ele).text().match(/(\d+)/)[1];
-                                    if (+info[idx].member > 2500) {
-                                        info[idx].atk = 0;
-                                    }
-                                    if (info[idx].atk > maxatk) {
-                                        maxatk = info[idx].atk;
-                                        maxid = idx;
-                                    }
+                                var catk = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(3) > div > div.fnt_emphasis').text(),
+                                    cmem = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                                    cp = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                                    coatk = catk / (1 + cp/100) - cmem;// * (rar - 1) / 2;
+                                GM_log(i + " cmem " + cmem + " coatk " + coatk);
+                                if (cmem <= 2500 && coatk > maxatk) {
+                                    maxatk = coatk;
+                                    maxid = i;
                                 }
-                            });
-                            if (maxid == -1) {
-                                maxid = Math.floor(Math.random() * 5); 
                             }
-                            $('#popup_content > div:nth-child(' + (maxid+1) + ') > div > div.card.box_horizontal.box_y_center.margin_x_10.margin_bottom > div.box_extend.txt_left > div.dice > a').clickJ();
+                            if (maxid == -1) {
+                                maxid = Math.floor(Math.random() * 5) + 1; 
+                            }
+                            $('#popup_content > div:nth-child(' + maxid + ') > div > div.card.box_horizontal.box_y_center.margin_x_10.margin_bottom > div.box_extend.txt_left > div.dice > a').clickJ();
                         }]]],
                     [/caravan%2FGoalBossAttackResult/, 'aJ', 'a[href*="caravan%2FDoResetDeck%2F%3Froute%3Dtop"]'],
                     [/^caravan%2FGoalBossTop%2F/, 'func', () => {
@@ -2004,7 +2009,21 @@
                         }
                     }],
                     [/caravan%2FMapTop/, 'list', [
+                        //['hold'],
                         ['func', () => {tryUntil(() => {
+                            for (i = 1; i <= 5; i++) {
+                                var rar = this.rankArr.indexOf($('#popup_content > div:nth-child(' + i + ') > div.section.cardlist_popup > div.margin_top_10 > span').text().match(/([A-Z]+)/)[1]);
+                                //GM_log(rar);
+                                if (rar < 0) {
+                                    alert("Illegal rare: " + txt);
+                                }
+                                var catk = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(3) > div > div.fnt_emphasis').text(),
+                                    cmem = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                                    cp = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                                    coatk = catk / (1 + cp/100) - cmem * (rar - 1) / 2;
+                                GM_log(i + " " + this.rankArr[rar] + " " + ((rar - 1) / 2) + " cmem " + cmem + " coatk " + coatk);
+                            }
+
                             if ($('#worker_cnt').text() > 0) {
                                 $('#mapFooter > div.btn_dice > a').clickJ();
                                 return true;
@@ -2026,6 +2045,16 @@
                             }, 1000);
                         }],
                         ['aJ', '#rcv_submit_btns > ul > li:nth-child(1) > a.enabled']]],
+                    [/^caravan%2FCardRentalTop%2F/, 'funcR', function () {
+                        var candatk = +$('#exCardList > ul > li > div.box_horizontal > div.box_extend.box_vertical.padding_left.txt_left > div.card.excard_pt > div:nth-child(3) > div.fnt_emphasis.txt_right').text();
+                        var exatk = +$('#cardList > ul > li:nth-child(6) > ul > li:nth-child(3) > div > div.fnt_emphasis').text();
+                        if (exatk != exatk || candatk > exatk) {
+                        //#exCardList > ul > li > div.box_horizontal > div.popup_btn.auto > img:nth-child(2)
+                            return $('#popup_content > div:nth-child(1) > div > div.box_horizontal.box_center.margin_y_10 > div:nth-child(2) > div > a').clickJ().length > 0;
+                        } else {
+                            return $('#containerBox > div.btn_large.btn_base.box_center.margin_bottom_20 > a').clickJ().length > 0;
+                        }
+                    }],
                     [/caravan%2FTop/, 'list', [
                         ['aJ', '#eventHeader > a']]],
                     [/card%2FBulkCardSell\b/, 'list', [
@@ -2664,7 +2693,8 @@
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
                     [/^login%2Findex%2F/, 'flashJT', '#canvas'],
-                    [/^mypage$/, 'list', [
+                    [/^login_flash%2Findex%2F/, 'flashJT', '#canvas'],
+                    [/^mypage/, 'list', [
                         //['hold'],
                         ['aJ', '#mypageMenu > div.mypageMenuBg > div.battle.open > a'],
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
@@ -2974,24 +3004,23 @@
         }
         succ = switch_site();
         function time_wait_flashJT(action) {
-            (function time_wait() {
+            var cnt = 0;
+            tryUntil(() => {
                 var canvas = $(action[1]),
                     x = action[2],
-                    y = action[3],
-                    cnt = 0;
+                    y = action[3];
                 if (canvas.length > 0) {
-                    //canvas.clickFlash(x, y);
                     canvas.touchFlash(x, y);
+                    return true;
                 } else {
                     GM_log('flashJT, wait flash ' + cnt);
                     cnt += 1;
                     if (cnt > 10) {
                         alert("illegal flash");
-                    } else {
-                        setTimeout(time_wait, 1000);
+                        return true;
                     }
-                }
-            }());
+                }                
+            });
         }
         for (i = 0; i < actions.length; i += 1) {
             if (url !== undefined && url.match(actions[i][0])) {
