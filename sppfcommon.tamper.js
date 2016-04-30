@@ -2673,8 +2673,8 @@
             get_actions : function () {
                 return [
                     [/^(:::|top)$/, 'aJ', '#bg a:contains("マイページ")'],
-                    [/^battle2%2Faction%2F/, 'flashJT', '#canvas'],
-                    [/^battle2%2Fbattle/, 'list', [
+                    [/^battle2?%2Faction%2F/, 'flashJT', '#canvas'],
+                    [/^battle2?%2Fbattle/, 'list', [
                         ['funcR', function () {
                             if ($('#but2[commandname="復活"]').clickJ().length > 0) {
                                 return $('#useOK > div > a').clickJ().length > 0;
@@ -2692,6 +2692,29 @@
                         ['hold']]],
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
+                    [/^legend%2FattackResult%2F/, 'aJ', '#bg > ul > li > a:contains("ステージを進行する")'],
+                    [/^legend%2Findex%2F/, 'aJ', '#aNormal'],
+                    [/^legend%2Fquest/, 'func', () => {
+                        setInterval(() => {
+                            $('#but3.questButton.active > a').clickJ().length > 0 ||
+                            $('#but1.questButton.on').clickJ().length > 0 ||
+                            $('#but2.questButton.on').clickJ().length > 0 ||
+                            ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
+                        }, 1000);
+                    }],
+                    [/^legend%2Fraid/, 'flashJT', '#canvas'],
+                    [/^legend%2Ftop/, 'list', [
+                        ['funcR', function () {
+                            var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
+                            if (count) {
+                                count = +count[0];
+                                if (count > 10) {
+                                    return $('a[href*="legend%2Fticket"]').clickJ().length > 0;
+                                }
+                            }
+                        }],
+                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > ul > li:nth-child(2) > div > a'],
+                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > div > a']]],
                     [/^login%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^login_flash%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^mypage/, 'list', [
@@ -2703,7 +2726,7 @@
                             var mp = $('#mypageMenu > div.mypageMenuBg > div.event.open > div.gaugeMpBox > dl');
                             if (mp.length === 0) return;
                             if (mp.hasClass("cost5") || mp.hasClass("cost6")) {
-                                return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0;
+                                //return $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0;
                             }
                         }],
                         ['funcR', function () {
@@ -2711,7 +2734,7 @@
                             st = +st[1];
                             if (st > 10) {
                                 return false
-                                    //|| $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
+                                    || $('#mypageMenu > div.mypageMenuBg > div.event.open > a').clickJ().length > 0
                                     || $('#mypageMenu > div.mypageMenuBg > div.story > a').clickJ().length > 0;
                             }
                         }],
@@ -2780,17 +2803,17 @@
                             }
                         }],
                         ['aJ', 'a:contains("オススメ編成")']]],
-                    [/^tika%2FpickResult%2F/, 'list', [
+                    [/^(legend|tika)%2FpickResult%2F/, 'list', [
                         ['aJ', 'a:contains("ガチャる"):last()'],
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     [/^tika%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
-                    [/^tika%2Fticket/, 'list', [
+                    [/^(legend|tika)%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
-                        ['aJ', 'a[href*="tika%2Fpick"]:last()']]],
+                        ['aJ', 'a[href*="%2Fpick"]:last()']]],
                     [/^[tT]ika%2Ftop$/, 'list', [
                         ['funcR', function () {
-                            var count = $('dl.status.nameSelf > dt:contains("プリンセスガチャキューブ所持数") + dt').text().match(/\d+/);
+                            var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
                             if (count) {
                                 count = +count[0];
                                 if (count > 10) {
@@ -2798,6 +2821,7 @@
                                 }
                             }
                         }],
+                        // tika
                         //['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F2"]'],
                         ['aJ', 'a[href*="battle_list"]'],
                         ['hold']]],
