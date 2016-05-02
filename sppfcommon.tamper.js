@@ -963,7 +963,7 @@
                             }
                             if (ap === apall) {
                                 return false
-                                    || $('#bg > section.eventArea > div > a[href*="StruggleBattle%2Fselect"]').clickJ().length > 0
+                                    || $('#bg > section.eventArea > div:not(.banner_area_result) > a[href*="StruggleBattle%2Fselect"]').clickJ().length > 0
                                     || $('a[href*="playerBattle%2Fbattle"]').clickJ().length > 0;
                             }
                         }],
