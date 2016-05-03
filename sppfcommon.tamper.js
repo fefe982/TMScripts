@@ -1700,6 +1700,7 @@
                         ['aJ', 'a:contains("リセット")'],
                         ['aJ', 'a:contains("連続で開ける")'],
                         ['aJ', 'a:contains("開ける")'],
+                        ['aJ', 'a:contains("イベントTOP")'],
                         ['aJ', 'a[href*="%2FDoMissionExecutionCheck"]']]],
                     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
                     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
@@ -2955,7 +2956,9 @@
                         ['aJ', this.cssmypage]]],
                     [/^feature%2Fmodule%2F183%2Farena%2Fdone/, 'aJ', '#head_module > a'],
                     [/^feature%2Fmodule%2F183%2Farena%2Findex/, 'aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()'],
-                    [/^feature%2Fmodule%2F184%2Fraid%2Fdone/, 'aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
+                    [/^feature%2Fmodule%2F184%2Fraid%2Fdone/, 'list', [
+                        ['aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
+                        ['aJ', '#main > block_list2 > a:contains("宝箱を開ける")']]],
                     [/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'list', [
                         ['aJ', '#main > a:contains("盟友に援軍依頼を出す")'],
                         ['func', () => {
