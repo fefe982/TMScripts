@@ -1090,7 +1090,7 @@
                         }],
                         ['aJ', '#btnBox1 > div > ul > li > div > div > a:visible'],
                         ['aJ', '#bg > div > div.btn_blue > a'],
-                        ['hold']]],
+                        ['switch']]],
                     [/%2Fbox_flash%2F/, 'flashJT', '#canvas'],
                     [/%2Fbox_reset_confirm/, 'aJ', '#bg > div.window > div.pt5 > form'],
                     [/%2Fbox_reset_result/, 'aJ', '#bg > ul > li > a[href*="eventTop"]'],
@@ -1372,10 +1372,29 @@
                         ['aJ', '#bigRaidBtn > div:nth-child(1) > a']]],
                     [/^eventStageRaidBoss%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > a'], //'a[href*="event%2FDoSetClickCount"]'],
                     [/^eventStageRaidBoss%2FWishComplyTop/, 'aJ', 'a[href*="eventStageRaidBoss%2FDoMissionExecutionCheck"]'],
+                    [/^eventTower%2FEventQuestResult%2F/, 'list', [
+                        ['aJ', '#main > div > a[href*="eventTower%2FRaidBossTop"]'],
+                        ['aJ', 'a[href*="DoEventQuestExecutionCheck"]']]],
                     [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
                         //['hold'],
                         ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
                         ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
+                        ['funcR', function () {
+                            var medalCount = $('a.medal_box span.fnt_normal');
+                            if (medalCount.length > 0
+                                && medalCount.text().match(/(\d+)/)
+                                && +medalCount.text().match(/(\d+)/)[1] >=5)
+                            {
+                                return $('a.medal_box').clickJ().length > 0;
+                            }
+                        }],
+                        ['funcR', function () {
+                            var freeChallenge = $('#main > div.section_sub.find_event_target_section > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
+                            if (freeChallenge.length > 0 && freeChallenge.text().match(/(\d+)/)
+                                && +freeChallenge.text().match(/(\d+)/)[1] > 0) {
+                                return $('a[href*="event%2FMaxDamageRaidBossTop"]').clickJ().length > 0;
+                            }
+                        }],
                         ['aJNC', '__ht_myboss_wait', 'a:regex(href, event[a-zA-Z0-9]*%2FRaidBossTop)'],
                         ['funcR', function () {
                             var raid_clear = GM_getValue('__ht_myraid_clear');
@@ -1623,6 +1642,17 @@
                         ['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
                         ['hold']]],
                     [/eventRaidBossLoop%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > div.txt_center.margin_y_10 > a'],
+                    [/^event%2FMaxDamageRaidBossBattleResult/, 'aJ', 'a:contains("もう一度挑戦")'],
+                    [/^event%2FMaxDamageRaidBossTop/, 'list', [
+                        ['funcR', function () {
+                            var fight = $('#do_battle_btn:contains("BP0消費") > div.txt_fight');
+                            if (fight.length > 0) {
+                                fight.clickJ();
+                                $('#overlay_box').touchFlash();
+                                return true;
+                            }
+                        }],
+                        ['aJ', '#main > a']]],
                     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
                     [/fusion%2FFusionEnd%2F/, "func", function () {
                         var lvl = getXPATH("//div[div[@class='sprite_deck heading_level']]").innerText,
@@ -1666,6 +1696,11 @@
                     //[/gacha%2FGachaTop%2F%3FthemeId%3D2/, 'a', '(//a[contains(text(), "ガチャをする")])[last()]'],
                     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D2/, 'a', '(//a[@class="btn_main_large" and contains(text(), "ガチャ")])[last()]'],
                     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'aJ', 'a[href*="gacha%2FGachaFlash%2F%3FgachaId%3D5%26themeId%3D3"]'], //text(), "ガチャをする")])[last()]'],
+                    [/gacha%2FItemBox(Result|Top)/, 'list', [
+                        ['aJ', 'a:contains("リセット")'],
+                        ['aJ', 'a:contains("連続で開ける")'],
+                        ['aJ', 'a:contains("開ける")'],
+                        ['aJ', 'a[href*="%2FDoMissionExecutionCheck"]']]],
                     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
                     [/mission%2FQuestResult/, "a", "//*[@id=\"main\"]/div[6]/a"],
                     [/mission%2FMissionResult%2F/, 'list', [
@@ -2546,7 +2581,7 @@
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fherosta"]'],
                         ['aJ', 'input[value="金のバットを使って試合!"]'],
                         //['formJ', 'form[action*="akr.konaminet.jp%2Fakr%2Fmain%2Fevent%2Fcommon%2Fdirectpotion%2Fuse%"]'],
-                        ['hold'],
+                        ['switch'],
                         ['aJ', this.cssmypage]]],
                     [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F/, 'list', [
                         ['aJ', '#d9-main > div.fontS.txtC.bg_main_herosta > div:nth-child(2) > a']]],
@@ -2846,7 +2881,7 @@
                             return true;
                         }],
                         ['hold']]],
-                    [/^tika%2Fbox_reset/, 'fromJ', 'form[action*="box_rest_result"]'],
+                    [/^[a-z]+%2Fbox_reset/, 'formJ', 'form[action*="box_reset_result"]'],
                     [/^tika%2Fjoin/, 'aJ', '#bg > ul > li > a[href*="tika%2Ftop"]'],
                     [/^tika%2Fparty_select/, 'list', [
                         ['funcR', () => {
@@ -3244,7 +3279,7 @@
 
     match_app_id = url.match(/^http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?$/);
     if (!match_app_id) {
-        match_app_id = url.match(/^http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/\S*(?:[?&]|&amp;)url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?$/);
+        match_app_id = url.match(/^http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/(?:\S*(?:[?&]|&amp;)url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?)?$/);
     }
     GM_log(match_app_id);
     if (match_app_id) {
