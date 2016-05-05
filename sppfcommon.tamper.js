@@ -1374,7 +1374,8 @@
                     [/^eventStageRaidBoss%2FWishComplyTop/, 'aJ', 'a[href*="eventStageRaidBoss%2FDoMissionExecutionCheck"]'],
                     [/^eventTower%2FEventQuestResult%2F/, 'list', [
                         ['aJ', '#main > div > a[href*="eventTower%2FRaidBossTop"]'],
-                        ['aJ', 'a[href*="DoEventQuestExecutionCheck"]']]],
+                        ['aJ', 'a[href*="DoEventQuestExecutionCheck"]'],
+                        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)']]],
                     [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
                         //['hold'],
                         ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
@@ -1405,6 +1406,7 @@
                         }],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
+                        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoEventQuestExecutionCheck)'],
                         ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
                         ['hold']]],
                     [/^event[a-zA-Z0-9]*%2FMissionList/, 'list', [
@@ -2713,7 +2715,8 @@
                         ['aJ', 'a:contains("件届いてるよ！")'],
                         ['funcR', function (){
                             if ($('dd.mypowergage > div').attr('style').match(/width:(?:100|[1-9][0-9])%/)) {
-                                return $('#ctl00_body_hl_series_success').clickJ().length > 0;
+                                return $('a[href*="%3Fbid%3D20160505_vic"]').clickJ().length > 0
+                                    || $('#ctl00_body_hl_series_success').clickJ().length > 0;
                             }
                         }],
                         ['funcR', () => {
@@ -2744,6 +2747,29 @@
                     [/^user_battle%2Ftraining_battle_result\.aspx/, 'aJ', '#wrapper > div.txt-center-pos.mg-tb-15 > a'],
                     [/^user_battle%2Ftraining_battle_select\.aspx/, 'aJ', '#ctl00_body_Repeater_ctl00_hl_battle_confirm_sp'],
                     [/^user_battle%2Ftraining_battle_turningpoint\.aspx/, 'aJ', '#ctl00_body_btn_choice_1'],
+                    [/^victory_order%2Fvic_deck_change\.aspx/, 'func', function () {
+                        if ($('#clay_content > div > div > div.order-status-box > div.change-ordernum-red').length > 0) {
+                            $('#ctl00_ctl00_body_body_part_hl_exchange_order_hl_smart_link').clickJ();
+                        } else {
+                            $('#ctl00_ctl00_body_body_part_Button1').clickJ();
+                        }
+                    }],
+                    [/^victory_order%2Fvic_deck_change_confirm\.aspx/, 'aJ', '#ctl00_ctl00_body_body_part_Button1'],
+                    [/^victory_order%2Fvic_deck_change_result.aspx/, 'aJ', '#ctl00_ctl00_body_body_part_vicMissionLink_rp_ctl0' + Math.floor(Math.random(3)) + '_hl_duty'],
+                    [/^victory_order%2Fvic_mission_result\.aspx/, 'list', [
+                        ['aJ', '#ctl00_ctl00_body_body_part_hl_execute'],
+                        ['aJ', '#ctl00_ctl00_HeaderNavi_hl_top']
+                    ]],
+                    [/^victory_order%2Fvic_top\.aspx/, 'list', [
+                        //['hold'],
+                        ['funcR', function () {
+                            var ticket = $('#clay_content > div.vo-rankbox > dl.vo-ticket > dd').text().match(/(\d+)/);
+                            if (ticket && +ticket[1] > 0) {
+                                return $('#ctl00_ctl00_body_body_part_vicMissionLink_vic_ticket_btn').clickJ().length > 0;
+                            }
+                        }],
+                        ['aJ', '#ctl00_ctl00_body_body_part_vicMissionLink_rp_ctl0' + Math.floor(Math.random(3)) + '_hl_duty'],
+                    ]],
                     [/^swf/, 'flashJT', '#container > canvas'],//, 100, 350],
                     [/[\s\S]*/, 'hold'],
                     [/XXXXXXXXXXXXXXXXXX/]
