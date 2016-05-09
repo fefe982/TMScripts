@@ -2150,6 +2150,7 @@
                         ['hold']]],
                     [/card%2FMaterialCardList%2F%3FbulkFusion%3D1/, 'func', function () {
                         var xp_select = getXPATHAll('//*[@id="containerBox"]/form//select'), select;
+                        return;
                         while ((select = xp_select.iterateNext()) !== null) {
                             select.selectedIndex = select.options.length - 1;
                         }
@@ -2518,6 +2519,7 @@
                     [/treasure%2FTreasureTop%2F/, 'a', '//a[text()="探索先を選ぶ"]'],
                     [/Swf\b/, 'flash', '//*[@id="btn_exec"]|//canvas|//*[@id="container"]|//*[@id="canvas"]'],
                     [/Flash\b/, 'flash', "//div[@id='gamecanvas']/canvas|//*[@id='btn_exec']|//*[@id='container']"],
+                    [/[\s\S]*/, 'hold'],
                     [/xxxxxxxxxxxxxxxxx/]
                 ];
                 //alert("oops");
@@ -2726,23 +2728,23 @@
                         }],
                         ['switch'],
                         ['hold']]],
+                    [/^tower%2Ftwr_battle_result\.aspx/, 'aJ', '#wrapper > div.txt-center-pos.mg-tb-15 > a[href*="tower%2Fapi%2Ftwr_select_user.ashx"]'],
+                    [/^tower%2Ftwr_top\.aspx/, 'aJ', '#ctl00_ctl00_body_body_part_TwrTopInfo_sp_hl_button'],
+                    [/^tower%2Ftwr_user_select\.aspx/, 'aJ', '#ctl00_ctl00_body_body_part_Repeater_ctl00_twrTargetUserInfo_hl_battle_confirm'],
                     [/^user%2Fplayers_nomal\.aspx/, 'aJ', this.cssmypage],
-                    [/^user_battle%2Ftraining_battle_confirm\.aspx/, 'func', () => {
+                    [/^(user_battle%2Ftraining|tower%2Ftwr)_battle_confirm\.aspx/, 'func', () => {
                         var disable = $('li.bppos-1:not(.disable)').clickJ().length === 0;
+                        tryUntil(function () {
+                            return $('#bpsubmit[value*="BP1"]').clickJ().length > 0;
+                        });
                         if (disable) {
-                            if (!document.referrer.match(/duty%2Fseries_success%2Fseries_success_top\.aspx/)) {
+                            //if (!document.referrer.match(/duty%2Fseries_success%2Fseries_success_top\.aspx/)) {
+                            if (document.referrer.match(/user_battle%2Ftraining_battle_select\.aspx/)) {
                                 $(this.cssmypage).clickJ();
                             }
+                            $('#ctl00_ctl00_body_body_part_img_item_1').clickJ();
                             return;
                         }
-                        (function time_wait() {
-                            var bp_button = $('#bpsubmit[value*="BP1"]');
-                            if (bp_button.length === 0) {
-                                setTimeout(time_wait, 2000);
-                            } else {
-                                bp_button.clickJ();
-                            }
-                        }());
                     }],
                     [/^user_battle%2Ftraining_battle_result\.aspx/, 'aJ', '#wrapper > div.txt-center-pos.mg-tb-15 > a'],
                     [/^user_battle%2Ftraining_battle_select\.aspx/, 'aJ', '#ctl00_body_Repeater_ctl00_hl_battle_confirm_sp'],
