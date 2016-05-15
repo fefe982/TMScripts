@@ -968,7 +968,10 @@
                             }
                         }],
                         ['switch']]],
-
+                    [/^oshibori%2FcharaFlash/, 'flashJT', '#canvas'],
+                    [/^oshibori%2Fchara/, 'list', [
+                        ['aJ', '#bg > section > div.px20.py5 > ul > li:nth-child(1) > a']]],
+                    [/^Oshibori%2FwinChara/, 'aJ', '#bg > div.px10.pb10.pt5 > div > a'],
                     [/[pP]artner(%2Findex|$)/, 'list', [
                         //['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
                         ['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
@@ -993,6 +996,7 @@
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fsr"]'],
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fssr"]'],
+                        ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Ffree"]'],
                         ['aJ', this.cssmypage]]],
                     [/pick%2F[a-zA-Z]*%2Fpremium/, 'list', [
                         //['aJ', 'a[href*="pick%2Frun%2Fpremium%2F"]'],
@@ -2810,8 +2814,9 @@
                     [/^legend%2Findex/, 'list', [
                         ['aJ', '#aNormal:not(.noMP)'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^legend%2Fquest/, 'func', () => {
+                    [/^(prince|legend)%2Fquest/, 'func', () => {
                         setInterval(() => {
+                            $('#battleBoss:visible').clickJ().length > 0 ||
                             ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
                             $('#but3.questButton.active > a').clickJ().length > 0 ||
                             $('#but1.questButton.on').clickJ().length > 0 ||
@@ -2870,6 +2875,10 @@
                         ['aJ', 'div.countBeing + a'],
                         ['aJ', this.cssmypage],
                         ['hold']]],
+                    [/^prince%2Fpresent_select/, 'list', [
+                        ['aJ', '#bg a[href*="prince%2Fpresent%2F1%2F0"]']]],
+                    [/^prince%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
+                    [/^prince%2Fpresent/, 'flashJT', '#canvas'],
                     [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
                     [/^quest%2Fboss/, 'aJ', 'a:contains(戦闘する)'],
                     [/^quest%2F(clearStage|get(Card|Social)|levelUp)/, 'aJ', 'div.questNextButton > a'],
