@@ -2546,9 +2546,12 @@
                     [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.cssmypage],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
                         //['hold'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D2"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D4"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D6"]:not(.disable)'],
-                        ['aJ', '#d9-main > div > a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]']]],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D12"]:not(.disable)'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D13"]:not(.disable)'],
+                        ['aJ', '#d9-main a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain"]']]],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]'],
@@ -2594,6 +2597,13 @@
                         ['aJ', this.cssmypage]]],
                     [/^akr%2Fmain%2Fevent%2Fherosta%2Fmain%2F/, 'list', [
                         ['aJ', '#d9-main > div.fontS.txtC.bg_main_herosta > div:nth-child(2) > a']]],
+                    [/^akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain%2Fresult/, 'aJ', '#shortCut'],
+                    [/^akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain%2Fuser_list/, 'list', [
+                        ['aJ', 'form > input.btnMM.colorline.red.fontM'],
+                        ['aJ', '#shortCutInputButton']]],
+                    [/^akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain/, 'list', [
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fvictoryroad%2Fexe"]']]],
+                    
                     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
                     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
                         ['aJ', '#howto_icon_back_gacha > a.enable']]],
@@ -2622,7 +2632,7 @@
                         }],
                         ['funcR', function () {
                             if ($('div.arena_cost_area > img[src*="icon_playcost.png"]').length > 0) {
-                                return $('#gacha_link_area a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]').clickJ().length > 0
+                                return $('#gacha_link_area a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain"]').clickJ().length > 0
                                     || $('#basic_menu_area a[href*="main%2Farena%2Fmain"]').clickJ().length > 0;
                             }
                             return false;
