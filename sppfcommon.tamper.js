@@ -2819,8 +2819,8 @@
                             $('#battleBoss:visible').clickJ().length > 0 ||
                             ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
                             $('#but3.questButton.active > a').clickJ().length > 0 ||
-                            $('#but1.questButton.on').clickJ().length > 0 ||
                             $('#but2.questButton.on').clickJ().length > 0 ||
+                            $('#but1.questButton.on').clickJ().length > 0 ||
                             ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
                         }, 1000);
                     }],
@@ -2876,7 +2876,7 @@
                         ['aJ', this.cssmypage],
                         ['hold']]],
                     [/^prince%2Fpresent_select/, 'list', [
-                        ['aJ', '#bg a[href*="prince%2Fpresent%2F1%2F0"]']]],
+                        ['aJ', '#bg a[href*="prince%2Fpresent%2F.%2F0"]']]],
                     [/^prince%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
                     [/^prince%2Fpresent/, 'flashJT', '#canvas'],
                     [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
