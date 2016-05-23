@@ -1995,8 +1995,8 @@
                         ['a', "//div[@class='event_btn']/a"],
                         ['flash', '//*[@id="container"]']]],
                     [/arrangement%2FArrangementEdit%2F/, 'func', function () {
-                        //clickS('//div[text()="自動割り振り"]');
-                        clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
+                        clickS('//div[text()="自動割り振り"]');
+                        //clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
                         setInterval(function () {
                             if (getXPATH('//div[@id="overrayArea" and not(@class="hide")]')) {
                                 clickForm('//*[@id="containerBox"]/form');
@@ -2602,6 +2602,8 @@
                         ['aJ', 'form > input.btnMM.colorline.red.fontM'],
                         ['aJ', '#shortCutInputButton']]],
                     [/^akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain/, 'list', [
+                        ['aJ', '#shortCut'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain%2Fuser_list"]'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fvictoryroad%2Fexe"]']]],
                     
                     [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
@@ -2886,7 +2888,7 @@
                         ['aJ', this.cssmypage],
                         ['hold']]],
                     [/^prince%2Fpresent_select/, 'list', [
-                        ['aJ', '#bg a[href*="prince%2Fpresent%2F.%2F0"]']]],
+                        ['aJ', '#bg a:regex(href, prince%2Fpresent%2F.%2F0)']]],
                     [/^prince%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
                     [/^prince%2Fpresent/, 'flashJT', '#canvas'],
                     [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
@@ -2898,12 +2900,12 @@
                     [/^quest%2Ftop/, 'list', [
                         ['aJ', 'div.questListButton.newStage > a']]],
                     [/^questStory%2Fquest/, 'flashJT', '#cv0'],
-                    [/^tika%2Fbattle_list/, 'list', [
-                        ['aJ', 'a[href*="tika%2Fbattle"]:contains("結果")'],
-                        ['aJ', 'a[href*="tika%2Fparty_select"]:contains("参戦")'],
+                    [/^(tika|kuroba)%2Fbattle_list/, 'list', [
+                        ['aJ', 'a[href*="%2Fbattle"]:contains("結果")'],
+                        ['aJ', 'a[href*="%2Fparty_select"]:contains("参戦")'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")'],
                         ['hold']]],
-                    [/^tika%2Fbattle%2F/, 'list', [
+                    [/^(kuroba|tika)%2Fbattle%2F/, 'list', [
                         ['funcR', function () {
                             //$('body > section > article > div.coopMainCommand > div.magicButton > img#enabledMagic1').clickJ();
                             //return false;
@@ -2911,7 +2913,7 @@
                                 if ($('#supportForm > div:nth-child(3) > ul > li:nth-child(1) > div > input:visible()').clickJ().length > 0 || $('#dialogRoot > section > article > div.p10.txC > div > a:visible()').clickJ().length > 0) {
                                     return true;
                                 }
-                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible()[href*="Tika%2Ftop"]').clickJ(0).length > 0 ||
+                                $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible():regex(href, [a-zA-Z]*%2Ftop)').clickJ(0).length > 0 ||
                                 $('#loseDialogRoot:visible()').length > 0 ||
                                 $('#resultButton > div > a:visible()').clickJ(0).length > 0 ||
                                 $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic0)').length > 0 ||
@@ -2930,10 +2932,10 @@
                         }],
                         ['hold']]],
                     [/^[a-z]+%2Fbox_reset/, 'formJ', 'form[action*="box_reset_result"]'],
-                    [/^tika%2Fjoin/, 'aJ', '#bg > ul > li > a[href*="tika%2Ftop"]'],
-                    [/^tika%2Fparty_select/, 'list', [
+                    [/^(kuroba|tika)%2Fjoin/, 'aJ', '#bg > ul > li > a:contains("イベントTOP")'],
+                    [/^[a-zA-Z]+%2Fparty_select/, 'list', [
                         ['funcR', () => {
-                            if (document.referrer.match(/tika%2Fparty_select/)) {
+                            if (document.referrer.match(/%2Fparty_select/)) {
                                 if ($('#bg > section > article > div.whiteBand.py10.txC > div.button.main.middle > a').clickJ().length === 0) {
                                     $(this.cssmypage).clickJ();
                                 }//a:contains("救援する")
@@ -2941,26 +2943,26 @@
                             }
                         }],
                         ['aJ', 'a:contains("オススメ編成")']]],
-                    [/^(legend|tika)%2FpickResult%2F/, 'list', [
+                    [/^[a-zA-Z]*%2FpickResult%2F/, 'list', [
                         ['aJ', 'a:contains("ガチャる"):last()'],
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^tika%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
-                    [/^(legend|tika)%2Fticket/, 'list', [
+                    [/^(kuroba|tika)%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
+                    [/^(kuroba|legend|tika)%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="%2Fpick"]:last()']]],
-                    [/^[tT]ika%2Ftop$/, 'list', [
+                    [/^([tT]ika|[Kk]uroba)%2Ftop$/, 'list', [
                         ['funcR', function () {
                             var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
                             if (count) {
                                 count = +count[0];
                                 if (count > 10) {
-                                    return $('a[href*="tika%2Fticket"]').clickJ().length > 0;
+                                    return $('a[href*="%2Fticket"]').clickJ().length > 0;
                                 }
                             }
                         }],
                         // tika
-                        //['aJ', 'a[href*="Ftika%2Fparty_select%2F1%2F2"]'],
+                        ['aJ', 'a[href*="%2Fparty_select%2F1%2F"]:last()'],
                         ['aJ', 'a[href*="battle_list"]'],
                         ['hold']]],
                     [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
@@ -3006,7 +3008,8 @@
                     [/^feature%2Fmodule%2F184%2Fraid%2Fdone/, 'list', [
                         ['aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
                         ['aJ', '#main > block_list2 > a:contains("宝箱を開ける")']]],
-                    [/^feature%2Fmodule%2F182%2Ftower%2Frequest/, 'list', [
+                    [/^feature%2Fmodule%2F186%2Ftower%2Fmove%/, 'aJ', '#main > a.btn_quest_skip'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Ftower%2Frequest/, 'list', [
                         ['aJ', '#main > a:contains("盟友に援軍依頼を出す")'],
                         ['func', () => {
                         if (GM_getValue("dt_support_done", 0) > 0) {
@@ -3018,11 +3021,11 @@
                         }
                         }]]],
                     [/^feature%2Fmodule%2F183%2Farena%2Frequestdone/, 'aJ', '#main > a.btn_type2_l'],
-                    [/^feature%2Fmodule%2F182%2Ftowermonster%2Fdone/, 'aJ', '#main > a:contains("ダンジョンへ進む")'],
-                    [/^feature%2Fmodule%2F182%2Ftower%2Fdone/, 'list', [
+                    [/^feature%2Fmodule%2F[0-9]+%2Ftowermonster%2Fdone/, 'aJ', '#main > a:contains("ダンジョンへ進む")'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Ftower%2Fdone/, 'list', [
                         ['aJ', '#main > a:contains("まとめて剣礼")'],
                         ['aJ', '#wrapper_list > footer > a.link3']]],
-                    [/^feature%2Fmodule%2F182%2Ftower%2Findex/, 'list', [
+                    [/^feature%2Fmodule%2F[0-9]+%2Ftower%2Findex/, 'list', [
                         ['aJ', '#popup-navi > div > a'],
                         ['hold']]],
                     /*[/^feature%2Fmodule%2F182%2Ftowermonster%2Findex/, 'list', [
