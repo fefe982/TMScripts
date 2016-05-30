@@ -1065,7 +1065,7 @@
                             || $('#bg > section > div.p10 > div > a[href*="battle_animation%2Fplayer"]').clickJ().length > 0;
                     }],
                     [/^struggle_battle%2Fresult/, 'aJ', this.cssmypage],
-                    [/^StruggleBattle%2Fselect/, 'minmaxJ', '#bg > section:nth-child(8) > article > div', 'div.player_waku_detail > div:nth-child(2)', 'a'],
+                    [/^[Ss]truggle_?[Bb]attle%2Fselect/, 'minmaxJ', '#bg > section:nth-child(8) > article > div', 'div.player_waku_detail > div:nth-child(2)', 'a'],
                     [/(soge|FrSkill|raidBoss)Flash/, 'flashJT', '#canvas'],
                     [/%2FuseItem%2F/, 'aJ', 'a[href*="%2FuseItem%2F"]'],
                     //wd2014%2FuseItem%2F1%2F1%2F6%2F3%2Fconfirm
@@ -2617,7 +2617,7 @@
                     [/^akr%2Fmain%2Fjpseries%2Floginbonus/, 'aJ', 'a:contains("ドリナイマイページへ")'],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/(main%2Fmypage|:::)/, 'list', [
-                        ['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
+                        //['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
                         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
                         ['aJ', '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
@@ -3000,11 +3000,11 @@
                     [/^feature%2Ffloortreasurelist/, 'list', [
                         ['aJ', '#main > a'],
                         ['aJ', this.cssmypage]]],
-                    [/^feature%2Fmodule%2F183%2Farena%2Fconfirm/, 'list', [
+                    [/^feature%2Fmodule%2F[0-9]+%2Farena%2Fconfirm/, 'list', [
                         ['aJ', '#head_module > a'],
                         ['aJ', this.cssmypage]]],
-                    [/^feature%2Fmodule%2F183%2Farena%2Fdone/, 'aJ', '#head_module > a'],
-                    [/^feature%2Fmodule%2F183%2Farena%2Findex/, 'aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Farena%2Fdone/, 'aJ', '#head_module > a'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Farena%2Findex/, 'aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()'],
                     [/^feature%2Fmodule%2F184%2Fraid%2Fdone/, 'list', [
                         ['aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
                         ['aJ', '#main > block_list2 > a:contains("宝箱を開ける")']]],
@@ -3105,10 +3105,11 @@
                         ['aJ', '#main > div.list_sort a.btn_raid_type0']]],
                     [/^(feature%2Fmodule%2F184%2F)?raid%2Fmain/, 'list', [
                         ['aJ', '#main > div.list_sort > div > a.btn_raid_type2'],
-                        ['aJ', '#main > div.list_sort > div > a.btn_raid_type2'],
+                        ['aJ', '#main > div.list_sort > div > a.btn_raid_type1'],
                         ['aJ', '#main > a.btn_type2_l'],
                         ['aJ', '#main > div.list_sort > a'],
-                        ['aJ', '#main > a[href*="%2Fquest%"]']]],
+                        ['aJ', '#main > a[href*="%2Fquest%"]'],
+                        ['aJ', '#main > header > a.mypage']]],
                     [/^(feature%2Fmodule%2F184%2F)?raid%2Fsosconf/, 'list', [//
                         ['aJ', 'div.bg > a:contains("盟友に援軍依頼を出す")'],
                         ['func', () => {
