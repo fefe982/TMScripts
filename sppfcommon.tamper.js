@@ -715,7 +715,9 @@
                         ['aJ', 'a:contains("さらにクエストする")'], //succ = succ || clickA('//a[text()="さらにクエストする"]');
                         ['aJ', 'a:contains("次のエリアへ")'], //('//a[text()="次のエリアへ"]');
                         ['aJ', this.cssmypage]]], //(this.xpathmypage);]]],
-                    [/mission%2FBossBattleResult%2F/, 'aJ', 'a:contains("次のエリアへ進む"):first()'],
+                    [/mission%2FBossBattleResult%2F/, 'list', [
+                        ['aJ', 'a:contains("次のエリアへ進む"):first()'],
+                        ['aJ', 'a:contains("次のフィールドへ進む"):first()']]],
                     [/mission%2FMissionError%2F/, 'list', [
                         ['funcR', function () {
                             if (document.referrer.match(/island%2F/)) {
@@ -1157,7 +1159,7 @@
                         ['aJ', 'ul.contentLink > li > a[href*="eventTop"]']]],
 
                     [/%2FrSkill%2F/, 'aJ', 'a[href*="%2FrSkillProc%2F"]'],
-                    [/%2FrSkillResult/, 'aJ', 'a[href*="%2Findex%2F"]'],
+                    [/%2FrSkillResult/, 'aJ', 'div.btn_blue > a[href*="%2Findex%2F"]'],
                     [/[\s\S]*/, 'hold'],
                     [/xxxxxxxxxxxxxxxxxxx/]
                 ];
@@ -2605,8 +2607,8 @@
                         ['aJ', '#shortCut'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain%2Fuser_list"]'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fvictoryroad%2Fexe"]']]],
-                    
-                    [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
+
+                        [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
                     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
                         ['aJ', '#howto_icon_back_gacha > a.enable']]],
                     [/main%2Fgacha%2Fmain%2Fmulti_result%3/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
@@ -2888,7 +2890,7 @@
                         ['aJ', this.cssmypage],
                         ['hold']]],
                     [/^prince%2Fpresent_select/, 'list', [
-                        ['aJ', '#bg a:regex(href, prince%2Fpresent%2F.%2F0)']]],
+                        ['aJ', '#bg a:regex(href, prince%2Fpresent%2F.%2F.):last()']]],
                     [/^prince%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
                     [/^prince%2Fpresent/, 'flashJT', '#canvas'],
                     [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
@@ -3004,7 +3006,9 @@
                         ['aJ', '#head_module > a'],
                         ['aJ', this.cssmypage]]],
                     [/^feature%2Fmodule%2F[0-9]+%2Farena%2Fdone/, 'aJ', '#head_module > a'],
-                    [/^feature%2Fmodule%2F[0-9]+%2Farena%2Findex/, 'aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Farena%2Findex/, 'list', [
+                        ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("召喚獣を呼び出す"):first()'],
+                        ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()']]],
                     [/^feature%2Fmodule%2F184%2Fraid%2Fdone/, 'list', [
                         ['aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
                         ['aJ', '#main > block_list2 > a:contains("宝箱を開ける")']]],
