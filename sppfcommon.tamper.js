@@ -968,10 +968,10 @@
                             }
                         }],
                         ['switch']]],
-                    [/^oshibori%2FcharaFlash/, 'flashJT', '#canvas'],
-                    [/^oshibori%2Fchara/, 'list', [
+                    [/^[a-zA-Z0-9]+%2FcharaFlash/, 'flashJT', '#canvas'],
+                    [/^[a-zA-Z0-9]+%2Fchara(%|$)/, 'list', [
                         ['aJ', '#bg > section > div.px20.py5 > ul > li:nth-child(1) > a']]],
-                    [/^Oshibori%2FwinChara/, 'aJ', '#bg > div.px10.pb10.pt5 > div > a'],
+                    [/^[a-zA-Z0-9]+%2FwinChara/, 'aJ', '#bg > div.px10.pb10.pt5 > div > a'],
                     [/[pP]artner(%2Findex|$)/, 'list', [
                         //['aJ', '#partnerCommand > li:nth-child(' + (Math.floor(Math.random() * 4) + 1) + ') > div > div > a']]],
                         ['formJ', '#questWindow > article > div:nth-child(1) > div.p10 > form'],
@@ -1121,7 +1121,7 @@
                         ['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
                         ['funcR', function () {
                             if ($('#difficultyPopup > div:contains("強敵と戦う!")').length > 0) {
-                                return $('a[href*="dangerous%2Findex%2F"]:last()').clickJ().length > 0
+                                return $('a[href*="%2Findex%2F"]:last()').clickJ().length > 0
                             }
                         }],
                         ['funcR', function () {
@@ -2820,31 +2820,35 @@
                         ['hold']]],
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
-                    [/^legend%2FattackResult%2F/, 'list', [
+                    [/^(legend|kyoto3)%2FattackResult%2F/, 'list', [
                         ['aJ', '#bg > section.window.wide > div > div.helpCommand > div.helpCommandWindow > ul > li:nth-child(1) > div > div.p5 > div > a'],
                         ['aJ', '#bg > ul > li > a:contains("ステージを進行する")']]],
-                    [/^legend%2Findex/, 'list', [
+                    [/^(legend|kyoto3)%2Findex/, 'list', [
                         ['aJ', '#aNormal:not(.noMP)'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^(prince|legend)%2Fquest/, 'func', () => {
+                    [/^[a-z0-9]+%2Fquest/, 'func', () => {
                         setInterval(() => {
-                            $('#battleBoss:visible').clickJ().length > 0 ||
+                            $('#battleBoss:visible()').clickJ().length > 0 ||
+                            $('#but4.commandButton.on').clickJ().length > 0 ||
+                            $('#but3.commandButton.on').clickJ().length > 0 ||
+                            $('#but2.commandButton.on').clickJ().length > 0 ||
+                            $('#but1.commandButton.on').clickJ().length > 0 ||
                             ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
                             $('#but3.questButton.active > a').clickJ().length > 0 ||
                             $('#but2.questButton.on').clickJ().length > 0 ||
                             $('#but1.questButton.on').clickJ().length > 0 ||
                             ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
-                        }, 1000);
+                        }, 2000);
                     }],
-                    [/^legend%2Fraid/, 'flashJT', '#canvas'],
-                    [/^legend%2Fsupport/, 'aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
-                    [/^legend%2Ftop/, 'list', [
+                    [/^(legend|kyoto3)%2Fraid/, 'flashJT', '#canvas'],
+                    [/^(legend|kyoto3)%2Fsupport/, 'aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
+                    [/^(legend|kyoto3)%2Ftop/, 'list', [
                         ['funcR', function () {
                             var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
                             if (count) {
                                 count = +count[0];
                                 if (count > 10) {
-                                    return $('a[href*="legend%2Fticket"]').clickJ().length > 0;
+                                    return $('a[href*="%2Fticket"]').clickJ().length > 0;
                                 }
                             }
                         }],
@@ -2943,15 +2947,15 @@
                             }
                         }],
                         ['aJ', 'a:contains("オススメ編成")']]],
-                    [/^[a-zA-Z]*%2FpickResult%2F/, 'list', [
+                    [/^[a-zA-Z0-9]+%2FpickResult%2F/, 'list', [
                         ['aJ', 'a:contains("ガチャる"):last()'],
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     [/^(kuroba|tika)%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
-                    [/^(kuroba|legend|tika)%2Fticket/, 'list', [
+                    [/^[a-z0-9]+%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="%2Fpick"]:last()']]],
-                    [/^([tT]ika|[Kk]uroba)%2Ftop$/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Ftop$/, 'list', [
                         ['funcR', function () {
                             var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
                             if (count) {
@@ -2964,6 +2968,9 @@
                         // tika
                         ['aJ', 'a[href*="%2Fparty_select%2F1%2F"]:last()'],
                         ['aJ', 'a[href*="battle_list"]'],
+                        // 
+                        ['aJ', '#bg > section > div > div.raidAction > div > ul > li:nth-child(2) > div > a:not(:has(dl.cost0))'],
+                        ['aJ', '#bg > section > div > div.raidAction > div a'],
                         ['hold']]],
                     [/(Flash|battleAnimation)%2F/, 'flashJT', '#canvas'],
                     [/[\s\S]*/, 'hold'],
@@ -3099,18 +3106,19 @@
                     [/^quest(%3F|$)/, 'list', [
                         ['aJ', '#main > a.btn_type1_l'],
                         ['aJ', '#main > div.quest_list > a']]],
-                    [/^raid%2Fdone/, 'list', [
-                        ['aJ', '#main > a.btn_raid_boss_search']]],
-                    [/^(feature%2Fmodule%2F184%2F)?raid%2Findex/, 'list', [
+                    [/^(feature%2Fmodule%2F[0-9]+%2F)?raid%2Fdone/, 'list', [
+                        ['aJ', '#main > a.btn_raid_boss_search'],
+                        ['aJ', '#main > div.list_sort > a:contains("進撃に戻る")']]],
+                    [/^(feature%2Fmodule%2F[0-9]+%2F)?raid%2Findex/, 'list', [
                         ['aJ', '#main > div.list_sort a.btn_raid_type0']]],
-                    [/^(feature%2Fmodule%2F184%2F)?raid%2Fmain/, 'list', [
+                    [/^(feature%2Fmodule%2F[0-9]+%2F)?raid%2Fmain/, 'list', [
                         ['aJ', '#main > div.list_sort > div > a.btn_raid_type2'],
                         ['aJ', '#main > div.list_sort > div > a.btn_raid_type1'],
                         ['aJ', '#main > a.btn_type2_l'],
                         ['aJ', '#main > div.list_sort > a'],
                         ['aJ', '#main > a[href*="%2Fquest%"]'],
                         ['aJ', '#main > header > a.mypage']]],
-                    [/^(feature%2Fmodule%2F184%2F)?raid%2Fsosconf/, 'list', [//
+                    [/^(feature%2Fmodule%2F[0-9]+%2F)?raid%2Fsosconf/, 'list', [//
                         ['aJ', 'div.bg > a:contains("盟友に援軍依頼を出す")'],
                         ['func', () => {
                             if (GM_getValue("dt_support_done", 0) > 0) {
