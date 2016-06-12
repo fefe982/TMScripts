@@ -1384,14 +1384,16 @@
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)']]],
                     [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
                         //['hold'],
-                        ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryConfirm"]'],
-                        ['aJ', 'a[href*="eventAnniversary%2FEventQuestEntryList"]'],
+                        ['aJ', 'a[href*="%2FEventQuestEntryConfirm"]'],
+                        ['aJ', 'a[href*="%2FEventQuestEntryList"]'],
                         ['funcR', function () {
                             var medalCount = $('a.medal_box span.fnt_normal');
-                            if (medalCount.length > 0
+                            if (medalCount.length === 1
                                 && medalCount.text().match(/(\d+)/)
                                 && +medalCount.text().match(/(\d+)/)[1] >=5)
                             {
+                                //GM_log(medalCount);
+                                //return true;
                                 return $('a.medal_box').clickJ().length > 0;
                             }
                         }],
