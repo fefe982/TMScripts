@@ -1305,7 +1305,7 @@
                         ['formJ', '#main > div:nth-child(1) > ul > li:nth-child(1) > form'],
                         ['aJ', '#main > div.btn_sub_medium.margin_top_20 > a']]],
                     [/arena%2FArenaBattleConf%2F/, 'list', [
-                        ['aJ', 'a:contains("対戦結果を見る")'],
+                        ['aJ', 'a:contains("対戦結果を見る"):visible()'],
                         ['aJ', '#do_battle_btn:visible()'],
                         ['aJ', this.cssmypage]]],
                     [/arena%2FArenaBattleResult%2F/, 'aJ', 'a:contains("次の相手")'],
@@ -2553,6 +2553,7 @@
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D2"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D4"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D6"]:not(.disable)'],
+                        ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D11"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D12"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D13"]:not(.disable)'],
                         ['aJ', '#d9-main a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain"]']]],
@@ -2982,7 +2983,7 @@
                 ];
             }
         },
-        "12014627" : {
+        "12014627" : { // dragon tactics
             mypage_url : "http://g12014627.sp.pf.mbga.jp",
             rotation_time : 5,
             cssmypage : '#main > header > a.mypage',
@@ -3041,6 +3042,14 @@
                     [/^feature%2Fmodule%2F[0-9]+%2Ftower%2Findex/, 'list', [
                         ['aJ', '#popup-navi > div > a'],
                         ['hold']]],
+                    [/^feature%2Fmodule%2F[0-9]+%2Fteamduel%2Fconfirm/, 'list', [
+                        ['aJ', '#head_module > a'],
+                        ['aJ', '#main > div.table_div > div:nth-child(1) > a']]],
+                    [/^feature%2Fmodule%2F189%2Fteamduel%2Fdone/, 'hold'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Fteamduel%2Findex/, 'aJ', 'div.bg > list_knight > a:first()'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Fteamduel%2Frequest/, 'list', [
+                        ['aJ', '#main > a'],
+                        ['hold']]],
                     /*[/^feature%2Fmodule%2F182%2Ftowermonster%2Findex/, 'list', [
                         ['aJ', '#main a.btn_raid_type3'],
                         ['aJ', '#main > a.btn_type2_l'], //援軍
@@ -3095,7 +3104,7 @@
                                 ['#wrapper_list > div.default_popup > div > div.list_sort > a:nth-child(1)']);}
                         ],
                         ['aJ', this.cssmypage]]],
-                    [/^quest%2Fdone/, 'aJ', '#main > a.btn_quest_skip'],
+                    [/^quest%2F(crystal|done)/, 'aJ', '#main > a.btn_quest_skip'],
                     [/^quest%2Ffriend/, 'list', [
                         ['funcR', () => {
                             return this.wait_confirm('#quest_dialog > div > a.btn_type1_m',
