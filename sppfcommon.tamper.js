@@ -2909,12 +2909,12 @@
                     [/^quest%2Ftop/, 'list', [
                         ['aJ', 'div.questListButton.newStage > a']]],
                     [/^questStory%2Fquest/, 'flashJT', '#cv0'],
-                    [/^(tika|kuroba)%2Fbattle_list/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Fbattle_list/, 'list', [
                         ['aJ', 'a[href*="%2Fbattle"]:contains("結果")'],
                         ['aJ', 'a[href*="%2Fparty_select"]:contains("参戦")'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")'],
                         ['hold']]],
-                    [/^(kuroba|tika)%2Fbattle%2F/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Fbattle%2F/, 'list', [
                         ['funcR', function () {
                             //$('body > section > article > div.coopMainCommand > div.magicButton > img#enabledMagic1').clickJ();
                             //return false;
@@ -2956,7 +2956,7 @@
                         ['aJ', 'a:contains("ガチャる"):last()'],
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^(kuroba|tika)%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
+                    [/^[a-zA-Z0-9]+%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
                     [/^[a-z0-9]+%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="%2Fpick"]:last()']]],
