@@ -2058,7 +2058,7 @@
                         ['aJ', '#diceEventHeader > a'],
                         ['func', () => {
                             var maxatk = 0, maxid = -1, i;
-                            for (i = 1; i <= 5; i++) {
+                            for (i = 1; i <= $('#cardList > ul > li > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').length; i++) {
                                 var rar = 0; //this.rankArr.indexOf($('#popup_content > div:nth-child(' + i + ') > div.section.cardlist_popup > div.margin_top_10 > span').text().match(/([A-Z]+)/)[1]);
                                 GM_log(rar);
                                 if (rar < 0) {
@@ -2098,7 +2098,7 @@
                     [/caravan%2FMapTop/, 'list', [
                         //['hold'],
                         ['func', () => {tryUntil(() => {
-                            for (i = 1; i <= 5; i++) {
+                            for (i = 1; i <= $('#cardList > ul > li > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').length; i++) {
                                 var rar = this.rankArr.indexOf($('#popup_content > div:nth-child(' + i + ') > div.section.cardlist_popup > div.margin_top_10 > span').text().match(/([A-Z]+)/)[1]);
                                 //GM_log(rar);
                                 if (rar < 0) {
@@ -2909,12 +2909,12 @@
                     [/^quest%2Ftop/, 'list', [
                         ['aJ', 'div.questListButton.newStage > a']]],
                     [/^questStory%2Fquest/, 'flashJT', '#cv0'],
-                    [/^(tika|kuroba)%2Fbattle_list/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Fbattle_list/, 'list', [
                         ['aJ', 'a[href*="%2Fbattle"]:contains("結果")'],
                         ['aJ', 'a[href*="%2Fparty_select"]:contains("参戦")'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")'],
                         ['hold']]],
-                    [/^(kuroba|tika)%2Fbattle%2F/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Fbattle%2F/, 'list', [
                         ['funcR', function () {
                             //$('body > section > article > div.coopMainCommand > div.magicButton > img#enabledMagic1').clickJ();
                             //return false;
@@ -2941,8 +2941,8 @@
                         }],
                         ['hold']]],
                     [/^[a-z]+%2Fbox_reset/, 'formJ', 'form[action*="box_reset_result"]'],
-                    [/^(kuroba|tika)%2Fjoin/, 'aJ', '#bg > ul > li > a:contains("イベントTOP")'],
-                    [/^[a-zA-Z]+%2Fparty_select/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Fjoin/, 'aJ', '#bg > ul > li > a:contains("イベントTOP")'],
+                    [/^[a-zA-Z0-9]+%2Fparty_select/, 'list', [
                         ['funcR', () => {
                             if (document.referrer.match(/%2Fparty_select/)) {
                                 if ($('#bg > section > article > div.whiteBand.py10.txC > div.button.main.middle > a').clickJ().length === 0) {
@@ -2956,7 +2956,7 @@
                         ['aJ', 'a:contains("ガチャる"):last()'],
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^(kuroba|tika)%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
+                    [/^[a-zA-Z0-9]+%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
                     [/^[a-z0-9]+%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="%2Fpick"]:last()']]],
