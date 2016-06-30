@@ -2825,41 +2825,6 @@
                         ['hold']]],
                     [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
                     [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
-                    [/^(legend|kyoto3)%2FattackResult%2F/, 'list', [
-                        ['aJ', '#bg > section.window.wide > div > div.helpCommand > div.helpCommandWindow > ul > li:nth-child(1) > div > div.p5 > div > a'],
-                        ['aJ', '#bg > ul > li > a:contains("ステージを進行する")']]],
-                    [/^(legend|kyoto3)%2Findex/, 'list', [
-                        ['aJ', '#aNormal:not(.noMP)'],
-                        ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^[a-z0-9]+%2Fquest/, 'func', () => {
-                        setInterval(() => {
-                            $('#battleBoss:visible()').clickJ().length > 0 ||
-                            $('#but4.commandButton.on').clickJ().length > 0 ||
-                            $('#but3.commandButton.on').clickJ().length > 0 ||
-                            $('#but2.commandButton.on').clickJ().length > 0 ||
-                            $('#but1.commandButton.on').clickJ().length > 0 ||
-                            ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
-                            $('#but3.questButton.active > a').clickJ().length > 0 ||
-                            $('#but2.questButton.on').clickJ().length > 0 ||
-                            $('#but1.questButton.on').clickJ().length > 0 ||
-                            ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
-                        }, 2000);
-                    }],
-                    [/^(legend|kyoto3)%2Fraid/, 'flashJT', '#canvas'],
-                    [/^(legend|kyoto3)%2Fsupport/, 'aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
-                    [/^(legend|kyoto3)%2Ftop/, 'list', [
-                        ['funcR', function () {
-                            var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
-                            if (count) {
-                                count = +count[0];
-                                if (count > 10) {
-                                    return $('a[href*="%2Fticket"]').clickJ().length > 0;
-                                }
-                            }
-                        }],
-                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > ul > li:nth-child(2) > div > a:not(:has(dl.cost0))'],
-                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > div > a'],
-                        ['switch']]],
                     [/^login%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^login_flash%2Findex%2F/, 'flashJT', '#canvas'],
                     [/^mypage/, 'list', [
@@ -2909,6 +2874,41 @@
                     [/^quest%2Ftop/, 'list', [
                         ['aJ', 'div.questListButton.newStage > a']]],
                     [/^questStory%2Fquest/, 'flashJT', '#cv0'],
+                    [/^[a-zA-Z0-9]+%2FattackResult%2F/, 'list', [
+                        ['aJ', '#bg > section.window.wide > div > div.helpCommand > div.helpCommandWindow > ul > li:nth-child(1) > div > div.p5 > div > a'],
+                        ['aJ', '#bg > ul > li > a:contains("ステージを進行する")']]],
+                    [/^[a-zA-Z0-9]+%2Findex/, 'list', [
+                        ['aJ', '#aNormal:not(.noMP)'],
+                        ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
+                    [/^[a-zA-Z0-9]+%2Fquest/, 'func', () => {
+                        setInterval(() => {
+                            $('#battleBoss:visible()').clickJ().length > 0 ||
+                            $('#but4.commandButton.on').clickJ().length > 0 ||
+                            $('#but3.commandButton.on').clickJ().length > 0 ||
+                            $('#but2.commandButton.on').clickJ().length > 0 ||
+                            $('#but1.commandButton.on').clickJ().length > 0 ||
+                            ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
+                            $('#but3.questButton.active > a').clickJ().length > 0 ||
+                            $('#but2.questButton.on').clickJ().length > 0 ||
+                            $('#but1.questButton.on').clickJ().length > 0 ||
+                            ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
+                        }, 2000);
+                    }],
+                    [/^[a-zA-Z0-9]+%2Fraid/, 'flashJT', '#canvas'],
+                    [/^[a-zA-Z0-9]+%2Fsupport/, 'aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
+                    [/^[a-zA-Z0-9]+%2Ftop/, 'list', [
+                        ['funcR', function () {
+                            var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
+                            if (count) {
+                                count = +count[0];
+                                if (count > 10) {
+                                    return $('a[href*="%2Fticket"]').clickJ().length > 0;
+                                }
+                            }
+                        }],
+                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > ul > li:nth-child(2) > div > a:not(:has(dl.cost0))'],
+                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > div > a'],
+                        ['switch']]],
                     [/^[a-zA-Z0-9]+%2Fbattle_list/, 'list', [
                         ['aJ', 'a[href*="%2Fbattle"]:contains("結果")'],
                         ['aJ', 'a[href*="%2Fparty_select"]:contains("参戦")'],
@@ -2940,7 +2940,7 @@
                             return true;
                         }],
                         ['hold']]],
-                    [/^[a-z]+%2Fbox_reset/, 'formJ', 'form[action*="box_reset_result"]'],
+                    [/^[a-zA-Z0-9]+%2Fbox_reset/, 'formJ', 'form[action*="box_reset_result"]'],
                     [/^[a-zA-Z0-9]+%2Fjoin/, 'aJ', '#bg > ul > li > a:contains("イベントTOP")'],
                     [/^[a-zA-Z0-9]+%2Fparty_select/, 'list', [
                         ['funcR', () => {
@@ -2957,7 +2957,7 @@
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     [/^[a-zA-Z0-9]+%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
-                    [/^[a-z0-9]+%2Fticket/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="%2Fpick"]:last()']]],
                     [/^[a-zA-Z0-9]+%2Ftop$/, 'list', [
