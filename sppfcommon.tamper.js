@@ -3019,10 +3019,10 @@
                     [/^feature%2Fmodule%2F[0-9]+%2Farena%2Findex/, 'list', [
                         ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("召喚獣を呼び出す"):first()'],
                         ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()']]],
-                    [/^feature%2Fmodule%2F184%2Fraid%2Fdone/, 'list', [
+                    [/^feature%2Fmodule%2F[0-9]+%2Fraid%2Fdone/, 'list', [
                         ['aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
                         ['aJ', '#main > block_list2 > a:contains("宝箱を開ける")']]],
-                    [/^feature%2Fmodule%2F186%2Ftower%2Fmove%/, 'aJ', '#main > a.btn_quest_skip'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Ftower%2Fmove%/, 'aJ', '#main > a.btn_quest_skip'],
                     [/^feature%2Fmodule%2F[0-9]+%2Ftower%2Frequest/, 'list', [
                         ['aJ', '#main > a:contains("盟友に援軍依頼を出す")'],
                         ['func', () => {
