@@ -1663,6 +1663,20 @@
                             }
                         }],
                         ['aJ', '#main > a']]],
+                    [/^eventGuildHideAndSeek%2FPanelTop%2F/, 'list', [
+                        ['func', function(){
+                            $('div#panel > form > ul.select > li:nth-child(5) input[type="checkbox"]').clickJ();
+                            tryUntil(function() {
+                                if ($('#panel > form > div > div.btn_main_large.submit:not([style*="none"])').length > 0) {
+                                    $('#panel > form > div > div.btn_main_large.submit:not([style*="none"]) > input[type="submit"]').clickJ();
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            });
+                        }]]],
+                    [/^eventGuildHideAndSeek%2FPanelResult%2F/, 'list', [
+                        ['aJ', '#panel > div.button a']]],//#panel > div > p > a
                     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
                     [/fusion%2FFusionEnd%2F/, "func", function () {
                         var lvl = getXPATH("//div[div[@class='sprite_deck heading_level']]").innerText,
@@ -2372,7 +2386,7 @@
                             }
                         }]]],
                     [/mypage%2FCollectionComp%2F/, 'form', '//form[.//input[@value="報酬を受け取る"]]'],
-                    [/mypage%2FCollectionCompEnd%2F/, 'a', '//a[text()="図鑑報酬へ"]'],
+                    [/mypage%2FCollectionCompEnd%2F/, 'aJ', 'a:contains("図鑑報酬へ")'],
                     [/mypage%2FGreetList%2F/, 'a', this.xpathmypage],
                     [/mypage%2FIndex/, 'list', [
                         ["funcR", () => {
@@ -2424,7 +2438,7 @@
                     [/newMission%2FMissionDetail%2F/, 'flashJT', '#execBtn'],
                     [/newMission%2FMissionList%2F/, 'aJ', 'a[href*="newMission%2FMissionDetail%2F"]'],
                     [/mypage%2FMaterialCollection%2F/, 'a', '//a[text()="図鑑報酬を受け取る"]'],
-                    [/mypage%2FMaterialCollectionCompEnd%2F/, 'a', '//a[text()="コンプマテリアル図鑑"]'],
+                    [/mypage%2FMaterialCollectionCompEnd%2F/, 'aJ', 'a:contains("コンプマテリアル図鑑")'],
                     [/prizeReceive%2FPrizeReceiveAllEnd%2F/, 'a', '//a[text()="贈り物BOX TOP"]'], //this.xpathmypage],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
                         ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])']]],
@@ -2556,7 +2570,7 @@
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D11"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D12"]:not(.disable)'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D13"]:not(.disable)'],
-                        ['aJ', '#d9-main a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain"]']]],
+                        ['aJ', '#d9-main a:regex(href, akr%2Fmain%2Fevent%2F(.|..|[^b]..|.[^o].|..[^x]|.....*)%2Fmain)']]],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
                         ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]'],
@@ -2895,7 +2909,9 @@
                         }, 2000);
                     }],
                     [/^[a-zA-Z0-9]+%2Fraid/, 'flashJT', '#canvas'],
-                    [/^[a-zA-Z0-9]+%2Fsupport/, 'aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
+                    [/^[a-zA-Z0-9]+%2Fsupport/, 'list', [
+                        ['aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
+                        ['aJ', this.cssmypage]]],
                     [/^[a-zA-Z0-9]+%2Ftop/, 'list', [
                         ['funcR', function () {
                             var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
@@ -3152,9 +3168,10 @@
         }
     };
 
-    function msgloop(actions) {
+    function msgloop(action_handler) {
         var i, j, list_action, succ, siteI, siteT, ele, sites = Object.keys(handler), siteStatic = new Set()
         GM_log('-msgloop--------------------------------------- ' + Date());
+        var actions = action_handler.get_actions();
         function switch_site() {
             var new_app_id, now = Date.now(), switch_flag;
             if (typeof setSiteStatic_local !== "undefined") {
@@ -3163,9 +3180,6 @@
             if (typeof setStopSite_local != "undefined") {
                 siteStatic = new Set([...siteStatic, ...setStopSite_local]);
             }
-            if (siteStatic.has(app_id)) {
-                return false;
-            }
             siteI = GM_getValue("site_loop_index", 0);
             siteT = GM_getValue("site_timeout", 0);
             if (siteT != siteT) {
@@ -3173,19 +3187,23 @@
             }
             switch_flag = GM_getValue("site_switch_flag", 0);
             if (now > siteT || switch_flag === 1) {
-                do {
-                    siteI = (siteI + 1) % sites.length;
-                    new_app_id = sites[siteI];
-                } while(siteStatic.has(new_app_id));
-                siteT = now + 60 * 1000 * handler[sites[siteI]].rotation_time;
+                if (siteStatic.has(app_id)) {
+                    new_app_id = app_id;
+                } else {
+                    do {
+                        siteI = (siteI + 1) % sites.length;
+                        new_app_id = sites[siteI];
+                    } while(siteStatic.has(new_app_id));
+                    GM_setValue("site_loop_index", siteI);
+                    GM_setValue("site_switch_flag", 0);
+                    GM_log("switch-site " + siteI + " " + siteT);
+                }
+                siteT = now + 60 * 1000 * handler[new_app_id].rotation_time;
                 if (siteT != siteT) {
                     alert("error, no rotation_time, " + new_app_id);
                 }
-                GM_log("switch-site " + siteI + " " + siteT);
                 GM_setValue("site_timeout", siteT);
-                GM_setValue("site_loop_index", siteI);
-                GM_setValue("site_switch_flag", 0);
-                window.location.href = handler[sites[siteI]].mypage_url;
+                window.location.href = handler[new_app_id].mypage_url;
                 return true;
             } else {
                 GM_log(siteT);
@@ -3196,7 +3214,7 @@
         }
         succ = switch_site();
         function time_wait_flashJT(action) {
-            var cnt = 0;
+            //var cnt = 0;
             tryUntil(() => {
                 var canvas = $(action[1]),
                     x = action[2],
@@ -3206,12 +3224,12 @@
                     canvas.touchFlash(x, y);
                     return true;
                 } else {
-                    GM_log('flashJT, wait flash ' + cnt);
-                    cnt += 1;
-                    if (cnt > 10) {
-                        alert("illegal flash");
-                        return true;
-                    }
+                    //GM_log('flashJT, wait flash ' + cnt);
+                    //cnt += 1;
+                    //if (cnt > 10) {
+                    //    alert("illegal flash");
+                    //    return true;
+                    //}
                 }                
             });
         }
@@ -3338,9 +3356,9 @@
                     }
                     GM_log("succ : " + succ);
                 }
-                if (!succ) {
-                    unsafeWindow.alert('no action');
-                }
+                //if (!succ) {
+                    //unsafeWindow.alert('no action');
+                //}
                 break;
             }
         }
@@ -3374,7 +3392,7 @@
         //GM_log("short_url: " + url);
         action_handler = handler[app_id];
         if (action_handler) {
-            msgloop(action_handler.get_actions());
+            msgloop(action_handler);
         }
     }
 }());
