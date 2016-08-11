@@ -1386,6 +1386,7 @@
                         //['hold'],
                         ['aJ', 'a[href*="%2FEventQuestEntryConfirm"]'],
                         ['aJ', 'a[href*="%2FEventQuestEntryList"]'],
+                        ['aJ', 'a[href*="%2FeventGuildHideAndSeek%2FPanelTop"]'],
                         ['funcR', function () {
                             var medalCount = $('a.medal_box span.fnt_normal');
                             if (medalCount.length === 1
@@ -1663,7 +1664,7 @@
                             }
                         }],
                         ['aJ', '#main > a']]],
-                    [/^eventGuildHideAndSeek%2FPanelTop%2F/, 'list', [
+                    [/^eventGuildHideAndSeek%2FPanelTop/, 'list', [
                         ['func', function(){
                             $('div#panel > form > ul.select > li:nth-child(5) input[type="checkbox"]').clickJ();
                             tryUntil(function() {
@@ -2437,7 +2438,9 @@
                     [/newMission%2FBossAppear/, 'aJ', 'a[href*="newMission%2FBossBattleFlash%2F"]'],
                     [/newMission%2FMissionDetail%2F/, 'flashJT', '#execBtn'],
                     [/newMission%2FMissionList%2F/, 'aJ', 'a[href*="newMission%2FMissionDetail%2F"]'],
-                    [/mypage%2FMaterialCollection%2F/, 'a', '//a[text()="図鑑報酬を受け取る"]'],
+                    [/mypage%2FMaterialCollection%2F/, 'list', [
+                        ['a', '//a[text()="図鑑報酬を受け取る"]'],
+                        ['aJ', this.cssmypage]]],
                     [/mypage%2FMaterialCollectionCompEnd%2F/, 'aJ', 'a:contains("コンプマテリアル図鑑")'],
                     [/prizeReceive%2FPrizeReceiveAllEnd%2F/, 'a', '//a[text()="贈り物BOX TOP"]'], //this.xpathmypage],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
@@ -2875,10 +2878,10 @@
                         ['aJ', 'div.countBeing + a'],
                         ['aJ', this.cssmypage],
                         ['hold']]],
-                    [/^prince%2Fpresent_select/, 'list', [
-                        ['aJ', '#bg a:regex(href, prince%2Fpresent%2F.%2F.):last()']]],
-                    [/^prince%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
-                    [/^prince%2Fpresent/, 'flashJT', '#canvas'],
+                    [/^[a-zA-Z0-9]+%2Fpresent_select/, 'list', [
+                        ['aJ', '#bg a:regex(href, %2Fpresent%2F.%2F.):last()']]],
+                    [/^[a-zA-Z0-9]+%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
+                    [/^[a-zA-Z0-9]+%2Fpresent/, 'flashJT', '#canvas'],
                     [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
                     [/^quest%2Fboss/, 'aJ', 'a:contains(戦闘する)'],
                     [/^quest%2F(clearStage|get(Card|Social)|levelUp)/, 'aJ', 'div.questNextButton > a'],
@@ -2923,7 +2926,7 @@
                             }
                         }],
                         ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > ul > li:nth-child(2) > div > a:not(:has(dl.cost0))'],
-                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > div > a'],
+                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction a'],
                         ['switch']]],
                     [/^[a-zA-Z0-9]+%2Fbattle_list/, 'list', [
                         ['aJ', 'a[href*="%2Fbattle"]:contains("結果")'],
