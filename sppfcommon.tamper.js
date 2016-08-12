@@ -1120,7 +1120,7 @@
                             return false;
                         }],
                         //['aJ', 'div.btn_blue > a[href*="box_select"]'],
-                        ['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
+                        //['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
                         ['funcR', function () {
                             if ($('#difficultyPopup > div:contains("強敵と戦う!")').length > 0) {
                                 return $('a[href*="%2Findex%2F"]:last()').clickJ().length > 0
@@ -1910,7 +1910,7 @@
                     [/^:::$/, 'aJ', 'a[href*="mypage%2FIndex"]'],
                     [/apology%2FApologyList%2F/, 'form', '//*[@id="containerBox"]//form'],
                     [/arena%2FArenaBattleEntry%2F/, 'aJ', '#containerBox > div > a[href*="arena%2FDoArenaBattleEntry%2F"]'],
-                    [/Farena%2FArenaBattleEntryEnd%2F/, 'aJ', '#containerBox > div > a:contains("イベントを進める")'],
+                    [/^arena%2FArenaBattleEntryEnd%2F/, 'aJ', '#containerBox > div > a:contains("イベントを進める")'],
                     [/arena%2FArena(Sub)?BattleResult%2F/, 'list', [
                         ["a", '//a[contains(@href, "UserSelectList")]'], //text()="戦いを続ける"]'],
                         ['flashJT', '#container > canvas']]], //*[@id="container"]']]],
@@ -2515,10 +2515,11 @@
                         //['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'],
                         ['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
                         ['aJ', this.cssmypage]]], //'func',handlePrizeTop],
-                    [/strongBoss%2FStrongBossBattleResult%2F/, 'a', '//a[text()="クエストを進める"]'],
+                    [/strongBoss%2FStrongBossBattleResult%2F/, 'aJ', 'a:contains("クエストを進める")'],
                     [/strongBoss%2FStrongBossHelpResult%2F/, 'a', this.xpathquest],
                     [/strongBoss%2FStrongBossTop%2F/, 'func', this.handleStrongBossTop],
                     [/strongBoss%2FStrongBossNoWinList%2F/, 'list', [
+                        ['aJ', 'a:contains("戦いに行く")'],
                         ['setCookie', '__my_r_boss_clear', 1, 60],
                         ['a', this.xpathmypage]]],
                     [/supernova%2FSupernovaBattleHistory%/, 'list', [
