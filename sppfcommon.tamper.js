@@ -1110,7 +1110,7 @@
                     [/%2FeventTop/, 'list', [
                         ['funcR', function () {
                             var res = $('#bg > section.py5 > article:visible() dd').text().match(/([0-9]+)/);
-                            if (res === undefined) {
+                            if (res === undefined || res === null) {
                                 return false;
                             }
                             res = +res[1];
@@ -1129,7 +1129,7 @@
                         ['funcR', function () {
                             if ($('div.questAction a[href*="%2Fraid%2F"]:last').length > 0) {
                                 tryUntil (() => {
-                                    if ($('#bg > section > div.eventTopImage > div.questAction > div > a > div > dl > dd > img[src*="bp_g.png"]').length < 3) {
+                                    if ($('div.questAction a > div > dl > dd > img[src*="bp_g.png"]').length < 3) {
                                         return $('div.questAction a[href*="%2Fraid%2F"]:last').clickJ().length > 0;
                                     }
                                 });
@@ -1421,7 +1421,7 @@
                     [/^event[a-zA-Z0-9]*%2FMissionList/, 'list', [
                         ['a', '//a[contains(@href, "%2FDoMissionExecutionCheck")]'],
                         ['hold']]],
-                    ["event[a-zA-Z0-9]*%2FMissionResult%.F", 'list', [
+                    [/^event[a-zA-Z0-9]*%2FMissionResult%.F/, 'list', [
                         //['dbg'],
                         //['aNC', '__ht_myboss_wait', '//a[contains(@href, "event' + this.eventName + '%2FRaidBossTop")]'],
                         //['hold'],
@@ -1438,8 +1438,10 @@
                         }],
                         ['aJ', 'a[href*="%2FDoMissionExecution"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
+                        ['aJ', '#world_select_wrap > div > ul > li.stage_icon > div:has(span.count_num:regexText("^(.|..)$")) > div.btn.relative > a:first()'],
                         //['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
-                        ['func', function () {alert("need intervene");}],
+                        ['aJ', '#world_select_wrap > div > ul > li.stage_icon.extra.clear > div > div > a'],
+                        //['func', function () {alert("need intervene");}],
                         ['hold']]],
                     [/event[a-zA-Z0-9]*%2FRaidBossBattleResult/, 'list', [
                         ['aJ', '#boss_battle_gauge_wrap > div > div.btn_gauge_battle > a'],
@@ -1778,8 +1780,8 @@
                             if (eventL.length > 0 && !$(eventL[0]).text().match(/終了しました/)) {
                                 succ = eventL.last().clickJ().length > 0;
                             }
-                            //succ = succ || clickA(this.xpathevent);
-                            succ = succ || ($('a[href*="MissionList"]').last().clickJ().length > 0);
+                            // do not so mission, change to GI quest
+                            //succ = succ || ($('a[href*="MissionList"]').last().clickJ().length > 0);
                         }
                         if (!succ) {
                             if (getXPATH('//div[@class="battle"]/a/div[@class="mypage_battleOlympia"]')) {
@@ -1790,11 +1792,6 @@
                                 GM_setValue("__mybattle_bp", 1);
                                 succ = clickA("//div[@class='battle']/a");
                             }
-                        }
-                        if (!succ) {
-                            setTimeout(function () {
-                                location.reload(true);
-                            }, 60000);
                         }
                     }],
                     [/mypage%2FLoginBonusSpecial%2F/, 'a', "//div[contains(@class, 'btn_present')]/a"],
@@ -2077,7 +2074,8 @@
                                 var rar = 0; //this.rankArr.indexOf($('#popup_content > div:nth-child(' + i + ') > div.section.cardlist_popup > div.margin_top_10 > span').text().match(/([A-Z]+)/)[1]);
                                 GM_log(rar);
                                 if (rar < 0) {
-                                    alert("Illegal rare: " + txt);
+                                    return;
+                                    //alert("Illegal rare: " + txt);
                                 }
                                 var catk = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(3) > div > div.fnt_emphasis').text(),
                                     cmem = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
@@ -2117,7 +2115,8 @@
                                 var rar = this.rankArr.indexOf($('#popup_content > div:nth-child(' + i + ') > div.section.cardlist_popup > div.margin_top_10 > span').text().match(/([A-Z]+)/)[1]);
                                 //GM_log(rar);
                                 if (rar < 0) {
-                                    alert("Illegal rare: " + txt);
+                                    return;
+                                    //alert("Illegal rare: " + txt);
                                 }
                                 var catk = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(3) > div > div.fnt_emphasis').text(),
                                     cmem = +$('#cardList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
@@ -2383,7 +2382,7 @@
                                     clickA('//*[@id="containerBox"]/div[@class="margin_top txt_center"]/div/a');
                                 }
                             } else {
-                                alert(title);
+                                //alert(title);
                             }
                         }]]],
                     [/mypage%2FCollectionComp%2F/, 'form', '//form[.//input[@value="報酬を受け取る"]]'],
@@ -2650,14 +2649,14 @@
                             var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/),
                                 ap = match_res ? +match_res[1] : 0;
                             if (ap > 10) {
-                                return $('#gacha_link_area a[href*="akr%2Fmain%2Fevent%2Fherosta%2Fmain"]').clickJ().length > 0
+                                return $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
                                     || $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
                             }
                             return false;
                         }],
                         ['funcR', function () {
                             if ($('div.arena_cost_area > img[src*="icon_playcost.png"]').length > 0) {
-                                return $('#gacha_link_area a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain"]').clickJ().length > 0
+                                return $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(victoryroad)%2F)').clickJ().length > 0
                                     || $('#basic_menu_area a[href*="main%2Farena%2Fmain"]').clickJ().length > 0;
                             }
                             return false;
@@ -2675,7 +2674,7 @@
                     [/main%2Fpresent%2Freceive%2Fmain(%2Findex|%3F)/, 'list', [
                         ['funcR', function () {
                             if ($('#d9-main > div > table > tbody > tr > td > div:contains("プレゼントを受け取れませんでした")').length > 0) {
-                                alert("cardbox full");
+                                //alert("cardbox full");
                                 return true;
                             }
                         }],
@@ -3185,7 +3184,7 @@
                 siteStatic = new Set([...siteStatic, ...setStopSite_local]);
             }
             siteI = GM_getValue("site_loop_index", 0);
-            siteT = GM_getValue("site_timeout", 0);
+            siteT = GM_getValue("site_timeout_" + app_id, 0);
             if (siteT != siteT) {
                 siteT = 0;
             }
@@ -3203,10 +3202,11 @@
                     GM_log("switch-site " + siteI + " " + siteT);
                 }
                 siteT = now + 60 * 1000 * handler[new_app_id].rotation_time;
-                if (siteT != siteT) {
-                    alert("error, no rotation_time, " + new_app_id);
+                if (siteT != siteT/*NaN*/) {
+                    //alert("error, no rotation_time, " + new_app_id);
+                    siteT = now + 60 * 1000 * 5;
                 }
-                GM_setValue("site_timeout", siteT);
+                GM_setValue("site_timeout_" + new_app_id, siteT);
                 window.location.href = handler[new_app_id].mypage_url;
                 return true;
             } else {
@@ -3355,7 +3355,7 @@
                         succ = true;
                         break;
                     default:
-                        unsafeWindow.alert("msgloop - unknown msg - " + list_action[j][0]);
+                        alert("msgloop - unknown msg - " + list_action[j][0]);
                         break;
                     }
                     GM_log("succ : " + succ);
@@ -3368,7 +3368,7 @@
         }
 
         if (i === actions.length) {
-            unsafeWindow.alert('no match:' + url);
+            alert('no match:' + url);
             GM_log('no match:' + url);
         }
 
