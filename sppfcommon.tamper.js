@@ -1098,7 +1098,7 @@
                         ['aJ', '#bg > div > div.btn_blue > a'],
                         ['switch']]],
                     [/%2Fbox_flash%2F/, 'flashJT', '#canvas'],
-                    [/%2Fbox_reset_confirm/, 'aJ', '#bg > div.window > div.pt5 > form'],
+                    [/%2Fbox_reset_confirm/, 'formJ', '#bg > div.window > div.pt5 > form'],
                     [/%2Fbox_reset_result/, 'aJ', '#bg > ul > li > a[href*="eventTop"]'],
                     [/%2Fbox_result%2F/, 'list', [
                         ['aJ', '#bg > section > div.btn_blue > a']]],
@@ -1365,6 +1365,7 @@
                     [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
                     [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
                     [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
+                    [/errorCatch%2FError%2F%3Ferror%3D301/, 'aJ', this.cssmypage],
                     [/^eventBigRaidBoss%2FBigRaidBossBattleResult/, 'aJ', '#main > div.btn_mission > a'],
                     [/^eventBigRaidBoss%2FBigRaidbossBattleSwf/, 'func', () => {
                         setTimeout(function wait() {
@@ -1398,8 +1399,9 @@
                                 return $('a.medal_box').clickJ().length > 0;
                             }
                         }],
+                        //['hold'],
                         ['funcR', function () {
-                            var freeChallenge = $('#main > div.section_sub.find_event_target_section > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
+                            var freeChallenge = $('#main > div.raid_boss_container.section_margin_top > div.section_sub > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
                             if (freeChallenge.length > 0 && freeChallenge.text().match(/(\d+)/)
                                 && +freeChallenge.text().match(/(\d+)/)[1] > 0) {
                                 return $('a[href*="event%2FMaxDamageRaidBossTop"]').clickJ().length > 0;
@@ -1413,6 +1415,7 @@
                             }
                             return false;
                         }],
+                        ['aJ', 'a[href*="eventLimitedRaidBoss%2FDoSuperHonkiAppear"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoEventQuestExecutionCheck)'],
@@ -1447,6 +1450,7 @@
                         ['aJ', '#boss_battle_gauge_wrap > div > div.btn_gauge_battle > a'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
+                        ['aJ', 'a[href*="eventLimitedRaidBoss%2FRaidBossTop"]'],
                         ['hold']]],
                     [/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
                     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -1539,7 +1543,7 @@
                         var boss_info = $('#main > div.subtitle').first(), boss_n, boss_lvl, wait = 2000, back_xpath, res,
                             hp_gauge, hp_full, USERNAME, help_record, last_attack, bp_need = 1,
                             attack_num;
-                        //debugger;
+                        //return;
                         if (url.match(/%2FraidBoss%2F/)) {
                             back_xpath = '//a[text()="クエストに戻る"]';
                         } else {
@@ -1581,26 +1585,25 @@
                         }
 
                         attack_num = 0;
-                        setInterval(function () {
-                            //if (url.match(/GiDimension/)) {
-                            //	return;
-                            //}
+                        tryUntil(function () {
                             GM_log(bp_need);
                             GM_log($('#do_battle_btn_' + bp_need));
-                            var attack = $('#do_battle_btn_' + bp_need + ':not([style*="none"])'), add_bp;
+                            var attack = $('#bp_attack > div.bonus_raid_bp');
+                            var add_bp;
+                            if (attack.length === 0) {
+                                // bonus raid, bp 0.
+                                attack = $('#do_battle_btn_' + bp_need + ':not([style*="none"])');
+                            }
                             GM_log(attack);
                             if (attack.length > 0 && !attack.hasClass('btn_main_off_small') && !attack.hasClass('btn_select_' + bp_need + '_off')) {
-                                if (attack_num === 0) {
-                                    attack.clickJ();
-                                }
-                                attack_num += 1;
-                                attack_num = attack_num % 5;
-                                return;
-                            }
-                            GM_log("yyyyyyyyyy");
-                            if (attack.length === 0) {
-                                $('#stage_front').clickJ();
-                                return;
+                                //if (attack_num === 0) {
+                                //    attack.clickJ();
+                                //}
+                                //attack_num += 1;
+                                //attack_num = attack_num % 5;
+                                //return;
+                                $('#main > div.power_drink.relative.on > div.use_btn.show').clickJ();
+                                return attack.clickJ().length > 0;
                             }
                             GM_log("zzzzzzzzzz");
                             add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
@@ -1611,6 +1614,19 @@
                             } else {
                                 add_bp.first().clickJ();
                             }
+                            return false;
+                        });
+                        setInterval(function () {
+                            //if (url.match(/GiDimension/)) {
+                            //	return;
+                            //}
+
+                            GM_log("yyyyyyyyyy");
+                            //if (attack.length === 0) {
+                                $('#stage_front').clickJ();
+                            //    return;
+                            //}
+
                         }, wait);
                     }],
                     [/eventCapture2%2FCaptureBossTop%2F/, 'aJ', $('#bp_attack > div > div > div > div > a').last()],
@@ -2011,8 +2027,8 @@
                         ['a', "//div[@class='event_btn']/a"],
                         ['flash', '//*[@id="container"]']]],
                     [/arrangement%2FArrangementEdit%2F/, 'func', function () {
-                        clickS('//div[text()="自動割り振り"]');
-                        //clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
+                        //clickS('//div[text()="自動割り振り"]');
+                        clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
                         setInterval(function () {
                             if (getXPATH('//div[@id="overrayArea" and not(@class="hide")]')) {
                                 clickForm('//*[@id="containerBox"]/form');
@@ -2204,7 +2220,8 @@
                         ['aJ', this.cssmypage]]],
                     [/gacha%2FGachaTop%2F%3FpageNum%3D4%26thema%3Dregend/, 'aJ', 'a[href$="gacha%2FGachaTop%2F%3FpageNum%3D4"]'],
                     [/gacha%2FGachaTop%2F%3FpageNum%3D4$/, 'list', [
-                        ['aJ', '#containerBox > div > div.txt_center > div > a[href*="gacha%2FGachaFlash%2F%3FthemaId%3D4"]'],
+                        //['hold'],//gacha%2FGachaFlash%2F%3FthemaId%3D
+                        ['aJ', 'a[href*="gacha%2FGachaFlash%2F%3FthemaId%3D"]:last()'],
                         //['a', '(//a[.//span[text()="ガチャをする"]])[last()]'],
                         ['aJ', 'a[href*="gacha%2FGachaTop%2F%3FpageNum%3D3"]']]],
                     [/gacha%2FGachaTop%2F/, 'list', [
@@ -2848,7 +2865,12 @@
                         //['hold'],
                         ['aJ', '#mypageMenu > div.mypageMenuBg > div.battle.open > a'],
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
-                        ['aJ', '#present > a'],
+                        ['funcR', function () {
+                            var last_present = GM_getValue('irregular_present_full', 0);
+                            if (last_present === 0 || last_present + 30 * 6 * 1000 > Date.now()) {
+                                return $('#present > a').clickJ() > 0;
+                            }
+                        }],
                         ['funcR', function () {
                             var mp = $('#mypageMenu > div.mypageMenuBg > div.event.open > div.gaugeMpBox > dl');
                             if (mp.length === 0) return;
@@ -2872,16 +2894,16 @@
                         ['aJ', this.cssmypage]]],
                     [/^pick%2Frun/, 'flashJT', '#canvas'],
                     [/^pick%2Ftop%2Ffree/, 'aJ', '#gacha > div.p10.txC > div > a'],
-                    [/^present%2Fconfirm%2F/, 'formJ', '#bg > section > article > div > form'],
+                    [/^present%2Fconfirm%2F/, 'list', [
+                        ['formJ', '#bg > section > article > div > form'],
+                        ['setGMV', 'irregular_present_full', Date.now()],
+                        ['aJ', this.cssmypage]]],
                     [/^present%2Findex%2F/, 'list',[
+                        ['clearGMV', 'irregular_present_full'],
                         ['aJ', 'a.on:contains("一括で受け取る")'],
                         ['aJ', 'div.countBeing + a'],
                         ['aJ', this.cssmypage],
                         ['hold']]],
-                    [/^[a-zA-Z0-9]+%2Fpresent_select/, 'list', [
-                        ['aJ', '#bg a:regex(href, %2Fpresent%2F.%2F.):last()']]],
-                    [/^[a-zA-Z0-9]+%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
-                    [/^[a-zA-Z0-9]+%2Fpresent/, 'flashJT', '#canvas'],
                     [/quest%2FbossSuccess/, 'aJ', 'a:contains("次のステージへ")'],
                     [/^quest%2Fboss/, 'aJ', 'a:contains(戦闘する)'],
                     [/^quest%2F(clearStage|get(Card|Social)|levelUp)/, 'aJ', 'div.questNextButton > a'],
@@ -2894,40 +2916,6 @@
                     [/^[a-zA-Z0-9]+%2FattackResult%2F/, 'list', [
                         ['aJ', '#bg > section.window.wide > div > div.helpCommand > div.helpCommandWindow > ul > li:nth-child(1) > div > div.p5 > div > a'],
                         ['aJ', '#bg > ul > li > a:contains("ステージを進行する")']]],
-                    [/^[a-zA-Z0-9]+%2Findex/, 'list', [
-                        ['aJ', '#aNormal:not(.noMP)'],
-                        ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
-                    [/^[a-zA-Z0-9]+%2Fquest/, 'func', () => {
-                        setInterval(() => {
-                            $('#battleBoss:visible()').clickJ().length > 0 ||
-                            $('#but4.commandButton.on').clickJ().length > 0 ||
-                            $('#but3.commandButton.on').clickJ().length > 0 ||
-                            $('#but2.commandButton.on').clickJ().length > 0 ||
-                            $('#but1.commandButton.on').clickJ().length > 0 ||
-                            ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
-                            $('#but3.questButton.active > a').clickJ().length > 0 ||
-                            $('#but2.questButton.on').clickJ().length > 0 ||
-                            $('#but1.questButton.on').clickJ().length > 0 ||
-                            ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
-                        }, 2000);
-                    }],
-                    [/^[a-zA-Z0-9]+%2Fraid/, 'flashJT', '#canvas'],
-                    [/^[a-zA-Z0-9]+%2Fsupport/, 'list', [
-                        ['aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
-                        ['aJ', this.cssmypage]]],
-                    [/^[a-zA-Z0-9]+%2Ftop/, 'list', [
-                        ['funcR', function () {
-                            var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
-                            if (count) {
-                                count = +count[0];
-                                if (count > 10) {
-                                    return $('a[href*="%2Fticket"]').clickJ().length > 0;
-                                }
-                            }
-                        }],
-                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction > div > ul > li:nth-child(2) > div > a:not(:has(dl.cost0))'],
-                        ['aJ', '#bg > section:nth-child(5) > div > div.raidAction a'],
-                        ['switch']]],
                     [/^[a-zA-Z0-9]+%2Fbattle_list/, 'list', [
                         ['aJ', 'a[href*="%2Fbattle"]:contains("結果")'],
                         ['aJ', 'a[href*="%2Fparty_select"]:contains("参戦")'],
@@ -2960,6 +2948,9 @@
                         }],
                         ['hold']]],
                     [/^[a-zA-Z0-9]+%2Fbox_reset/, 'formJ', 'form[action*="box_reset_result"]'],
+                    [/^[a-zA-Z0-9]+%2Findex/, 'list', [
+                        ['aJ', '#aNormal:not(.noMP)'],
+                        ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     [/^[a-zA-Z0-9]+%2Fjoin/, 'aJ', '#bg > ul > li > a:contains("イベントTOP")'],
                     [/^[a-zA-Z0-9]+%2Fparty_select/, 'list', [
                         ['funcR', () => {
@@ -2975,11 +2966,33 @@
                         ['aJ', 'a:contains("ガチャる"):last()'],
                         //['hold'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
+                    [/^[a-zA-Z0-9]+%2Fpresent_select/, 'list', [
+                        ['aJ', '#bg a:regex(href, %2Fpresent%2F.%2F.):last()']]],
+                    [/^[a-zA-Z0-9]+%2FpresentResult/, 'aJ', '#bg > section.window.wide > article > div > div > div > a'],
+                    [/^[a-zA-Z0-9]+%2Fpresent/, 'flashJT', '#canvas'],
+                    [/^[a-zA-Z0-9]+%2Fquest/, 'func', () => {
+                        setInterval(() => {
+                            $('#battleBoss:visible()').clickJ().length > 0 ||
+                            $('#but4.commandButton.on').clickJ().length > 0 ||
+                            $('#but3.commandButton.on').clickJ().length > 0 ||
+                            $('#but2.commandButton.on').clickJ().length > 0 ||
+                            $('#but1.commandButton.on').clickJ().length > 0 ||
+                            ($('#mpLamp.cost0').length > 0 && $('#but3.questButton.active > a').length > 0) ||
+                            $('#but3.questButton.active > a').clickJ().length > 0 ||
+                            $('#but2.questButton.on').clickJ().length > 0 ||
+                            $('#but1.questButton.on').clickJ().length > 0 ||
+                            ($('#but1.questButton.off').length > 0 && $(this.cssmypage).clickJ().length > 0);
+                        }, 2000);
+                    }],
+                    [/^[a-zA-Z0-9]+%2Fraid/, 'flashJT', '#canvas'],
                     [/^[a-zA-Z0-9]+%2Fresult/, 'aJ', 'a:contains("イベントTOP")'],
+                    [/^[a-zA-Z0-9]+%2Fsupport/, 'list', [
+                        ['aJ', '#bg > ul > li > a:contains("戦闘準備に戻る")'],
+                        ['aJ', this.cssmypage]]],
                     [/^[a-zA-Z0-9]+%2Fticket/, 'list', [
                         ['aJ', 'a.on:contains("BOXをリセットする")'],
                         ['aJ', 'a[href*="%2Fpick"]:last()']]],
-                    [/^[a-zA-Z0-9]+%2Ftop$/, 'list', [
+                    [/^[a-zA-Z0-9]+%2Ftop/, 'list', [
                         ['funcR', function () {
                             var count = $('dl.status.nameSelf > dt:contains("ガチャキューブ所持数") + dt').text().match(/\d+/);
                             if (count) {
@@ -3027,7 +3040,7 @@
                     [/^boss%2Fwin/, 'list', [
                         ['aJ', '#main > a.btn_type1_l']]],
                     [/^boss%3F/, 'aJ', '#main > a.btn_battle_start'],
-                    [/^campaign%2Findex/, 'func', () => {alert("campaign!!!");}],
+                    //[/^campaign%2Findex/, 'func', () => {alert("campaign!!!");}],
                     [/^feature%2Ffloortreasurelist/, 'list', [
                         ['aJ', '#main > a'],
                         ['aJ', this.cssmypage]]],
@@ -3288,9 +3301,14 @@
                     case 'formN':
                         succ = succ || clickForm(list_action[j][1], true);
                         break;
-                    case 'setCookie':
+                    case 'setCookie':case 'setGMV':
                         if (!succ) {
                             GM_setValue(list_action[j][1], list_action[j][2]);
+                        }
+                        break;
+                    case 'clearGMV':
+                        if (!succ) {
+                            GM_deleteValue(list_action[j][1]);
                         }
                         break;
                     case 'hold':
@@ -3368,7 +3386,7 @@
         }
 
         if (i === actions.length) {
-            alert('no match:' + url);
+            //alert('no match:' + url);
             GM_log('no match:' + url);
         }
 
