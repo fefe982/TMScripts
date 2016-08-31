@@ -1384,6 +1384,40 @@
                         ['aJ', 'a[href*="DoEventQuestExecutionCheck"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)']]],
                     [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
+                        ['funcR', function () {
+                            //#eventDeck > ul.event_chara > li > div
+                            var items = $('#main > div.raid_boss_container.section_margin_top > div.section_main:has(div:contains("イベキャラを強化しよう！")) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div > div');
+                            var has_item = false;
+                            items.each(function(){
+                                if (this.innerText.match(/(\d+)/) && 
+                                    +this.innerText.match(/(\d+)/)[0] > 0) {
+                                    has_item = true;
+                                }
+                            });
+                            if (has_item !== true) {
+                                return false;
+                            }
+                            var lvls = $('#eventDeck > ul.event_chara > li > div');
+                            var i = 0, lvl = 99999;
+                            lvls.each(function(index) {
+                                if (this.innerText.match(/(\d+)/) && 
+                                    +this.innerText.match(/(\d+)/)[0] < lvl) {
+                                    i = index;
+                                    lvl = +this.innerText.match(/(\d+)/)[0];
+                                }
+                            });
+                            if (i > 0) {
+                                return $('#eventDeck > ul > li:eq(' + i + ') > a').clickJ().length > 0;
+                            }
+                        }],
+                        ['funcR', function() {
+                            var medal = $('#raid_boss_top > div > div.event_command_section > div > div > div > div.btn_battle > a > div');
+                            if (medal.length === 1
+                                && medal.text().match(/(\d+)/)
+                                && +medal.text().match(/(\d+)/)[1] > 0) {
+                                return $('#raid_boss_top > div > div.event_command_section > div > div > div > div.btn_battle > a').clickJ().length > 0;
+                            }
+                        }],
                         //['hold'],
                         ['aJ', 'a[href*="%2FEventQuestEntryConfirm"]'],
                         ['aJ', 'a[href*="%2FEventQuestEntryList"]'],
@@ -1579,12 +1613,14 @@
                                 help_record &&
                                 !url.match(/GiDimension/) &&
                                 $('a[href*="DoMissionExecutionCheck"]').length > 0) {
-                            $('a[href*="DoMissionExecutionCheck"]').clickJ();
+                            //$('a[href*="DoMissionExecutionCheck"]').clickJ();
                             //clickA(back_xpath);
                             return;
                         }
+                        //return;
 
                         attack_num = 0;
+                        var bp_check_count = 0;
                         tryUntil(function () {
                             GM_log(bp_need);
                             GM_log($('#do_battle_btn_' + bp_need));
@@ -1608,25 +1644,22 @@
                             GM_log("zzzzzzzzzz");
                             add_bp = $('#bp_recovery > div.flexslider.small > div > ul > li > ul > li > div > span:nth-child(1)');
                             GM_log("bp_candy : " + add_bp.length);
+                            //return true;
                             if (add_bp.length === 0) {
                                 GM_log("empty");
-                                $('#main > div.go_mission_button a').clickJ(); // go on with mission
+                                // bp candy usually appear later
+                                bp_check_count++;
+                                if (bp_check_count > 3) {
+                                    //return $('#main a:contains("イベントTOPへ")').clickJ().length > 0;
+                                    return $('#main > div.go_mission_button a').clickJ().length > 0; // go on with mission
+                                }
                             } else {
                                 add_bp.first().clickJ();
                             }
                             return false;
                         });
                         setInterval(function () {
-                            //if (url.match(/GiDimension/)) {
-                            //	return;
-                            //}
-
-                            GM_log("yyyyyyyyyy");
-                            //if (attack.length === 0) {
-                                $('#stage_front').clickJ();
-                            //    return;
-                            //}
-
+                            $('#stage_front').clickJ();
                         }, wait);
                     }],
                     [/eventCapture2%2FCaptureBossTop%2F/, 'aJ', $('#bp_attack > div > div > div > div > a').last()],
@@ -1655,8 +1688,10 @@
                         ['aJ', 'a:contains("全ての秘伝書を使う")'],
                         ['aJ', 'a:contains("エピソードエリア")'],
                         ['hold']]],
+                    [/^event%2FeventFusion%2FMaterialFusionTop%2F%3FeventTypeId%3D34/, 'list', [
+                        ['aJ', 'a:contains("全ての秘伝書を使う")']]],
                     [/event%2FeventFusion%2FFusionEnd/, 'list', [
-                        ['aJ', 'a:contains("エピソードエリア")'],
+                        ['aJ', 'a:contains("イベントTOPへ")'],
                         ['hold']]],
                     [/eventAnniversary%2FEventDeckTop/, 'list', [
                         ['aJ', 'a:contains("選択する"):last()'],
@@ -1696,6 +1731,11 @@
                         }]]],
                     [/^eventGuildHideAndSeek%2FPanelResult%2F/, 'list', [
                         ['aJ', '#panel > div.button a']]],//#panel > div > p > a
+                    [/^eventTeamRaidBoss%2F(EventBattleConf|EventBattleResult)%2F/, 'list', [
+                        ['aJ', 'a[href*="eventTeamRaidBoss%2FDoFeverStart%2F"]'],
+                        ['aJ', '#loopBossBtn > div > div.btn_1 > a'],
+                        ['aJ', 'a[href*="eventTeamRaidBoss%2FDoMissionExecutionCheck"]']]],
+                    [/^eventTeamRaidBoss%2FEventBattleSwf/, 'flashJT', '#stage_front'],
                     [/fusion%2FBulkFusionConfirm%2F/, 'form', '//*[@id="main"]/div[@class="section_sub"]/form'],
                     [/fusion%2FFusionEnd%2F/, "func", function () {
                         var lvl = getXPATH("//div[div[@class='sprite_deck heading_level']]").innerText,
