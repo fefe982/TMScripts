@@ -1398,7 +1398,7 @@
                                 return false;
                             }
                             var lvls = $('#eventDeck > ul.event_chara > li > div');
-                            var i = 0, lvl = 99999;
+                            var i = -1, lvl = 99999;
                             lvls.each(function(index) {
                                 if (this.innerText.match(/(\d+)/) && 
                                     +this.innerText.match(/(\d+)/)[0] < lvl) {
@@ -1406,7 +1406,7 @@
                                     lvl = +this.innerText.match(/(\d+)/)[0];
                                 }
                             });
-                            if (i > 0) {
+                            if (i >= 0) {
                                 return $('#eventDeck > ul > li:eq(' + i + ') > a').clickJ().length > 0;
                             }
                         }],
@@ -1435,7 +1435,9 @@
                         }],
                         //['hold'],
                         ['funcR', function () {
-                            var freeChallenge = $('#main > div.raid_boss_container.section_margin_top > div.section_sub > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
+                            //'#main > div.raid_boss_container > div.section_sub > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span'
+                            //'#main > div.raid_boss_container > div.section_sub > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span'
+                            var freeChallenge = $('#main > div.raid_boss_container > div.section_sub:contains("本日BP消費なしであと") > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
                             if (freeChallenge.length > 0 && freeChallenge.text().match(/(\d+)/)
                                 && +freeChallenge.text().match(/(\d+)/)[1] > 0) {
                                 return $('a[href*="event%2FMaxDamageRaidBossTop"]').clickJ().length > 0;
@@ -2473,7 +2475,7 @@
                             succ = succ || clickA('//a[text()="MPが割り振れます"]');
                             succ = succ || clickA('//a[text()="無料ガチャが出来ます"]');
                             succ = succ || clickA('//a[text()="トレジャーの結果が出ています"]');
-                            succ = succ || clickA('//a[text()="贈り物が届いてます"]');
+                            //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
                             succ = succ || clickA('//a[text()="運営からのお詫び"]');
                             succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
                             succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
@@ -2500,7 +2502,9 @@
                     [/mypage%2FMaterialCollectionCompEnd%2F/, 'aJ', 'a:contains("コンプマテリアル図鑑")'],
                     [/prizeReceive%2FPrizeReceiveAllEnd%2F/, 'a', '//a[text()="贈り物BOX TOP"]'], //this.xpathmypage],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
-                        ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])']]],
+                        ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])'],
+                        ['aJ', 'li:not(.current) a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D3"]'],
+                        ['aJ', this.cssmypage]]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
                         ['funcR', () => {
                             var sell = false, name, cardname;
@@ -2533,6 +2537,7 @@
                             GM_log("fall through");
                             return 0;
                         }],
+                        ['aJ', 'a[href*="FprizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'],
                         ['hold']]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2|bulkSellFlg%3D0%26sortKey%3D1%26receiveCategory%3D2%26page|receiveId%3D)/, 'list', [
                         ['funcR', function () {
@@ -2559,17 +2564,18 @@
                                 return true;
                             });
                             if (!get) {
-                                $('#containerBox > div > div.page_number:first() > div.current + div > a').clickJ();
+                                return $('#containerBox > div > div.page_number:first() > div.current + div > a').clickJ().length > 0;
                             }
                             return true;
                         }],
                         ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2%26bulkSellFlg%3D1"]'],
+                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'],
                         ['hold']]],
                     [/prizeReceive%2FPrizeReceiveTop\b/, 'list', [
                         //['hold'],
                         //['formJ', '#containerBox > form:nth-child(7)'],
-                        //['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'],
-                        ['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
+                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'], // go to item tab
+                        //['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
                         ['aJ', this.cssmypage]]], //'func',handlePrizeTop],
                     [/strongBoss%2FStrongBossBattleResult%2F/, 'aJ', 'a:contains("クエストを進める")'],
                     [/strongBoss%2FStrongBossHelpResult%2F/, 'a', this.xpathquest],
@@ -2907,8 +2913,8 @@
                         ['aJ', '#newsDetail > article > ul > li > a[href*="pick%2Ftop%2Ffree"]'],
                         ['funcR', function () {
                             var last_present = GM_getValue('irregular_present_full', 0);
-                            if (last_present === 0 || last_present + 30 * 6 * 1000 > Date.now()) {
-                                return $('#present > a').clickJ() > 0;
+                            if (last_present + 30 * 6 * 1000 < Date.now()) {
+                                return $('#present > a').clickJ().length > 0;
                             }
                         }],
                         ['funcR', function () {
