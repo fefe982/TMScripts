@@ -716,8 +716,8 @@
                         ['aJ', 'a:contains("次のエリアへ")'], //('//a[text()="次のエリアへ"]');
                         ['aJ', this.cssmypage]]], //(this.xpathmypage);]]],
                     [/mission%2FBossBattleResult%2F/, 'list', [
-                        ['aJ', 'a:contains("次のエリアへ進む"):first()'],
-                        ['aJ', 'a:contains("次のフィールドへ進む"):first()']]],
+                        ['aJ', 'a:contains("次のエリアへ進む"):first'],
+                        ['aJ', 'a:contains("次のフィールドへ進む"):first']]],
                     [/mission%2FMissionError%2F/, 'list', [
                         ['funcR', function () {
                             if (document.referrer.match(/island%2F/)) {
@@ -926,7 +926,7 @@
                     [/fusion%2Flimit%/, 'flashJT', "#canvas"],
                     [/item%2FpresentList/, 'formJ', 'form'],
                     [/%2ForderHelpSelect/, 'list', [
-                        ['aJ', '#bg > section a:contains("参戦する"):first()'],
+                        ['aJ', '#bg > section a:contains("参戦する"):first'],
                         ['aJ', '#bg > ul > li > a:contains("イベントTOP")']]],
                     //#bg > section > ul > li > dl > dd > div.p10.txR > div > a
                     [/^login%2Fgacha%2Fdx/, 'flashJT', '#canvas'],
@@ -1477,7 +1477,7 @@
                         }],
                         ['aJ', 'a[href*="%2FDoMissionExecution"]'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)'],
-                        ['aJ', '#world_select_wrap > div > ul > li.stage_icon > div:has(span.count_num:regexText("^(.|..)$")) > div.btn.relative > a:first()'],
+                        ['aJ', '#world_select_wrap > div > ul > li.stage_icon > div:has(span.count_num:regexText("^(.|..)$")) > div.btn.relative > a:first'],
                         //['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
                         ['aJ', '#world_select_wrap > div > ul > li.stage_icon.extra.clear > div > div > a'],
                         //['func', function () {alert("need intervene");}],
@@ -1576,7 +1576,7 @@
                         ['hold']]],
                     [/eventSurvival%2FMissionResult/, 'a', '//*[@id="go"]/a'],
                     [/^(event[a-zA-Z0-9]*|raidBoss)%2FRaidBossTop/, 'func', function () {
-                        var boss_info = $('#main > div.subtitle').first(), boss_n, boss_lvl, wait = 2000, back_xpath, res,
+                        var boss_info = $('#main > div.subtitle').first, boss_n, boss_lvl, wait = 2000, back_xpath, res,
                             hp_gauge, hp_full, USERNAME, help_record, last_attack, bp_need = 1,
                             attack_num;
                         //return;
@@ -1597,21 +1597,21 @@
                             }
                         }
                         //debugger;
-                        hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first();
+                        hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first;
                         hp_full = hp_gauge.attr('style').match(/100/);
                         USERNAME = GM_getValue('__ht_USERNAME', "");
                         help_record = USERNAME !== "" && $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
-                        last_attack = $('div.tactical_situation_detail').first();
+                        last_attack = $('div.tactical_situation_detail').first;
                         bp_need = 1;
                         GM_log("hp_gauge : " + hp_gauge.attr('style'));
                         GM_log(USERNAME);
                         GM_log("help_record : " + help_record);
-                        GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
+                        GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first.text());
                         //"#main > div:nth-child(14) > div:nth-child(1) > div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a"
                         //#main > div.raidboss_module  div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a
                         if (!hp_full &&
                                 USERNAME !== "" &&
-                                $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() !== USERNAME &&
+                                $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first.text() !== USERNAME &&
                                 help_record &&
                                 !url.match(/GiDimension/) &&
                                 $('a[href*="DoMissionExecutionCheck"]').length > 0) {
@@ -1656,7 +1656,7 @@
                                     return $('#main > div.go_mission_button a').clickJ().length > 0; // go on with mission
                                 }
                             } else {
-                                add_bp.first().clickJ();
+                                add_bp.first.clickJ();
                             }
                             return false;
                         });
@@ -1704,7 +1704,7 @@
                         ['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
                         ['hold']]],
                     [/eventGiDimension%2FMemoryCardUserList/, 'list', [
-                        ['aJ', 'a:contains("プレゼントする"):first()'],
+                        ['aJ', 'a:contains("プレゼントする"):first'],
                         ['aJ', 'a[href*="eventGiDimension%2FDoMissionExecutionCheck"]'],
                         ['hold']]],
                     [/eventRaidBossLoop%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > div.txt_center.margin_y_10 > a'],
@@ -1829,11 +1829,12 @@
                         succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
                         succ = succ || $('#mypage_news > ul > li > a[href*="arena%2FArenaTop"]').clickJ().length > 0;
                         succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
-                        GM_log(ap_gauge.css('width'));
+                        //GM_log(ap_gauge.css('width'));
                         if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9][0-9]px|[89]px/)) {
-                            eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first()');
-                            //alert(eventL.length);
-                            //alert(eventL.text());
+                            //GM_log("yyyy");
+                            eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first');
+                            //GM_log(eventL.length);
+                            //GM_log(eventL.text());
                             //GM_log(eventL.text());
                             if (eventL.length > 0 && !$(eventL[0]).text().match(/終了しました/)) {
                                 succ = eventL.last().clickJ().length > 0;
@@ -1841,6 +1842,7 @@
                             // do not so mission, change to GI quest
                             //succ = succ || ($('a[href*="MissionList"]').last().clickJ().length > 0);
                         }
+                        //GM_log("xxxx");
                         if (!succ) {
                             if (getXPATH('//div[@class="battle"]/a/div[@class="mypage_battleOlympia"]')) {
                                 if (!battle_olympia_over) {
@@ -2532,7 +2534,7 @@
                             });
                             return sell;
                         }],
-                        ['aJ', '#containerBox > div > div.page_number:first() > div.current + div > a'],
+                        ['aJ', '#containerBox > div > div.page_number:first > div.current + div > a'],
                         ['funcR', function () {
                             GM_log("fall through");
                             return 0;
@@ -2564,7 +2566,7 @@
                                 return true;
                             });
                             if (!get) {
-                                return $('#containerBox > div > div.page_number:first() > div.current + div > a').clickJ().length > 0;
+                                return $('#containerBox > div > div.page_number:first > div.current + div > a').clickJ().length > 0;
                             }
                             return true;
                         }],
@@ -2697,7 +2699,7 @@
                     [/main%2Fgacha%2Fmain%2Fmulti_result%3/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/main%2Fgacha%2Fmain%2Fresult%3F/, 'list', [
                         ['aJ', '#shortCutForm > input.btnLM.blue'],
-                        ['aJ', 'div.gacha_frame:first() form:last()'],
+                        ['aJ', 'div.gacha_frame:first form:last()'],
                         ['aJ', this.cssmypage]]],
                     [/^akr%2Fmain%2Fjpseries%2Floginbonus/, 'aJ', 'a:contains("ドリナイマイページへ")'],
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
@@ -3095,8 +3097,8 @@
                         ['aJ', this.cssmypage]]],
                     [/^feature%2Fmodule%2F[0-9]+%2Farena%2Fdone/, 'aJ', '#head_module > a'],
                     [/^feature%2Fmodule%2F[0-9]+%2Farena%2Findex/, 'list', [
-                        ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("召喚獣を呼び出す"):first()'],
-                        ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first()']]],
+                        ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("召喚獣を呼び出す"):first'],
+                        ['aJ', '#main > div > div.bg > div > div.status_user > a:contains("バトルを挑む"):first']]],
                     [/^feature%2Fmodule%2F[0-9]+%2Fraid%2Fdone/, 'list', [
                         ['aJ', '#main > div.list_sort > a.btn_type2_m:contains("進撃に戻る")'],
                         ['aJ', '#main > block_list2 > a:contains("宝箱を開ける")']]],
@@ -3124,7 +3126,7 @@
                         ['aJ', '#head_module > a'],
                         ['aJ', '#main > div.table_div > div:nth-child(1) > a']]],
                     [/^feature%2Fmodule%2F189%2Fteamduel%2Fdone/, 'hold'],
-                    [/^feature%2Fmodule%2F[0-9]+%2Fteamduel%2Findex/, 'aJ', 'div.bg > list_knight > a:first()'],
+                    [/^feature%2Fmodule%2F[0-9]+%2Fteamduel%2Findex/, 'aJ', 'div.bg > list_knight > a:first'],
                     [/^feature%2Fmodule%2F[0-9]+%2Fteamduel%2Frequest/, 'list', [
                         ['aJ', '#main > a'],
                         ['hold']]],
@@ -3143,7 +3145,7 @@
                     [/^friend%2Faccept/, 'aJ', '#main > a'],
                     [/^friend%2Fconfirm/, 'aJ', '#main > a:contains("盟友になる")'],
                     [/^friend%2Fwaitfor/, 'list', [
-                        ['aJ', 'div.status_user > a:first()'],
+                        ['aJ', 'div.status_user > a:first'],
                         ['aJ', this.cssmypage]]],
                     [/^gacha%2Fbronze/, 'list', [
                         ['funcR', () => {
