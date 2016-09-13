@@ -2544,6 +2544,7 @@
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2|bulkSellFlg%3D0%26sortKey%3D1%26receiveCategory%3D2%26page|receiveId%3D)/, 'list', [
                         ['funcR', function () {
                             var get = false;
+                            var card_names = [];
                             GM_log('getting');
                             $("#containerBox > div.section > ul > li").each(function (index) {
                                 var name = $(this).children("div.section_header.fnt_emphasis.txt_center").text(), mres, cardname, setGetCard;
@@ -2559,6 +2560,7 @@
                                         get = true;
                                         return false;
                                     }
+                                    card_names.push(cardname);
                                     GM_log(cardname + " pass");
                                 } else {
                                     GM_log("bad name " + name);
@@ -2566,6 +2568,17 @@
                                 return true;
                             });
                             if (!get) {
+                                var card_count = {};
+                                if ($('#containerBox > div > div.page_number:first > div.current').text() !== "1") {
+                                    var last_count = GM_getValue("rag_card_count", "{}");
+                                    card_count = JSON.parse(last_count);
+                                }
+                                card_names.forEach(function (val) {
+                                    card_count[val] = card_count[val] ? card_count[val] + 1 : 1;
+                                });
+                                var this_count = JSON.stringify(card_count);
+                                GM_setValue("rag_card_count", this_count);
+                                GM_log(this_count);
                                 return $('#containerBox > div > div.page_number:first > div.current + div > a').clickJ().length > 0;
                             }
                             return true;
