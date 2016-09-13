@@ -2506,6 +2506,7 @@
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
                         ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])'],
                         ['aJ', 'li:not(.current) a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D3"]'],
+                        ['hold'],
                         ['aJ', this.cssmypage]]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
                         ['funcR', () => {
@@ -2591,6 +2592,7 @@
                         //['formJ', '#containerBox > form:nth-child(7)'],
                         ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'], // go to item tab
                         //['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
+                        ['hold'],
                         ['aJ', this.cssmypage]]], //'func',handlePrizeTop],
                     [/strongBoss%2FStrongBossBattleResult%2F/, 'aJ', 'a:contains("クエストを進める")'],
                     [/strongBoss%2FStrongBossHelpResult%2F/, 'a', this.xpathquest],
