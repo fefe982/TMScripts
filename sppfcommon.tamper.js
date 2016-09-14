@@ -938,10 +938,10 @@
                     }],
                     [/mypage/, 'list', [
                         //['dbg'],
-                        ['aJ', 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
+                        ['aJGMV_Time', 'toaru_card_full', 30 * 60 * 1000, 'div.contents_info a[href*="pick%2Ftop%2Ffree"]'], // free gacha
                         //['dbg'],
                         ['aJ', 'section.eventArea > article a[href*="mypage%2FsetParameter"]'], // status point
-                        ['aJ', $('.present_number > a').filter(function () {
+                        ['aJGMV_Time', 'toaru_card_full', 30 * 60 * 1000, $('.present_number > a').filter(function () {
                             return this.innerHTML !== '0';
                         })], // present
                         ['aJ', 'div.contents_info a[href*="cardBook%2Fbonus"]'], // card book
@@ -993,6 +993,8 @@
                         //['hold'],
                         ['aJ', 'a[href*="pick%2Frun%2Ffree%2Fdaily%3F"]'],
                         ['aJ', 'a[href*="pick%2Frun%2Ffree%2Flunch%3F"]'],
+                        ['setGMV', 'toaru_card_full', Date.now()],
+                        ['aJ', this.cssmypage],
                         ['flashJT', 'canvas']]],
                     [/pick%2F(top|result)%2Fpremium2/, 'list', [
                         ['aJ', 'a[href*="pick%2Frun%2Fpremium2%2Fmedal"]'],
@@ -1424,25 +1426,32 @@
                         ['aJ', 'a[href*="%2FeventGuildHideAndSeek%2FPanelTop"]'],
                         ['funcR', function () {
                             var medalCount = $('a.medal_box span.fnt_normal');
-                            if (medalCount.length === 1
-                                && medalCount.text().match(/(\d+)/)
-                                && +medalCount.text().match(/(\d+)/)[1] >=5)
-                            {
-                                //GM_log(medalCount);
-                                //return true;
-                                return $('a.medal_box').clickJ().length > 0;
-                            }
+                            var result = false;
+                            medalCount.each(function () {
+                                var item = $(this);
+                                if (item.text().match(/(\d+)/)
+                                    && +item.text().match(/(\d+)/)[1] >=5) {
+                                    if($('a.medal_box').clickJ().length > 0) {
+                                        result = true;
+                                        return false;
+                                    }
+                                }
+                                return false;
+                            });
+                            return result;
                         }],
-                        //['hold'],
                         ['funcR', function () {
+                            //'#main > div.event_wrap > div:nth-child(6) > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span
                             //'#main > div.raid_boss_container > div.section_sub > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span'
                             //'#main > div.raid_boss_container > div.section_sub > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span'
-                            var freeChallenge = $('#main > div.raid_boss_container > div.section_sub:contains("本日BP消費なしであと") > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
+                            var freeChallenge = $('div.section_sub:contains("本日BP消費なしであと") > div.padding_x_10 > div.txt_center.txt_frame_2.no_margin > span');
+                            GM_log(freeChallenge);
                             if (freeChallenge.length > 0 && freeChallenge.text().match(/(\d+)/)
                                 && +freeChallenge.text().match(/(\d+)/)[1] > 0) {
                                 return $('a[href*="event%2FMaxDamageRaidBossTop"]').clickJ().length > 0;
                             }
                         }],
+                        //['hold'],
                         ['aJNC', '__ht_myboss_wait', 'a:regex(href, event[a-zA-Z0-9]*%2FRaidBossTop)'],
                         ['funcR', function () {
                             var raid_clear = GM_getValue('__ht_myraid_clear');
@@ -1486,7 +1495,7 @@
                         ['aJ', '#boss_battle_gauge_wrap > div > div.btn_gauge_battle > a'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
-                        ['aJ', 'a[href*="eventLimitedRaidBoss%2FRaidBossTop"]'],
+                        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FRaidBossTop)'],
                         ['hold']]],
                     [/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
                     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -1597,28 +1606,30 @@
                             }
                         }
                         //debugger;
-                        hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first;
+                        hp_gauge = $('div.gauge.bosshp.box_extend.margin_x > div.bar').first();
+                        GM_log(hp_gauge);
                         hp_full = hp_gauge.attr('style').match(/100/);
                         USERNAME = GM_getValue('__ht_USERNAME', "");
                         help_record = USERNAME !== "" && $('div.tactical_situation_detail:contains("' + USERNAME + '")').length > 0;
-                        last_attack = $('div.tactical_situation_detail').first;
+                        last_attack = $('div.tactical_situation_detail').first();
                         bp_need = 1;
                         GM_log("hp_gauge : " + hp_gauge.attr('style'));
                         GM_log(USERNAME);
+                        GM_log($('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
                         GM_log("help_record : " + help_record);
-                        GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first.text());
+                        GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
                         //"#main > div:nth-child(14) > div:nth-child(1) > div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a"
                         //#main > div.raidboss_module  div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a
-                        if (!hp_full &&
-                                USERNAME !== "" &&
-                                $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first.text() !== USERNAME &&
-                                help_record &&
-                                !url.match(/GiDimension/) &&
-                                $('a[href*="DoMissionExecutionCheck"]').length > 0) {
-                            //$('a[href*="DoMissionExecutionCheck"]').clickJ();
-                            //clickA(back_xpath);
-                            return;
-                        }
+                        //if (!hp_full &&
+                        //        USERNAME !== "" &&
+                        //        $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() !== USERNAME &&
+                        //        help_record &&
+                        //        !url.match(/GiDimension/) &&
+                        //        $('a[href*="DoMissionExecutionCheck"]').length > 0) {
+                        //    //$('a[href*="DoMissionExecutionCheck"]').clickJ();
+                        //    //clickA(back_xpath);
+                        //    return;
+                        //}
                         //return;
 
                         attack_num = 0;
@@ -1656,7 +1667,7 @@
                                     return $('#main > div.go_mission_button a').clickJ().length > 0; // go on with mission
                                 }
                             } else {
-                                add_bp.first.clickJ();
+                                add_bp.first().clickJ();
                             }
                             return false;
                         });
@@ -1768,6 +1779,8 @@
                         succ = succ || clickA(this.xpathmypage);
                     }],
                     [/fusion%2FMaterialFusionConfirm%2F/, "form", '//*[@id=\"main\"]/div[@class="section_sub"]/form'],
+                    [/^gacha%2FGachaBoxResetConf/, 'aJ', 'a:contains("リセットする")'],
+                    [/^gacha%2FGachaBoxResetEnd/, 'aJ', '#main > nav > a'],
                     [/gacha%2FGachaCharacterCoinTop/, 'a', '//a[contains(text(),"ガチャをする")]'],
                     [/gacha%2FGachaCoinTop%2F/, 'a', '(//a[contains(text(), "ガチャをする")])[last()]'],
                     [/gacha%2FGachaFlash%2F/, 'a', '//a[text()="マイページへ"]'],
@@ -1783,8 +1796,9 @@
                     [/gacha%2FGachaTop(%2F)?%3FthemeId%3D3/, 'aJ', 'a[href*="gacha%2FGachaFlash%2F%3FgachaId%3D5%26themeId%3D3"]'], //text(), "ガチャをする")])[last()]'],
                     [/gacha%2FItemBox(Result|Top)/, 'list', [
                         ['aJ', 'a:contains("リセット")'],
-                        ['aJ', 'a:contains("連続で開ける")'],
+                        ['aJ', 'a:contains("連で開ける")'],
                         ['aJ', 'a:contains("開ける")'],
+                        //['aJ', '#main > ul > li:nth-child(2) > a'],
                         ['aJ', 'a:contains("イベントTOP")'],
                         ['aJ', 'a[href*="%2FDoMissionExecutionCheck"]']]],
                     [/itemBox%2FGachaItemList%2F/, 'a', '//a[text()="ガチャをする"]'],
@@ -1998,7 +2012,8 @@
                     [/arena%2FArenaBossBattleResult%2F/, 'list', [
                         ['a', '//a[text()="ボス一覧へ戻る"]'],
                         ['a', '//a[text()="報酬を受け取る"]'],
-                        ['a', '//a[text()="イベントを進める"]']]],
+                        ['a', '//a[text()="イベントを進める"]'],
+                        ['a', '//a[text()="イベントTOP"]']]],
                     [/arena%2FArenaBossRewardAllGetEnd%2F/, 'list', [
                         ['a', '//a[text()="ボス一覧へ戻る"]'],
                         ['a', '//a[text()="イベントを進める"]']]],
@@ -2450,6 +2465,17 @@
                     [/mypage%2FCollectionCompEnd%2F/, 'aJ', 'a:contains("図鑑報酬へ")'],
                     [/mypage%2FGreetList%2F/, 'a', this.xpathmypage],
                     [/mypage%2FIndex/, 'list', [
+                        ['a', '//a[contains(text(),"戦友申請が")]'],
+                        ['a', '//a[text()="カード図鑑報酬が受け取れます"]'],
+                        ['a', '//a[text()="マテリアル図鑑報酬が受け取れます"]'],
+                        ['a', '//a[text()="トレジャーに出発できます"]'],
+                        ['a', '//a[text()="MPが割り振れます"]'],
+                        ['a', '//a[text()="無料ガチャが出来ます"]'],
+                        ['a', '//a[text()="トレジャーの結果が出ています"]'],
+                        ['aJGMV_Time', 'rag_present_timer', 30 * 60 * 1000, 'a:contains("贈り物が届いてます")'],
+                        ['a', '//a[text()="運営からのお詫び"]'],
+                        ['a', '//a[text()="新しいメッセージがございます"]'],
+                        ['aJ', 'a:contains("スーパーノヴァの結果が届いています")'],
                         ["funcR", () => {
                             var txt = $('input[name="keUrl"][type="text"]'),
                                 ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
@@ -2470,17 +2496,7 @@
                                     return;
                                 }
                             }
-                            succ = succ || clickA('//a[contains(text(),"戦友申請が")]');
-                            succ = succ || clickA('//a[text()="カード図鑑報酬が受け取れます"]');
-                            succ = succ || clickA('//a[text()="マテリアル図鑑報酬が受け取れます"]');
-                            succ = succ || clickA('//a[text()="トレジャーに出発できます"]');
-                            succ = succ || clickA('//a[text()="MPが割り振れます"]');
-                            succ = succ || clickA('//a[text()="無料ガチャが出来ます"]');
-                            succ = succ || clickA('//a[text()="トレジャーの結果が出ています"]');
-                            //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
-                            succ = succ || clickA('//a[text()="運営からのお詫び"]');
-                            succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
-                            succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
+
                             boss_clear = getCookie("__my_r_boss_clear");
                             if (!boss_clear) {
                                 succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
@@ -2507,6 +2523,7 @@
                         ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])'],
                         ['aJ', 'li:not(.current) a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D3"]'],
                         ['hold'],
+                        ['setGMV', 'rag_present_timer', Date.now()],
                         ['aJ', this.cssmypage]]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
                         ['funcR', () => {
@@ -2708,7 +2725,10 @@
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fvictoryroad%2Fmain%2Fuser_list"]'],
                         ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Farea%2Fvictoryroad%2Fexe"]']]],
 
-                        [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
+                    [/main%2Fgacha%2Fmain%2F%3Faction_eventgacha/, 'list', [
+                        ['formJ', 'form[action*="main%2Ffree_gacha_exe%3"]:last()'],
+                        ['setGMV', 'dream_nine_card_full', Date.now()],
+                        ['aJ', this.cssmypage]]],
                     [/main%2Fgacha%2Fmain%2Findex%2F/, 'list', [
                         ['aJ', '#howto_icon_back_gacha > a.enable']]],
                     [/main%2Fgacha%2Fmain%2Fmulti_result%3/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
@@ -2722,7 +2742,7 @@
                         //['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
                         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
-                        ['aJ', '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
+                        ['aJGMV_Time', 'dream_nine_card_full', 30 * 60 * 1000, '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
                         ['aJ', '#news_user_info_area a:contains("新しく獲得した称号があります")'],
                         //['hold'],
                         ['funcR', function () {
@@ -2811,6 +2831,13 @@
                 return [
                     [/^:::$/, 'aJ', '#ctl00_body_hl_mypage_sp'],
                     [/^duty%2Fseries_success%2Fseries_success_season_start_or_end\.aspx/, 'aJ', '#ctl00_body_hl_series_success_start'],
+                    [/^duty%2Fseries_success%2Fseries_success_exe_complet\.aspx/, 'list', [
+                        ['aJ', '#ctl00_body_hl_series_success_start'],
+                        ['aJ', '#ctl00_body_hl_top']]],
+                    [/^duty%2Fseries_success%2Fseries_success_exe_confirm\.aspx/, 'list', [
+                        ['aJ', '#ctl00_body_Button1'],
+                        ['aJ', '#ctl00_body_Button2']]],
+                    [/^duty%2Fseries_success%2Fseries_success_order_regist\.aspx/, 'aJ', '#ctl00_body_hl_order_regist_top'],
                     [/^duty%2Fseries_success%2Fseries_success_top\.aspx/, 'list', [
                         ['funcR', () => {
                             var ap = $('#ctl00_body_DutyStaminaEmptyControl_divDutyStaminaEmpty > div.kadomaru > div.kadomaru_alltop:contains("体力が足りない")');
@@ -2821,7 +2848,9 @@
                                 return $(this.cssmypage).clickJ().length > 0;
                             }
                         }],
-                        ['aJ', '#ctl00_body_hl_chapter_progress']]],
+                        ['aJ', '#ctl00_body_hl_chapter_progress'],
+                        ['aJ', '#ctl00_body_hl_reset'],
+                        ['aJ', '#ctl00_body_rp_chapter_list_ctl02_hl_chapter']]],
                     [/^gacha%2Fgacha_new_result\.aspx/, 'list', [
                         ['aJ', '#ctl00_body_hl_gift'],
                         ['hold']]],
@@ -3337,6 +3366,14 @@
                         if (!succ) {
                             if (!GM_getValue(list_action[j][1])) {
                                 succ = clickA(list_action[j][2]);
+                            }
+                        }
+                        break;
+                    case 'aJGMV_Time':
+                        if (!succ) {
+                            if (GM_getValue(list_action[j][1], 0) + list_action[j][2] < Date.now()) {
+                                GM_deleteValue(list_action[j][1]);
+                                succ = $(list_action[j][3]).clickJ().length > 0;
                             }
                         }
                         break;
