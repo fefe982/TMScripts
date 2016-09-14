@@ -2465,6 +2465,17 @@
                     [/mypage%2FCollectionCompEnd%2F/, 'aJ', 'a:contains("図鑑報酬へ")'],
                     [/mypage%2FGreetList%2F/, 'a', this.xpathmypage],
                     [/mypage%2FIndex/, 'list', [
+                        ['a', '//a[contains(text(),"戦友申請が")]'],
+                        ['a', '//a[text()="カード図鑑報酬が受け取れます"]'],
+                        ['a', '//a[text()="マテリアル図鑑報酬が受け取れます"]'],
+                        ['a', '//a[text()="トレジャーに出発できます"]'],
+                        ['a', '//a[text()="MPが割り振れます"]'],
+                        ['a', '//a[text()="無料ガチャが出来ます"]'],
+                        ['a', '//a[text()="トレジャーの結果が出ています"]'],
+                        ['aJGMV_Time', 'rag_present_timer', 30 * 60 * 1000, 'a:contains("贈り物が届いてます")'],
+                        ['a', '//a[text()="運営からのお詫び"]'],
+                        ['a', '//a[text()="新しいメッセージがございます"]'],
+                        ['aJ', 'a:contains("スーパーノヴァの結果が届いています")'],
                         ["funcR", () => {
                             var txt = $('input[name="keUrl"][type="text"]'),
                                 ap_gauge = getXPATH('//*[@id="header_ap_gauge"]'),
@@ -2485,17 +2496,7 @@
                                     return;
                                 }
                             }
-                            succ = succ || clickA('//a[contains(text(),"戦友申請が")]');
-                            succ = succ || clickA('//a[text()="カード図鑑報酬が受け取れます"]');
-                            succ = succ || clickA('//a[text()="マテリアル図鑑報酬が受け取れます"]');
-                            succ = succ || clickA('//a[text()="トレジャーに出発できます"]');
-                            succ = succ || clickA('//a[text()="MPが割り振れます"]');
-                            succ = succ || clickA('//a[text()="無料ガチャが出来ます"]');
-                            succ = succ || clickA('//a[text()="トレジャーの結果が出ています"]');
-                            //succ = succ || clickA('//a[text()="贈り物が届いてます"]');
-                            succ = succ || clickA('//a[text()="運営からのお詫び"]');
-                            succ = succ || clickA('//a[text()="新しいメッセージがございます"]');
-                            succ = succ || $('a:contains("スーパーノヴァの結果が届いています")').clickJ().length > 0;
+
                             boss_clear = getCookie("__my_r_boss_clear");
                             if (!boss_clear) {
                                 succ = succ || clickA('//*[@id="mypage_boss_icon"]/a');
@@ -2521,6 +2522,7 @@
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
                         ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])'],
                         ['aJ', 'li:not(.current) a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D3"]'],
+                        ['setGMV', 'rag_present_timer', Date.now()],
                         ['aJ', this.cssmypage]]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3F(receiveCategory%3D2%26bulkSellFlg%3D1|bulkSellFlg%3D1%26sortKey%3D1%26receiveCategory%3D2)/, 'list', [
                         ['funcR', () => {
