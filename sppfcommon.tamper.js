@@ -1495,7 +1495,7 @@
                         ['aJ', '#boss_battle_gauge_wrap > div > div.btn_gauge_battle > a'],
                         ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FDoMissionExecution)'],
                         ['aJ', 'a[href*="eventStageRaidBoss%2FMissionResult"]'],
-                        ['aJ', 'a[href*="eventLimitedRaidBoss%2FRaidBossTop"]'],
+                        ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FRaidBossTop)'],
                         ['hold']]],
                     [/eventGiDimension%2FEventQuestResult%2F/, 'aJ', 'a[href*="%2Fmission%2FMissionList"]:last()'],
                     [/eventQuestRaidBoss%2FEventQuestResult%/, 'aJ', 'a[href*="FeventQuestRaidBoss%2FDoEventQuestExecution%2F"]'],
@@ -1615,20 +1615,21 @@
                         bp_need = 1;
                         GM_log("hp_gauge : " + hp_gauge.attr('style'));
                         GM_log(USERNAME);
+                        GM_log($('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
                         GM_log("help_record : " + help_record);
                         GM_log("discover : " + $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text());
                         //"#main > div:nth-child(14) > div:nth-child(1) > div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a"
                         //#main > div.raidboss_module  div > ul > li:nth-child(2) > div > dl > dd.fnt_emphasis.padding_left > a
-                        if (!hp_full &&
-                                USERNAME !== "" &&
-                                $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() !== USERNAME &&
-                                help_record &&
-                                !url.match(/GiDimension/) &&
-                                $('a[href*="DoMissionExecutionCheck"]').length > 0) {
-                            //$('a[href*="DoMissionExecutionCheck"]').clickJ();
-                            //clickA(back_xpath);
-                            return;
-                        }
+                        //if (!hp_full &&
+                        //        USERNAME !== "" &&
+                        //        $('#main > div.raidboss_module div.margin_top_10 > ul.lst_sub > li:last() > div a').first().text() !== USERNAME &&
+                        //        help_record &&
+                        //        !url.match(/GiDimension/) &&
+                        //        $('a[href*="DoMissionExecutionCheck"]').length > 0) {
+                        //    //$('a[href*="DoMissionExecutionCheck"]').clickJ();
+                        //    //clickA(back_xpath);
+                        //    return;
+                        //}
                         //return;
 
                         attack_num = 0;
