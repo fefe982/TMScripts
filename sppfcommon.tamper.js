@@ -2245,19 +2245,93 @@
                             return 1;
                         }],
                         ['hold']]],
-                    [/card%2FMaterialCardList%2F%3FbulkFusion%3D1/, 'func', function () {
-                        var xp_select = getXPATHAll('//*[@id="containerBox"]/form//select'), select;
-                        return;
-                        while ((select = xp_select.iterateNext()) !== null) {
-                            select.selectedIndex = select.options.length - 1;
+                    [/^card%2FCardList%2F%3FbulkFusion%3D1/, 'func', function () {
+                        var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
+                        var splitlvl = baselvl.match(/(\d+)\/(\d+)/);
+                        GM_log(splitlvl);
+                        if (!splitlvl) return;
+                        
+                        if (splitlvl[2] !== '20') return;
+                        
+                        if ($('#containerBox > ul.btn_switch.margin_top_10.fnt_medium > li:not(.current) > a:contains("クジャタで合成")').clickJ().length > 0) {
+                            return;
                         }
-                        clickForm('//*[@id="containerBox"]/form');
+                    }],
+                    [/card%2FMaterialCardList%2F%3FbulkFusion%3D1/, 'func', function () {
+                        var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
+                        var splitlvl = baselvl.match(/(\d+)\/(\d+)/);
+                        GM_log(splitlvl);
+                        if (!splitlvl) return;
+                        
+                        if (splitlvl[2] !== '20') return;
+                        
+                        var firstKujata = $('#containerBox > form > div.section.margin_top_10.padding_botoom_10');
+                        if (firstKujata.length === 0 || firstKujata.length > 1) return;
+                        
+                        var KujataRare = firstKujata.find('div.section_title.box_horizontal > div:nth-child(2)').text();
+                        GM_log(KujataRare);
+                        if (KujataRare !== 'N') return;
+                        
+                        firstKujata.find('select option:last').prop('selected', true);
+                        $('#containerBox > form > div.btn_base.btn_large.block_center.margin_top_10 > input[type="submit"]').clickJ();
                     }],
                     [/companion%2FCompanionApplicationAccept%2F/, 'form', '//form[.//input[@value="承認する"]]'],
                     [/companion%2FCompanionApprovalList%2F/, 'list', [
                         ['a', '//a[text()="承認する"]'],
                         ['aJ', this.cssmypage]]],
+                    [/^evolution%2FEvolutionConfirm/, 'aJ', '#containerBox > div.section.margin_top_10.padding_bottom_10 > div:nth-child(2) > div.box_horizontal.margin_x_10.box_spaced.margin_top_10 > div:nth-child(2) > form > div > input[type="submit"]'],
+                    [/^evolution%2FEvolutionCardList%2F/, 'func', function() {
+                        var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
+                        var splitlvl = baselvl.match(/(\d+)\/(\d+)/);
+                        GM_log(splitlvl);
+                        if (!splitlvl) return;
+                        if (splitlvl[2] !== '20') return;
+                        
+                        var firstSlot = $('#containerBox > div:contains("▼ 画像タッチで選択 ▼") + div.section.margin_top_10:first');
+                        var slotlvl = firstSlot.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_left > table > tbody > tr:nth-child(1) > td.txt_right.padding_right_10').text();
+                        GM_log(slotlvl);
+                        var slotsplitlvl = slotlvl.match(/(\d+)\/(\d+)/);
+                        if (!slotsplitlvl) return;
+                        GM_log(slotsplitlvl);
+                        if (splitlvl[2] !== slotsplitlvl[2]) return;
+                        
+                        GM_log(splitlvl);
+                        if (splitlvl[1] !== splitlvl[2]) {
+                            GM_log('move');
+                            $('#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(1) > a').clickJ();
+                            return;
+                        }
+                        
+                        firstSlot.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a').clickJ();
+                    }],
+                    [/^evolution%2FEvolutionEnd/, 'list', [
+                        ['aJ', '#containerBox > div:nth-child(21) > div:nth-child(2) > div > a'],
+                        ['aJ', '#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(1) > a']]],
+                    [/^evolution%2FSelectBaseCard/, 'func', function () {
+                        var bases = $('#containerBox > div.section.margin_top_10');
+                        bases.each(function () {
+                            var item = $(this);
+                            var title = item.children('div.section_title.box_horizontal');
+                            var rare = title.children('div:nth-child(2)').text();
+                            var name = title.children('div:nth-child(3)').text();
+                            if (rare === 'N' || rare === 'N+' || rare === 'N++') {
+                                var a = item.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a');
+                                GM_log(a);
+                                a.clickJ();
+                                return false
+                            }
+                        });
+                    }],
                     [/deck%2FDeckEditTop%2F/, 'a', this.xpathmypage],
+                    [/^fusion%2FFusionEnd/, 'func', function () {
+                        var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
+                        var splitlvl = baselvl.match(/(\d+)\/(\d+)/);
+                        GM_log(splitlvl);
+                        if (!splitlvl) return;
+                        if (splitlvl[1] === splitlvl[2]) {
+                            $('#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(2) > a').clickJ(); // evolution
+                        }
+                    }],
                     [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="canvas"]'],
                     [/fusion%2FBulkMaterialCardFusionConfirm%2F/, 'form', '//*[@id="containerBox"]/form'],
                     [/gacha%2FSetFreeGachaFlashResult%2F/, 'list', [
@@ -2601,13 +2675,13 @@
                             }
                             return true;
                         }],
-                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2%26bulkSellFlg%3D1"]'],
-                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'],
+                        //['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2%26bulkSellFlg%3D1"]'],
+                        //['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'],
                         ['hold']]],
                     [/prizeReceive%2FPrizeReceiveTop\b/, 'list', [
                         //['hold'],
                         //['formJ', '#containerBox > form:nth-child(7)'],
-                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'], // go to item tab
+                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'], // go card
                         //['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
                         ['hold'],
                         ['aJ', this.cssmypage]]], //'func',handlePrizeTop],
@@ -3321,7 +3395,7 @@
             }
             return false;
         }
-        succ = switch_site();
+        succ = false; //switch_site();
         function time_wait_flashJT(action) {
             //var cnt = 0;
             tryUntil(() => {
