@@ -2933,6 +2933,45 @@
                         ['aJ', '#ctl00_body_rp_navi_ctl00_btn_receive'],
                         ['aJ', '#ctl00_HeaderNavi_hl_top']]],
                     [/^login_bonus%2Flogin_bonus_stamp\.aspx/, 'aJ', '#ctl00_body_hl_gift_top_sp'],
+                    [/^mix%2Fmix_card_list_base_sp\.aspx/, 'func', function () {
+                        if (document.URL.match(/rid%3D1/)) {
+                            GM_log("sub_player");
+                            var opt = $('#ddl_sort > option:contains("ｺｽﾄ高い順")');
+                            GM_log(opt);
+                            if (opt.prop('selected') !== true) {
+                                opt.prop('selected', true);
+                                $('#btn_condition')[0].click();
+                                return;
+                            }
+                        }
+                        var item = $('#regular_fielder, #regular_pitcher, #sub_player').find('div > div > div > dl:nth-child(2) > a:contains("限界突破可能!!")');// :contains("限界突破可能!!")
+                        GM_log(item);
+                        if (item.length > 0) {
+                            item[0].click();
+                            return;
+                        }
+                        $('#ctl00_body_hlSubPlayer')[0].click();
+                        $('#BottomcarouselInner > ul > li:has(a:not(:has(div))) + li > a').clickJ();
+                    }],
+                    [/^mix%2Fmix_card_list_limit_sp\.aspx/, 'func', function () {
+                        var check = $('#material_player > div > div > div > dl:nth-child(2) > a > div.mix_status_box_base');//'#ctl00_body_rp_ctl00_cardListSubPlayer_hlBaseSelect > div.mix_status_box_base > div');
+                        //GM_log(check[0]);
+                        //check[0].click();
+                        check.each(function () { $(this)[0].click(); GM_log($(this));});
+                        //check.prop('checked', true);
+                        if (check.length > 0) {
+                            $('#cfm_mix2')[0].click();
+                            $('#exec_mix')[0].click();
+                        }
+                        tryUntil(function () {
+                            var click = $('#enchant-stage > div > div:nth-child(35)');
+                            return click.touchJ().length > 0;
+                        });
+                        //$('#enchant-stage > div > div:nth-child(34)')[0].click();
+                    }],
+                    [/^mix%2Fmix_card_list_plus_sp\.aspx/, 'func', function () {
+                        $('body > div > div > div > a:contains("限界突破")').clickJ();
+                    }],
                     [/^top\.aspx/, 'list', [
                         ['aJ', 'a:contains("選手名鑑に選手が追加されました")'],
                         ['aJ', 'a:contains("件届いてるよ！")'],
