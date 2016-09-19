@@ -1014,6 +1014,7 @@
                     [/player_battle%2Fcomplete%/, 'flashJT', "#canvas"],
                     [/present%2Fconfirm%2F[01]%2F/, 'list', [
                         ['formJ', '#bg > section > article > div > form'],
+                        ['setGMV', 'toaru_card_full', Date.now()],
                         ['aJ', '#top_btn > a']]],
                     [/present%2Findex/, 'list', [
                         ['aJ', '#bg > section > article > form > div > div > input[type="submit"]'],
@@ -1842,7 +1843,7 @@
                         succ = succ || clickA('//a[text()="運営からのお詫び"]');
                         succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
                         succ = succ || $('#mypage_news > ul > li > a[href*="arena%2FArenaTop"]').clickJ().length > 0;
-                        succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
+                        succ = succ || ((GM_getValue('hunter_card_full', 0) + 30 * 60 * 1000 < Date.now()) && clickA('//div[@class="badge_present_wrap"]/a'));
                         //GM_log(ap_gauge.css('width'));
                         if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9][0-9]px|[89]px/)) {
                             //GM_log("yyyy");
@@ -1872,7 +1873,8 @@
                     [/prizeReceive%2FPrizeReceiveTop/, 'list', [
                         //['a', '//a[text()="強化する"]'],
                         ['form', "//*[@id=\"main\"]/div[3]/div/form"],
-                        ['a', "//a[span[@class='badge fnt_normal']]"],
+                        ['aJ', 'li:not(.current) a:has(span.badge.fnt_normal)'],
+                        ['setGMV', 'hunter_card_full', Date.now()],
                         ['aJ', this.cssmypage]]],
                     [/questRaidBoss%2FQuestDeck%2F/, 'list', [
                         ['form', '//*[@id="deck_box"]//form'],
