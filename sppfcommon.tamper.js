@@ -3332,8 +3332,14 @@
             if (siteT != siteT) {
                 siteT = 0;
             }
-            switch_flag = GM_getValue("site_switch_flag", 0);
-            if (now > siteT || switch_flag === 1) {
+            switch_flag = GM_getValue("site_switch_flag", "");
+            if (now > siteT || switch_flag === app_id) {
+                if (switch_flag === app_id) {
+                    GM_deleteValue("site_switch_flag");
+                    if (now <= siteT && siteStatic.has(app_id)) {
+                        return false;
+                    }
+                }
                 if (siteStatic.has(app_id)) {
                     new_app_id = app_id;
                 } else {
@@ -3351,6 +3357,8 @@
                     siteT = now + 60 * 1000 * 5;
                 }
                 GM_setValue("site_timeout_" + new_app_id, siteT);
+                GM_log(app_id);
+                GM_log(new_app_id);
                 window.location.href = handler[new_app_id].mypage_url;
                 return true;
             } else {
@@ -3506,7 +3514,7 @@
                         break;
                     case 'switch':
                         if (!succ && !siteStatic.has(app_id)) {
-                            GM_setValue("site_switch_flag", 1);
+                            GM_setValue("site_switch_flag", app_id);
                             switch_site();
                         }
                         succ = true;
