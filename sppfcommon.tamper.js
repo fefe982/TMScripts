@@ -2777,6 +2777,8 @@
                                 //alert("cardbox full");
                                 return true;
                             }
+                            GM_setValue("nine_reinforce_page", 1);
+                            GM_setValue("nine_reinforce_idx", 0);
                         }],
                         ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
                         ['formJ', '#shortCutForm'],
@@ -2788,6 +2790,120 @@
                     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
                     [/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
                     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fselect_base_card/, 'func', () => {
+                        var opt = $('#sort > option:contains("レア度高い順")');
+                        GM_log(opt);
+                        if (opt.length === 0) return;
+                        if (opt.prop('selected') !== true) {
+                            opt.prop('selected', true);
+                            $('form > input.button_global.fontS.sizeM[value="表示"]')[0].click();
+                            //GM_setValue("nine_reinforce_page", 6);
+                            //GM_setValue("nine_reinforce_idx", 0);
+                            return;
+                        }
+                        
+                        var d_page = GM_getValue("nine_reinforce_page", 1);
+                        var d_idx = GM_getValue("nine_reinforce_idx", 0);
+                        GM_log(d_page);
+                        GM_log(d_idx);
+                        var c_page = $('#d9-main > div:nth-child(1) > div.pagination > span.active').text().match(/\d+/);
+                        if (c_page) {
+                            c_page = +c_page[0];
+                        } else {
+                            return;
+                        }
+                        GM_log(c_page);
+                        if (c_page < d_page) {
+                            if ($('#d9-main > div:nth-child(1) > div.pagination > span > a:contains("' + d_page + '")').clickJ().length > 0) return;
+                            $('#d9-main > div:nth-child(1) > div.pagination > span:not(.next) > a:last').clickJ();
+                            return;
+                        } else if (c_page > d_page) {
+                            return;
+                        }
+                        //return;
+                        var cards = $('#d9-main > div:nth-child(1) > div.frame_2014_90:eq(' + d_idx + ')');
+                        if (cards.length === 0) {
+                            //GM_deleteValue("nine_reinforce_idx");
+                            //GM_deleteValue("nine_reinforce_page");
+                            GM_log("card_empty");
+                            return;
+                        }
+                        var rare_map = {
+                            'ノーマル': 1,
+                            'レギュラー': 2,
+                            'グレート': 3,
+                            'パズル': 4,
+                            'スター': 5,
+                            'スター+': 6,
+                            'スーパースター': 7,
+                            'ドリームスター': 8,
+                            'ドリームスーパースター': 9,
+                            'ドリームダイヤモンドスター': 10
+                            };
+                        var rare_card = cards.find('div.tag_box_label > span:last').text().trim().split(/\s/).pop();
+                        GM_log(rare_card);
+                        if (rare_map[rare_card] >= 5) {
+                            d_idx++;
+                            if (d_idx >= 10) {
+                                d_page ++;
+                                d_idx -= 10;
+                            }
+                            GM_setValue("nine_reinforce_page", d_page);
+                            GM_setValue("nine_reinforce_idx", d_idx);
+                            //return;
+                            return cards.find('div > a:contains("選手カードで強化")').clickJ().length > 0;
+                        } else {
+                            //GM_deleteValue("nine_reinforce_page");
+                            //GM_deleteValue("nine_reinforce_idx");
+                            //$(this.cssmypage).clickJ();
+                        }
+                        //GM_deleteValue("nine_reinforce_page");
+                        //GM_deleteValue("nine_reinforce_idx");
+                    }],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fbulk_confirm/, 'aJ', '#d9-main > form > div > input[value="一括強化する"]'],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fbulk/, 'func', function () {
+                        var no_card = $('#content_body > div > span:contains("コーチ転身出来る選手がいません。")');
+                        if (no_card.length > 0) {
+                            $('#content_body > div.frame_2014_90 > div.tag_box_label > div > a:contains("別の選手にする")').clickJ();
+                            return;
+                        }
+                        var rare_map = {
+                            'ノーマル': 1,
+                            'レギュラー': 2,
+                            'グレート': 3,
+                            'パズル': 4,
+                            'スター': 5,
+                            'スター+': 6,
+                            'スーパースター': 7,
+                            'ドリームスター': 8,
+                            'ドリームスーパースター': 9,
+                            'ドリームダイヤモンドスター': 10
+                            };
+                        
+                        var card_base = $('#content_body > div.frame_2014_90');
+                        
+                        var fit = true;
+                        var rare_card_base = card_base.find('div.tag_box_label > span:nth-child(2)').text().trim().split(/\s/).pop();
+                        GM_log("base:" + rare_card_base);
+                        rare_card_base = rare_map[rare_card_base];
+                        
+                        var cards = $('#content_body > form > div.frame_2014_90');
+                        if (cards.length === 0) {
+                            GM_log(cards);
+                            return;
+                        }
+                        cards.each(function() {
+                            var rare_m = $(this).find('div.tag_box_label > span:nth-child(2)').text().trim().split(/\s/).pop();
+                            GM_log(rare_m);
+                            if (rare_map[rare_m] > rare_card_base) {
+                                fit = false;
+                            }
+                        });
+                        if (fit) {
+                            $('#all').clickJ(0);
+                            $('#input').clickJ();
+                        }
+                    }],
                     [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
                     [/^akr%2Fmain%2Freward%2Fmain/, 'list', [
                         ['funcR', function () {
