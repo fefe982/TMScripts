@@ -1014,6 +1014,7 @@
                     [/player_battle%2Fcomplete%/, 'flashJT', "#canvas"],
                     [/present%2Fconfirm%2F[01]%2F/, 'list', [
                         ['formJ', '#bg > section > article > div > form'],
+                        ['setGMV', 'toaru_card_full', Date.now()],
                         ['aJ', '#top_btn > a']]],
                     [/present%2Findex/, 'list', [
                         ['aJ', '#bg > section > article > form > div > div > input[type="submit"]'],
@@ -1842,7 +1843,7 @@
                         succ = succ || clickA('//a[text()="運営からのお詫び"]');
                         succ = succ || clickA("//a[contains(text(), '仲間申請が')]");
                         succ = succ || $('#mypage_news > ul > li > a[href*="arena%2FArenaTop"]').clickJ().length > 0;
-                        succ = succ || clickA('//div[@class="badge_present_wrap"]/a');
+                        succ = succ || ((GM_getValue('hunter_card_full', 0) + 30 * 60 * 1000 < Date.now()) && clickA('//div[@class="badge_present_wrap"]/a'));
                         //GM_log(ap_gauge.css('width'));
                         if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9][0-9]px|[89]px/)) {
                             //GM_log("yyyy");
@@ -1872,7 +1873,8 @@
                     [/prizeReceive%2FPrizeReceiveTop/, 'list', [
                         //['a', '//a[text()="強化する"]'],
                         ['form', "//*[@id=\"main\"]/div[3]/div/form"],
-                        ['a', "//a[span[@class='badge fnt_normal']]"],
+                        ['aJ', 'li:not(.current) a:has(span.badge.fnt_normal)'],
+                        ['setGMV', 'hunter_card_full', Date.now()],
                         ['aJ', this.cssmypage]]],
                     [/questRaidBoss%2FQuestDeck%2F/, 'list', [
                         ['form', '//*[@id="deck_box"]//form'],
@@ -2851,6 +2853,8 @@
                                 //alert("cardbox full");
                                 return true;
                             }
+                            GM_setValue("nine_reinforce_page", 1);
+                            GM_setValue("nine_reinforce_idx", 0);
                         }],
                         ['aJ', '#shortCutForm a[href*="main%2Fpresent%2Freceive%2Fmain%2Freceive_exe"]'],
                         ['formJ', '#shortCutForm'],
@@ -2862,6 +2866,120 @@
                     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
                     [/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
                     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fselect_base_card/, 'func', () => {
+                        var opt = $('#sort > option:contains("レア度高い順")');
+                        GM_log(opt);
+                        if (opt.length === 0) return;
+                        if (opt.prop('selected') !== true) {
+                            opt.prop('selected', true);
+                            $('form > input.button_global.fontS.sizeM[value="表示"]')[0].click();
+                            //GM_setValue("nine_reinforce_page", 6);
+                            //GM_setValue("nine_reinforce_idx", 0);
+                            return;
+                        }
+                        
+                        var d_page = GM_getValue("nine_reinforce_page", 1);
+                        var d_idx = GM_getValue("nine_reinforce_idx", 0);
+                        GM_log(d_page);
+                        GM_log(d_idx);
+                        var c_page = $('#d9-main > div:nth-child(1) > div.pagination > span.active').text().match(/\d+/);
+                        if (c_page) {
+                            c_page = +c_page[0];
+                        } else {
+                            return;
+                        }
+                        GM_log(c_page);
+                        if (c_page < d_page) {
+                            if ($('#d9-main > div:nth-child(1) > div.pagination > span > a:contains("' + d_page + '")').clickJ().length > 0) return;
+                            $('#d9-main > div:nth-child(1) > div.pagination > span:not(.next) > a:last').clickJ();
+                            return;
+                        } else if (c_page > d_page) {
+                            return;
+                        }
+                        //return;
+                        var cards = $('#d9-main > div:nth-child(1) > div.frame_2014_90:eq(' + d_idx + ')');
+                        if (cards.length === 0) {
+                            //GM_deleteValue("nine_reinforce_idx");
+                            //GM_deleteValue("nine_reinforce_page");
+                            GM_log("card_empty");
+                            return;
+                        }
+                        var rare_map = {
+                            'ノーマル': 1,
+                            'レギュラー': 2,
+                            'グレート': 3,
+                            'パズル': 4,
+                            'スター': 5,
+                            'スター+': 6,
+                            'スーパースター': 7,
+                            'ドリームスター': 8,
+                            'ドリームスーパースター': 9,
+                            'ドリームダイヤモンドスター': 10
+                            };
+                        var rare_card = cards.find('div.tag_box_label > span:last').text().trim().split(/\s/).pop();
+                        GM_log(rare_card);
+                        if (rare_map[rare_card] >= 5) {
+                            d_idx++;
+                            if (d_idx >= 10) {
+                                d_page ++;
+                                d_idx -= 10;
+                            }
+                            GM_setValue("nine_reinforce_page", d_page);
+                            GM_setValue("nine_reinforce_idx", d_idx);
+                            //return;
+                            return cards.find('div > a:contains("選手カードで強化")').clickJ().length > 0;
+                        } else {
+                            //GM_deleteValue("nine_reinforce_page");
+                            //GM_deleteValue("nine_reinforce_idx");
+                            //$(this.cssmypage).clickJ();
+                        }
+                        //GM_deleteValue("nine_reinforce_page");
+                        //GM_deleteValue("nine_reinforce_idx");
+                    }],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fbulk_confirm/, 'aJ', '#d9-main > form > div > input[value="一括強化する"]'],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fbulk/, 'func', function () {
+                        var no_card = $('#content_body > div > span:contains("コーチ転身出来る選手がいません。")');
+                        if (no_card.length > 0) {
+                            $('#content_body > div.frame_2014_90 > div.tag_box_label > div > a:contains("別の選手にする")').clickJ();
+                            return;
+                        }
+                        var rare_map = {
+                            'ノーマル': 1,
+                            'レギュラー': 2,
+                            'グレート': 3,
+                            'パズル': 4,
+                            'スター': 5,
+                            'スター+': 6,
+                            'スーパースター': 7,
+                            'ドリームスター': 8,
+                            'ドリームスーパースター': 9,
+                            'ドリームダイヤモンドスター': 10
+                            };
+                        
+                        var card_base = $('#content_body > div.frame_2014_90');
+                        
+                        var fit = true;
+                        var rare_card_base = card_base.find('div.tag_box_label > span:nth-child(2)').text().trim().split(/\s/).pop();
+                        GM_log("base:" + rare_card_base);
+                        rare_card_base = rare_map[rare_card_base];
+                        
+                        var cards = $('#content_body > form > div.frame_2014_90');
+                        if (cards.length === 0) {
+                            GM_log(cards);
+                            return;
+                        }
+                        cards.each(function() {
+                            var rare_m = $(this).find('div.tag_box_label > span:nth-child(2)').text().trim().split(/\s/).pop();
+                            GM_log(rare_m);
+                            if (rare_map[rare_m] > rare_card_base) {
+                                fit = false;
+                            }
+                        });
+                        if (fit) {
+                            $('#all').clickJ(0);
+                            $('#input').clickJ();
+                        }
+                    }],
                     [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
                     [/^akr%2Fmain%2Freward%2Fmain/, 'list', [
                         ['funcR', function () {
@@ -3406,8 +3524,14 @@
             if (siteT != siteT) {
                 siteT = 0;
             }
-            switch_flag = GM_getValue("site_switch_flag", 0);
-            if (now > siteT || switch_flag === 1) {
+            switch_flag = GM_getValue("site_switch_flag", "");
+            if (now > siteT || switch_flag === app_id) {
+                if (switch_flag === app_id) {
+                    GM_deleteValue("site_switch_flag");
+                    if (now <= siteT && siteStatic.has(app_id)) {
+                        return false;
+                    }
+                }
                 if (siteStatic.has(app_id)) {
                     new_app_id = app_id;
                 } else {
@@ -3425,6 +3549,8 @@
                     siteT = now + 60 * 1000 * 5;
                 }
                 GM_setValue("site_timeout_" + new_app_id, siteT);
+                GM_log(app_id);
+                GM_log(new_app_id);
                 window.location.href = handler[new_app_id].mypage_url;
                 return true;
             } else {
@@ -3580,7 +3706,7 @@
                         break;
                     case 'switch':
                         if (!succ && !siteStatic.has(app_id)) {
-                            GM_setValue("site_switch_flag", 1);
+                            GM_setValue("site_switch_flag", app_id);
                             switch_site();
                         }
                         succ = true;
