@@ -76,8 +76,8 @@
             break;
         case 'dbb_training.cgi':
             if (!('detail' in param)) {
-                if (jQuery('#downchoice > ul > li:nth-child(6) > select > option:contains("¥ì¥Ù¥ë")').attr('selected') === true &&
-                    jQuery('#downchoice > ul > li:nth-child(7) > select > option:contains("½µí˜")').attr('selected') === true) {
+                if (jQuery('#downchoice > ul > li:nth-child(6) > select > option:contains("ãƒ¬ãƒ™ãƒ«")').attr('selected') === true &&
+                    jQuery('#downchoice > ul > li:nth-child(7) > select > option:contains("é™é †")').attr('selected') === true) {
                     GM_log("good");
                     jQuery('#shoji_cardarea > div.card_tr > div.cardwaku').each(function () {
                         GM_log("hi");
@@ -93,8 +93,8 @@
                         //jQuery('#shoji_cardarea > div.card_tr > div > ul > li > a').click();
                     });
                 } else {
-                    jQuery('#downchoice > ul > li:nth-child(6) > select > option:contains("¥ì¥Ù¥ë")').attr('selected', true);
-                    jQuery('#downchoice > ul > li:nth-child(7) > select > option:contains("½µí˜")').attr('selected', true);
+                    jQuery('#downchoice > ul > li:nth-child(6) > select > option:contains("ãƒ¬ãƒ™ãƒ«")').attr('selected', true);
+                    jQuery('#downchoice > ul > li:nth-child(7) > select > option:contains("é™é †")').attr('selected', true);
                     jQuery('#downchoice > ul > li:nth-child(8) > input').click();
                 }
             } else {
