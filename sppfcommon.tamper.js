@@ -1,10 +1,11 @@
 // ==UserScript==
-// @name       sp.pf.mbga.jp
+// @name       sp.pf.mbga.jp_local
 // @namespace  http://tampermonkey.net/
 // @version    0.1
 // @description  enter something useful
-// @match      http://sp.pf.mbga.jp/*
+// @match      http://*.sp.pf.mbga.jp/*
 // @require    http://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js
+// @require    file:///D:/fefe/sppfragnarok_local.js
 // @noframes
 // @grant      GM_log
 // @grant      GM_getValue
@@ -12,6 +13,7 @@
 // @grant      GM_deleteValue
 // @copyright  2012+, Yongxin Wang
 // ==/UserScript==
+
 (function () {
     'use strict';
 
@@ -2594,7 +2596,9 @@
                         ['a', '//a[text()="図鑑報酬を受け取る"]'],
                         ['aJ', this.cssmypage]]],
                     [/mypage%2FMaterialCollectionCompEnd%2F/, 'aJ', 'a:contains("コンプマテリアル図鑑")'],
-                    [/prizeReceive%2FPrizeReceiveAllEnd%2F/, 'a', '//a[text()="贈り物BOX TOP"]'], //this.xpathmypage],
+                    [/prizeReceive%2FPrizeReceiveAllEnd%2F/, 'list', [
+                        ['setGMV', 'rag_present_timer', Date.now()],
+                        ['a', /*'//a[text()="贈り物BOX TOP"]'], */this.xpathmypage]]],
                     [/prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D[13]/, 'list', [
                         ['formJ', '#containerBox > form:has(div > input[type="submit"][value*="一括で受け取る"])'],
                         ['aJ', 'li:not(.current) a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D3"]'],
@@ -2683,9 +2687,8 @@
                     [/prizeReceive%2FPrizeReceiveTop\b/, 'list', [
                         //['hold'],
                         //['formJ', '#containerBox > form:nth-child(7)'],
-                        ['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D2"]'], // go card
-                        //['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
-                        ['hold'],
+                        //['aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop%2F%3FreceiveCategory%3D1"]'], // go to item tab
+                        ['form', '//*[@id="containerBox"]/form[div/input[contains(@value,"一括で受け取る")]]'],
                         ['aJ', this.cssmypage]]], //'func',handlePrizeTop],
                     [/strongBoss%2FStrongBossBattleResult%2F/, 'aJ', 'a:contains("クエストを進める")'],
                     [/strongBoss%2FStrongBossHelpResult%2F/, 'a', this.xpathquest],
