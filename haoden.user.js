@@ -36,7 +36,7 @@
                 });
             }
             jQuery('#level02 > tbody > tr > td:nth-child(4) > input[type="button"]:nth-child(2)').eq(cur_idx).click();
-            //jQuery('#lvuparea_btnarea > input[type="image"]').attr('onclick', 'return true').click();
+            jQuery('#lvuparea_btnarea > input[type="image"]').attr('onclick', 'return true').click();
             break;
         case 'ht_card_list.fcgi':
             var lvlup = jQuery('#militarylist > tbody > tr > td:nth-child(6) > a');
@@ -45,7 +45,11 @@
             }
             break;
         case 'ht_deck_list.fcgi':
-            jQuery('#search_cardlist > div > div > div > div.search_carddataname > p.eiyulv > a:first')[0].click();
+            if (jQuery('span.card_lvup > a').length > 0) {
+                jQuery('span.card_lvup > a')[0].click();
+            } else if (jQuery('div.search_carddataname > p.eiyulv > a:first').length > 0) {
+                jQuery('div.search_carddataname > p.eiyulv > a')[0].click();
+            }
             break;
     }
     // Your code here...
