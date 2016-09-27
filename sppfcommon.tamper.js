@@ -3563,7 +3563,9 @@
             }
             return false;
         }
-        succ = false; //switch_site();
+        if (typeof rotateSite_local === "undefined" || rotateSite_local === true) {
+            succ = switch_site();
+        }
         function time_wait_flashJT(action) {
             //var cnt = 0;
             tryUntil(() => {
