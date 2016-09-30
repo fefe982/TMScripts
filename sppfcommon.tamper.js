@@ -2867,7 +2867,14 @@
                     [/main%2Freinforce%2Fmain%3Ferror_no/, 'list', [
                         ['aJ', this.cssmypage]]],
                     [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
-                    [/main%2Freinforce%2Fmain%2Fwith_item%3F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
+                    [/^akr%2Fmain%2Freinforce%2Fmain%2Fwith_item%3F/, 'list', [
+                        ['funcR', () => {
+                            if ($('#d9-main > div > div:contains("強化Pが不足しています")').length > 0) {
+                                $(this.cssmypage).clickJ();
+                                return true;
+                            }
+                        }],
+                        ['aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]']]],
                     [/main%2Freinforce%2Fmain%2Fitem_use_confirm/, 'formJ', 'form[action*="main%2Freinforce%2Fmain%2Fitem_use_execute"]'],
                     [/^akr%2Fmain%2Freinforce%2Fmain%2Fselect_base_card/, 'func', () => {
                         var opt = $('#sort > option:contains("レア度高い順")');
