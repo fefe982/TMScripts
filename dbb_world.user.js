@@ -21,8 +21,7 @@
             // gacha, get next card
             var gacha = jQuery('#retrial > a');
             GM_log(gacha);
-            gacha.attr('onclick', 'return true;');
-            gacha[0].click();
+            setTimeout(function () {jQuery('#retrial > a').attr('onclick', 'return true;')[0].click();}, 1000);
             break;
         case 'dbb_level_up.cgi':
             var grade = jQuery('#levelup_gr').text().match(/\d+/);
