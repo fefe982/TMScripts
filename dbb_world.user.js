@@ -101,5 +101,10 @@
                 jQuery('#park_contents > div:nth-child(2) > p > input').attr('onclick', 'return true').click();
             }
             break;
+        case 'dbb_spa.cgi':
+            if (jQuery('#sasikae_cardarea > div > div > div:nth-child(1) > ul > li > a').length > 0) {
+                jQuery('#sasikae_cardarea > div > div > div:nth-child(1) > ul > li > a').attr('onclick', 'return true')[0].click();
+            }
+            break;
     }
 })();
