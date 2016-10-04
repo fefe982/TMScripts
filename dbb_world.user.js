@@ -116,5 +116,21 @@
     case 'dbb_road_game_entry_normal.fcgi':
         jQuery('#entrygame_cenbox02 > div > p:nth-child(2) > a')[0].click();
         break;
+    case 'dbb_regist_club_team_player.fcgi':
+        if (param.add_select === "1") {
+            //GM_log(jQuery('#leveluparea > div:nth-child(2) > div > p:nth-child(1) > a'));
+            //jQuery('#leveluparea > div:nth-child(2) > div > p:nth-child(1) > a').attr('onclick', 'return true;')[0].click();
+            //jQuery('#leveluparea > div:nth-child(2) > div > p:nth-child(1) > a > input').click();
+            document.insert.submit();
+        }
+        break;
+    case 'dbb_road_game_entry_decisive.fcgi':
+        if (param.exe_entry === undefined) {
+            var entry = jQuery('#entrygame_cenbox02 > table.timetable > tbody > tr > td > a:has(img[src*="btn_entrytime.gif"]):first');
+            if (entry.length > 0) {
+                entry.attr('onclick', 'return true')[0].click();
+            }
+        }
+        break;
     }
 })();
