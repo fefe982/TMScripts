@@ -109,8 +109,9 @@
         }
         break;
     case 'dbb_spa.cgi':
-        if (jQuery('#sasikae_cardarea > div > div > div:nth-child(1) > ul > li > a').length > 0) {
-            jQuery('#sasikae_cardarea > div > div > div:nth-child(1) > ul > li > a').attr('onclick', 'return true')[0].click();
+    case 'dbb_rehabilitation.cgi':
+        if (jQuery('#sasikae_cardarea ul > li > a').length > 0) {
+            jQuery('#sasikae_cardarea ul > li > a').attr('onclick', 'return true')[0].click();
         }
         break;
     case 'dbb_road_game_entry_normal.fcgi':
