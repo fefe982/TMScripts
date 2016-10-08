@@ -58,7 +58,7 @@
             if (current < add_row) {
                 add_five_button.click();
             } else if (current > add_row) {
-                halt = true;
+                //halt = true;
             }
         }
         if (!halt) {
