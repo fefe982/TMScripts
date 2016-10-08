@@ -2739,7 +2739,14 @@
                         ['aJ', this.cssmypage]]],
                     [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
                     [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
-                    [/main%2Farena%2Fmain/, 'aJ', '#arena_back > div.arena_btn_only > a'],
+                    [/main%2Farena%2Fmain/, 'list', [
+                        ['funcR', function () {
+                            if ($('#arena_back > div > div.navi_back > div.navi_right > div.arrow_box_right > div.top_onegai_title01 + div').length > 0) {
+                                GM_setValue("dream_nine_sos_text", $('#arena_back > div > div.navi_back > div.navi_right > div.arrow_box_right > div.top_onegai_title01 + div').text() + '{' + $('#arena_back > div > div.frame_global > table > tbody > tr > td:nth-child(1) > div:nth-child(3)').text() + '}'
+                                );
+                            }
+                        }],
+                        ['aJ', '#arena_back > div.arena_btn_only > a']]],
                     [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.cssmypage],
                     [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
                         //['hold'],
@@ -2819,6 +2826,9 @@
                     [/main%2Fmission2016%2Fmain/, 'aJ', '#naviheader > ul > li:nth-child(1) > a'],
                     [/(main%2Fmypage|:::)/, 'list', [
                         //['aJ', '#news_user_info_area a:contains("プレゼントが来ています")'],
+                        ['funcR', function () {
+                            GM_log(GM_getValue('dream_nine_sos_text', ''));
+                        }],
                         ['aJ', '#news_user_info_area a:contains("達成しているミッションがあります")'],
                         ['aJ', '#news_user_info_area a:contains("開けていない金箱が")'],
                         ['aJGMV_Time', 'dream_nine_card_full', 30 * 60 * 1000, '#news_user_info_area a:contains("いま無料ガチャが引けます")'],
