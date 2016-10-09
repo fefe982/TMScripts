@@ -2237,6 +2237,76 @@
                     }],
                     [/caravan%2FTop/, 'list', [
                         ['aJ', '#eventHeader > a']]],
+                    [/^card%2FCardList/, 'list', [
+                        ['func', function () {
+                            //GM_deleteValue('rag_card_best_ten_flag');
+                            if (GM_getValue('rag_card_best_ten_flag', 0) + 24 * 60 * 60 * 1000 > Date.now) {
+                                GM_log(JSON.stringify(GM_getValue("rag_card_best_ten")));
+                                GM_log(JSON.stringify(GM_getValue("rag_card_best_ten_sell_limit")));
+                                var sel_limit = GM_getValue("rag_card_best_ten_sell_limit");
+                                $('#containerBox > div.cardItems.section').each(function () {
+                                    var type = $(this).find('div > div > div.sp-cp:first');
+                                    type = type.attr('class').match(/ sp-cp-(\S+)/)[1];
+                                    var atk = +$(this).find('td.txt_right.cardAttack').text();
+                                    var def = +$(this).find('td.txt_right.cardDefense').text();
+                                    var name = $(this).find('div > div > div > a').text();
+                                    GM_log(name, type, atk, def);
+                                    if (sel_limit[type] != undefined && atk < sel_limit[type].atk && def < sel_limit[type].def) {
+                                        $(this).css('background', 'olive');
+                                    }
+                                });
+                                return;
+                            }
+                            var best_array = {};
+                            if ($('#containerBox > div.margin_y > div > div.page_number.box_horizontal.box_extend.box_x_center > div.current').text() === "1") {
+                                best_array = {}
+                            } else {
+                                best_array = GM_getValue("rag_card_best_ten");
+                            }
+                            GM_log(best_array);
+                            $('#containerBox > div.cardItems.section').each(function () {
+                                var type = $(this).find('div > div > div.sp-cp:first');
+                                type = type.attr('class').match(/ sp-cp-(\S+)/)[1];
+                                var atk = +$(this).find('td.txt_right.cardAttack').text();
+                                var def = +$(this).find('td.txt_right.cardDefense').text();
+                                var name = $(this).find('div > div > div > a').text();
+                                GM_log(name, type, atk, def);
+                                if (best_array[type] === undefined) {
+                                    best_array[type] = {};
+                                    best_array[type].atk = [];
+                                    best_array[type].def = [];
+                                }
+                                best_array[type].atk.push(atk);
+                                best_array[type].def.push(def);
+                                //GM_log(best_array);
+                            });
+                            for (var key in best_array) {
+                                best_array[key].atk.sort(function(a,b){return b-a;});
+                                best_array[key].def.sort(function(a,b){return b-a;});
+                                if (best_array[key].atk.length > 10) {
+                                    best_array[key].atk.splice(10);
+                                    best_array[key].def.splice(10);
+                                }
+                            }
+                            GM_setValue('rag_card_best_ten', best_array);
+                            if ($('#containerBox > div.margin_y > div > div.page_number.box_horizontal.box_extend.box_x_center > div.current + div > a').clickJ().length > 0) {
+                                return;
+                            } else {
+                                var best_low = {};
+                                for (var key in best_array) {
+                                    best_low[key] = {};
+                                    if (best_array[key].atk.length >= 10) {
+                                        best_low[key].atk = best_array[key].atk[9];
+                                        best_low[key].def = best_array[key].def[9];
+                                    } else {
+                                        best_low[key].atk = 0;
+                                        best_low[key].def = 0;
+                                    }
+                                }
+                                GM_setValue('rag_card_best_ten_flag', Date.now);
+                                GM_setValue('rag_card_best_ten_sell_limit', best_low);
+                            }
+                        }]]],
                     [/card%2FBulkCardSell\b/, 'list', [
                         ['aJ', 'a:contains("さらに売却する")'],
                         ['hold']]],
@@ -2284,30 +2354,32 @@
                         ['a', '//a[text()="承認する"]'],
                         ['aJ', this.cssmypage]]],
                     [/^evolution%2FEvolutionConfirm/, 'aJ', '#containerBox > div.section.margin_top_10.padding_bottom_10 > div:nth-child(2) > div.box_horizontal.margin_x_10.box_spaced.margin_top_10 > div:nth-child(2) > form > div > input[type="submit"]'],
-                    [/^evolution%2FEvolutionCardList%2F/, 'func', function() {
-                        var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
-                        var splitlvl = baselvl.match(/(\d+)\/(\d+)/);
-                        GM_log(splitlvl);
-                        if (!splitlvl) return;
-                        if (splitlvl[2] !== '20') return;
-                        
-                        var firstSlot = $('#containerBox > div:contains("▼ 画像タッチで選択 ▼") + div.section.margin_top_10:first');
-                        var slotlvl = firstSlot.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_left > table > tbody > tr:nth-child(1) > td.txt_right.padding_right_10').text();
-                        GM_log(slotlvl);
-                        var slotsplitlvl = slotlvl.match(/(\d+)\/(\d+)/);
-                        if (!slotsplitlvl) return;
-                        GM_log(slotsplitlvl);
-                        if (splitlvl[2] !== slotsplitlvl[2]) return;
-                        
-                        GM_log(splitlvl);
-                        if (splitlvl[1] !== splitlvl[2]) {
-                            GM_log('move');
-                            $('#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(1) > a').clickJ();
-                            return;
-                        }
-                        
-                        firstSlot.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a').clickJ();
-                    }],
+                    [/^evolution%2FEvolutionCardList%2F/, 'list', [
+                        ['hold'],
+                        ['func', function() {
+                            var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
+                            var splitlvl = baselvl.match(/(\d+)\/(\d+)/);
+                            GM_log(splitlvl);
+                            if (!splitlvl) return;
+                            if (splitlvl[2] !== '20') return;
+                            
+                            var firstSlot = $('#containerBox > div:contains("▼ 画像タッチで選択 ▼") + div.section.margin_top_10:first');
+                            var slotlvl = firstSlot.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_left > table > tbody > tr:nth-child(1) > td.txt_right.padding_right_10').text();
+                            GM_log(slotlvl);
+                            var slotsplitlvl = slotlvl.match(/(\d+)\/(\d+)/);
+                            if (!slotsplitlvl) return;
+                            GM_log(slotsplitlvl);
+                            if (splitlvl[2] !== slotsplitlvl[2]) return;
+                            
+                            GM_log(splitlvl);
+                            if (splitlvl[1] !== splitlvl[2]) {
+                                GM_log('move');
+                                $('#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(1) > a').clickJ();
+                                return;
+                            }
+                            
+                            firstSlot.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a').clickJ();
+                        }]]],
                     [/^evolution%2FEvolutionEnd/, 'list', [
                         ['aJ', '#containerBox > div:nth-child(21) > div:nth-child(2) > div > a'],
                         ['aJ', '#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(1) > a']]],
@@ -2503,6 +2575,10 @@
                         ['aJ', 'a[href*="island%2FMissionDetail%2F"]'],
                         //div[contains(@class,"sprites-event-top-quest")]/a'],
                         ['flash', '//*[@id="container"]']]],
+                    [/materiaSkill%2FMateriaSkillAutoSet/, 'func', function () {
+                        GM_log(JSON.stringify(GM_getValue("rag_card_best_ten")));
+                        GM_log(JSON.stringify(GM_getValue("rag_card_best_ten_sell_limit")));
+                    }],
                     [/mission%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
                     [/mission%2FBossBattleFlash/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],
                     [/mission%2FBossBattleResult%2F/, 'a', '//a[text()="次に進む"]'],
