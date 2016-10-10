@@ -16,23 +16,31 @@
 
 (function () {
   'use strict';
-
-  function decodeURLParam(param) {
-    return param ? JSON.parse('{"' + param.replace(/^&/, '').replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
-      return key === "" ? value : decodeURIComponent(value);
-    }) : {};
+  function decodeURLSearchParam(p) {
+    var ret = '{';
+    for (var key of p.keys()) {
+      ret = ret + '"' + key + '":"' + p.get(key) + '",';
+    }
+    if (ret.length > 1) {
+      ret = ret.substr(0, ret.length - 1) + '}';
+    } else {
+      ret = ret + '}';
+    }
+    return JSON.parse(ret);
   }
-
+  
   var url = document.URL,
   decodeURL,
   path = location.pathname,
-  param = decodeURLParam(location.search.substring(1)),
+  param = decodeURLSearchParam(new URLSearchParams(location.search)),
   handler,
   match_app_id,
   app_id,
   action_handler;
 
   GM_log('-start----------------------------------------- ' + Date());
+
+
 
   function getXPATH(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
@@ -4108,24 +4116,5 @@
       msgloop(action_handler);
     }
   }
-  //GM_log(match_app_id);
-  //if (match_app_id) {
-  //	url = match_app_id[2];
-  //	if (url === undefined) {
-  //		url = ":::";
-  //	}
-  //	GM_log("sURL: " + url);
-  //	GM_log("REF : " + document.referrer);
-
-  //	app_id = match_app_id[1];
-  //	if (typeof setStopSite_local !== "undefined" && setStopSite_local.has(app_id)) {
-  //		return;
-  //	}
-  //GM_log("short_url: " + url);
-  //	action_handler = handler[app_id];
-  //	if (action_handler) {
-  //		msgloop(action_handler);
-  //	}
-  //}
 }
   ());
