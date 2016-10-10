@@ -28,7 +28,7 @@
     }
     return JSON.parse(ret);
   }
-  
+
   var url = document.URL,
   decodeURL,
   path = location.pathname,
@@ -40,8 +40,6 @@
   action_handler;
 
   GM_log('-start----------------------------------------- ' + Date());
-
-
 
   function getXPATH(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
@@ -3006,9 +3004,17 @@
           [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
           [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
           [/main%2Farena%2Fmain/, 'list', [
+
               ['funcR', function () {
                   if ($('#arena_back > div > div.navi_back > div.navi_right > div.arrow_box_right > div.top_onegai_title01 + div').length > 0) {
                     GM_setValue("dream_nine_sos_text", $('#arena_back > div > div.navi_back > div.navi_right > div.arrow_box_right > div.top_onegai_title01 + div').text() + '{' + $('#arena_back > div > div.frame_global > table > tbody > tr > td:nth-child(1) > div:nth-child(3)').text() + '}');
+                  } else if ($('#arena_back > div > div.navi_back > div.navi_right_motto > div.arrow_box_right_motto > div.top_onegai_title02 + div').length > 0) {
+                    GM_setValue("dream_nine_sos_text", $('#arena_back > div > div.navi_back > div.navi_right_motto > div.arrow_box_right_motto > div.top_onegai_title02 + div').text() + '{' + $('#arena_back > div > div.frame_global > table > tbody > tr > td:nth-child(1) > div:nth-child(3)').text() + '}');
+                  } else {
+                    var str = GM_getValue("dream_nine_sos_text", "");
+                    if (!str.startsWith('clear')) {
+                      GM_setValue('dream_nine_sos_text', 'clear' + str);
+                    }
                   }
                 }
               ],
