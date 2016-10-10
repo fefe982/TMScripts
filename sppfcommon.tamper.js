@@ -33,6 +33,7 @@
   decodeURL,
   path = location.pathname,
   param = decodeURLSearchParam(new URLSearchParams(location.search)),
+  decodeParam,
   handler,
   match_app_id,
   app_id,
@@ -1966,10 +1967,10 @@
               //GM_log(ap_gauge.css('width'));
               if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9][0-9]px|[89]px/)) {
                 //GM_log("yyyy");
-                eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first');
+                eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first:not(:has(div[data-image_countdown="true"]))');
                 //GM_log(eventL.length);
                 //GM_log(eventL.text());
-                //GM_log(eventL.text());
+                //GM_log(eventL);
                 if (eventL.length > 0 && !$(eventL[0]).text().match(/終了しました/)) {
                   succ = eventL.last().clickJ().length > 0;
                 }
@@ -3933,7 +3934,7 @@
               }
               return true;
             }
-              (actions[i][0][1], param))))) {
+              (actions[i][0][1], decodeParam))))) {
         GM_log(actions[i][0]);
         if (actions[i][1] === 'list') {
           list_action = actions[i][2];
@@ -4100,14 +4101,17 @@
     GM_log(param);
     if (param.url === undefined) {
       url = ":::";
-      decodeURL = "";
+      decodeURL = ":::";
+      decodeParam = {};
     } else {
       var urlhelper = new URL(param.url);
       decodeURL = urlhelper.pathname.substring(1);
+      decodeParam = decodeURLSearchParam(urlhelper.searchParams);
       url = encodeURIComponent(urlhelper.pathname.substring(1) + urlhelper.search);
     }
     GM_log(url);
     GM_log(decodeURL);
+    GM_log(decodeParam);
     if (typeof setStopSite_local !== "undefined" && setStopSite_local.has(app_id)) {
       return;
     }
