@@ -2382,8 +2382,12 @@
               ['aJ', '#eventHeader > a']]],
           [/^card%2FCardList/, 'list', [
               ['func', function () {
+                  $('#containerBox > div > p:contains("カテゴリ選択")').click(function() {
+                    GM_deleteValue('rag_card_best_ten_flag');
+                    location.reload();
+                  });
                   //GM_deleteValue('rag_card_best_ten_flag');
-                  if (GM_getValue('rag_card_best_ten_flag', 0) + 24 * 60 * 60 * 1000 > Date.now) {
+                  if (GM_getValue('rag_card_best_ten_flag', 0) + 24 * 60 * 60 * 1000 > Date.now()) {
                     GM_log(JSON.stringify(GM_getValue("rag_card_best_ten")));
                     GM_log(JSON.stringify(GM_getValue("rag_card_best_ten_sell_limit")));
                     var sel_limit = GM_getValue("rag_card_best_ten_sell_limit");
@@ -2450,8 +2454,9 @@
                         best_low[key].def = 0;
                       }
                     }
-                    GM_setValue('rag_card_best_ten_flag', Date.now);
+                    GM_setValue('rag_card_best_ten_flag', Date.now());
                     GM_setValue('rag_card_best_ten_sell_limit', best_low);
+                    $('#containerBox > div.margin_y > div > div.page_prev > a').clickJ();
                   }
                 }
               ]]],
