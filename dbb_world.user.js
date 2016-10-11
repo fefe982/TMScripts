@@ -7,6 +7,9 @@
 // @match        http://w13.d-bb.com/cgi-bin/*
 // @match        http://k13.d-bb.com/cgi-bin/*
 // @grant        GM_log
+// @grant        GM_setValue
+// @grant        GM_getValue
+// @grant        GM_deleteValue
 // ==/UserScript==
 
 (function () {
@@ -110,6 +113,7 @@
         break;
     case 'dbb_spa.cgi':
     case 'dbb_rehabilitation.cgi':
+    case 'dbb_hospital.cgi':
         if (jQuery('#sasikae_cardarea ul > li > a').length > 0) {
             jQuery('#sasikae_cardarea ul > li > a').attr('onclick', 'return true')[0].click();
         }
@@ -118,11 +122,30 @@
         jQuery('#entrygame_cenbox02 > div > p:nth-child(2) > a')[0].click();
         break;
     case 'dbb_regist_club_team_player.fcgi':
-        if (param.add_select === "1") {
-            //GM_log(jQuery('#leveluparea > div:nth-child(2) > div > p:nth-child(1) > a'));
-            //jQuery('#leveluparea > div:nth-child(2) > div > p:nth-child(1) > a').attr('onclick', 'return true;')[0].click();
-            //jQuery('#leveluparea > div:nth-child(2) > div > p:nth-child(1) > a > input').click();
+        if (jQuery('#leveluparea > div > div.temoti_search > form > div').length > 0) {
+            GM_log(GM_getValue('dbb_world_auto_club_team', 0));
+            if (GM_getValue('dbb_world_auto_club_team', 0) !== 1)
+                return;
+            if (jQuery('#hakihyo > tbody > tr > td.center > a:first').length > 0) {
+                jQuery('#hakihyo > tbody > tr > td.center > a:first')[0].click();
+                GM_log(jQuery('#hakihyo > tbody > tr > td.center > a:first')[0]);
+            }
+        } else if (document.insert !== undefined) {
             document.insert.submit();
+        } else {
+            var owner = jQuery('#hakihyo > tbody > tr').find('td:first:not(:has(input))'); //#hakihyo > tbody > tr:nth-child(16) > td:nth-child(4)
+            GM_log(owner);
+            if (owner.length === 0) {
+                jQuery('#hakihyo > tbody > tr:has(input[value="監督"]) > td > input[type="image"]').click();
+                GM_setValue('dbb_world_auto_club_team', 1);
+            } else {
+                if (jQuery('#hakihyo > tbody > tr:not(:has(td > input[type="image"])) > td:not(.co2)').length === 0) {
+                    GM_setValue('dbb_world_auto_club_team', 1);
+                    jQuery('#hakihyo > tbody > tr > td > input[type="image"]:first').click();
+                } else {
+                    GM_deleteValue('dbb_world_auto_club_team');
+                }
+            }
         }
         break;
     case 'dbb_road_game_entry_decisive.fcgi':
