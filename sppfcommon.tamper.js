@@ -1965,7 +1965,7 @@
               //GM_log(ap_gauge.css('width'));
               if (!succ && ap_gauge && ap_gauge.css("width").match(/[1-9][0-9]px|[89]px/)) {
                 //GM_log("yyyy");
-                eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first:not(:has(div[data-image_countdown="true"]))');
+                eventL = $('#main > div > a:regex(href, event%2FDoSetClickCount|event[a-zA-Z0-9]*%2FEventTop):first');
                 //GM_log(eventL.length);
                 //GM_log(eventL.text());
                 //GM_log(eventL);
