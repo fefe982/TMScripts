@@ -997,7 +997,7 @@
               ['aJ', 'a[href*="da2%2FrArea%2F4"]'],
               ['aJ', 'a[href*="da2%2FrArea%2F' + Math.floor(Math.random() * 3 + 1) + '"]']]],
           [/da2%2FrSkill/, 'aJ', 'a[href*="da2%2FrSkill%2Fdefeat"]'],
-          [/*da2%2F*/ / useItemComplete / , 'aJ', '#bg > section > article > div > div > a'],
+          [/*da2%2F*/ /useItemComplete/ , 'aJ', '#bg > section > article > div > div > a'],
           [/da2%2FuseItem\b/, 'aJ', 'a[href*="da2%2FuseItem"]'],
           [/friend%2FacceptList/, 'aJ', 'a[href*="friend%2FacceptOrderConfirm"]'],
           [/friend%2FacceptOrderConfirm/, 'aJ', 'input[name="yes"]'],
@@ -1117,7 +1117,7 @@
 
           //quest
           [/quest%2FbossSuccess/, 'aJ', 'a[href*="scenario%2Fquest"]'],
-          [/*quest%2F*/ / clearAreaFlash / , 'flashJT', '#canvas'],
+          [/*quest%2F*/ /clearAreaFlash/ , 'flashJT', '#canvas'],
           [/quest%2Findex/, 'func', function () {
               setInterval(function () {
                 //debugger;
@@ -1131,8 +1131,8 @@
           [/quest%2Fed/, 'list', [
               ['aJ', 'a[href*="quest%2Findex"]'],
               ['flashJT', document]]],
-          [/*quest%2F*/ / levelUp / , 'flashJT', '#canvas'],
-          [/*quest%2F*/ / noAction / , 'list', [
+          [/*quest%2F*/ /levelUp/ , 'flashJT', '#canvas'],
+          [/*quest%2F*/ /noAction/ , 'list', [
               ['aJ', 'a[href*="%2FuseItem"]'],
               ['aJ', '#top_btn > a']]],
           [/quest%2FrSkill/, 'list', [
@@ -1224,7 +1224,7 @@
               //['aJ', 'div.questAction a[href*="%2ForderHelpSelect"]'],
               ['funcR', function () {
                   if ($('#difficultyPopup > div:contains("強敵と戦う!")').length > 0) {
-                    return $('a[href*="%2Findex%2F"]:last()').clickJ().length > 0
+                    return $('a[href*="%2Findex%2F"]:last()').clickJ().length > 0;
                   }
                 }
               ],
@@ -2377,7 +2377,7 @@
                       $('#mapFooter > div.btn_dice > a').clickJ();
                       return true;
                     }
-                  })
+                  });
                 }
               ]]],
           [/caravan%2FRaidBattleResult%2F/, 'list', [
@@ -2436,7 +2436,7 @@
                   }
                   var best_array = {};
                   if ($('#containerBox > div.margin_y > div > div.page_number.box_horizontal.box_extend.box_x_center > div.current').text() === "1") {
-                    best_array = {}
+                    best_array = {};
                   } else {
                     best_array = GM_getValue("rag_card_best_ten");
                   }
@@ -2592,7 +2592,7 @@
                   var a = item.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a');
                   GM_log(a);
                   a.clickJ();
-                  return false
+                  return false;
                 }
               });
             }
@@ -3416,7 +3416,14 @@
               ['aJ', '#ctl00_HeaderNavi_hl_top']]],
           [/^login_bonus%2Flogin_bonus_stamp\.aspx/, 'aJ', '#ctl00_body_hl_gift_top_sp'],
           [/^mix%2Fmix_card_list_base_sp\.aspx/, 'func', function () {
-              return;
+              var dstp = GM_getValue('card_auto_mix');
+              if (dstp === undefined) {
+                $('div.mini_header').click(function () {
+                  GM_setValue('card_auto_mix', 1);
+                  location.reload();
+                });
+                return;
+              }
               if (document.URL.match(/rid%3D1/)) {
                 GM_log("sub_player");
                 var opt = $('#ddl_sort > option:contains("ｺｽﾄ高い順")');
@@ -3427,18 +3434,29 @@
                   return;
                 }
               }
+              var crp = decodeParam.crp === undefined ? 1 : +decodeParam.crp;
               var item = $('#regular_fielder, #regular_pitcher, #sub_player').find('div > div > div > dl:nth-child(2) > a:contains("限界突破可能!!")'); // :contains("限界突破可能!!")
               GM_log(item);
               if (item.length > 0) {
+                GM_setValue('card_auto_mix', crp);
                 item[0].click();
                 return;
               }
               $('#ctl00_body_hlSubPlayer')[0].click();
-              $('#BottomcarouselInner > ul > li:has(a:not(:has(div))) + li > a').clickJ();
+              if (un_loading === false) {
+                if (crp < dstp) {
+                  return $('#BottomcarouselInner > ul > li > a:eq(' + (dstp - 1) + ')').clickJ().length > 0;
+                } else if ($('#BottomcarouselInner > ul > li > a:eq(' + crp + ')').clickJ().length === 0) {
+                  GM_log("oooooooooooops");
+                  GM_deleteValue('card_auto_mix');
+                }
+              }
             }
           ],
           [/^mix%2Fmix_card_list_limit_sp\.aspx/, 'func', function () {
-              return;
+              if (GM_getValue('card_auto_mix') === undefined) {
+                return;
+              }
               var check = $('#material_player > div > div > div > dl:nth-child(2) > a > div.mix_status_box_base'); //'#ctl00_body_rp_ctl00_cardListSubPlayer_hlBaseSelect > div.mix_status_box_base > div');
               //GM_log(check[0]);
               //check[0].click();
@@ -3459,7 +3477,9 @@
             }
           ],
           [/^mix%2Fmix_card_list_plus_sp\.aspx/, 'func', function () {
-              return;
+              if (GM_getValue('card_auto_mix') === undefined) {
+                return;
+              }
               $('body > div > div > div > a:contains("限界突破")').clickJ();
             }
           ],
