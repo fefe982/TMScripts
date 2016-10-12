@@ -37,7 +37,12 @@
   handler,
   match_app_id,
   app_id,
-  action_handler;
+  action_handler,
+  un_loading = false;
+  $(window).bind('beforeunload', function () {
+    un_loading = true;
+    GM_log("set unload");
+  });
 
   GM_log('-start----------------------------------------- ' + Date());
 
@@ -358,11 +363,16 @@
     }
     var flash = $(this);
     setInterval(function () {
+      if (un_loading) {
+        GM_log("unloading ....");
+        return;
+      }
+      GM_log("click flash ....");
       flash.simMouseEvent("mousemove", xoff, yoff);
       flash.simMouseEvent("mousedown", xoff, yoff);
       flash.simMouseEvent("mouseup", xoff, yoff);
       flash.simMouseEvent("click", xoff, yoff);
-    }, 1000);
+    }, 150);
     return this;
   };
 
@@ -375,6 +385,11 @@
     GM_log(this);
     //alert(flash.text());
     setInterval(function () {
+      if (un_loading) {
+        GM_log("unloading ....");
+        return;
+      }
+      GM_log("touch flash ....");
       setTimeout(function () {
         flash.simTouchEvent("touchstart", xoff, yoff);
       }, 10);
@@ -393,7 +408,7 @@
       setTimeout(function () {
         flash.simMouseEvent("click", xoff, yoff);
       }, 60);
-    }, 100);
+    }, 150);
     return this;
   };
 
@@ -751,7 +766,7 @@
                   if (ap > 10) {
                     return false
                     //|| $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0
-                     || $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0
+                     || (GM_getValue('avalon_unit_battle_start', 0) < Date.now() && $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0)
                      || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0
                     //|| clickA('//a[contains(@href, "TowerRaidTop")]');
                      || clickA("//*[@id=\"quest_btn\"]/a");
@@ -928,7 +943,15 @@
               ['aJ', 'div.ub_inBattleButtons > div > div > a[href*="unitBattle%2FDoRaidbossBattleResult"]:last()'],
               ['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
           [/unitBattle%2FUnitBattleTop/, 'list', [
-              ['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
+              ['aJ', 'a[href*="unitBattle%2FMissionActionLot"]'],
+              ['func', () => {
+                  var date_time = $('div:contains("次のラウンド開始日時"):not(:has(div)) + div > div').text();
+                  var now = new Date(Date.now() + 60 * 1000);
+                  now = new Date(date_time.replace(' ', '/' + now.getFullYear() + ' ') + ' GMT+9');
+                  GM_setValue('avalon_unit_battle_start', now.getTime());
+                  $(this.cssmypage).clickJ();
+                }
+              ]]],
           [/unitBattle%2FUnitBattleRaidbossTop/, 'list', [
               ['aJ', 'a[href*="unitBattle%2FRaidbossTop"]'],
               ['aJ', 'a[href*="unitBattle%2FMissionActionLot"]']]],
@@ -3341,6 +3364,27 @@
       get_actions : function () {
         return [
           [/^:::$/, 'aJ', '#ctl00_body_hl_mypage_sp'],
+          [['bingo/bingo_top.aspx'], 'list', [
+              ['funcR', () => {
+                  //return;
+                  var mission_arr = [];
+                  for (var i = 0; i <= 16; i = i + 2) {
+                    if ($('#ctl00_body_rp_reward_sp_ctl' + (i < 10 ? '0' : '') + i + '_img_square').attr('src').match(/success/)) {
+                      continue;
+                    }
+                    var txt = $('a#ctl00_body_rp_reward_sp_ctl' + (i < 10 ? '0' : '') + i + '_hl_mission').filter(':not(:has(img))').next('div').text().match(/残り.*で達成/);
+                    if (txt) {
+                      txt = '{' + txt[0] + '}';
+                    } else {
+                      txt = '';
+                    }
+                    mission_arr.push($('#ctl00_body_rp_reward_sp_ctl' + (i < 10 ? '0' : '') + i + '_hl_mission > span').text() + txt);
+                  }
+                  GM_log(mission_arr);
+                  GM_setValue('card_bingo_target', mission_arr);
+                  $(this.cssmypage).clickJ();
+                }
+              ]]],
           [/^duty%2Fseries_success%2Fseries_success_season_start_or_end\.aspx/, 'aJ', '#ctl00_body_hl_series_success_start'],
           [/^duty%2Fseries_success%2Fseries_success_exe_complet\.aspx/, 'list', [
               ['aJ', '#ctl00_body_hl_series_success_start'],
@@ -3372,6 +3416,7 @@
               ['aJ', '#ctl00_HeaderNavi_hl_top']]],
           [/^login_bonus%2Flogin_bonus_stamp\.aspx/, 'aJ', '#ctl00_body_hl_gift_top_sp'],
           [/^mix%2Fmix_card_list_base_sp\.aspx/, 'func', function () {
+              return;
               if (document.URL.match(/rid%3D1/)) {
                 GM_log("sub_player");
                 var opt = $('#ddl_sort > option:contains("ｺｽﾄ高い順")');
@@ -3393,6 +3438,7 @@
             }
           ],
           [/^mix%2Fmix_card_list_limit_sp\.aspx/, 'func', function () {
+              return;
               var check = $('#material_player > div > div > div > dl:nth-child(2) > a > div.mix_status_box_base'); //'#ctl00_body_rp_ctl00_cardListSubPlayer_hlBaseSelect > div.mix_status_box_base > div');
               //GM_log(check[0]);
               //check[0].click();
@@ -3413,12 +3459,14 @@
             }
           ],
           [/^mix%2Fmix_card_list_plus_sp\.aspx/, 'func', function () {
+              return;
               $('body > div > div > div > a:contains("限界突破")').clickJ();
             }
           ],
           [/^top\.aspx/, 'list', [
               ['aJ', 'a:contains("選手名鑑に選手が追加されました")'],
               ['aJ', 'a:contains("件届いてるよ！")'],
+              ['aJ', 'a:contains("【球子のﾐｯｼｮﾝﾌｪｽﾀ】ﾋﾞﾝｺﾞしました!!")'],
               ['funcR', function () {
                   if ($('dd.mypowergage > div').attr('style').match(/width:(?:100|[1-9][0-9])%/)) {
                     return $('a[href*="%3Fbid%3D20160505_vic"]').clickJ().length > 0
@@ -3429,6 +3477,17 @@
               ['funcR', () => {
                   if ($('#ctl00_body_d_background > div.main-content > div.statusbox > dl.mybp > dd:nth-child(2) > span').text() > 0) {
                     return $('#ctl00_body_hl_battle_sp').clickJ().length > 0;
+                  }
+                }
+              ],
+              ['funcR', () => { //bingo
+                  if ($('#ctl00_body_Banner17 > div > a').length > 0) {
+                    var bingo_target = GM_getValue('card_bingo_target');
+                    if (bingo_target === undefined) {
+                      return $('#ctl00_body_Banner17 > div > a').clickJ().length > 0;
+                    } else {
+                      GM_log(bingo_target);
+                    }
                   }
                 }
               ],
