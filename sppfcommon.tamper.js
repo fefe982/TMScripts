@@ -393,7 +393,7 @@
       setTimeout(function () {
         flash.simMouseEvent("click", xoff, yoff);
       }, 60);
-    }, 1000);
+    }, 100);
     return this;
   };
 
@@ -1129,7 +1129,7 @@
           [/^quest%2FuseItemComplete/, 'aJ', 'a[href*="quest%2Findex"]'],
           [/quest%2FwinRare/, 'aJ', 'a[href*="quest%2Findex"]'],
           [/quest_story%2Fquest%2Fop/, 'flashJT', document],
-          [/^QuestStory%2Fquest_s%2/, 'flashJT', '#cv0'],
+          [/^[Qq]uestStory%2Fquest_s%2/, 'flashJT', '#cv0'],
           [/scenario%2Fquest/, 'flashJT', document],
           [/scenario2%2Fs%2Fmorinaga_end/, 'flashJT', document],
           [/scenario3%2F/, 'flashJT', '#skip'],
@@ -1590,6 +1590,13 @@
               //['aJ', '#world_select_wrap > div.inner > div > div.door_1 > a'],
               ['aJ', '#world_select_wrap > div > ul > li.stage_icon.extra.clear > div > div > a'],
               //['func', function () {alert("need intervene");}],
+              ['funcR', function () {
+                  var stg = $('#world_select_wrap > div > div.stage_icon > a');
+                  if (stg.length > 0) {
+                    return stg.eq(Math.floor(Math.random() * stg.length)).clickJ().length > 0;
+                  }
+                }
+              ],
               ['hold']]],
           [/event[a-zA-Z0-9]*%2FRaidBossBattleResult/, 'list', [
               ['aJ', '#boss_battle_gauge_wrap > div > div.btn_gauge_battle > a'],
@@ -2382,7 +2389,7 @@
               ['aJ', '#eventHeader > a']]],
           [/^card%2FCardList/, 'list', [
               ['func', function () {
-                  $('#containerBox > div > p:contains("カテゴリ選択")').click(function() {
+                  $('#containerBox > div > p:contains("カテゴリ選択")').click(function () {
                     GM_deleteValue('rag_card_best_ten_flag');
                     location.reload();
                   });
@@ -3160,8 +3167,9 @@
           [/akr%2Fmain%2Fpresent%2Freceive%2Fmain%2Ftactics_result/, 'aJ', 'a[href*="main%2Fpresent%2Freceive%2Fmain"]'],
           [/main%2Freinforce%2Fmain%3Ferror_no/, 'list', [
               ['aJ', this.cssmypage]]],
-          [/main%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
+          [/^akr%2Fmain%2Freinforce%2Fmain%2Findex%2F/, 'aJ', 'a[href*="main%2Freinforce%2Fmain%2Frecommendexe"]'],
           [/^akr%2Fmain%2Freinforce%2Fmain%2Fwith_item%3F/, 'list', [
+              ['aJ', '#d9-main > div > div > div > div > a:contains("Ptまでの報酬受取!")'],
               ['funcR', () => {
                   if ($('#d9-main > div > div:contains("強化Pが不足しています")').length > 0) {
                     $(this.cssmypage).clickJ();
@@ -3289,6 +3297,7 @@
               }
             }
           ],
+          [["akr/main/reinforcecampaign/main/receiveresult"], 'aJ', '#global_menu_link > a.global_menu_btn._reinforce.line_right.btn_touch'],
           [/main%2Freward%2Fmain%2Freward_swf%3F/, 'flashJT', '#tween_b_root'],
           [/^akr%2Fmain%2Freward%2Fmain/, 'list', [
               ['funcR', function () {
@@ -3936,8 +3945,9 @@
     for (i = 0; i < actions.length; i += 1) {
       if ((actions[i][0]instanceof RegExp && url !== undefined && url.match(actions[i][0])) ||
         (actions[i][0]instanceof Array &&
-          (actions[i][0][0] === decodeURL || (actions[i][0][0] && decodeURL.match(actions[i][0][0]))) &&
-          ((typeof actions[i][0][1] === 'function' && actions[i][0][1](param)) ||
+          (actions[i][0][0] === decodeURL || (actions[i][0][0]instanceof RegExp && decodeURL.match(actions[i][0][0]))) &&
+          (actions[i][0][1] === undefined ||
+            (typeof actions[i][0][1] === 'function' && actions[i][0][1](param)) ||
             typeof actions[i][0][1] === 'object' && (function (k, p) {
               for (var key in k) {
                 if (k[key] !== p[key])
@@ -4097,10 +4107,10 @@
     reload_page(120000);
   }
 
-  match_app_id = url.match(/^http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?$/);
-  if (!match_app_id) {
-    match_app_id = url.match(/^http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/(?:\S*(?:[?&]|&amp;)url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?)?$/);
-  }
+  //match_app_id = url.match(/^http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?$/);
+  //if (!match_app_id) {
+  //  match_app_id = url.match(/^http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/(?:\S*(?:[?&]|&amp;)url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?)?$/);
+  //}
   if (location.hostname === 'sp.pf.mbga.jp') {
     app_id = path.match(/(\d+)/)[1];
   } else if (location.hostname.match(/^g(\d+)\.sp\.pf\.mbga\.jp$/)) {
