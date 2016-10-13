@@ -376,7 +376,7 @@
     return this;
   };
 
-  $.fn.touchFlash = function (xoff, yoff) {
+  $.fn.touchFlash = function (xoff, yoff, interval) {
     if (this.length === 0) {
       return this;
     }
@@ -384,6 +384,9 @@
     GM_log("touchFlash: ");
     GM_log(this);
     //alert(flash.text());
+    if (interval === undefined || interval < 150) {
+        interval = 150;
+    }
     setInterval(function () {
       if (un_loading) {
         GM_log("unloading ....");
@@ -408,7 +411,7 @@
       setTimeout(function () {
         flash.simMouseEvent("click", xoff, yoff);
       }, 60);
-    }, 150);
+    }, interval);
     return this;
   };
 
@@ -1016,7 +1019,7 @@
           [/fusion%2Fevolution%/, 'flashJT', "#canvas"],
           [/fusion%2Ffusion%/, 'flashJT', '#canvas'],
           [/fusion%2Flimit_result%/, 'aJ', "a[href*='fusion%2Flimit_select']"],
-          [/fusion%2Flimit%/, 'flashJT', "#canvas"],
+          [/fusion%2Flimit%/, 'flashJT', "#canvas", 100, 100, 500],
           [/item%2FpresentList/, 'formJ', 'form'],
           [/%2ForderHelpSelect/, 'list', [
               ['aJ', '#bg > section a:contains("参戦する"):first'],
@@ -4019,10 +4022,11 @@
       tryUntil(() => {
         var canvas = $(action[1]),
         x = action[2],
-        y = action[3];
+        y = action[3],
+        interval = action[4] ? action[4] : 150;
         if (canvas.length > 0) {
           //canvas.clickFlash(x, y);
-          canvas.touchFlash(x, y);
+          canvas.touchFlash(x, y, interval);
           return true;
         } else {
           //GM_log('flashJT, wait flash ' + cnt);
