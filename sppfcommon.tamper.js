@@ -460,6 +460,11 @@
   function clickFlash(xpath, xoff, yoff) {
     GM_log('clickFlash : ' + xpath);
     setInterval(function () {
+      if (un_loading) {
+        GM_log("unloading ....");
+        return;
+      }
+      GM_log("click Flash XPath");
       var canvas = getXPATH(xpath);
       if (canvas) {
         //clickSth(canvas,"mousemove",xoff,yoff);
@@ -468,7 +473,7 @@
         clickSth(canvas, "mouseup", xoff, yoff);
         clickSth(canvas, "click", xoff, yoff);
       }
-    }, 1000);
+    }, 150);
     return true;
     //}
     //else
@@ -997,7 +1002,7 @@
               ['aJ', 'a[href*="da2%2FrArea%2F4"]'],
               ['aJ', 'a[href*="da2%2FrArea%2F' + Math.floor(Math.random() * 3 + 1) + '"]']]],
           [/da2%2FrSkill/, 'aJ', 'a[href*="da2%2FrSkill%2Fdefeat"]'],
-          [/*da2%2F*/ / useItemComplete / , 'aJ', '#bg > section > article > div > div > a'],
+          [/[a-zA-Z0-9]*%2FuseItemComplete/ , 'aJ', '#bg > section > article > div > div > a'],
           [/da2%2FuseItem\b/, 'aJ', 'a[href*="da2%2FuseItem"]'],
           [/friend%2FacceptList/, 'aJ', 'a[href*="friend%2FacceptOrderConfirm"]'],
           [/friend%2FacceptOrderConfirm/, 'aJ', 'input[name="yes"]'],
@@ -1117,7 +1122,7 @@
 
           //quest
           [/quest%2FbossSuccess/, 'aJ', 'a[href*="scenario%2Fquest"]'],
-          [/*quest%2F*/ / clearAreaFlash / , 'flashJT', '#canvas'],
+          [/clearAreaFlash/, 'flashJT', '#canvas'], /*quest%2F*/
           [/quest%2Findex/, 'func', function () {
               setInterval(function () {
                 //debugger;
@@ -1131,8 +1136,8 @@
           [/quest%2Fed/, 'list', [
               ['aJ', 'a[href*="quest%2Findex"]'],
               ['flashJT', document]]],
-          [/*quest%2F*/ / levelUp / , 'flashJT', '#canvas'],
-          [/*quest%2F*/ / noAction / , 'list', [
+          [/[a-zA-Z0-9]*%2FlevelUp/ , 'flashJT', '#canvas'],
+          [/[a-zA-Z0-9]*%2FnoAction/ , 'list', [
               ['aJ', 'a[href*="%2FuseItem"]'],
               ['aJ', '#top_btn > a']]],
           [/quest%2FrSkill/, 'list', [
@@ -1240,7 +1245,7 @@
                 }
               ],
               //['aJ', 'div.questAction a[href*="%2Fraid%2F"]:last'],
-              ['aJ', 'div.questAction a:regex(href, %2F[a-zA-Z]+%2Findex%2F1)']]],
+              ['aJ', 'div.questAction a:regex(href, %2F[a-zA-Z0-9]+%2Findex%2F1)']]],
           [/%2Findex%2F/, 'list', [
               ['aJ', 'div.bossEncountNow > a'],
               ['func', function () {
@@ -1908,6 +1913,7 @@
           ],
           //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],
           [/fusion%2FFusionTop/, 'func', function () {
+              return;
               if (document.referrer.match(/fusion%2FMaterialFusionTop/)) {
                 $('a[href*="mypage%2FIndex"]').clickJ();
               } else {
@@ -1916,6 +1922,7 @@
             }
           ],
           [/fusion%2FMaterialFusionTop/, "func", function () {
+              return;
               var form = getXPATH("(//ul[@class='lst_sub']/li/form)[last()]"),
               succ = false;
               if (form) {
@@ -3001,6 +3008,11 @@
               ['aJ', '#header_left_button > a']]],
           [/supernova%2FSupernovaBattleHistoryDetail%/, 'list', [
               ['aJ', '#containerBox > div > a[href*="supernova%2FSupernovaTop"]']]],
+          [["supernova/SupernovaDeckEditTop/"], 'func', () => {
+              GM_log(JSON.stringify(GM_getValue("rag_card_best_ten")));
+              GM_log(JSON.stringify(GM_getValue("rag_card_best_ten_sell_limit")));
+            }
+          ],
           [/supernova%2FSupernovaTop/, 'list', [
               ['aJ', '#navi > div > a']]],
           [/treasure%2FCardList%2F/, 'list', [
@@ -3574,6 +3586,7 @@
               ['hold']]],
           [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
           [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
+          [[/^fusion\/item\/.*$/], 'flashJT', '#canvas'],
           [/^login%2Findex%2F/, 'flashJT', '#canvas'],
           [/^login_flash%2Findex%2F/, 'flashJT', '#canvas'],
           [/^mypage/, 'list', [
