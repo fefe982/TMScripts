@@ -3078,7 +3078,7 @@
               ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D11"]:not(.disable)'],
               ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D12"]:not(.disable)'],
               ['aJ', 'a[href*="akr%2Fmain%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Fbox%3D13"]:not(.disable)'],
-              ['aJ', '#d9-main a:regex(href, akr%2Fmain%2Fevent%2F(.|..|[^b]..|.[^o].|..[^x]|.....*)%2Fmain)']]],
+              ['aJ', '#d9-main a:regex(href, akr%2Fmain%2Fevent%2F(.|..|[^b]..|.[^o].|..[^x]|.....*)%2F(main|info))']]],
           [/^akr%2Fmain%2Fevent%2Fbox%2Fmain%2F(dtraining_list|result)/, 'list', [
               ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F%3Ftimes"]'],
               ['aJ', 'a[href*="main%2Fevent%2Fbox%2Fmain%2Fexe%2F"]'],
