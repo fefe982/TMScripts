@@ -385,7 +385,7 @@
     GM_log(this);
     //alert(flash.text());
     if (interval === undefined || interval < 150) {
-        interval = 150;
+      interval = 150;
     }
     setInterval(function () {
       if (un_loading) {
@@ -1005,7 +1005,7 @@
               ['aJ', 'a[href*="da2%2FrArea%2F4"]'],
               ['aJ', 'a[href*="da2%2FrArea%2F' + Math.floor(Math.random() * 3 + 1) + '"]']]],
           [/da2%2FrSkill/, 'aJ', 'a[href*="da2%2FrSkill%2Fdefeat"]'],
-          [/[a-zA-Z0-9]*%2FuseItemComplete/ , 'aJ', '#bg > section > article > div > div > a'],
+          [/[a-zA-Z0-9]*%2FuseItemComplete/, 'aJ', '#bg > section > article > div > div > a'],
           [/da2%2FuseItem\b/, 'aJ', 'a[href*="da2%2FuseItem"]'],
           [/friend%2FacceptList/, 'aJ', 'a[href*="friend%2FacceptOrderConfirm"]'],
           [/friend%2FacceptOrderConfirm/, 'aJ', 'input[name="yes"]'],
@@ -1139,8 +1139,8 @@
           [/quest%2Fed/, 'list', [
               ['aJ', 'a[href*="quest%2Findex"]'],
               ['flashJT', document]]],
-          [/[a-zA-Z0-9]*%2FlevelUp/ , 'flashJT', '#canvas'],
-          [/[a-zA-Z0-9]*%2FnoAction/ , 'list', [
+          [/[a-zA-Z0-9]*%2FlevelUp/, 'flashJT', '#canvas'],
+          [/[a-zA-Z0-9]*%2FnoAction/, 'list', [
               ['aJ', 'a[href*="%2FuseItem"]'],
               ['aJ', '#top_btn > a']]],
           [/quest%2FrSkill/, 'list', [
@@ -3049,12 +3049,11 @@
           [/%2Fflash%2F/, 'flashJT', '#tween_b_root'],
           [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],
           [/main%2Farena%2Fmain%2Fgame_detail%3F/, 'list', [
-              ['aJ', '#arena_body a:contains("次の試合へ")'],
+              ['aJ', '#arena_body a:contains("試合へ"):first'],
               ['aJ', this.cssmypage]]],
           [/main%2Farena%2Fmain%2Fmatch_result_flash%3F/, 'flashJT', '#tween_b_root'],
           [/main%2Farena%2Fmain%2Fselect_tactics%3F/, 'formJ', 'form[action*="main%2Farena%2Fmain%2Fplayball_exe%3F"]'],
-          [/main%2Farena%2Fmain/, 'list', [
-
+          [/^akr%2Fmain%2Farena%2Fmain/, 'list', [
               ['funcR', function () {
                   if ($('#arena_back > div > div.navi_back > div.navi_right > div.arrow_box_right > div.top_onegai_title01 + div').length > 0) {
                     GM_setValue("dream_nine_sos_text", $('#arena_back > div > div.navi_back > div.navi_right > div.arrow_box_right > div.top_onegai_title01 + div').text() + '{' + $('#arena_back > div > div.frame_global > table > tbody > tr > td:nth-child(1) > div:nth-child(3)').text() + '}');
@@ -3064,11 +3063,14 @@
                     var str = GM_getValue("dream_nine_sos_text", "");
                     if (!str.startsWith('clear')) {
                       GM_setValue('dream_nine_sos_text', 'clear' + str);
+                      return $('#arena_back > div > div > a[href*="akr%2Fmain%2Farena%2Fevent%2Fdorinaichansos%2Findex"]').clickJ().length > 0;
                     }
                   }
                 }
               ],
-              ['aJ', '#arena_back > div.arena_btn_only > a']]],
+              ['aJ', '#arena_back > div.arena_btn_only > a'], // single order
+              ['aJ', '#arena_back > div.clearfix > div > a:first'], // multi order
+            ]],
           [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.cssmypage],
           [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
               //['hold'],
