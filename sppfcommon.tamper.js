@@ -2091,6 +2091,8 @@
         owner,
         attacked;
         succ = succ || clickA('//*[@id="requestChain"]/a');
+        succ = succ || $('#advantage_itembox_img_tutorial > a').clickJ().length > 0;
+        succ = succ || $('#popup_content > div > div.section:has(div.section_title:contains("全界の神水")) > div > div > a:contains("はい")').clickJ().length > 0;
         GM_log(USERID);
         if (!succ) {
           ownerbox = $('#popup_content > div:nth-child(1) > div.section > div > div.no_flex > img');
