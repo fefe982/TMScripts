@@ -3175,7 +3175,7 @@
                 }
               ],
               ['funcR', function () {
-                  if ($('div.arena_cost_area > img[src*="icon_playcost.png"]').length > 0) {
+                  if ($('div.bg_cost_area > img[src*="icon_playcost.png"]').length > 0) {
                     return $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(victoryroad)%2F)').clickJ().length > 0
                      || $('#basic_menu_area a[href*="main%2Farena%2Fmain"]').clickJ().length > 0;
                   }
