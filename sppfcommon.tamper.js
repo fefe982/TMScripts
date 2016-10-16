@@ -3806,6 +3806,9 @@
               ['aJ', '#main > a.btn_type1_l']]],
           [/^boss%3F/, 'aJ', '#main > a.btn_battle_start'],
           //[/^campaign%2Findex/, 'func', () => {alert("campaign!!!");}],
+          [['cheer/list'], 'list', [
+              ['aJ', '#main > a:contains("を既読にする")'],
+              ['aJ', this.cssmypage]]],
           [/^feature%2Ffloortreasurelist/, 'list', [
               ['aJ', '#main > a'],
               ['aJ', this.cssmypage]]],
@@ -3894,6 +3897,7 @@
                   }
                 }
               ],
+              ['aJ', '#mypage_bg_v2 > div.alert > a.icon2_on'],
               ['switch'],
               ['hold']]],
           [/^packgacha%2Findex/, 'list', [
