@@ -3050,6 +3050,7 @@
         return [
           [/%2Fflash%2F/, 'flashJT', '#tween_b_root'],
           [/(swf|flash)%3F/, 'flashJT', '#tween_b_root'],
+          [['akr/main/arena/event/dorinaichansos/index'], 'aJ', this.cssmypage],
           [/main%2Farena%2Fmain%2Fgame_detail%3F/, 'list', [
               ['aJ', '#arena_body a:contains("試合へ"):first'],
               ['aJ', this.cssmypage]]],
@@ -3072,7 +3073,7 @@
               ],
               ['aJ', '#arena_back > div.arena_btn_only > a'], // single order
               //['hold'],
-              ['aJ', '#arena_back > div.clearfix > div:has(div) > a:first'], // multi order
+              ['aJ', '#arena_back > div.clearfix > div > a:has(div):first'], // multi order
             ]],
           [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.cssmypage],
           [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
