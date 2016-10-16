@@ -3071,7 +3071,8 @@
                 }
               ],
               ['aJ', '#arena_back > div.arena_btn_only > a'], // single order
-              ['aJ', '#arena_back > div.clearfix > div > a:first'], // multi order
+              //['hold'],
+              ['aJ', '#arena_back > div.clearfix > div:has(div) > a:first'], // multi order
             ]],
           [/main%2Fcampaign%2Flogin(challenge|rally)%2Fmain/, 'aJ', this.cssmypage],
           [/^akr%2Fmain%2Fevent%2Fbox%2Fmain/, 'list', [
