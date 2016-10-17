@@ -35,7 +35,7 @@
   param = decodeURLSearchParam(new URLSearchParams(location.search)),
   decodeParam,
   handler,
-  match_app_id,
+  //match_app_id,
   app_id,
   action_handler,
   un_loading = false;
@@ -48,72 +48,6 @@
 
   function getXPATH(xpath) {
     return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null).iterateNext();
-  }
-
-  function getXPATHAll(xpath) {
-    return document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
-  }
-
-  function extend(destination, source) {
-    var property;
-    for (property in source) {
-      if (source.hasOwnProperty(property)) {
-        destination[property] = source[property];
-      }
-    }
-    return destination;
-  }
-
-  function simulate(element, eventName, config) {
-    var eventMatchers = {
-      'HTMLEvents' : /^(?:load|unload|abort|error|select|change|submit|reset|focus|blur|resize|scroll)$/,
-      'MouseEvents' : /^(?:click|dblclick|mouse(?:down|up|over|move|out))$/
-    },
-    defaultOptions = {
-      pointerX : 0,
-      pointerY : 0,
-      button : 0,
-      ctrlKey : false,
-      altKey : false,
-      shiftKey : false,
-      metaKey : false,
-      bubbles : true,
-      cancelable : true
-    },
-    options = extend(defaultOptions, config || {}),
-    oEvent,
-    eventType = null,
-    name;
-    for (name in eventMatchers) {
-      if (eventMatchers.hasOwnProperty(name)) {
-        if (eventMatchers[name].test(eventName)) {
-          eventType = name;
-          break;
-        }
-      }
-    }
-
-    if (!eventType) {
-      throw new SyntaxError('Only HTMLEvents and MouseEvents interfaces are supported');
-    }
-
-    if (document.createEvent) {
-      oEvent = document.createEvent(eventType);
-      if (eventType === 'HTMLEvents') {
-        oEvent.initEvent(eventName, options.bubbles, options.cancelable);
-      } else {
-        oEvent.initMouseEvent(eventName, options.bubbles, options.cancelable, document.defaultView,
-          options.button, options.pointerX, options.pointerY, options.pointerX, options.pointerY,
-          options.ctrlKey, options.altKey, options.shiftKey, options.metaKey, options.button, element);
-      }
-      element.dispatchEvent(oEvent);
-    } else {
-      options.clientX = options.pointerX;
-      options.clientY = options.pointerY;
-      oEvent = extend(document.createEventObject(), options);
-      element.fireEvent('on' + eventName, oEvent);
-    }
-    return element;
   }
 
   function clickSth(obj, eventname, xoff, yoff) {
@@ -171,6 +105,8 @@
   }
 
   $.expr[':'].regex = function (elem, index, match) {
+    GM_log("regex");
+    GM_log(match);
     var matchParams = match[3].split(','),
     validLabels = /^(data|css):/,
     attr = {
@@ -512,12 +448,6 @@
   }
 
   ////////////
-  function setCookie(c_name, value, exsecs) {
-    var exdate = new Date(),
-    c_value = escape(value) + ((exsecs === null) ? "" : "; expires=" + exdate.toUTCString());
-    exdate.setSeconds(exdate.getSeconds() + exsecs);
-    document.cookie = c_name + "=" + c_value;
-  }
   function getCookie(c_name) {
     GM_log("get cookie : " + c_name);
     var c_value = document.cookie,
@@ -1914,29 +1844,28 @@
               }
             }
           ],
-          //[/fusion%2FFusionTop/, 'func', handleFusionCard], //],
-          [/fusion%2FFusionTop/, 'func', function () {
-              return;
-              if (document.referrer.match(/fusion%2FMaterialFusionTop/)) {
-                $('a[href*="mypage%2FIndex"]').clickJ();
-              } else {
-                $('a[href*="fusion%2FMaterialFusionTop"]').clickJ();
-              }
-            }
-          ],
-          [/fusion%2FMaterialFusionTop/, "func", function () {
-              return;
-              var form = getXPATH("(//ul[@class='lst_sub']/li/form)[last()]"),
-              succ = false;
-              if (form) {
-                form.elements[1].selectedIndex = form.elements[1].options.length - 1;
-                form.submit();
-                succ = true;
-              }
-              succ = succ || clickA('//a[text()="Nカード一括強化"]');
-              succ = succ || clickA(this.xpathmypage);
-            }
-          ],
+          // [/fusion%2FFusionTop/, 'func', function () {
+              // return;
+              // if (document.referrer.match(/fusion%2FMaterialFusionTop/)) {
+                // $('a[href*="mypage%2FIndex"]').clickJ();
+              // } else {
+                // $('a[href*="fusion%2FMaterialFusionTop"]').clickJ();
+              // }
+            // }
+          // ],
+          // [/fusion%2FMaterialFusionTop/, "func", function () {
+              // return;
+              // var form = getXPATH("(//ul[@class='lst_sub']/li/form)[last()]"),
+              // succ = false;
+              // if (form) {
+                // form.elements[1].selectedIndex = form.elements[1].options.length - 1;
+                // form.submit();
+                // succ = true;
+              // }
+              // succ = succ || clickA('//a[text()="Nカード一括強化"]');
+              // succ = succ || clickA(this.xpathmypage);
+            // }
+          // ],
           [/fusion%2FMaterialFusionConfirm%2F/, "form", '//*[@id=\"main\"]/div[@class="section_sub"]/form'],
           [/^gacha%2FGachaBoxResetConf/, 'aJ', 'a:contains("リセットする")'],
           [/^gacha%2FGachaBoxResetEnd/, 'aJ', '#main > nav > a'],
@@ -2440,7 +2369,7 @@
                       var def = +$(this).find('td.txt_right.cardDefense').text();
                       var name = $(this).find('div > div > div > a').text();
                       GM_log(name, type, atk, def);
-                      if (sel_limit[type] != undefined && atk < sel_limit[type].atk && def < sel_limit[type].def) {
+                      if (sel_limit[type] !== undefined && atk < sel_limit[type].atk && def < sel_limit[type].def) {
                         $(this).css('background', 'olive');
                       }
                     });
@@ -2486,7 +2415,7 @@
                     return;
                   } else {
                     var best_low = {};
-                    for (var key in best_array) {
+                    for (key in best_array) {
                       best_low[key] = {};
                       if (best_array[key].atk.length >= 10) {
                         best_low[key].atk = best_array[key].atk[9];
@@ -2592,23 +2521,23 @@
           [/^evolution%2FEvolutionEnd/, 'list', [
               ['aJ', '#containerBox > div:nth-child(21) > div:nth-child(2) > div > a'],
               ['aJ', '#containerBox > div:nth-child(8) > div.ragna_selector.margin_bottom_10 > div > ul > li.cur > div > div > div:nth-child(1) > a']]],
-          [/^evolution%2FSelectBaseCard/, 'func', function () {
-              return;
-              var bases = $('#containerBox > div.section.margin_top_10');
-              bases.each(function () {
-                var item = $(this);
-                var title = item.children('div.section_title.box_horizontal');
-                var rare = title.children('div:nth-child(2)').text();
-                var name = title.children('div:nth-child(3)').text();
-                if (rare === 'N' || rare === 'N+' || rare === 'N++') {
-                  var a = item.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a');
-                  GM_log(a);
-                  a.clickJ();
-                  return false;
-                }
-              });
-            }
-          ],
+          // [/^evolution%2FSelectBaseCard/, 'func', function () {
+              // return;
+              // var bases = $('#containerBox > div.section.margin_top_10');
+              // bases.each(function () {
+                // var item = $(this);
+                // var title = item.children('div.section_title.box_horizontal');
+                // var rare = title.children('div:nth-child(2)').text();
+                // var name = title.children('div:nth-child(3)').text();
+                // if (rare === 'N' || rare === 'N+' || rare === 'N++') {
+                  // var a = item.find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_bottom_10 > a');
+                  // GM_log(a);
+                  // a.clickJ();
+                  // return false;
+                // }
+              // });
+            // }
+          // ],
           [/deck%2FDeckEditTop%2F/, 'a', this.xpathmypage],
           [/^fusion%2FFusionEnd/, 'func', function () {
               var baselvl = $('#base_card_area > div.deckInfoTop > div:nth-child(1) > div:nth-child(2)').text();
@@ -3690,7 +3619,7 @@
                     if ($('#supportForm > div:nth-child(3) > ul > li:nth-child(1) > div > input:visible()').clickJ().length > 0 || $('#dialogRoot > section > article > div.p10.txC > div > a:visible()').clickJ().length > 0) {
                       return true;
                     }
-                    $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible():regex(href, [a-zA-Z]*%2Ftop)').clickJ(0).length > 0 ||
+                    return $('#loseDialogRoot > section > article > div.px10.my10 > ul > li:nth-child(1) > div > a:visible():regex(href, [a-zA-Z]*%2Ftop)').clickJ(0).length > 0 ||
                     $('#loseDialogRoot:visible()').length > 0 ||
                     $('#resultButton > div > a:visible()').clickJ(0).length > 0 ||
                     $('div.magicButton[style*="z-index: 2001"]:has(img#enabledMagic0)').length > 0 ||
@@ -3735,7 +3664,7 @@
           [/^[a-zA-Z0-9]+%2Fpresent/, 'flashJT', '#canvas'],
           [/^[a-zA-Z0-9]+%2Fquest/, 'func', () => {
               setInterval(() => {
-                $('#battleBoss:visible()').clickJ().length > 0 ||
+                return $('#battleBoss:visible()').clickJ().length > 0 ||
                 $('#but4.commandButton.on').clickJ().length > 0 ||
                 $('#but3.commandButton.on').clickJ().length > 0 ||
                 $('#but2.commandButton.on').clickJ().length > 0 ||
@@ -4213,10 +4142,6 @@
     reload_page(120000);
   }
 
-  //match_app_id = url.match(/^http:\/\/sp\.pf\.mbga\.jp\/(\d+)(?:\S*[?&]url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?$/);
-  //if (!match_app_id) {
-  //  match_app_id = url.match(/^http:\/\/g(\d+)\.sp\.pf\.mbga\.jp(?:\/(?:\S*(?:[?&]|&amp;)url=http(?:%3A%2F%2F|:\/\/)[-_a-zA-Z0-9.]+(?:%2F|\/)([-_a-zA-Z%0-9.]+)\S*)?)?$/);
-  //}
   if (location.hostname === 'sp.pf.mbga.jp') {
     app_id = path.match(/(\d+)/)[1];
   } else if (location.hostname.match(/^g(\d+)\.sp\.pf\.mbga\.jp$/)) {
