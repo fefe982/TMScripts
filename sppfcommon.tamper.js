@@ -3522,7 +3522,7 @@
                 }
               ],
               ['funcR', () => { //bingo
-                  if ($('#ctl00_body_Banner17 > div > a').length > 0) {
+                  if ($('a:has(img[src*="smart%2Fbingo%2Fbanner.gif"])').length > 0) {
                     var bingo_target = GM_getValue('card_bingo_target');
                     if (bingo_target === undefined) {
                       return $('#ctl00_body_Banner17 > div > a').clickJ().length > 0;
