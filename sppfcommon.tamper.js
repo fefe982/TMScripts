@@ -4,6 +4,7 @@
 // @version    0.1
 // @description  enter something useful
 // @match      http://*.sp.pf.mbga.jp/*
+// @match      http://*.sp.mbga.jp/*
 // @require    http://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js
 // @require    file:///D:/fefe/sppfragnarok_local.js
 // @noframes
@@ -118,10 +119,6 @@
     return regex.test(jQuery(elem)[attr.method](attr.property));
   };
   $.expr[':'].regexText = function (elem, index, match) {
-    //GM_log(":" + elem.innerText + ":");
-    //GM_log(elem.innerText.match(match[3]));
-    //GM_log(match[3]);
-    //GM_log((new RegExp(match[3])).test(elem.innerText));
     return (new RegExp(match[3])).test(elem.innerText);
   };
   $.fn.simMouseEvent = function (eveName, xoff, yoff) {
@@ -3887,6 +3884,40 @@
           [/XXXXXXXXXX/]
         ];
       }
+    },
+    "gcc" : {
+      mypage_url : "http://gcc.sp.mbga.jp/_gcard_top?tgt=63358373&_from=u_myg_11000022",
+      rotation_time : 5,
+      cssmypage : '#container > nav.global-nav > a.myroom.btn',
+      get_actions : function () {
+        return [
+          [[/[\s\S]*/, () => {
+            return $('body.swf').length > 0;
+              }], 'flashJT', 'div:has(canvas)'],
+          [['_gcard_card_upgrades'], 'list', [
+              ['aJ', 'a:contains("イベントオススメベースカード選択")']]],
+          [['_gcard_gacha'], 'list', [
+              ['aJ', 'form[action="_gcard_gacha_exec"] > input[type="submit"]']]],
+          [['_gcard_gacha_result'], 'list', [
+              ['aJ', 'form > input[value="続けてガシャる"]'],
+              ['aJ', 'form > input[value="メダル一覧へ"]'],
+              ['aJ', 'form > input[value="司令室へ"]']]],
+          [['_gcard_gacha2_confirm'], 'list', [
+              //['aJ', 'a:contains("ベースカード変更")'],
+              ['aJ', 'form[action="_gcard_gacha2_exec"] > input[type="submit"]']]],
+          [['_gcard_gacha2_result'], 'list', [
+              ['aJ', 'a:contains("メダル一覧へ")']]],
+          [['_gcard_gifts'], 'list', [
+              ['aJ', '#container > div.gift-index.gift > form > div > input'],
+              ['aJ', '#container > div.gift-index.gift > div.pb8 > a']]],
+          [['_gcard_items', {type : "medal"}], 'list', [
+              ['aJ', 'form[action="_gcard_gacha"] > input[type="submit"]']]],
+          [['_gcard_my_room'], 'list', [
+              ['aJ', '#container > div.my-room.my > div > div.main-view > ul > li.present > a:has(div)']]],
+          [['_gcard_top'], 'aJ', '#container > div > div > div.top-myroom-box > nav > a'],
+          [/[\s\S]*/, "hold"]
+        ];
+      }
     }
   };
 
@@ -4146,20 +4177,26 @@
     app_id = path.match(/(\d+)/)[1];
   } else if (location.hostname.match(/^g(\d+)\.sp\.pf\.mbga\.jp$/)) {
     app_id = location.hostname.match(/^g(\d+)\.sp\.pf\.mbga\.jp$/)[1];
+  } else if (location.hostname.match(/^(\S+)\.sp\.mbga\.jp$/)) {
+    app_id = location.hostname.match(/^(\S+)\.sp\.mbga\.jp$/)[1];
+    decodeURL = location.pathname.substring(1);
+    decodeParam = param;
   }
   GM_log(location.hostname);
   if (app_id !== undefined) {
     GM_log(app_id);
     GM_log(param);
-    if (param.url === undefined) {
-      url = ":::";
-      decodeURL = ":::";
-      decodeParam = {};
-    } else {
-      var urlhelper = new URL(param.url);
-      decodeURL = urlhelper.pathname.substring(1);
-      decodeParam = decodeURLSearchParam(urlhelper.searchParams);
-      url = encodeURIComponent(urlhelper.pathname.substring(1) + urlhelper.search);
+    if (decodeURL === undefined) {
+      if (param.url === undefined) {
+        url = ":::";
+        decodeURL = ":::";
+        decodeParam = {};
+      } else {
+        var urlhelper = new URL(param.url);
+        decodeURL = urlhelper.pathname.substring(1);
+        decodeParam = decodeURLSearchParam(urlhelper.searchParams);
+        url = encodeURIComponent(urlhelper.pathname.substring(1) + urlhelper.search);
+      }
     }
     GM_log(url);
     GM_log(decodeURL);
