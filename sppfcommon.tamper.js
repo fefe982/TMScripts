@@ -3894,8 +3894,14 @@
           [[/[\s\S]*/, () => {
             return $('body.swf').length > 0;
               }], 'flashJT', 'div:has(canvas)'],
-          [['_gcard_card_upgrades'], 'list', [
-              ['aJ', 'a:contains("イベントオススメベースカード選択")']]],
+          [['_gcard_card_upgrade_auto', () => {return $('label[for="item-check"]').length > 0;}], 'aJ', 'input[value="オマカセ合成を確認"]'],
+          [['_gcard_card_upgrade_confirm'], 'aJ', 'form[action="_gcard_card_upgrade_exec"] > div > input[type="submit"]'],
+          [['_gcard_card_upgrade_result'], 'list', [
+              ['aJ', 'a:contains("続けて合成する")'],
+              ['aJ', this.cssmypage],
+              []]],
+          //[['_gcard_card_upgrades'], 'list', [
+          //    ['aJ', 'a:contains("イベントオススメベースカード選択")']]],
           [['_gcard_gacha'], 'list', [
               ['aJ', 'form[action="_gcard_gacha_exec"] > input[type="submit"]']]],
           [['_gcard_gacha_result'], 'list', [
@@ -3909,7 +3915,8 @@
               ['aJ', 'a:contains("メダル一覧へ")']]],
           [['_gcard_gifts'], 'list', [
               ['aJ', '#container > div.gift-index.gift > form > div > input'],
-              ['aJ', '#container > div.gift-index.gift > div.pb8 > a']]],
+              ['aJ', '#container > div.gift-index.gift > div.pb8 > a'],
+              ['aJ', this.cssmypage]]],
           [['_gcard_items', {type : "medal"}], 'list', [
               ['aJ', 'form[action="_gcard_gacha"] > input[type="submit"]']]],
           [['_gcard_my_room'], 'list', [
