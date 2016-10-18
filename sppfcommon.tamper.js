@@ -3891,9 +3891,6 @@
       cssmypage : '#container > nav.global-nav > a.myroom.btn',
       get_actions : function () {
         return [
-          [[/[\s\S]*/, () => {
-            return $('body.swf').length > 0;
-              }], 'flashJT', 'div:has(canvas)'],
           [['_gcard_card_upgrade_auto', () => {return $('label[for="item-check"]').length > 0;}], 'aJ', 'input[value="オマカセ合成を確認"]'],
           [['_gcard_card_upgrade_confirm'], 'aJ', 'form[action="_gcard_card_upgrade_exec"] > div > input[type="submit"]'],
           [['_gcard_card_upgrade_result'], 'list', [
@@ -3902,6 +3899,10 @@
               []]],
           //[['_gcard_card_upgrades'], 'list', [
           //    ['aJ', 'a:contains("イベントオススメベースカード選択")']]],
+          [['_gcard_event213', {func : "pvp"}], 'aJ', 'input[value="上記の編成で出撃する"]'],
+          [['_gcard_event213', {func : "pvp_battle_result"}], 'aJ', 'a:contains("出撃画面へ戻る")'],
+          //[['_gcard_event213', {func : "pvp_warship_choice"}], 'func', 'a:contains("出撃画面へ戻る")'],
+          [['_gcard_flight'], 'aJ', '#container > div.fight-index.fight > section > div.mainmenu.mb8 > ul.mainmenu-a > li:nth-child(2) > a'],
           [['_gcard_gacha'], 'list', [
               ['aJ', 'form[action="_gcard_gacha_exec"] > input[type="submit"]']]],
           [['_gcard_gacha_result'], 'list', [
@@ -3919,9 +3920,30 @@
               ['aJ', this.cssmypage]]],
           [['_gcard_items', {type : "medal"}], 'list', [
               ['aJ', 'form[action="_gcard_gacha"] > input[type="submit"]']]],
+          [['_gcard_missions'], 'aJ', 'a:contains("探索する"):first'],
+          [['_gcard_mission_world'], 'list', [
+              ['func', () => {
+                $('body > div.js-ui-modal-container > div.js-ui-modal-content > div > div:nth-child(5):not(:has(div.box > p:regexText(探索:200%.*カード:100%))) > div.btn-area > a:contains("選択する"):first').clickJ();
+              }]]],
           [['_gcard_my_room'], 'list', [
               ['aJ', '#container > div.my-room.my > div > div.main-view > ul > li.present > a:has(div)']]],
+          [['_gcard_pex_fight_inline'], 'flashJT', '.main'],
+          [['_gcard_promotion_battle'], 'aJ', '#container > div.promotion-battle-show.promotion-battle.promotion > section > div.be-btn > div > div.txt-c.pb8.pt8 > a:nth-child(1)'],
+          [['_gcard_promotion_battle_result'], [
+              ['aJ', 'a:contains("次の対戦へ進む")'],
+              ['aJ', 'a:contains("キャンペーンTOPへ")']]],
+          [['_gcard_promotion_battles'], 'list', [
+              ['minmaxJ', '#container > div.promotion-battle-index.promotion-battle.promotion > section > section > ul > li.enemy-detail', 'a > dl > dd.power > span', 'a']]],
           [['_gcard_top'], 'aJ', '#container > div > div > div.top-myroom-box > nav > a'],
+          [[/[\s\S]*/, () => {
+            return $('body.swf').length > 0;
+              }], 'func', () => {
+                //'flashJT', 'div.container'
+                GM_log('begin');
+                $('div.container').on('click', (eve) => {GM_log("!!!!!!!!!!");GM_log(eve);});
+                GM_log('end');
+                $('canvas').on('click', (eve) => {GM_log("?????????????");GM_log(eve);});
+              }],
           [/[\s\S]*/, "hold"]
         ];
       }
