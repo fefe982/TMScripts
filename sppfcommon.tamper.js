@@ -160,14 +160,21 @@
     }
     if (this[0].getBoundingClientRect) {
       rect = this[0].getBoundingClientRect();
+      var zoom_lvl = 1;
+      var zoomcheck = this;
+      while (zoomcheck.prop('tagName')) {
+        zoom_lvl = zoom_lvl * zoomcheck.css('zoom');
+        zoomcheck = zoomcheck.parent();
+      }
+      //GM_log(zoom_lvl);
       if (xoff !== undefined && xoff < 1) {
-        xoff = (rect.right - rect.left) * xoff;
+        xoff = rect.width * zoom_lvl * xoff;
       }
       if (yoff !== undefined && yoff < 1) {
-        yoff = (rect.bottom - rect.top) * yoff;
+        yoff = rect.height * zoom_lvl * yoff;
       }
-      x = xoff ? rect.left + xoff : (rect.left + rect.right) / 2;
-      y = yoff ? rect.top + yoff : (rect.top + rect.bottom) / 2;
+      x = rect.left + xoff ? xoff : rect.width * zoom_lvl * 0.5;
+      y = rect.top + yoff ? yoff : rect.height * zoom_lvl * 0.5;
     } else {
       x = 0;
       y = 0;
@@ -321,7 +328,11 @@
     }
     var flash = $(this);
     GM_log("touchFlash: ");
-    GM_log(this);
+    //GM_log(this);
+    //flash.css("zoom", "1");
+    //GM_log(flash);
+    //flash.parent().css("zoom", "1");
+    //GM_log(flash.parent());
     //alert(flash.text());
     if (interval === undefined || interval < 150) {
       interval = 150;
@@ -331,7 +342,9 @@
         GM_log("unloading ....");
         return;
       }
-      GM_log("touch flash ....");
+      //flash.css("zoom", "1");
+      //flash.parent().css("zoom", "1");
+      //GM_log("touch flash ....");
       setTimeout(function () {
         flash.simTouchEvent("touchstart", xoff, yoff);
       }, 10);
@@ -406,7 +419,7 @@
         GM_log("unloading ....");
         return;
       }
-      GM_log("click Flash XPath");
+      //GM_log("click Flash XPath");
       var canvas = getXPATH(xpath);
       if (canvas) {
         //clickSth(canvas,"mousemove",xoff,yoff);
@@ -1022,7 +1035,7 @@
           [/pick%2Fresult%2Ffree/, 'list', [
               //['aJ', $('a[href*="pick%2Frun%2Ffree%2F"]').filter(':last')],
               ['aJ', this.cssmypage]]], //['aJ', '#bg > article > section:nth-child(1) > article > div > div > a']
-          [/pick%2Frun/, 'flashJT', '#canvas', 40, 410],
+          [/pick%2Frun/, 'flashJT', '#canvas', 0.1, 0.58, 500],
           [/pick%2Ftop%2Ffree/, 'list', [
               //['hold'],
               ['aJ', 'a[href*="pick%2Frun%2Ffree%2Fdaily%3F"]'],
@@ -3905,6 +3918,17 @@
               []]],
           //[['_gcard_card_upgrades'], 'list', [
           //    ['aJ', 'a:contains("イベントオススメベースカード選択")']]],
+          [['_gcard_daily_event_battle'], 'func', () => {
+              if ($('#js-unit-select-submit.disable').length > 0) {
+                $('.unit-frames').each(function () {
+                    $(this).find('div:has(div.common-checkbox-view.light-green.js-checkbox-view):first').touchJ();
+                });
+              }
+              tryUntil(function () {
+                return $('#js-unit-select-submit:not(.disable)').clickJ().length > 0;
+              });
+          }],
+          [['_gcard_daily_event_stage'], 'aJ', 'a:contains("バトル開始")'],
           [['_gcard_event213', {func : "pvp"}], 'aJ', 'input[value="上記の編成で出撃する"]'],
           [['_gcard_event213', {func : "pvp_battle_result"}], 'aJ', 'a:contains("出撃画面へ戻る")'],
           //[['_gcard_event213', {func : "pvp_warship_choice"}], 'func', 'a:contains("出撃画面へ戻る")'],
@@ -3927,12 +3951,19 @@
           [['_gcard_items', {type : "medal"}], 'list', [
               ['aJ', 'form[action="_gcard_gacha"] > input[type="submit"]']]],
           [['_gcard_missions'], 'aJ', 'a:contains("探索する"):first'],
+          [['_gcard_mission_lot'], 'list', [
+            ['aJ', this.cssmypage]]],
           [['_gcard_mission_world'], 'list', [
               ['func', () => {
                 $('body > div.js-ui-modal-container > div.js-ui-modal-content > div > div:nth-child(5):not(:has(div.box > p:regexText(探索:200%.*カード:100%))) > div.btn-area > a:contains("選択する"):first').clickJ();
               }]]],
           [['_gcard_my_room'], 'list', [
-              ['aJ', '#container > div.my-room.my > div > div.main-view > ul > li.present > a:has(div)']]],
+              ['aJ', '#container > div.my-room.my > div > div.main-view > ul > li.present > a:has(div)'],
+              ['funcR', () => {
+                if ($('div.status-detail.fuel > p.txt-wrap > span.current').text() > 10) {
+                  return $('#container > div.my-room.my > div > div.pb16 > div.main-menu > ul.event > li.search.btn > a').clickJ().length > 0;
+                }
+              }]]],
           [['_gcard_pex_fight_inline'], 'flashJT', '.main', 0.5, 0.9],
           [['_gcard_promotion_battle'], 'aJ', '#container > div.promotion-battle-show.promotion-battle.promotion > section > div.be-btn > div > div.txt-c.pb8.pt8 > a:nth-child(3)'],
           [['_gcard_promotion_battle_result'], 'list', [
@@ -4038,14 +4069,12 @@
       });
     }
     $(document).on('touchstart', (eve) => {
-        GM_log(eve.originalEvent.touches[0]);
-        GM_log("clientXY", eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY)
+        //GM_log(eve.originalEvent.touches[0]);
+        //GM_log("clientXY", eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY)
         var rect = eve.originalEvent.touches[0].target.getBoundingClientRect();
-        GM_log("boundingRect", eve.originalEvent.touches[0].target.nodeName, rect);
-        GM_log("offset", eve.originalEvent.touches[0].clientX - rect.left, eve.originalEvent.touches[0].clientY - rect.top);
-        GM_log("offsetP", (eve.originalEvent.touches[0].clientX - rect.left)/(rect.right-rect.left), (eve.originalEvent.touches[0].clientY - rect.top)/(rect.bottom-rect.top));
+        GM_log("boundingRect", eve.originalEvent.touches[0].target.nodeName, "offset", eve.originalEvent.touches[0].clientX - rect.left, eve.originalEvent.touches[0].clientY - rect.top, "offsetP", (eve.originalEvent.touches[0].clientX - rect.left)/(rect.right-rect.left), (eve.originalEvent.touches[0].clientY - rect.top)/(rect.bottom-rect.top));
       });
-    $(document).on('click', (eve) => {GM_log(eve.originalEvent);});
+    //$(document).on('click', (eve) => {GM_log(eve.originalEvent);});
     for (i = 0; i < actions.length; i += 1) {
       if ((actions[i][0]instanceof RegExp && url !== undefined && url.match(actions[i][0])) ||
         (actions[i][0]instanceof Array &&
