@@ -160,6 +160,12 @@
     }
     if (this[0].getBoundingClientRect) {
       rect = this[0].getBoundingClientRect();
+      if (xoff !== undefined && xoff < 1) {
+        xoff = (rect.right - rect.left) * xoff;
+      }
+      if (yoff !== undefined && yoff < 1) {
+        yoff = (rect.bottom - rect.top) * yoff;
+      }
       x = xoff ? rect.left + xoff : (rect.left + rect.right) / 2;
       y = yoff ? rect.top + yoff : (rect.top + rect.bottom) / 2;
     } else {
@@ -3927,9 +3933,9 @@
               }]]],
           [['_gcard_my_room'], 'list', [
               ['aJ', '#container > div.my-room.my > div > div.main-view > ul > li.present > a:has(div)']]],
-          [['_gcard_pex_fight_inline'], 'flashJT', '.main'],
-          [['_gcard_promotion_battle'], 'aJ', '#container > div.promotion-battle-show.promotion-battle.promotion > section > div.be-btn > div > div.txt-c.pb8.pt8 > a:nth-child(1)'],
-          [['_gcard_promotion_battle_result'], [
+          [['_gcard_pex_fight_inline'], 'flashJT', '.main', 0.5, 0.9],
+          [['_gcard_promotion_battle'], 'aJ', '#container > div.promotion-battle-show.promotion-battle.promotion > section > div.be-btn > div > div.txt-c.pb8.pt8 > a:nth-child(3)'],
+          [['_gcard_promotion_battle_result'], 'list', [
               ['aJ', 'a:contains("次の対戦へ進む")'],
               ['aJ', 'a:contains("キャンペーンTOPへ")']]],
           [['_gcard_promotion_battles'], 'list', [
@@ -3937,13 +3943,7 @@
           [['_gcard_top'], 'aJ', '#container > div > div > div.top-myroom-box > nav > a'],
           [[/[\s\S]*/, () => {
             return $('body.swf').length > 0;
-              }], 'func', () => {
-                //'flashJT', 'div.container'
-                GM_log('begin');
-                $('div.container').on('click', (eve) => {GM_log("!!!!!!!!!!");GM_log(eve);});
-                GM_log('end');
-                $('canvas').on('click', (eve) => {GM_log("?????????????");GM_log(eve);});
-              }],
+              }], 'flashJT', 'canvas', 0.5, 0.98],
           [/[\s\S]*/, "hold"]
         ];
       }
@@ -4037,6 +4037,15 @@
         }
       });
     }
+    $(document).on('touchstart', (eve) => {
+        GM_log(eve.originalEvent.touches[0]);
+        GM_log("clientXY", eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY)
+        var rect = eve.originalEvent.touches[0].target.getBoundingClientRect();
+        GM_log("boundingRect", eve.originalEvent.touches[0].target.nodeName, rect);
+        GM_log("offset", eve.originalEvent.touches[0].clientX - rect.left, eve.originalEvent.touches[0].clientY - rect.top);
+        GM_log("offsetP", (eve.originalEvent.touches[0].clientX - rect.left)/(rect.right-rect.left), (eve.originalEvent.touches[0].clientY - rect.top)/(rect.bottom-rect.top));
+      });
+    $(document).on('click', (eve) => {GM_log(eve.originalEvent);});
     for (i = 0; i < actions.length; i += 1) {
       if ((actions[i][0]instanceof RegExp && url !== undefined && url.match(actions[i][0])) ||
         (actions[i][0]instanceof Array &&
