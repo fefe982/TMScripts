@@ -149,6 +149,33 @@
     }
     return this;
   };
+  $.fn.getZoomLvl = function () {
+    var zoom_lvl = 1;
+    var zoomcheck = this;
+    while (zoomcheck.prop('tagName')) {
+      zoom_lvl = zoom_lvl * zoomcheck.css('zoom');
+      zoomcheck = zoomcheck.parent();
+    }
+    return zoom_lvl;
+  }
+  $.fn.getBoundRectZoom = function () {
+    var brect = this[0].getBoundingClientRect();
+    var rect = {x: brect.left, y: brect.top, w: brect.width, h: brect.height};
+    var zoomcheck = this, zoom_lvl = 1;
+    while (zoomcheck.prop('tagName')) {
+      brect = zoomcheck[0].getBoundingClientRect();
+      zoom_lvl = + zoomcheck.css('zoom');
+      rect.w *= zoom_lvl;
+      rect.h *= zoom_lvl;
+      rect.x = brect.left + (rect.x - brect.left) * zoom_lvl;
+      rect.y = brect.top + (rect.y - brect.top) * zoom_lvl;
+      if (zoom_lvl != 1) {
+          GM_log("zoom lvl", zoom_lvl, rect.y, brect.top, rect.y - brect.top);
+      }
+      zoomcheck = zoomcheck.parent();
+    }
+    return rect;
+  }
   $.fn.simTouchEvent = function (eveName, xoff, yoff) {
     var customEvent,
     rect,
@@ -160,12 +187,8 @@
     }
     if (this[0].getBoundingClientRect) {
       rect = this[0].getBoundingClientRect();
-      var zoom_lvl = 1;
-      var zoomcheck = this;
-      while (zoomcheck.prop('tagName')) {
-        zoom_lvl = zoom_lvl * zoomcheck.css('zoom');
-        zoomcheck = zoomcheck.parent();
-      }
+      var zoom_lvl = this.getZoomLvl();
+
       //GM_log(zoom_lvl);
       if (xoff !== undefined && xoff < 1) {
         xoff = rect.width * zoom_lvl * xoff;
@@ -173,8 +196,8 @@
       if (yoff !== undefined && yoff < 1) {
         yoff = rect.height * zoom_lvl * yoff;
       }
-      x = rect.left + xoff ? xoff : rect.width * zoom_lvl * 0.5;
-      y = rect.top + yoff ? yoff : rect.height * zoom_lvl * 0.5;
+      x = rect.left * zoom_lvl + xoff ? xoff : rect.width * zoom_lvl * 0.5;
+      y = rect.top * zoom_lvl + yoff ? yoff : rect.height * zoom_lvl * 0.5;
     } else {
       x = 0;
       y = 0;
@@ -183,8 +206,8 @@
     touchinfo = {
       clientX : x,
       clientY : y,
-      pageX : x,
-      pageY : y,
+      pageX : x + window.scrollX,
+      pageY : y + window.scrollY,
       screenX : x,
       screenY : y,
       target : this[0]
@@ -4071,8 +4094,16 @@
     $(document).on('touchstart', (eve) => {
         //GM_log(eve.originalEvent.touches[0]);
         //GM_log("clientXY", eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY)
+        
         var rect = eve.originalEvent.touches[0].target.getBoundingClientRect();
-        GM_log("boundingRect", eve.originalEvent.touches[0].target.nodeName, "offset", eve.originalEvent.touches[0].clientX - rect.left, eve.originalEvent.touches[0].clientY - rect.top, "offsetP", (eve.originalEvent.touches[0].clientX - rect.left)/(rect.right-rect.left), (eve.originalEvent.touches[0].clientY - rect.top)/(rect.bottom-rect.top));
+        var zoom_lvl = $(eve.originalEvent.touches[0].target).getZoomLvl();
+        //GM_log(eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY);
+        GM_log("touch", zoom_lvl, eve.originalEvent.touches[0].target.nodeName, "offset", eve.originalEvent.touches[0].clientX - rect.left, eve.originalEvent.touches[0].clientY - rect.top, "offsetP", (eve.originalEvent.touches[0].clientX/zoom_lvl - rect.left)/rect.width, (eve.originalEvent.touches[0].clientY/zoom_lvl - rect.top)/rect.height);
+        //GM_log("bound", rect.left, rect.top, "scroll", window.scrollX, window.scrollY);
+        //rect = $(eve.originalEvent.touches[0].target).getBoundRectZoom();
+        //GM_log("bound", rect.x, rect.y, "scroll", window.scrollX, window.scrollY);
+        //GM_log("touch zoom", rect, (eve.originalEvent.touches[0].clientX - rect.x)/rect.w, (eve.originalEvent.touches[0].clientY - rect.y)/rect.h);
+
       });
     //$(document).on('click', (eve) => {GM_log(eve.originalEvent);});
     for (i = 0; i < actions.length; i += 1) {
