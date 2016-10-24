@@ -106,8 +106,8 @@
   }
 
   $.expr[':'].regex = function (elem, index, match) {
-    GM_log("regex");
-    GM_log(match);
+    //GM_log("regex");
+    //GM_log(match);
     var matchParams = match[3].split(','),
     validLabels = /^(data|css):/,
     attr = {
@@ -196,8 +196,8 @@
       if (yoff !== undefined && yoff < 1) {
         yoff = rect.height * zoom_lvl * yoff;
       }
-      x = rect.left * zoom_lvl + xoff ? xoff : rect.width * zoom_lvl * 0.5;
-      y = rect.top * zoom_lvl + yoff ? yoff : rect.height * zoom_lvl * 0.5;
+      x = rect.left * zoom_lvl + (xoff ? xoff : rect.width * zoom_lvl * 0.5);
+      y = rect.top * zoom_lvl + (yoff ? yoff : rect.height * zoom_lvl * 0.5);
     } else {
       x = 0;
       y = 0;
@@ -3931,6 +3931,11 @@
       mypage_url : "http://gcc.sp.mbga.jp/_gcard_top?tgt=63358373&_from=u_myg_11000022",
       rotation_time : 5,
       cssmypage : '#container > nav.global-nav > a.myroom.btn',
+      pre_action : function () {
+        if (decodeURL !== '_gcard_inline_swf') {
+          GM_setValue('gcc_ref', decodeURL);
+        }
+      },
       get_actions : function () {
         return [
           [['_gcard_card_upgrade_auto', () => {return $('label[for="item-check"]').length > 0;}], 'aJ', 'input[value="オマカセ合成を確認"]'],
@@ -3951,7 +3956,18 @@
                 return $('#js-unit-select-submit:not(.disable)').clickJ().length > 0;
               });
           }],
-          [['_gcard_daily_event_stage'], 'aJ', 'a:contains("バトル開始")'],
+          [['_gcard_daily_event_battle_result'], 'aJ', 'a:contains("エリアTOP")'],
+          [['_gcard_daily_event_stage'], 'funcR', function () {
+              $('p.next-icon + div.quest-stage > div').clickJ();
+              //'aJ', 'a:contains("バトル開始")'
+              tryUntil(()=>{
+                if ($('a.common-btn-red:not(.disable):contains("バトル開始")').clickJ().length > 0) {
+                  return true;
+                } else if ($('a.common-btn-red.disable:contains("バトル開始")').length > 0){
+                  return $(this.cssmypage).clickJ() > 0;
+                }                
+              });
+          }],
           [['_gcard_event213', {func : "pvp"}], 'aJ', 'input[value="上記の編成で出撃する"]'],
           [['_gcard_event213', {func : "pvp_battle_result"}], 'aJ', 'a:contains("出撃画面へ戻る")'],
           //[['_gcard_event213', {func : "pvp_warship_choice"}], 'func', 'a:contains("出撃画面へ戻る")'],
@@ -3976,6 +3992,7 @@
           [['_gcard_missions'], 'aJ', 'a:contains("探索する"):first'],
           [['_gcard_mission_lot'], 'list', [
             ['aJ', this.cssmypage]]],
+          [['_gcard_mission_lvup_result'], 'aJ', 'a:contains("探索する")'],
           [['_gcard_mission_world'], 'list', [
               ['func', () => {
                 $('body > div.js-ui-modal-container > div.js-ui-modal-content > div > div:nth-child(5):not(:has(div.box > p:regexText(探索:200%.*カード:100%))) > div.btn-area > a:contains("選択する"):first').clickJ();
@@ -3995,6 +4012,13 @@
           [['_gcard_promotion_battles'], 'list', [
               ['minmaxJ', '#container > div.promotion-battle-index.promotion-battle.promotion > section > section > ul > li.enemy-detail', 'a > dl > dd.power > span', 'a']]],
           [['_gcard_top'], 'aJ', '#container > div > div > div.top-myroom-box > nav > a'],
+          [[/[\s\S]*/, () => {
+            return $('body.swf').length > 0 && GM_getValue('gcc_ref', '') === '_gcard_missions';
+              }], 'flashJT', 'canvas', 0.755, 0.686],
+          //[[/[\s\S]*/, () => {
+          //  GM_log(GM_getValue('gcc_ref'));
+          //  return $('body.swf').length > 0 && GM_getValue('gcc_ref', '') === '_gcard_daily_event_battle';
+          //    }], 'flashJT', 'canvas', 0.5, 0.95],              
           [[/[\s\S]*/, () => {
             return $('body.swf').length > 0;
               }], 'flashJT', 'canvas', 0.5, 0.98],
@@ -4093,7 +4117,7 @@
     }
     $(document).on('touchstart', (eve) => {
         //GM_log(eve.originalEvent.touches[0]);
-        //GM_log("clientXY", eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY)
+        //GM_log("clientXY", eve.originalEvent.touches[0])
         
         var rect = eve.originalEvent.touches[0].target.getBoundingClientRect();
         var zoom_lvl = $(eve.originalEvent.touches[0].target).getZoomLvl();
@@ -4106,6 +4130,10 @@
 
       });
     //$(document).on('click', (eve) => {GM_log(eve.originalEvent);});
+    var pre_action = action_handler.pre_action;
+    if (pre_action != undefined) {
+      pre_action();
+    }
     for (i = 0; i < actions.length; i += 1) {
       if ((actions[i][0]instanceof RegExp && url !== undefined && url.match(actions[i][0])) ||
         (actions[i][0]instanceof Array &&
@@ -4281,6 +4309,7 @@
     decodeParam = param;
   }
   GM_log(location.hostname);
+  GM_log("REF:", document.referrer);
   if (app_id !== undefined) {
     GM_log(app_id);
     GM_log(param);
