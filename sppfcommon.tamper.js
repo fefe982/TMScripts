@@ -987,6 +987,12 @@
           [/fusion%2Fevolution_result%/, 'aJ', "a[href*='fusion%2Fevolution_select']"],
           [/fusion%2Fevolution%/, 'flashJT', "#canvas"],
           [/fusion%2Ffusion%/, 'flashJT', '#canvas'],
+          [['fusion/limit_select'], 'func', ()=>{
+              if ($('#bg > section > article > div.emph_blue:contains("素材となるカードがありません")').length > 0) {
+                $('a:contains("ベースカードを変更")').clickJ();
+              }
+          }],
+          [[/^fusion\/limit_confirm\/.*/], 'aJ', 'a:contains("限界突破する")'],
           [/fusion%2Flimit_result%/, 'aJ', "a[href*='fusion%2Flimit_select']"],
           [/fusion%2Flimit%/, 'flashJT', "#canvas", 100, 100, 500],
           [/item%2FpresentList/, 'formJ', 'form'],
@@ -3582,8 +3588,16 @@
               ], //#cUse
               ['hold']]],
           [/^event_story%2Fs%2Ftika_op/, 'flashJT', '#cv0'],
-          [/^fusion%2Ffusion/, 'flashJT', '#canvas'],
-          [[/^fusion\/item\/.*$/], 'flashJT', '#canvas'],
+          [[/^fusion\/(fusion|item|limit)\/.*/], 'flashJT', '#canvas'],
+          [[/^fusion\/(costume|magic)_confirm\/.*/], 'aJ', '#sticker a:contains("強化する")'],
+          [[/^fusion\/(costume|magic)_limit_confirm\/.*/], 'aJ', '#sticker a:contains("進化する")'],
+          [[/^fusion\/(costume|magic)_limit_result\/.*/], 'aJ', 'a:contains("ベース変更")'],
+          [['fusion/costume_select'], 'func', function () {
+            if ($('div.rarityBox > div.N').length > 0) {
+               $('a:contains("オススメ")').clickJ();
+            }
+          }],
+          [[/^fusion\/(costume|magic)_select\/%7B/], 'aJ', 'a:contains("オススメ")'],
           [/^login%2Findex%2F/, 'flashJT', '#canvas'],
           [/^login_flash%2Findex%2F/, 'flashJT', '#canvas'],
           [/^mypage/, 'list', [
