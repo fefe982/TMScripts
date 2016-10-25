@@ -2597,6 +2597,14 @@
           ],
           [/fusion%2FFusionSwfStart%2F/, 'flash', '//*[@id="canvas"]'],
           [/fusion%2FBulkMaterialCardFusionConfirm%2F/, 'form', '//*[@id="containerBox"]/form'],
+          [[/fusion\/SelectBaseCard\/?/], 'func', function () {
+              $('#containerBox > div.section.margin_top_10').each(function () {
+                var lvl = $(this).find('div:nth-child(2) > table > tbody > tr > td.padding_top.padding_left > table > tbody > tr:nth-child(1) > td.txt_right.padding_right_10').text().match(/(\d+)\/(\d+)/);
+                if (lvl && lvl[1] !== lvl[2]) {
+                  $(this).css('background', 'olive');
+                }
+              });
+          }],
           [/gacha%2FSetFreeGachaFlashResult%2F/, 'list', [
               ['flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 100, 366],
               ['func', this.handleGachaFlashResult]]],
