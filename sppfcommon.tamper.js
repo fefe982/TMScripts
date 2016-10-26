@@ -3600,9 +3600,14 @@
           [[/^fusion\/(costume|magic)_confirm\/.*/], 'aJ', '#sticker a:contains("強化する")'],
           [[/^fusion\/(costume|magic)_limit_confirm\/.*/], 'aJ', '#sticker a:contains("進化する")'],
           [[/^fusion\/(costume|magic)_limit_result\/.*/], 'aJ', 'a:contains("ベース変更")'],
-          [['fusion/costume_select'], 'func', function () {
-            if ($('div.rarityBox > div.N').length > 0) {
-               $('a:contains("オススメ")').clickJ();
+          [[/^fusion\/(costume|magic)_select/], 'func', function () {
+            if ($('#bg > section > article > div.p5 > p > b.yellow')) {
+              return $('a:contains("オススメ")').clickJ();
+            } else if ($('div.rarityBox > div.N').length > 0) {
+              return $('a:contains("オススメ")').clickJ();
+            } else if ($('#bg > section > article > div > form > ul').length > 0) {
+              $('#bg > section > article > div > form > ul:last > li > div > select > option:last').prop('selected', 'true');
+              return $('#bg > section > article > div > form > ul:last > li > div > input[type="submit"]').clickJ();
             }
           }],
           [[/^fusion\/(costume|magic)_select\/%7B/], 'aJ', 'a:contains("オススメ")'],
@@ -3956,6 +3961,8 @@
       pre_action : function () {
         if (decodeURL !== '_gcard_inline_swf') {
           GM_setValue('gcc_ref', decodeURL);
+        } else {
+          GM_log('gcc_ref', GM_getValue('gcc_ref'));
         }
       },
       get_actions : function () {
@@ -3993,6 +4000,9 @@
           [['_gcard_event213', {func : "pvp"}], 'aJ', 'input[value="上記の編成で出撃する"]'],
           [['_gcard_event213', {func : "pvp_battle_result"}], 'aJ', 'a:contains("出撃画面へ戻る")'],
           //[['_gcard_event213', {func : "pvp_warship_choice"}], 'func', 'a:contains("出撃画面へ戻る")'],
+          [['_gcard_event214_raid_boss'], 'list', [
+              ['aJ', '#container > div.event-214-raid_boss-show.event-214-raid_boss.event-214.event > section > div.energy-panel.mb4 > div:nth-child(1) > a:nth-child(1)'],
+              ['aJ', 'a:contains("探索する")']]],
           [['_gcard_flight'], 'aJ', '#container > div.fight-index.fight > section > div.mainmenu.mb8 > ul.mainmenu-a > li:nth-child(2) > a'],
           [['_gcard_gacha'], 'list', [
               ['aJ', 'form[action="_gcard_gacha_exec"] > input[type="submit"]']]],
@@ -4035,9 +4045,11 @@
               ['minmaxJ', '#container > div.promotion-battle-index.promotion-battle.promotion > section > section > ul > li.enemy-detail', 'a > dl > dd.power > span', 'a']]],
           [['_gcard_top'], 'aJ', '#container > div > div > div.top-myroom-box > nav > a'],
           [[/[\s\S]*/, () => {
-            return $('body.swf').length > 0 && GM_getValue('gcc_ref', '') === '_gcard_missions';
-              }], 'flashJT', 'canvas', 0.755, 0.686],
-          //[[/[\s\S]*/, () => {
+            return $('body.swf').length > 0 && (GM_getValue('gcc_ref', '') === '_gcard_missions' || GM_getValue('gcc_ref', '') === '_gcard_mission_lot' || GM_getValue('gcc_ref', '') === '_gcard_event214_raid_boss');
+              }], 'flashJT', 'canvas', 0.355, 0.686],
+          [[/[\s\S]*/, () => {
+            return $('body.swf').length > 0 && GM_getValue('gcc_ref', '') === '_gcard_mission_lot';
+              }], 'flashJT', 'canvas', 0.31, 0.7],          //[[/[\s\S]*/, () => {
           //  GM_log(GM_getValue('gcc_ref'));
           //  return $('body.swf').length > 0 && GM_getValue('gcc_ref', '') === '_gcard_daily_event_battle';
           //    }], 'flashJT', 'canvas', 0.5, 0.95],              
