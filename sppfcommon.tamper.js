@@ -2777,6 +2777,34 @@
               ['aJ', 'a[href*="island%2FMissionDetail%2F"]'],
               //div[contains(@class,"sprites-event-top-quest")]/a'],
               ['flash', '//*[@id="container"]']]],
+          [['mapQuest/ChangeCardList/'], 'func', function () {
+              return;
+              var atk = $('#getNewCard > div.box_horizontal.margin_x_20.margin_bottom_10 > div.box_extend.txt_left.no_line_space > div:nth-child(4) > div.attack.box_extend.txt_right.margin_right_10').text(),              
+              idxmin,
+              minatk = -1,
+              rare = -1,
+              i;
+              for (i = 1; i <= 6; i++) {
+                var catk = +$('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li.status1 > div.attack.box_horizontal.box_y_center > div.box_extend.txt_right').text();//,
+                //cmem = +$('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                //cp = +$('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').text().match(/(\d+)/)[1],
+                //coatk = catk / (1 + cp / 100) - cmem;
+                //GM_log(i + " : coatk : " + coatk);
+                if (minatk < 0 || atk < minatk) {
+                  idxmin = i;
+                  minatk = catk;
+                }
+              }
+              GM_log(minatk);
+              GM_log(atk);
+              if (minatk < atk) {
+                $('#popup_content > div:nth-child(' + idxmin + ') > div > div.box_horizontal.box_center.margin_bottom_10 > div:nth-child(2) > div > a').clickJ();
+              } else {
+                $('a:contains("交換しないで進む")').clickJ();
+              }
+          }],
+          [['mapQuest/RaidBattleResult/'], 'aJ', 'a:contains("ダンジョンを進める")'],
+          [['mapQuest/RaidBattleTop/'], 'aJ', 'a.sprites-common-btn_attack'],
           [/materiaSkill%2FMateriaSkillAutoSet/, 'func', function () {
               GM_log(JSON.stringify(GM_getValue("rag_card_best_ten")));
               GM_log(JSON.stringify(GM_getValue("rag_card_best_ten_sell_limit")));
@@ -3152,7 +3180,8 @@
                   var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/),
                   ap = match_res ? +match_res[1] : 0;
                   if (ap > 10) {
-                    return $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
+                    return $('#gacha_link_area a[href*="main%2Fscout%2Fevent%2Ftreasure"]').clickJ().length > 0 ||
+                    $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
                      || $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
                   }
                   return false;
@@ -3337,21 +3366,21 @@
               //['func', function () {alert("xxxx");}],
               //['aJ', '#shortCutForm input[type="submit"]:last()'],
               ['aJ', this.cssmypage]]],
-          [/main%2Fscout%2Fmain%2Fboss%3F/, 'aJ', 'a#shortCut'],
-          [/main%2Fscout%2Fmain%2Fboss_result%3/, 'list', [
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fboss%3F/, 'aJ', 'a#shortCut'],
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fboss_result%3/, 'list', [
               ['aJ', 'a#shortCut']]],
-          [/main%2Fscout%2Fmain%2Fconfirm%3F/, 'aJ', '#bg_scout a:contains("決定する")'],
-          [/main%2Fscout%2Fmain%2Ffield%3F/, 'list', [
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fconfirm%3F/, 'aJ', '#bg_scout a:contains("決定する")'],
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Ffield%3F/, 'list', [
               ['aJ', 'a:contains("ヒロスタへ")'],
               ['aJ', 'a#shortCut'],
               ['aJ', this.cssmypage]]],
-          [/main%2Fscout%2Fmain%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
-          [/main%2Fscout%2Fmain%2Fscout_flash/, 'flashJT', '#tween_b_root'],
-          [/main%2Fscout%2Fmain%2Fspecial%3/, 'list', [
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fscout_flash/, 'flashJT', '#tween_b_root'],
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fspecial%3/, 'list', [
               ['aJ', '#bg_scout a:contains("挑戦する")']]],
-          [/main%2Fscout%2Fmain%2Fspecial_result%3/, 'list', [
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fspecial_result%3/, 'list', [
               ['aJ', 'a#shortCut']]],
-          [/main%2Fscout%2Fmain%3F/, 'list', [
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%3F/, 'list', [
               ['aJ', 'a#shortCut'],
               ['aJ', '#bg_scout a:contains("最新エリア")']]],
           [/main%2Ftitle%2Fmain/, 'aJ', this.cssmypage],
