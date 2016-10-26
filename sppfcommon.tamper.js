@@ -3375,14 +3375,18 @@
               ['aJ', 'a#shortCut'],
               ['aJ', this.cssmypage]]],
           [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
+          [['akr/main/scout/event/treasure/main/panel'], 'list', [
+              ['aJ', '#d9-main > div.box_bg_main > div.bg_xxx > div > a:first'],
+              ['aJ', 'a:contains("BOXスタジアムを探しにいく")']]],
           [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fscout_flash/, 'flashJT', '#tween_b_root'],
           [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fspecial%3/, 'list', [
               ['aJ', '#bg_scout a:contains("挑戦する")']]],
           [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Fspecial_result%3/, 'list', [
               ['aJ', 'a#shortCut']]],
-          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%3F/, 'list', [
+          [/main%2Fscout%2Fmain%3F/, 'list', [
               ['aJ', 'a#shortCut'],
               ['aJ', '#bg_scout a:contains("最新エリア")']]],
+          [['akr/main/scout/event/treasure/main'], 'aJ', '#d9-main > div.box_bg_main.fontS.txtC > div > div:nth-child(4) > section > ul > li > a'],
           [/main%2Ftitle%2Fmain/, 'aJ', this.cssmypage],
           [/[\s\S]*/, 'hold'],
           [/XXXXXXXXXXXXX/]
