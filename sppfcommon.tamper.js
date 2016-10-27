@@ -2777,39 +2777,59 @@
               ['aJ', 'a[href*="island%2FMissionDetail%2F"]'],
               //div[contains(@class,"sprites-event-top-quest")]/a'],
               ['flash', '//*[@id="container"]']]],
-          [['mapQuest/ChangeCardList/'], 'func', function () {
-              return;
-              var atk = $('#getNewCard > div.box_horizontal.margin_x_20.margin_bottom_10 > div.box_extend.txt_left.no_line_space > div:nth-child(4) > div.attack.box_extend.txt_right.margin_right_10').text(),              
+          [['mapQuest/AreaClearResult'], 'aJ', 'a:contains("イベントTOP")'],
+          [['mapQuest/ChangeCardList'], 'func', function () {
+              //return;
+              var atk = $('#getNewCard > div.box_horizontal.margin_x_20.margin_bottom_10 > div.box_extend.txt_left.no_line_space > div:nth-child(4) > div.attack.box_extend.txt_right.margin_right_10').text(),
               idxmin,
-              minatk = -1,
+              minatk = -1, //debug
+              minatk_max = -1,
+              minlvl = -1, //debug
+              minlvl_max = -1, //debug
               rare = -1,
               i;
+              var lvl_max = +$('#getNewCard > div.box_horizontal.margin_x_20.margin_bottom_10 > div.box_extend.txt_left.no_line_space > div:nth-child(2) > div.box_extend.txt_right').text().match(/\/(\d+)/)[1];
+              var atk_max = atk * ( 1 + lvl_max / 100);
               for (i = 1; i <= 6; i++) {
+                if (i === 3) continue;
                 var catk = +$('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li.status1 > div.attack.box_horizontal.box_y_center > div.box_extend.txt_right').text();//,
                 //cmem = +$('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(1) > div.fnt_emphasis').text().match(/(\d+)/)[1],
-                //cp = +$('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li:nth-child(2) > div:nth-child(2) > div.fnt_emphasis').text().match(/(\d+)/)[1],
-                //coatk = catk / (1 + cp / 100) - cmem;
+                var cp = $('#partyMemberList > ul > li:nth-child(' + i + ') > ul > li.status2 > div.level.box_horizontal.box_y_center > div.box_extend.txt_right').text().match(/(\d+)\/(\d+)/);
+                var clvl = +cp[1];
+                var clvl_max = +cp[2];
+                //#cardId_3621937 > ul > li.status2 > div.level.box_horizontal.box_y_center > div.box_extend.txt_right
+                var catk_max = catk / (1 + clvl / 100) * ( 1+ clvl_max / 100);
                 //GM_log(i + " : coatk : " + coatk);
-                if (minatk < 0 || atk < minatk) {
+                if (minlvl_max < 0 || clvl_max <= minlvl_max) {
                   idxmin = i;
                   minatk = catk;
+                  minatk_max = catk_max;
+                  minlvl = clvl;
+                  minlvl_max = clvl_max;
                 }
+                GM_log("loop", catk, catk / (1 + clvl / 100), clvl, clvl_max, catk_max);
               }
-              GM_log(minatk);
-              GM_log(atk);
-              if (minatk < atk) {
-                $('#popup_content > div:nth-child(' + idxmin + ') > div > div.box_horizontal.box_center.margin_bottom_10 > div:nth-child(2) > div > a').clickJ();
-              } else {
+              GM_log(minlvl_max, lvl_max);
+              if (minlvl_max < lvl_max) {
+                if (idxmin > 3) idxmin--;
+                $('#popup_content > div:nth-child(' + idxmin + ') > div > div.box_horizontal.box_center.margin_bottom_10 > div:nth-child(2) > a').clickJ();
+              } else if (minlvl_max > lvl_max) {
                 $('a:contains("交換しないで進む")').clickJ();
               }
           }],
-          [['mapQuest/RaidBattleResult/'], 'aJ', 'a:contains("ダンジョンを進める")'],
-          [['mapQuest/RaidBattleTop/'], 'aJ', 'a.sprites-common-btn_attack'],
+          [['mapQuest/RaidBattleResult'], 'aJ', 'a:contains("ダンジョンを進める")'],
+          [['mapQuest/RaidBattleTop'], 'aJ', 'a.sprites-common-btn_attack'],
+          [['mapQuest/Top'], 'list', [
+            ['aJ', '#eventTop > div.sprites-event-top.sprites-event-top-btn_quest > a'],
+            //['hold'],
+            ['aJ', '#selectArea > div.area > a:last']]],
+          
           [/materiaSkill%2FMateriaSkillAutoSet/, 'func', function () {
               GM_log(JSON.stringify(GM_getValue("rag_card_best_ten")));
               GM_log(JSON.stringify(GM_getValue("rag_card_best_ten_sell_limit")));
             }
           ],
+          
           [/mission%2FBossAppear%2F/, 'a', '//a[text()="ボスと戦う"]'],
           [/mission%2FBossBattleFlash/, 'flash', '//div[@id="gamecanvas"]/canvas|//*[@id="container"]', 79, 346],
           [/mission%2FBossBattleResult%2F/, 'a', '//a[text()="次に進む"]'],
@@ -4393,6 +4413,9 @@
       }
     }
     GM_log(url);
+    if (decodeURL.endsWith('/')) {
+        decodeURL = decodeURL.slice(0, -1);
+    }
     GM_log(decodeURL);
     GM_log(decodeParam);
     if (typeof setStopSite_local !== "undefined" && setStopSite_local.has(app_id)) {
