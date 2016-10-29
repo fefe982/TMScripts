@@ -3654,7 +3654,7 @@
           [[/^fusion\/(costume|magic)_limit_confirm\/.*/], 'aJ', '#sticker a:contains("進化する")'],
           [[/^fusion\/(costume|magic)_limit_result\/.*/], 'aJ', 'a:contains("ベース変更")'],
           [[/^fusion\/(costume|magic)_select/], 'func', function () {
-            if ($('#bg > section > article > div.p5 > p > b.yellow')) {
+            if ($('#bg > section > article > div.p5 > p > b.yellow').length > 0) {
               return $('a:contains("オススメ")').clickJ();
             } else if ($('div.rarityBox > div.N').length > 0) {
               return $('a:contains("オススメ")').clickJ();
