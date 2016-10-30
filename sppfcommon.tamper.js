@@ -18,16 +18,11 @@
 (function () {
   'use strict';
   function decodeURLSearchParam(p) {
-    var ret = '{';
+    var ret = {};
     for (var key of p.keys()) {
-      ret = ret + '"' + key + '":"' + p.get(key) + '",';
+      ret[key] = p.get(key);
     }
-    if (ret.length > 1) {
-      ret = ret.substr(0, ret.length - 1) + '}';
-    } else {
-      ret = ret + '}';
-    }
-    return JSON.parse(ret);
+    return ret;
   }
 
   var url = document.URL,
@@ -730,6 +725,7 @@
               ['aJ', 'a:contains("完全討伐報酬が受け取れます")'],
               ['aJ', 'a:contains("ビンゴチケットが届いています")'],
               ['aJ', 'a:contains("を討伐してくれました")'],
+              ['aJ', 'a:contains("オールスターガチャが回せます")'],
               ['funcR', () => {
                   if (GM_getValue("__ava_no_gift", 0) + this.no_gift_delay * 1000 < Date.now()) {
                     return $('a:contains("贈り物が届いています")').clickJ().length > 0;
@@ -3200,8 +3196,8 @@
                   var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/),
                   ap = match_res ? +match_res[1] : 0;
                   if (ap > 10) {
-                    return $('#gacha_link_area a[href*="main%2Fscout%2Fevent%2Ftreasure"]').clickJ().length > 0 ||
-                    $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
+                    //return $('#gacha_link_area a[href*="main%2Fscout%2Fevent%2Ftreasure"]').clickJ().length > 0 ||
+                    return $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
                      || $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
                   }
                   return false;
@@ -3334,6 +3330,9 @@
                 $('#content_body > div.frame_2014_90 > div.tag_box_label > div > a:contains("別の選手にする")').clickJ();
                 return;
               }
+              if ($('div:contains("引き継ぎ可能な選手です!")').length > 0) {
+                return;
+              }
               var rare_map = {
                 'ノーマル' : 1,
                 'レギュラー' : 2,
@@ -3394,7 +3393,7 @@
               ['aJ', 'a:contains("ヒロスタへ")'],
               ['aJ', 'a#shortCut'],
               ['aJ', this.cssmypage]]],
-          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="main%2Fscout%2Fmain%2Ffriend_exe"]'],
+          [/main%2Fscout%2F(event%2Ftreasure%2F)?main%2Ffriend/, 'aJ', '#bg_scout > div > div > a[href*="Fmain%2Ffriend_exe"]'],
           [['akr/main/scout/event/treasure/main/panel'], 'list', [
               ['aJ', '#d9-main > div.box_bg_main > div.bg_xxx > div > a:first'],
               ['aJ', 'a:contains("BOXスタジアムを探しにいく")']]],
