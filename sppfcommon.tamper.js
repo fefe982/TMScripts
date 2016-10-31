@@ -1107,9 +1107,8 @@
               }, 1000);
             }
           ],
-          [/quest%2Fed/, 'list', [
-              ['aJ', 'a[href*="quest%2Findex"]'],
-              ['flashJT', document]]],
+          [/^quest%2Fed/, 'list', [
+              ['aJ', 'a[href*="quest%2Findex"]']]],
           [/[a-zA-Z0-9]*%2FlevelUp/, 'flashJT', '#canvas'],
           [/[a-zA-Z0-9]*%2FnoAction/, 'list', [
               ['aJ', 'a[href*="%2FuseItem"]'],
@@ -1130,7 +1129,7 @@
           [/quest%2FuseItem\b/, 'aJ', 'a[href*="quest%2FuseItem"]'],
           [/^quest%2FuseItemComplete/, 'aJ', 'a[href*="quest%2Findex"]'],
           [/quest%2FwinRare/, 'aJ', 'a[href*="quest%2Findex"]'],
-          [/quest_story%2Fquest%2Fop/, 'flashJT', document],
+          [/quest_story%2Fquest(_s)?%2F(op|bs|ed)/, 'flashJT', document],
           [/^[Qq]uestStory%2Fquest_s%2/, 'flashJT', '#cv0'],
           [/scenario%2Fquest/, 'flashJT', document],
           [/scenario2%2Fs%2Fmorinaga_end/, 'flashJT', document],
@@ -3195,9 +3194,9 @@
               ['funcR', function () {
                   var match_res = $('div.scout_cost_area').text().match(/([0-9]*)\s*\/\s*([0-9]*)/),
                   ap = match_res ? +match_res[1] : 0;
-                  if (ap > 10) {
-                    //return $('#gacha_link_area a[href*="main%2Fscout%2Fevent%2Ftreasure"]').clickJ().length > 0 ||
-                    return $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
+                  if (ap > 20) {
+                    return $('#gacha_link_area a[href*="main%2Fscout%2Fevent%2Ftreasure"]').clickJ().length > 0 ||
+                     $('#gacha_link_area a:regex(href, akr%2Fmain%2Fevent%2F(dtraining|herosta)%2F)').clickJ().length > 0
                      || $('#basic_menu_area a[href*="main%2Fscout%2Fmain"]').clickJ().length > 0;
                   }
                   return false;
@@ -3719,7 +3718,8 @@
           [/^quest%2FnoAction%2F/, 'aJ', this.cssmypage],
           [/^quest%2Fstep/, 'flashJT', '#canvas'],
           [/^quest%2Ftop/, 'list', [
-              ['aJ', 'div.questListButton.newStage > a']]],
+              ['aJ', 'div.questListButton.newStage > a'],
+              ['aJ', '#bg > section > article > div.storyStageList > div.questBossButton > a']]],
           [/^questStory%2Fquest/, 'flashJT', '#cv0'],
           [/^[a-zA-Z0-9]+%2FattackResult%2F/, 'list', [
               ['aJ', '#bg > section.window.wide > div > div.helpCommand > div.helpCommandWindow > ul > li:nth-child(1) > div > div.p5 > div > a'],
@@ -4023,7 +4023,7 @@
           [['_gcard_card_upgrade_confirm'], 'aJ', 'form[action="_gcard_card_upgrade_exec"] > div > input[type="submit"]'],
           [['_gcard_card_upgrade_result'], 'list', [
               ['aJ', 'a:contains("続けて合成する")'],
-              ['aJ', this.cssmypage],
+              ['aJ', '#container > div.card-upgrade-result.card-upgrade.card > div > nav > ul > li > a:contains("合成")'],
               []]],
           //[['_gcard_card_upgrades'], 'list', [
           //    ['aJ', 'a:contains("イベントオススメベースカード選択")']]],
@@ -4204,7 +4204,10 @@
     $(document).on('touchstart', (eve) => {
         //GM_log(eve.originalEvent.touches[0]);
         //GM_log("clientXY", eve.originalEvent.touches[0])
-        
+        if (eve.originalEvent.touches[0].target.getBoundingClientRect == undefined) {
+          GM_log("no bcr; touch", eve.originalEvent.touches[0].target.nodeName, "client", eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY);
+          return;
+        }
         var rect = eve.originalEvent.touches[0].target.getBoundingClientRect();
         var zoom_lvl = $(eve.originalEvent.touches[0].target).getZoomLvl();
         //GM_log(eve.originalEvent.touches[0].clientX, eve.originalEvent.touches[0].clientY);
