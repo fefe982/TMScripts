@@ -1480,6 +1480,7 @@
               ['aJ', 'a[href*="DoEventQuestExecutionCheck"]'],
               ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)']]],
           [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
+              ['funcR', () => {$('#chengeApproval2 > div.relative > div.skip_off').clickJ();}],
               ['funcR', function () {
                   //#eventDeck > ul.event_chara > li > div
                   var items = $('#main > div.raid_boss_container.section_margin_top > div.section_main:has(div:contains("イベキャラを強化")) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div > div');
