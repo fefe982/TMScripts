@@ -152,7 +152,7 @@
       zoomcheck = zoomcheck.parent();
     }
     return zoom_lvl;
-  }
+  };
   $.fn.getBoundRectZoom = function () {
     var brect = this[0].getBoundingClientRect();
     var rect = {x: brect.left, y: brect.top, w: brect.width, h: brect.height};
@@ -170,7 +170,7 @@
       zoomcheck = zoomcheck.parent();
     }
     return rect;
-  }
+  };
   $.fn.simTouchEvent = function (eveName, xoff, yoff) {
     var customEvent,
     rect,
@@ -3423,6 +3423,8 @@
         return [
           [/^:::$/, 'aJ', '#ctl00_body_hl_mypage_sp'],
           [['bingo/bingo_top.aspx'], 'list', [
+              //['hold'],
+              ['aJ', '#ctl00_body_btn_sheet_change'],
               ['funcR', () => {
                   //return;
                   var mission_arr = [];
@@ -4056,9 +4058,18 @@
           [['_gcard_event213', {func : "pvp"}], 'aJ', 'input[value="上記の編成で出撃する"]'],
           [['_gcard_event213', {func : "pvp_battle_result"}], 'aJ', 'a:contains("出撃画面へ戻る")'],
           //[['_gcard_event213', {func : "pvp_warship_choice"}], 'func', 'a:contains("出撃画面へ戻る")'],
-          [['_gcard_event214_raid_boss'], 'list', [
-              ['aJ', '#container > div.event-214-raid_boss-show.event-214-raid_boss.event-214.event > section > div.energy-panel.mb4 > div:nth-child(1) > a:nth-child(1)'],
+          [[/^_gcard_event\d+_raid_boss$/], 'list', [
+              ['aJ', '#container > div > section > div.energy-panel > div:nth-child(1) a:nth-child(1)'],
+              ['aJ', '#container > div > div > div.btn-area > form > input[value="報酬を受け取る"]'],
               ['aJ', 'a:contains("探索する")']]],
+          [[/^_gcard_event\d+_raid_boss_receive_result$/], 'aJ', '#container > div > div > a:contains("敵一覧")'],
+          [[/^_gcard_event\d+_raid_boss_update/], 'aJ', 'a:contains("敵一覧")'],
+          [[/^_gcard_event\d+_raid_bosses$/], 'list', [
+              ['aJ', 'a:contains("報酬を受け取る")'],
+              //['hold'],
+              ['aJ', 'a:contains("敵を攻撃"):first'],
+              ['aJ', 'a:contains("敵を見つける")']
+          ]],
           [['_gcard_flight'], 'aJ', '#container > div.fight-index.fight > section > div.mainmenu.mb8 > ul.mainmenu-a > li:nth-child(2) > a'],
           [['_gcard_gacha'], 'list', [
               ['aJ', 'form[action="_gcard_gacha_exec"] > input[type="submit"]']]],
@@ -4101,7 +4112,7 @@
               ['minmaxJ', '#container > div.promotion-battle-index.promotion-battle.promotion > section > section > ul > li.enemy-detail', 'a > dl > dd.power > span', 'a']]],
           [['_gcard_top'], 'aJ', '#container > div > div > div.top-myroom-box > nav > a'],
           [[/[\s\S]*/, () => {
-            return $('body.swf').length > 0 && (GM_getValue('gcc_ref', '') === '_gcard_missions' || GM_getValue('gcc_ref', '') === '_gcard_mission_lot' || GM_getValue('gcc_ref', '') === '_gcard_event214_raid_boss');
+            return $('body.swf').length > 0 && (GM_getValue('gcc_ref', '') === '_gcard_missions' || GM_getValue('gcc_ref', '') === '_gcard_mission_lot' || GM_getValue('gcc_ref', '').match(/_gcard_event\d+_raid_boss/));
               }], 'flashJT', 'canvas', 0.355, 0.686],
           [[/[\s\S]*/, () => {
             return $('body.swf').length > 0 && GM_getValue('gcc_ref', '') === '_gcard_mission_lot';
