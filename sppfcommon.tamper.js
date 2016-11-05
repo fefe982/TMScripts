@@ -1482,8 +1482,10 @@
           [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
               ['funcR', function () {
                   //#eventDeck > ul.event_chara > li > div
-                  var items = $('#main > div.raid_boss_container.section_margin_top > div.section_main:has(div:contains("イベキャラを強化しよう！")) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div > div');
+                  var items = $('#main > div.raid_boss_container.section_margin_top > div.section_main:has(div:contains("イベキャラを強化")) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div > div');
+                  //#main > div.raid_boss_container.section_margin_top > div:nth-child(5) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div:nth-child(2) > div:nth-child(1)
                   var has_item = false;
+                  GM_log(items);
                   items.each(function () {
                     if (this.innerText.match(/(\d+)/) &&
                       +this.innerText.match(/(\d+)/)[0] > 0) {
@@ -1504,10 +1506,11 @@
                     }
                   });
                   if (i >= 0) {
-                    return $('#eventDeck > ul > li:eq(' + i + ') > a').clickJ().length > 0;
+                    return $('#eventDeck > ul > li:eq(' + i + ') a').clickJ().length > 0;
                   }
                 }
               ],
+              ['hold'],
               ['funcR', function () {
                   var medal = $('#raid_boss_top > div > div.event_command_section > div > div > div > div.btn_battle > a > div');
                   if (medal.length === 1
@@ -1823,7 +1826,7 @@
               ['aJ', 'a:contains("全ての秘伝書を使う")'],
               ['aJ', 'a:contains("エピソードエリア")'],
               ['hold']]],
-          [/^event%2FeventFusion%2FMaterialFusionTop%2F%3FeventTypeId%3D34/, 'list', [
+          [/^event%2FeventFusion%2FMaterialFusionTop%2F/, 'list', [
               ['aJ', 'a:contains("全ての秘伝書を使う")']]],
           [/event%2FeventFusion%2FFusionEnd/, 'list', [
               ['aJ', 'a:contains("イベントTOPへ")'],
