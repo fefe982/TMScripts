@@ -14,6 +14,23 @@
 
 (function () {
     'use strict';
+    
+    var teams = {
+        H  : [14],
+        F  : [9],
+        M  : [10],
+        L  : [18],
+        Bs : [15],
+        BS : [15],
+        E  : [13],
+        Ys : [17],
+        S  : [17],
+        G  : [1],
+        T  : [4],
+        C  : [6],
+        D  : [2],
+        DB : [19]
+    };
     var path = location.pathname.split('/').pop();
     var param = location.search.substring(1);
     param = param ? JSON.parse('{"' + param.replace(/^&/, '').replace(/&/g, '","').replace(/=/g, '":"') + '"}', function (key, value) {
@@ -74,6 +91,22 @@
         if (lvup.length > 0) {
             lvup[0].click();
         }
+        GM_log(GM_getValue('npb_starters'));
+        var players = GM_getValue('npb_starters');
+        GM_log(typeof players);
+        if (typeof players === "string") {
+            players = JSON.parse(players);
+        }
+        GM_log(typeof players);
+        GM_log(players);
+
+        players.forEach(function (v) {
+            GM_log(v);
+            if (v[1] === "") {
+                return;
+            }
+            jQuery('tr:contains("' + v[1] + '"):has(img[src*="icon_col_team' + teams[v[0]][0] + '.gif"]) td:not(.co1):not(.co1)').css('background', 'yellow');
+        });
         break;
     case 'dbb_card_list.cgi':
         GM_log("in");
@@ -155,6 +188,29 @@
                 entry.attr('onclick', 'return true')[0].click();
             }
         }
+        break;
+    case 'dbb_manager_confirm.cgi':
+        var starters = [];
+        var teams_i = {
+            14 : 'H',
+            9  : 'F',
+            10 : 'M',
+            18 : 'L',
+            15 : 'BS',
+            13 : 'E',
+            17 : 'S',
+            1  : 'G',
+            4  : 'T',
+            6  : 'C',
+            2  : 'D',
+            19 : 'DB',
+        };
+        jQuery('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
+            starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
+            starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
+        });
+        GM_log(starters);
+        GM_setValue('npb_starters', starters);
         break;
     }
 })();
