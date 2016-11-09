@@ -10,6 +10,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 
 (function () {
@@ -30,6 +31,21 @@
         C  : [6],
         D  : [2],
         DB : [19]
+    };
+    var starters = [];
+    var teams_i = {
+        14 : 'H',
+        9  : 'F',
+        10 : 'M',
+        18 : 'L',
+        15 : 'BS',
+        13 : 'E',
+        17 : 'S',
+        1  : 'G',
+        4  : 'T',
+        6  : 'C',
+        2  : 'D',
+        19 : 'DB',
     };
     var path = location.pathname.split('/').pop();
     var param = location.search.substring(1);
@@ -90,7 +106,50 @@
         var lvup = jQuery('td.lvup > a:first');
         if (lvup.length > 0) {
             lvup[0].click();
+            return;
         }
+        if (path === 'dbb_regist_team_player.fcgi') break;
+        
+        var date = new Date(Date.now() + 3600 * 1000 * 7);
+        date = (date.getMonth() + 1) + "-" + date.getDate();
+        GM_log("date_check", GM_getValue('npb_start_update_date', ""), date);
+        if (GM_getValue('npb_start_update_date', "") !== date) {
+            var ret = GM_xmlhttpRequest({
+                method: "GET",
+                //url: "http://npb.jp/announcement/starter/",
+                //onload: function(res) {
+                //    var npb_starter = $(new DOMParser().parseFromString(res.responseText, "text/html"));
+                //    var infoarea = npb_starter.find('.team_left, .team_right');
+                //    GM_log(infoarea);
+                //    var starter = [];
+                //    infoarea.each(function () {
+                //        GM_log(this);
+                //        var team = $(this).children('img').attr('src').match(/logo_(.+)_m.gif/)[1].toUpperCase();
+                //        var player = $(this).find('a > span').text().split(/　/);
+                //        player[0] = player[0].replace(/[A-ZＡ-Ｚ]．/, '');
+                //        GM_log([team, ...player]);
+                //        starter.push([team, ...player]);
+                //    });
+                //    GM_log(starter);
+                //    GM_setValue('npb_starters', starter);
+                //    GM_setValue('npb_start_update_date', date);
+                //}
+                url: "/cgi-bin/dbb_manager_confirm.cgi",
+                onload: function(res) {
+                    
+                    var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
+                    npb_starter.find('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
+                        starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
+                        starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
+                    });
+                    GM_log(starters);
+                    GM_setValue('npb_starters', starters);
+                    GM_setValue('npb_start_update_date', date);
+                    GM_log("date", GM_getValue('npb_start_update_date', ""), date);
+                }
+            });
+        }
+        
         GM_log(GM_getValue('npb_starters'));
         var players = GM_getValue('npb_starters');
         GM_log(typeof players);
@@ -190,21 +249,6 @@
         }
         break;
     case 'dbb_manager_confirm.cgi':
-        var starters = [];
-        var teams_i = {
-            14 : 'H',
-            9  : 'F',
-            10 : 'M',
-            18 : 'L',
-            15 : 'BS',
-            13 : 'E',
-            17 : 'S',
-            1  : 'G',
-            4  : 'T',
-            6  : 'C',
-            2  : 'D',
-            19 : 'DB',
-        };
         jQuery('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
             starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
             starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
