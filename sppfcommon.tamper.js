@@ -1511,7 +1511,7 @@
                   }
                 }
               ],
-              ['hold'],
+              //['hold'],
               ['funcR', function () {
                   var medal = $('#raid_boss_top > div > div.event_command_section > div > div > div > div.btn_battle > a > div');
                   if (medal.length === 1
