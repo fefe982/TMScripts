@@ -188,6 +188,10 @@
         }
         break;
     case 'sdb_regist_team_player_real.cgi':
+        $('#main > div.formationarea > div.formation_list > table > tbody > tr:nth-child(1) > th.th_stts').click(function (){
+            GM_deleteValue('npb_start_update_date');
+            location.reload();
+        });
         var date = new Date(Date.now() + 3600 * 1000 * 7);
         date = (date.getMonth() + 1) + "-" + date.getDate();
         GM_log("date_check", GM_getValue('npb_start_update_date', ""), date);
