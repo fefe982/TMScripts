@@ -66,12 +66,59 @@
     case 'sdb_into_battle_event.cgi':
         if (param.team_select === 'on') {
             $('#main > form > p > input[type="image"]')[0].click();
-        } else if (param.stage === '2') {
+        } else if (param.stage !== undefined) { 
+            GM_log("syutujin");
+            if ($('#main > div.errorbox').length > 0) {
+                GM_deleteValue('sengoku_quest_ttl');
+                return;
+            }
+            if ($('#main > div > div > p.levelbtns > a').length > 0) {
+                var hard = $('#main > div > div > p.difficulty').text().length;
+                GM_log(hard);
+                if (hard > 3 && param.stage !== "1") {
+                    $('#main > div > div > p.levelbtns > a:nth-child(1)')[0].click();
+                    break;
+                } else if (param.stage !== "2") {
+                    $('#main > div > div > p.levelbtns > a:nth-child(2)')[0].click();
+                    break;
+                }
+            }
+            GM_log($('#main > div > div > p.syutujin > a'));
             $('#main > div > div > p.syutujin > a')[0].click();
-        } else if (param.stage !== undefined) {
-            $('#main > div > div > p.levelbtns > a:nth-child(2)')[0].click();
         } else {
-            //GM_log(Object.getOwnPropertyNames(param));
+            var pg = GM_getValue('sengoku_quest_pg');
+            var idx = GM_getValue('sengoku_quest_idx');
+            if (pg === undefined || idx === undefined) {
+                var ttl = GM_getValue('sengoku_quest_ttl');
+                if (ttl === undefined) {
+                    if ($('#main > div > ol.paging > li > a:contains(">>")').length > 0) {
+                        GM_log($('#main > div > ol.paging > li > a:contains(">>")'));
+                        $('#main > div > ol.paging > li > a:contains(">>")')[0].click();
+                        return;
+                    } else {
+                        pg = +$('#main > div > ol.paging > li.here').text();
+                        ttl = (pg - 1) * 10 + $('#main > div > div > ul.event_top > li.event_part').length;
+                        GM_setValue('sengoku_quest_ttl', ttl);
+                    }
+                }
+                GM_log("ttl", ttl);
+                idx = getRandomIntInclusive(0, ttl - 1);
+                pg = Math.floor(idx / 10);
+                idx  = idx - pg * 10;
+                pg = pg + 1;
+                GM_setValue('sengoku_quest_pg', pg);
+                GM_setValue('sengoku_quest_idx', idx);
+            }
+            if (pg !== +$('#main > div > ol.paging > li.here').text()) {
+                $('#main > div > ol.paging > li > a:contains("' + pg + '")')[0].click();
+                return;
+            }
+            GM_deleteValue('sengoku_quest_pg');
+            GM_deleteValue('sengoku_quest_idx');
+            GM_log($('#main > div > div > ul.event_top > li.event_part'), idx);
+            $('#main > div > div > ul.event_top > li.event_part > a')[idx].click();
+            return;
+            
             var links = $('#main > div > div > ul > li > a:has(img[src*="quest_icon_sensyu.png"])');
             if (links.length !== 0) {
                 links[getRandomIntInclusive(0, links.length - 1)].click();
