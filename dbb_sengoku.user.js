@@ -65,21 +65,26 @@
     switch (path) {
     case 'sdb_into_battle_event.cgi':
         if (param.team_select === 'on') {
-            $('#main > form > p > input[type="image"]')[0].click();
-        } else if (param.stage !== undefined) { 
-            GM_log("syutujin");
-            if ($('#main > div.errorbox').length > 0) {
+            if ($('#main > form > p > input[type="image"]').length > 0 ) {
+                $('#main > form > p > input[type="image"]')[0].click();
+                break;
+            } else if ($('#main > div.quest > div > p.syutujin > a > img').length > 0) {
+                GM_log('error');
                 GM_deleteValue('sengoku_quest_ttl');
                 return;
             }
+        } else if (param.stage !== undefined) { 
+            GM_log("syutujin");
             if ($('#main > div > div > p.levelbtns > a').length > 0) {
                 var hard = $('#main > div > div > p.difficulty').text().length;
-                GM_log(hard);
+                GM_log('hard', hard);
                 if (hard > 3 && param.stage !== "1") {
-                    $('#main > div > div > p.levelbtns > a:nth-child(1)')[0].click();
+                    GM_setValue('sengoku_quest_stage', param.stage);
+                    $('#main > div > div > p.levelbtns > a:nth-child(' + (param.stage - 1) + ')')[0].click();
                     break;
-                } else if (param.stage !== "2") {
-                    $('#main > div > div > p.levelbtns > a:nth-child(2)')[0].click();
+                } else if (hard < 3 && (GM_getValue('sengoku_quest_stage') === undefined || GM_getValue('sengoku_quest_stage') < param.stage) && param.stage < 3) {
+                    GM_setValue('sengoku_quest_stage', param.stage);
+                    $('#main > div > div > p.levelbtns > a:nth-child(' + ((+param.stage) + 1) + ')')[0].click();
                     break;
                 }
             }
@@ -88,8 +93,10 @@
         } else {
             var pg = GM_getValue('sengoku_quest_pg');
             var idx = GM_getValue('sengoku_quest_idx');
+            GM_log("pg_check", pg, idx);
             if (pg === undefined || idx === undefined) {
                 var ttl = GM_getValue('sengoku_quest_ttl');
+                GM_log("ttl_check", ttl);
                 if (ttl === undefined) {
                     if ($('#main > div > ol.paging > li > a:contains(">>")').length > 0) {
                         GM_log($('#main > div > ol.paging > li > a:contains(">>")'));
@@ -108,7 +115,9 @@
                 pg = pg + 1;
                 GM_setValue('sengoku_quest_pg', pg);
                 GM_setValue('sengoku_quest_idx', idx);
+                GM_deleteValue('sengoku_quest_stage');
             }
+            GM_log("pg exec", pg, idx);
             if (pg !== +$('#main > div > ol.paging > li.here').text()) {
                 $('#main > div > ol.paging > li > a:contains("' + pg + '")')[0].click();
                 return;
