@@ -3424,6 +3424,13 @@
       get_actions : function () {
         return [
           [/^:::$/, 'aJ', '#ctl00_body_hl_mypage_sp'],
+          [['abw/mission_list.aspx'], 'aJ', '#ctl00_ctl00_body_body_hl_execute'],
+          [['abw/mission_result.aspx'], 'aJ', '#ctl00_ctl00_body_body_hl_execute'],
+          [['abw/strike_mission.aspx'], 'list', [
+              ['aJ', '#ctl00_ctl00_body_body_btn_pitch1'],
+              ['aJ', '#ctl00_ctl00_body_body_btn_next'], 
+          ]],
+          [['abw/top.aspx'], 'aJ', '#ctl00_ctl00_body_body_hl_exec_mission'],
           [['bingo/bingo_top.aspx'], 'list', [
               //['hold'],
               ['aJ', '#ctl00_body_btn_sheet_change'],
@@ -3551,7 +3558,7 @@
               ['aJ', 'a:contains("【球子のﾐｯｼｮﾝﾌｪｽﾀ】ﾋﾞﾝｺﾞしました!!")'],
               ['funcR', function () {
                   if ($('dd.mypowergage > div').attr('style').match(/width:(?:100|[1-9][0-9])%/)) {
-                    return $('a[href*="%3Fbid%3D20160505_vic"]').clickJ().length > 0
+                    return $('a[href*="%3Fbid%3D20161110"]').clickJ().length > 0
                      || $('#ctl00_body_hl_series_success').clickJ().length > 0;
                   }
                 }
