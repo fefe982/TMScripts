@@ -82,7 +82,7 @@
                     GM_setValue('sengoku_quest_stage', param.stage);
                     $('#main > div > div > p.levelbtns > a:nth-child(' + (param.stage - 1) + ')')[0].click();
                     break;
-                } else if (hard < 3 && (GM_getValue('sengoku_quest_stage') === undefined || GM_getValue('sengoku_quest_stage') < param.stage) && param.stage < 3) {
+                } else if (hard < 3 && (GM_getValue('sengoku_quest_stage') === undefined || GM_getValue('sengoku_quest_stage') < param.stage) && param.stage < 3 && $('#main > div > div > p.levelbtns > a:nth-child(' + ((+param.stage) + 1) + ')').length > 0) {
                     GM_setValue('sengoku_quest_stage', param.stage);
                     $('#main > div > div > p.levelbtns > a:nth-child(' + ((+param.stage) + 1) + ')')[0].click();
                     break;
