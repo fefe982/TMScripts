@@ -1788,8 +1788,8 @@
                   // bp candy usually appear later
                   bp_check_count++;
                   if (bp_check_count > 3) {
-                    //return $('#main a:contains("イベントTOPへ")').clickJ().length > 0;
-                    return $('#main > div.go_mission_button a').clickJ().length > 0; // go on with mission
+                    //return $('#main a:contains("イベントTOPへ")').clickJ().length > 0;#quest_go_btn > div > a
+                    return $('#main > div#quest_go_btn a').clickJ().length > 0; // go on with mission
                   }
                 } else {
                   add_bp.first().clickJ();
