@@ -2096,8 +2096,11 @@
         if (getXPATH('//div[@id="gamecanvas"]/canvas|//*[@id="container"]')) {
           clickFlash('//div[@id="gamecanvas"]/canvas|//*[@id="container"]');
         } else {
+          //return;
           var succ = false;
-          succ = succ || $('#containerBox > div.txt_center.fnt_medium > div > div > a[href$="gacha%2FGachaFlash%2F%3FthemaId%3D4"]').clickJ().length > 0;
+          //gacha%2FGachaFlash%2F%3FthemaId%3D4748
+          //#containerBox > div.txt_center.fnt_medium > div > div > div > a
+          succ = succ || $('#containerBox > div.txt_center.fnt_medium > div > div  a[href*="gacha%2FGachaFlash%2F%3FthemaId%3D4"]').clickJ().length > 0;
           succ = succ || clickA('(//a[contains(text(), "エールガチャ")])[last()]');
           //succ = succ || clickA('//a[text()="エールガチャ"]');
           succ = succ || clickA('//a[text()="ガチャTOPへ戻る"]');
@@ -2614,6 +2617,7 @@
               ['hold']]],
           [/gacha%2FGachaFlashResult%2F/, 'list', [
               //['flash', '//div[@id="gamecanvas"]/canvas'],
+              //['hold'],
               ['func', this.handleGachaFlashResult]]],
           [/gacha%2FGachaTop%2F%3FpageNum%3D2/, 'list', [//エールガチャ
               ['a', '(//a[contains(text(), "ガチャ")])[last()]'],
