@@ -1483,7 +1483,10 @@
               ['funcR', () => {$('#chengeApproval2 > div.relative > div.skip_off').clickJ();}],
               ['funcR', function () {
                   //#eventDeck > ul.event_chara > li > div
-                  var items = $('#main > div.raid_boss_container.section_margin_top > div.section_main:has(div:contains("イベキャラを強化")) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div > div');
+                  //#eventTop > div > div.margin_bottom_10 > a > span
+                  //#eventDeck > ul > li:nth-child(1) > div	
+                  //#eventTop > div > div.txt_frame_2.margin_x_10.padding_bottom_10 > div:nth-child(1) > div:nth-child(2)                  
+                  var items = $('#main > div.raid_boss_container.section_margin_top > div.section_main:has(div:contains("キャラを強化")) > div.padding_top div.txt_frame_2.margin_x_10.padding_bottom_10 > div > div');
                   //#main > div.raid_boss_container.section_margin_top > div:nth-child(5) > div.padding_top > div.txt_frame_2.margin_x_10.padding_bottom_10 > div:nth-child(2) > div:nth-child(1)
                   var has_item = false;
                   GM_log(items);
@@ -1830,7 +1833,7 @@
           [/^event%2FeventFusion%2FMaterialFusionTop%2F/, 'list', [
               ['aJ', 'a:contains("全ての秘伝書を使う")']]],
           [/event%2FeventFusion%2FFusionEnd/, 'list', [
-              ['aJ', 'a:contains("イベントTOPへ")'],
+              ['aJ', 'a:contains("イベントTOP")'],
               ['hold']]],
           [/eventAnniversary%2FEventDeckTop/, 'list', [
               ['aJ', 'a:contains("選択する"):last()'],
