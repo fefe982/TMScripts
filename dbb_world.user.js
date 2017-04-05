@@ -72,12 +72,25 @@
             level = +level[0];
         GM_log(grade);
         GM_log(level);
-        if (grade !== 1)
-            break;
+        //if (grade !== 1)
+        //    break;
         var card_type = jQuery('#card_type').text();
         GM_log(card_type);
-        var add_time = (level - 1) * 3;
+        var add_time = jQuery('#remain_point').text();
         var halt = false;
+        for (var i = 1; i <= 8; ++i) {
+            var row = jQuery('#data' + i + '_row');
+            var add_five_button = row.find('td:nth-child(5) > input[type="button"]');
+            var bonus = +add_five_button[0].getAttribute('onclick').split(',')[4];
+            GM_log(bonus);
+            var current = +row.find('td:nth-child(9)').text();
+            var cur_row = current / 5.0;
+            if (bonus > 0) {
+                cur_row = Math.ceil(cur_row * bonus / (bonus + 1));
+            }
+            GM_log("current: " + current + " bonus: " + bonus + " cur_row: " + cur_row);
+            add_time += cur_row;
+        }
         for (var i = 1; i <= 8; ++i) {
             var row = jQuery('#data' + i + '_row');
             var add_five_button = row.find('td:nth-child(5) > input[type="button"]');
@@ -116,37 +129,38 @@
         if (GM_getValue('npb_start_update_date', "") !== date) {
             var ret = GM_xmlhttpRequest({
                 method: "GET",
-                //url: "http://npb.jp/announcement/starter/",
-                //onload: function(res) {
-                //    var npb_starter = $(new DOMParser().parseFromString(res.responseText, "text/html"));
-                //    var infoarea = npb_starter.find('.team_left, .team_right');
-                //    GM_log(infoarea);
-                //    var starter = [];
-                //    infoarea.each(function () {
-                //        GM_log(this);
-                //        var team = $(this).children('img').attr('src').match(/logo_(.+)_m.gif/)[1].toUpperCase();
-                //        var player = $(this).find('a > span').text().split(/　/);
-                //        player[0] = player[0].replace(/[A-ZＡ-Ｚ]．/, '');
-                //        GM_log([team, ...player]);
-                //        starter.push([team, ...player]);
-                //    });
-                //    GM_log(starter);
-                //    GM_setValue('npb_starters', starter);
-                //    GM_setValue('npb_start_update_date', date);
-                //}
-                url: "/cgi-bin/dbb_manager_confirm.cgi",
+                url: "http://npb.jp/announcement/starter/",
                 onload: function(res) {
-                    
-                    var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
-                    npb_starter.find('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
-                        starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
-                        starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
-                    });
-                    GM_log(starters);
-                    GM_setValue('npb_starters', starters);
-                    GM_setValue('npb_start_update_date', date);
-                    GM_log("date", GM_getValue('npb_start_update_date', ""), date);
+                   var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
+                   GM_log(npb_starter);
+                   var infoarea = npb_starter.find('.team_left, .team_right');
+                   GM_log(infoarea);
+                   var starter = [];
+                   infoarea.each(function () {
+                       GM_log(this);
+                       var team = jQuery(this).children('img').attr('src').match(/logo_(.+)_m.gif/)[1].toUpperCase();
+                       var player = jQuery(this).find('a > span').text().split(/　/);
+                       player[0] = player[0].replace(/[A-ZＡ-Ｚ]．/, '');
+                       GM_log([team, ...player]);
+                       starter.push([team, ...player]);
+                   });
+                   GM_log(starter);
+                   GM_setValue('npb_starters', starter);
+                   GM_setValue('npb_start_update_date', date);
                 }
+                // url: "/cgi-bin/dbb_manager_confirm.cgi",
+                // onload: function(res) {
+                    
+                    // var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
+                    // npb_starter.find('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
+                        // starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
+                        // starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
+                    // });
+                    // GM_log(starters);
+                    // GM_setValue('npb_starters', starters);
+                    // GM_setValue('npb_start_update_date', date);
+                    // GM_log("date", GM_getValue('npb_start_update_date', ""), date);
+                // }
             });
         }
         
