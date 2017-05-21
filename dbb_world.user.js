@@ -270,5 +270,38 @@
         GM_log(starters);
         GM_setValue('npb_starters', starters);
         break;
+    case 'dbb_goods.cgi':
+        if (jQuery('#park_whole > div:nth-child(2) > div:not(.buildbox):contains("資材が不足しています")').length > 0) {
+            GM_deleteValue('dbb_world_build_goods');
+            break;
+        }
+        if (jQuery('#product_form').length > 0) {
+            jQuery('#product_form > div > p > input[type="image"]:nth-child(1)').click();
+            break;
+        }
+        function build_goods() {
+            GM_log(GM_getValue('dbb_world_build_goods', 0));
+            if (GM_getValue('dbb_world_build_goods', 0) !== 1) {
+                return;
+            }
+            var time = jQuery('#park_contents > div:nth-child(3) > div.builddata_goods:last > table > tbody > tr:nth-child(3) > td');
+            //if (time.length === 0) {
+            //    return;
+            //}
+            //GM_log(Date.parse(time.text()) - Date.now());
+            if (time.length > 0 && Date.parse(time.text()) - Date.now() > 2 * 24 * 3600 * 1000) {
+                GM_deleteValue('dbb_world_build_goods');
+                return;
+            }
+            jQuery('#park_contents > div:nth-child(2) > div.builddata_goods:last > table:first > tbody > tr:nth-child(3) > td:nth-child(4) > form  #count')[0].value = 1000;
+            jQuery('#park_contents > div:nth-child(2) > div.builddata_goods:last > table:first > tbody > tr:nth-child(3) > td:nth-child(4) > form > input[type="image"]:nth-child(7)').click();
+        }
+        jQuery('#park_contents > div:nth-child(2) > div.builddata_goods:last > table > tbody > tr > th:contains("製造数")').click(function (){
+            GM_log('in click');
+            GM_setValue('dbb_world_build_goods', 1);
+            build_goods();
+        });
+        build_goods();
+        break;
     }
 })();
