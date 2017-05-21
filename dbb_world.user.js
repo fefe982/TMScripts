@@ -314,5 +314,34 @@
         });
         build_goods();
         break;
+    case 'dbb_conflate_card.cgi':
+        if (param.conflate_type === '2') {
+            GM_log('conflate, card add ability');
+            if (jQuery('#slotwaku > div.le > p.naosu').length === 0) {
+                if (jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected') === true &&
+                jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("降順")').attr('selected') === true) {
+                    jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
+                } else {
+                    jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected', true);
+                    jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("降順")').attr('selected', true);
+                    jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
+                }
+            } else if (jQuery('#slotwaku > div.ri > p.naosu').length === 0) {	
+                if (jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected') === true &&
+                jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected') === true) {
+                    //jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
+                } else {
+                    jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected', true);
+                    jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected', true);
+                    jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
+                }
+            } else {
+                jQuery('#slotwaku > div.lein > input')[0].click();
+            }
+        }
+        break;
+    case 'dbb_conflate_finish.cgi':
+        jQuery('#slotwaku > p.btn_regosei > a:last')[0].click();
+        break;
     }
 })();
