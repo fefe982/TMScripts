@@ -173,13 +173,24 @@
         GM_log(typeof players);
         GM_log(players);
 
+        var num_p = 0;
         players.forEach(function (v) {
             GM_log(v);
             if (v[1] === "") {
                 return;
             }
-            jQuery('tr:contains("' + v[1] + '"):has(img[src*="icon_col_team' + teams[v[0]][0] + '.gif"]) td:not(.co1):not(.co1)').css('background', 'yellow');
+            num_p += jQuery('tr:contains("' + v[1] + '"):has(img[src*="icon_col_team' + teams[v[0]][0] + '.gif"]) td:not(.co1):not(.co1)').css('background', 'yellow').length;
         });
+        GM_log(num_p);
+        if (jQuery('#realteamarea > div.konbase.clear > div.temoti_search > form > table > tbody > tr:nth-child(1) > td:nth-child(4) > div > span').text().match(/投手/)) {
+            if (num_p === 0) {
+                var pl = jQuery('.page_fixed + li.page_link > a');
+                GM_log(pl);
+                if (pl.length > 0) {
+                    pl[0].click();
+                }
+            }
+        }
         break;
     case 'dbb_card_list.cgi':
         GM_log("in");
