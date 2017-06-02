@@ -358,7 +358,16 @@
                 GM_log(jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected'));
                 if (jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected') === 'selected' &&
                 jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected') === 'selected') {
-                    //jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
+                    var items = jQuery('#shoji_cardarea > div > div');
+                    for (var i = 0; i < items.length; ++i) {
+                      var item = jQuery(items[i]);
+                      if (item.find('span.card_saisinbbr').text() === '' && item.find('span.card_avebbr').text() === '') {
+                        item.find('ul > li > a')[0].click();
+                        break;
+                      }
+                    }
+                    //jQuery('#shoji_cardarea > div > div > ul > li > a')[0].click();
+                    //
                 } else {
                     jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected', 'selected');
                     jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected', 'selected');
