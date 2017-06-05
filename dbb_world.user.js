@@ -231,6 +231,10 @@
     case 'dbb_spa.cgi':
     case 'dbb_rehabilitation.cgi':
     case 'dbb_hospital.cgi':
+        if (jQuery('#downchoice > ul > li:nth-child(1) > a').length > 0) {
+            jQuery('#downchoice > ul > li:nth-child(1) > a').attr('onclick', 'return true;')[0].click();
+            break;
+        }
         if (jQuery('#sasikae_cardarea ul > li > a').length > 0) {
             jQuery('#sasikae_cardarea ul > li > a').attr('onclick', 'return true')[0].click();
         }
