@@ -286,7 +286,7 @@
         GM_setValue('npb_starters', starters);
         break;
     case 'dbb_goods.cgi':
-        if (jQuery('#park_whole > div:nth-child(2) > div:not(.buildbox):contains("資材が不足しています")').length > 0) {
+        if (jQuery('#park_whole > div:nth-child(2) > img').length > 0) {
             GM_deleteValue('dbb_world_build_goods');
             break;
         }
