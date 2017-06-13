@@ -384,7 +384,8 @@
         if (param.conflate_type === '2') {
             jQuery('#slotwaku > div.lein > input').attr('onclick', 'return true')[0].click();
         } else if (param.conflate_type === '4') {
-            jQuery('#goseiitiran > tbody > tr > td:nth-child(1) > label > span:first')[0].click();
+            var itm = jQuery('#goseiitiran > tbody > tr > td:nth-child(1) > label > span');
+            itm[Math.floor(Math.random() * itm.size())].click();
             jQuery('#w660 > div.lein > input').attr('onclick', 'return true')[0].click();
         }
         break;
