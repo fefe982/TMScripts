@@ -365,7 +365,12 @@
                     var items = jQuery('#shoji_cardarea > div > div');
                     for (var i = 0; i < items.length; ++i) {
                       var item = jQuery(items[i]);
-                      if (item.find('span.card_saisinbbr').text() === '' && item.find('span.card_avebbr').text() === '') {
+                      var grade = +item.find('span.card_grade > img').attr('src').match(/grade([0-9])/)[1];
+                      var lvl = +item.find('span.card_level').text();
+                      var season = +item.find('span.card_season > img').attr('src').match(/season([0-9]*)/)[1];
+                      var recentBBR = item.find('span.card_saisinbbr').text();
+                      var avgBBR = item.find('span.card_avebbr').text();
+                      if (( recentBBR === '' && avgBBR === '') || (season < 13 && lvl === 1 && (avgBBR === '' || (+avgBBR) < 60))) {
                         item.find('ul > li > a')[0].click();
                         break;
                       }
