@@ -126,42 +126,49 @@
         var date = new Date(Date.now() + 3600 * 1000 * 7);
         date = (date.getMonth() + 1) + "-" + date.getDate();
         GM_log("date_check", GM_getValue('npb_start_update_date', ""), date);
+        //GM_deleteValue('npb_start_update_date')
         if (GM_getValue('npb_start_update_date', "") !== date) {
-            var ret = GM_xmlhttpRequest({
-                method: "GET",
-                url: "http://npb.jp/announcement/starter/",
-                onload: function(res) {
-                   var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
-                   GM_log(npb_starter);
-                   var infoarea = npb_starter.find('.team_left, .team_right');
-                   GM_log(infoarea);
-                   var starter = [];
-                   infoarea.each(function () {
-                       GM_log(this);
-                       var team = jQuery(this).children('img').attr('src').match(/logo_(.+)_m.gif/)[1].toUpperCase();
-                       var player = jQuery(this).find('a > span').text().split(/　/);
-                       player[0] = player[0].replace(/[A-ZＡ-Ｚ]．/, '');
-                       GM_log([team, ...player]);
-                       starter.push([team, ...player]);
-                   });
-                   GM_log(starter);
-                   GM_setValue('npb_starters', starter);
-                   GM_setValue('npb_start_update_date', date);
-                }
-                // url: "/cgi-bin/dbb_manager_confirm.cgi",
-                // onload: function(res) {
-                    
-                    // var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
-                    // npb_starter.find('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
-                        // starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
-                        // starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
-                    // });
-                    // GM_log(starters);
-                    // GM_setValue('npb_starters', starters);
-                    // GM_setValue('npb_start_update_date', date);
-                    // GM_log("date", GM_getValue('npb_start_update_date', ""), date);
-                // }
-            });
+            if (jQuery('#kantokuore > a').size() == 0) {
+                var ret = GM_xmlhttpRequest({
+                    method: "GET",
+                    url: "http://npb.jp/announcement/starter/",
+                    onload: function(res) {
+                       var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
+                       GM_log(npb_starter);
+                       var infoarea = npb_starter.find('.team_left, .team_right');
+                       GM_log(infoarea);
+                       var starter = [];
+                       infoarea.each(function () {
+                           GM_log(this);
+                           var team = jQuery(this).children('img').attr('src').match(/logo_(.+)_m.gif/)[1].toUpperCase();
+                           var player = jQuery(this).find('a > span').text().split(/　/);
+                           player[0] = player[0].replace(/[A-ZＡ-Ｚ]．/, '');
+                           GM_log([team, ...player]);
+                           starter.push([team, ...player]);
+                       });
+                       GM_log(starter);
+                       GM_setValue('npb_starters', starter);
+                       GM_setValue('npb_start_update_date', date);
+                    }
+                });
+            } else {
+                GM_log('offseason');
+                var ret = GM_xmlhttpRequest({
+                    method: "GET",
+                    url: "/cgi-bin/dbb_manager_confirm.cgi",
+                    onload: function(res) {
+                        var npb_starter = jQuery(new DOMParser().parseFromString(res.responseText, "text/html"));
+                        npb_starter.find('#stovearea > div > div > div.stove_dispresult > table > tbody > tr:has(td.stove_kantoku_td)').each(function () {
+                            starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(1)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(2)').text()]);
+                            starters.push([teams_i[jQuery(this).children('td:nth-child(3)').children('img:nth-child(3)').attr('src').match(/logo_team(\d+).gif/)[1]], jQuery(this).children('td:nth-child(4)').text()]);
+                        });
+                        GM_log(starters);
+                        GM_setValue('npb_starters', starters);
+                        GM_setValue('npb_start_update_date', date);
+                        GM_log("date", GM_getValue('npb_start_update_date', ""), date);
+                    }
+                });
+            }
         }
         
         GM_log(GM_getValue('npb_starters'));
@@ -396,6 +403,15 @@
         break;
     case 'dbb_conflate_finish.cgi':
         jQuery('#slotwaku > p.btn_regosei > a:last')[0].click();
+        break;
+    case 'dbb_card_employ.cgi':
+        location.assign("javascript:SetChecked(true);");
+        if (jQuery('#alartwrap > table > tbody > tr > td:contains("登録ができません")').size() > 0) {
+            break;
+        }
+        setTimeout(()=>{
+          jQuery('#levelup_btnbox > ul > li.last > input[type="image"]').attr('onclick', 'return true')[0].click();
+        }, 1000);
         break;
     }
 })();
