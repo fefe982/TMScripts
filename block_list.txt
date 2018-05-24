@@ -1,7 +1,7 @@
 [Adblock Plus 2.0]
 ! Title: Private Block List
 ! Expires: 14 days
-
+! Version: 1
 ! full-count.jp
 full-count.jp##.related-articles_lists
 full-count.jp##div.article > div.paragraph > p > a
