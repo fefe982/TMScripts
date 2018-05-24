@@ -1,0 +1,16 @@
+! Title: Private Block List
+! Expires: 14 days
+
+! full-count.jp
+full-count.jp##.related-articles_lists
+full-count.jp##div.article > div.paragraph > p > a
+full-count.jp##div.contents_wrapper > div > div.sub_col
+
+! headlines.yahoo.co.jp
+headlines.yahoo.co.jp###ym_newsarticle > div.articleMain > div.ynDetailRelArticle
+headlines.yahoo.co.jp###taboola-below-article-thumbnails-p4
+headlines.yahoo.co.jp###taboola-below-article-thumbnails-pc-paid
+headlines.yahoo.co.jp###taboola-below-article-thumbnails-pc-sc
+headlines.yahoo.co.jp###commentTabContents
+headlines.yahoo.co.jp###ym_newsarticle > div.articleMain > div.paragraph > p > a
+headlines.yahoo.co.jp###sub
