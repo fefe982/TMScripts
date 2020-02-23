@@ -122,6 +122,7 @@
             return;
         }
         if (path === 'dbb_regist_team_player.fcgi') break;
+        //return; // not applicable for start of season.
         
         var date = new Date(Date.now() + 3600 * 1000 * 7);
         date = (date.getMonth() + 1) + "-" + date.getDate();
@@ -293,6 +294,7 @@
         GM_setValue('npb_starters', starters);
         break;
     case 'dbb_goods.cgi':
+        //GM_log("xxxx");
         if (jQuery('#park_whole > div:nth-child(2) > img').length > 0) {
             GM_deleteValue('dbb_world_build_goods');
             break;
@@ -306,19 +308,19 @@
             if (GM_getValue('dbb_world_build_goods', 0) !== 1) {
                 return;
             }
-            var time = jQuery('#park_contents > div:nth-child(3) > div.builddata_goods:last > table > tbody > tr:nth-child(3) > td');
-            //if (time.length === 0) {
-            //    return;
-            //}
-            //GM_log(Date.parse(time.text()) - Date.now());
-            if (time.length > 0 && Date.parse(time.text()) - Date.now() > 2 * 24 * 3600 * 1000) {
-                GM_deleteValue('dbb_world_build_goods');
-                return;
+            var time = jQuery('#park_contents > div:contains("現在生産中のカプセルは以下です。") > div.builddata_goods:last > table > tbody > tr:nth-child(3) > td');
+            if (time.length > 0) {
+                //GM_log(time.text());
+                GM_log(Date.parse(time.text()) - Date.now());
+                if (time.length > 0 && Date.parse(time.text()) - Date.now() > 2 * 24 * 3600 * 1000) {
+                    GM_deleteValue('dbb_world_build_goods');
+                    return;
+                }
             }
             jQuery('#park_contents > div:nth-child(2) > div.builddata_goods:last > table:first > tbody > tr:nth-child(3) > td:nth-child(4) > form  #count')[0].value = 1000;
             jQuery('#park_contents > div:nth-child(2) > div.builddata_goods:last > table:first > tbody > tr:nth-child(3) > td:nth-child(4) > form > input[type="image"]:nth-child(7)').click();
         }
-        jQuery('#park_contents > div:nth-child(2) > div.builddata_goods:last > table > tbody > tr > th:contains("製造数")').click(function (){
+        jQuery('#park_contents > div:contains("現在製造できるカプセルは以下です。") > div.builddata_goods:last > table > tbody > tr > th:contains("製造数")').click(function (){
             GM_log('in click');
             GM_setValue('dbb_world_build_goods', 1);
             build_goods();
@@ -326,19 +328,20 @@
         build_goods();
         break;
     case 'dbb_conflate_card.cgi':
+        //break; // not applicable at the start of season, as statistics are meaningless
         if (param.conflate_type === '2') {
             GM_log('conflate, card add ability');
             if (jQuery('#slotwaku > div.le > p.naosu').length === 0) {
                 GM_log('add base');
                 if (jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected') === 'selected' &&
                 jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("降順")').attr('selected') === 'selected') {
-                    jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
+                    //jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
                 } else {
                     jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected', 'selected');
                     jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("降順")').attr('selected', 'selected');
                     jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
                 }
-            } else if (jQuery('#slotwaku > div.ri > p.naosu').length === 0) {	
+            } else if (jQuery('#slotwaku > div.ri > p.naosu').length === 0) {
                 GM_log('add material');
                 GM_log(jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected'));
                 GM_log(jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected'));
@@ -357,16 +360,16 @@
                 GM_log('add base');
                 if (jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("グレード")').attr('selected') === 'selected' &&
                 jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("降順")').attr('selected') === 'selected') {
-                    jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
+                    //jQuery('#shoji_cardarea > div:nth-child(1) > div:nth-child(1) > ul > li > a')[0].click();
                 } else {
                     jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("グレード")').attr('selected', 'selected');
                     jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("降順")').attr('selected', 'selected');
-                    jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
+                    //jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
                 }
-            } else if (jQuery('#slotwaku > div.ri > p.naosu').length === 0) {	
+            } else if (jQuery('#slotwaku > div.ri > p.naosu').length === 0) {
                 GM_log('add material');
-                GM_log(jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected'));
-                GM_log(jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected'));
+                //GM_log(jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected'));
+                //GM_log(jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected'));
                 if (jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected') === 'selected' &&
                 jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected') === 'selected') {
                     var items = jQuery('#shoji_cardarea > div > div');
@@ -377,17 +380,18 @@
                       var season = +item.find('span.card_season > img').attr('src').match(/season([0-9]*)/)[1];
                       var recentBBR = item.find('span.card_saisinbbr').text();
                       var avgBBR = item.find('span.card_avebbr').text();
+                      GM_log(season + "; " + lvl + "; " + recentBBR + "; " + avgBBR);
                       if (( recentBBR === '' && avgBBR === '') || (season < 13 && lvl === 1 && (avgBBR === '' || (+avgBBR) < 60))) {
-                        item.find('ul > li > a')[0].click();
+                        GM_log("!!!!" + season + "; " + lvl + "; " + recentBBR + "; " + avgBBR);
+                        //item.find('ul > li > a')[0].click();
                         break;
                       }
                     }
                     //jQuery('#shoji_cardarea > div > div > ul > li > a')[0].click();
-                    //
                 } else {
                     jQuery('#narabikae > ul > li > select:nth-child(1) > option:contains("平均BBR")').attr('selected', 'selected');
                     jQuery('#narabikae > ul > li > select:nth-child(3) > option:contains("昇順")').attr('selected', 'selected');
-                    jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
+                    //jQuery('#gosei_cardsearch > div.kensaku_op > p > input[type="image"]')[0].click();
                 }
             }
         }
