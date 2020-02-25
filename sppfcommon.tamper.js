@@ -537,11 +537,15 @@
             ['a', '//*[@id="raid_announce" and span]/div/a'],
             ['a', '//*[@id="contents"]//a[contains(@href,"MissionActionLot")]'],
             ['hold']]],
-          [/bossguildbattle%2FRaidbossAssistList%2F/, 'a', '//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
+          [['eventRaidboss/RaidbossAssistList'], 'list', [
+            ['a', '//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
+            ['aJ', '#contents > div > a:contains("マイページへ")']]],
           [/bossguildbattle%2FRaidbossBattleResult%2F/, 'list', [
             //['a', '//a[text()="イベントレイドボス応援一覧へ"]'],
             ['aJ', '#contents > div.raidboss_module a[href*="bossguildbattle%2FMissionActionLot"]']]],
           [/bossguildbattle%2FRaidbossHelpResult%2F/, 'a', '//a[text()="レイドボスバトルへ"]'],
+          [['eventRaidBossLoop/RaidBossLoopTop'], 'list', [
+            ['aJ', '#loopBossBtn > div > div.btn_5 > a']]],
           [/bossguildbattle%2FRaidbossTop%2F/, 'list', [
             //['hold'],
             ['form', '//*[@id="contents"]/form'],
@@ -568,9 +572,14 @@
             ['aJ', this.cssmypage]]],
           [/comebackContinuation%2FComebackGacha%2F/, 'aJ', 'a:contains("贈り物ボックスへ")'],
           [/campaign%2FcmStory%2FCmStoryTop%2F/, 'a', '//a[text()="最新ストーリーを進める"]'],
-          [/companion%2FCompanionApplicationEnd%2F/, 'a', '//a[text()="さらに探す"]'],
+          [/companion%2FCompanionApplicationEnd%2F/, 'aJ', this.cssmypage],
           [/companion%2FCompanionMultiApplication%2F/, 'form', '//*[@id="contents"]/div[1]/form'],
           [/companion%2FSearchCompanion%2F/, 'form', '//*[@id="contents"]/form'],
+          [['dungeon/MissionList'], 'aJ', '#contents > div.user_mission_list > ul > li > a:first'],
+          [['dungeon/MissionResult'], 'aJ', '#dungeon_mission_main > div.mission_btn > div > a'],
+          [['dungeon/DungeonTop'], 'aJ', '#dungeon_main_btn > div.button_area > a.btn_top_quest.btn_base'],
+          [['dungeon/RaidbossBattleResult'], 'aJ', '#contents > div > a[href*="%2Fdungeon%2FMissionActionLot%2"]'],
+          [['dungeon/RaidbossTop'], 'aJ', '#contents > div.relative.margin_top_20 > div.box_horizontal.box_spaced.padding_x_10 > a:nth-child(2)'],
           [/eventRaidboss%2FRaidbossBattleResult/, 'list', [
             ['aJ', '#contents a[href*="worldRaidboss%2FRaidbossTop"]'],
             ['aJ', '#contents a[href*="mission%2FMissionActionLot"]']]],
@@ -613,6 +622,8 @@
             ['aJ', this.cssmypage]]],
           [/gacha%2FGachaResult%2F%3FthemeId%3D7/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
           [/gacha%2FGachaResult%2F%3FthemeId%3D8/, "a", '(//div[@class="btn_base block_flex"]/a[img])[last()]'],
+          [['gacha/GachaTop', { gacha_theme_id: 1 }], 'list', [
+            ['aJ', '#yell_gacha_button_section a:last()']]],
           [/gacha%2FitemBox%2FGachaBoxResetConf/, 'aJ', 'a[href*="gacha%2FitemBox%2FDoGachaBoxReset%2F"]'],
           [/gacha%2FitemBox%2FGachaBoxResetEnd/, 'aJ', 'a[href*="gacha%2FitemBox%2FGachaTop%2F"'],
           [/gacha%2FitemBox%2FGachaResult/, 'list', [
@@ -668,6 +679,7 @@
             ['a', '//a[text()="シルバースロット"]'],
             ['a', '//*[@id="global_menu"]/ul/li[4]/div[4]/a']]], //giftbox
           //['hold']]],
+          [['island/DoBackNumberMovie'], 'flashJT', '#container > canvas'],
           [/island%2FIslandRaidbossAssistList%2F/, 'list', [
             ['a', '//ul/li[div[1]/span/span[@class="icon_new"]]//a[text()="助けに行く"]'],
             ['aJ', this.cssmypage]]],
@@ -702,9 +714,14 @@
             ['a', '//a[img[@alt="エクストラステージを探索"]]'],
             ['a', '//a[img[@alt="イベントクエストを探索"]]'],
             ['a', '//a[text()="使用する"]']]],
+          [['mix'], 'list', [
+            //['hold'],
+            ['aJ', '#mix > a:contains("おまかせ強化")']
+          ]],
           [/^mypage%2FIndex/, 'list', [
+            // ギルドバトル開戦まで
             ['aJ', '#header > a:not(:contains("まで")):not([href*="team%2FTeamDetail"]):regexText(.)'],
-            ['aJ', 'a:has(span#battle_name)'], //succ = succ || clickA('//a[span[@id="battle_name"]]');
+            ['aJ', 'a:has(span#battle_name)'], /// ????
             ['aJ', '#boss_appear_btn:has(span) > div > a'], //succ = succ || clickA("//*[@id=\"boss_appear_btn\" and span]/div/a");
             ['funcR', function () {
               //var bp = getXPATH("//*[@id=\"gauge_bp\"]/div[1]").dataset.value;
@@ -738,21 +755,22 @@
 
               if (ap > 10) {
                 return false
+                  || $('a[href*="dungeon%2FDungeonTop%2F"]').clickJ().length > 0
                   //|| $('a[href*="summonHunt%2FSummonHuntTop"]').clickJ().length > 0
                   || (GM_getValue('avalon_unit_battle_start', 0) < Date.now() && $('#index > div > a[href*="unitBattle%2FUnitBattleTop"]').clickJ().length > 0)
                   || $('#index > div > a[href*="island%2FIslandTop"]').clickJ().length > 0
                   //|| clickA('//a[contains(@href, "TowerRaidTop")]');
-                  || clickA("//*[@id=\"quest_btn\"]/a");
+                  || $("#btn_quest > a").clickJ().length > 0;
               }
             }
             ],
-            ['switch'],
+            //['switch'],
             ['hold']]],
           [/mypage%2FLoginBonusResult%2F/, 'list', [
             ['a', '//a[text()="贈り物BOXへ"]'],
             ['aJ', this.cssmypage]]],
           [/mypage%2FLoginBonusSpecial%2F/, 'aJ', 'a[href*="prizeReceive%2FPrizeReceiveTop"]'],
-          [/mission%2FRegionList%2F/, "a", "//div[@class='section_main']/div[2]/div[2]/div/a"], //*[@id="contents"]/div[3]/div[2]/div[2]/div/a
+          [/mission%2FRegionList%2F/, "aJ", '#contents > div.section_main a[href*="%2Fmission%2FMissionActionLot%2F"]'], //*[@id="contents"]/div[3]/div[2]/div[2]/div/a
           [/mission%2FMissionActionLot%2F/, "flash", "//*[@id=\"container\"]"],
           [/mission%2FBossAppear%2F/, "a", "//*[@id=\"contents\"]/div[2]/a"],
           [/mission%2FBossBattleFlash%2F/, "flash", "//*[@id=\"container\"]", 161, 293],
@@ -781,8 +799,8 @@
             ['a', '//*[@id="btn_force"]/a']]],
           [/multiguildbattle%2FMultiGuildbattleSelectTarget%2F/, 'a', '//div[div[text()="ターゲット選択"]]/ul/li[1]//a'],
           [/multiguildbattle%2FMultiGuildbattleTop%2F/, 'a', this.xpathmypage],
-          [/prizeReceive%2FPrizeReceiveTop%2F/, 'hold', [
-            ['formJ', '#contents > form:first'], //succ = succ || clickForm("//*[@id=\"contents\"]/form");
+          [/prizeReceive%2FPrizeReceiveTop%2F/, 'list', [
+            ['formJ', '#contents > form:first:has(input[type="submit"])'], //succ = succ || clickForm("//*[@id=\"contents\"]/form");
             ['aJ', '#contents > ul.btn_tabs.margin_top_10 > li > a:not(:contains("(0)"))'], //    succ = succ || clickA('//*[@id="contents"]/ul[@class="btn_tabs margin_top_10"]/li/a[not(contains(text(), "(0)"))]');
             ['funcR', function () {
               GM_log($('div.txt_block_center:contains("所持武具が上限数に達しています")'));
@@ -1124,6 +1142,7 @@
           ],
           [/battleTower%2FBattleTowerBossConf%2F/, "func", this.handleBattleTower],
           [/battleTower%2FBattleTowerBossResult%2F/, "func", this.handleBattleResult],
+          [['campaignSummary/Top'], 'aJ', this.cssmypage],
           [/card%2FBulkCardSell\b/, 'a', this.xpathmypage],
           [/card%2FBulkCardSellConfirm%2F/, 'form', '//*[@id="main"]/div/form'],
           [/card%2FBulkCardSellList%2F/, 'a', '//a[text()="Nカードを一括で売却"]'],
@@ -1149,6 +1168,7 @@
           [/cave%2FItemSelect/, "form", "//*[@id=\"main\"]/form"],
           [/cave%2FQuestConfirm/, "a", "//*[@id=\"main\"]/div[3]/a"],
           [/cave%2FQuestResult%2F/, 'aJ', 'a[href*="cave%2FIndex"]:last()'],
+          [['comebackLogin/RewardHistory'], 'aJ', this.cssmypage],
           [/companion%2FCompanionApprovalList%2F/, "form", "//*[@id=\"wrap_object\"]/div[1]/div/form"],
           [/CompanionApplicationAccept$/, "form", "//*[@id=\"main\"]/section/div/form"],
           [/errorCatch%2FError%2F%3Ferror%3D301/, 'aJ', this.cssmypage],
@@ -1161,9 +1181,14 @@
             }, 1000);
           }
           ],
+          [['eventRaidBossLoop/RaidBossLoopBattleResult'], 'aJ', '#loopBossBtn > div > div.btn_5 > a'],
+          [['eventRaidBossLoop/RaidbossLoopBattleSwf'], 'flashJT', '#stage'],
           [/^eventBigRaidBoss%2FBigRaidBossTop/, 'list', [
             ['aJ', '#bigRaidBtn > div:nth-child(2) > a'],
             ['aJ', '#bigRaidBtn > div:nth-child(1) > a']]],
+          [['eventRaidBossLoop/RaidBossLoopTop'], 'list', [
+            ['aJ', '#loopBossBtn > div > div.btn_5 > a'],
+            ['aJ', '#loopBossBtn > div > a']]],
           [/^eventStageRaidBoss%2FEventRule%2F%3FfirstAccess%3D1/, 'aJ', '#main > a'], //'a[href*="event%2FDoSetClickCount"]'],
           [/^eventStageRaidBoss%2FWishComplyTop/, 'aJ', 'a[href*="eventStageRaidBoss%2FDoMissionExecutionCheck"]'],
           [/^eventTower%2FEventQuestResult%2F/, 'list', [
@@ -1171,6 +1196,12 @@
             ['aJ', 'a[href*="DoEventQuestExecutionCheck"]'],
             ['aJ', 'a:regex(href, event[a-zA-Z0-9]*%2FMissionList)']]],
           [/^event[a-zA-Z0-9]*%2FEventTop/, 'list', [
+            ['funcR', () => {
+              if ($('#raid_boss_top > div > div > div.btn_battle > a > div').text().match(/(\d+)/)[1] >= 5) {
+                return $('#raid_boss_top > div > div > div.btn_battle > a').clickJ().length > 0
+              }
+              return false;
+            }],
             ['funcR', () => { $('#chengeApproval2 > div.relative > div.skip_off').clickJ(); }],
             ['funcR', function () {
               //#eventDeck > ul.event_chara > li > div
@@ -1924,8 +1955,9 @@
             ['aJ', 'a[href*="arena%2FDoMissionExecutionCheck"]']]],
           //'func', handleArenaMissionRes],
           [/arena%2FTop/, 'list', [
+            //['hold'],//#containerBox > div.switchs > div > div:nth-child(2) > div:nth-child(1) > a
+            ['aJ', '#containerBox > div.switchs > div.switch_body > div.switch_content > div > a[href*="arena%2FChoiceCoinItemTop"]:regexText(\\s?0*[1-9][0-9]*\\s?)'],
             //['hold'],
-            ['aJ', '#containerBox > div > a[href*="arena%2FChoiceCoinItemTop"]:regexText(\\s?0*[1-9][0-9]*\\s?)'],
             ['a', '//div[@id="bgbox_wrapper"]//a[contains(@href, "Arena' + (Math.random() < 0.5 ? '' : 'Sub') + 'BattleTop")]'],
             ['a', "//div[@class='event_btn']/a"],
             ['flash', '//*[@id="container"]']]],
@@ -2771,14 +2803,88 @@
         //alert("oops");
       }
     },
-    "12024505": {
+    "12024505": { // furyou yuugi
       mypage_url: "http://g12024505.sp.pf.mbga.jp/",
+      rotation_time: 10,
+      cssmypage: "#global_header > li.btn-mypage > a",
       get_actions() {
         return [
           [/^:::$/, "aJ", "#all > div.main_visual > div > a"],
+          [['arena'], 'aJ', '#arena a[href*="2Farena%2Fbattle%3F"]'],
+          [['duel/duel_result'], 'aJ', '#duel > a'],
+          [[/^duel\/duel_conf/], 'aJ', '#all > div.o-talign-c.o-mt-10 > a'],
+          [['duel/duelists'], 'aJ', '#all > div > div.child.o-w-60.o-fs-xsmall > div > a[href*="duel%2Fduel_conf%2F"]'],
+          [[/^evo\/confirm\//], 'aJ', '#mix > a'],
+          [['evo/result'], 'aJ', '#mix > a:contains("続けて限界突破する")'],
+          //[["gacha"], 'list', [
+          //  ['formJ', 'form[name="normal_gacha_id_6"]']]],
+          [[/^gacha(?:$|\/(?:gacha_draw_result|index)\/)/], 'list', [
+            ['aJ', 'a[href*="%2Fgacha%2Fgacha_draw%2F"]:last'],
+            ['aJ', '#gacha > a:contains("ガチャチケットはこちら")'],
+            ['aJ', 'a:contains("ガチャトップへ")']]],
+          [['login_bonus/campaign/13'], 'aJ', this.cssmypage],
+          [['mafia/login_bonus_exec/18/quest'], 'flashJT', 'canvas'],
+          [[/^mix(\/index|$)/], 'list', [
+            ['hold'],
+            ['aJ', '#mix > a:contains("おまかせ強化")'],
+          ]],
+          [[/^mix(\/confirm\/0\/1\/1\/1\/2\/1\/1\/1\/0)/], 'aJ', '#mix > a'], // 強化する
+          [['mix/result'], 'aJ', '#mix > a:contains("続けて強化する")'],
           [/^mypage/, "list", [
+            ['aJ', 'div.js-popup > div > ul > li > a:contains("未受け取りレイド報酬があります")'],
+            ['aJ', 'div.js-popup > div > ul > li > a:contains("チームに新しいメンバーが加わりました")'],
+            //['hold'],
+            ['aJ', '#all > div.main_screen > div.btn-arenaWrap > div > a:contains("抗争中")'],
             ["aJ", "#all > div.main_screen > div.btn-bottomWrap > div.btn-quest > a"]]],
-          [/^quest/, 'aJ', $('#quest > div.quest_list > a').first()],
+          [[/present($|\/index)/], 'list', [
+            ['aJ', '#gift > a:contains("一括受け取り")']]],
+          [['present/batch_receive'], 'list', [
+            ['aJ', '#gift > a:contains("一括受け取り")'],
+            ['aJ', this.cssmypage]]],
+          [['quest'], 'list', [
+            ['aJ', '#quest > ul > li > a:contains("期間限定")'],
+            ['aJ', '#quest > div.quest_list > a:first']]],
+          [['quest/index/1'], 'list', [
+            ['aJ', '#quest > div.quest_list > a:first']]],
+          [['quest/boss_battle_result/0'], 'list', [
+            ['aJ', '#quest > a:contains("次のエリアへ進む")'],
+            ['aJ', '#quest > a:contains("クエストを進める")']]],
+          [/^quest%2Fquest_flash%2F/, 'funcR', () => {
+            tryUntil(() => {
+              return $('canvas').touchFlash().length > 0
+            })
+          }],
+          [/^quest%2Fresult%2F/, 'list', [
+            //['hold'],
+            //['aJ', ''],
+            ['aJ', '#quest > div.raid_rescue > a.new'],
+            ['aJ', '#quest > a:contains("クエストを続ける")'],
+            ['aJ', '#quest > a:contains("次のエリアへ進む")'],
+            ['aJ', '#quest > a:contains("クエストを進める")'],
+            ['hold', '#quest > a:first()']]],
+          [[/^quest\/result_empty_ap\//], 'list', [
+            ['aJ', 'div.raid_rescue > a.btn-resque.new']]],
+          [/^quest%2Fboss_appear%2F/, 'aJ', '#quest > div > a:has(img[src*="attack_0bp_long_on.png"])'],
+          [['raid'], 'list', [
+            ['aJ', '#raid > div > a:contains("レイド結果あり")'],
+            ['aJ', '#raid > a:contains("クエストで探す")']]],
+          [['raid/get_reward_all'], 'list', [
+            ['aJ', '#raid > a:contains("ギフトを確認")']]],
+          [/^raid%2Fbattle_top%2F/, 'list', [
+            ['aJ', '#raid > div > a:has(img[src*="attack_0bp_long_on.png"])'],
+            ['aJ', '#raid > div > a:has(img[src*="rescue_02.png"])'],
+            ['aJ', '#raid > div.raid_rescue > a.btn-resque.new'],
+            ['aJ', '#raid > a:contains("レイドボスを探しに行く")'],
+            ['aJ', '#raid > a:contains("今はクエストに行く")']]],
+          [['raid/index'], 'list', [
+            ['aJ', '#raid > div > a:contains("レイド結果あり")'],
+            ['aJ', '#raid > a:contains("クエストで探す")']]],
+          [['raid/request_list'], 'list', [
+            ['aJ', '#raid > h3:contains("New") + div.o-col-free.o-w-95.o-matb-10 > div.child.o-w-70.o-pr-5 > div.o-float-c > a']]],
+          [/^raid%2Fboss_appear_flash%/, 'flashJT', 'canvas'],
+          [/^raid%2Fhelp_request%2F/, 'aJ', '#raid > ul > li.child.right > a[href*="quest_exec"]'],
+          [/^raid%2Fresult%2F/, 'aJ', '#raid > a:contains("レイドボスを探しに行く")'],
+          [/_(flash|swf)%/, 'flashJT', 'canvas'],
           [/xxxxxxxxxxxxxxxxxxxxx/]
         ];
       }
