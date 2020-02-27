@@ -575,7 +575,10 @@
           [/companion%2FCompanionApplicationEnd%2F/, 'aJ', this.cssmypage],
           [/companion%2FCompanionMultiApplication%2F/, 'form', '//*[@id="contents"]/div[1]/form'],
           [/companion%2FSearchCompanion%2F/, 'form', '//*[@id="contents"]/form'],
-          [['dungeon/MissionList'], 'aJ', '#contents > div.user_mission_list > ul > li > a:first'],
+          [['dungeon/MissionBossTop'], 'list', [
+            ['hold'],
+            ['aJ', '#mission_boss_battle_boss_info > div.battle_btn > a']]],
+          [['dungeon/MissionList'], 'aJ', '#contents > div.user_mission_list > ul > li > a:regexText("クエスト\\d"):first'],
           [['dungeon/MissionResult'], 'aJ', '#dungeon_mission_main > div.mission_btn > div > a'],
           [['dungeon/DungeonTop'], 'aJ', '#dungeon_main_btn > div.button_area > a.btn_top_quest.btn_base'],
           [['dungeon/RaidbossBattleResult'], 'aJ', '#contents > div > a[href*="%2Fdungeon%2FMissionActionLot%2"]'],
@@ -613,6 +616,7 @@
           //[/gacha%2FGachaTop%2F%3FthemeId%3D2/,
           //[/gacha%2FGachaTop(%2F)?%3FthemeId%3D7\b/, "a", "(//div[contains(@class, 'btn_base block_flex')]//a)[last()]"],
           //[/gacha%2FGachaTop%2F%3FthemeId%3D[0-9]/, 'sth', '//form//input[@value="ガチャをする" and @onclick="submit()"]'],
+          [['gacha/DoPlaySwfGachaResult'], 'flashJT', '#container > convas'],
           [/gacha%2FGacha(?:Result|Top)(?:%2F)?(?:%3FthemeId%3D[0-9]+\S*)?$/, 'list', [
             ['aJ', 'form[name="gacha"] input[name="isMaxValue"]'],
             ['formJ', 'form[name="gacha"]'],
@@ -1962,6 +1966,7 @@
             ['a', "//div[@class='event_btn']/a"],
             ['flash', '//*[@id="container"]']]],
           [/arrangement%2FArrangementEdit%2F/, 'func', function () {
+            return true;
             //clickS('//div[text()="自動割り振り"]');
             clickS('//*[@id="reminderPointData"]/div/div[1]/div[2]/div[2]');
             setInterval(function () {
@@ -2509,7 +2514,7 @@
             ['flash', '//*[@id="container"]']]],
           [['mapQuest/AreaClearResult'], 'aJ', 'a:contains("イベントTOP")'],
           [['mapQuest/ChangeCardList'], 'func', function () {
-            //return;
+            return;
             var atk = $('#getNewCard > div.box_horizontal.margin_x_20.margin_bottom_10 > div.box_extend.txt_left.no_line_space > div:nth-child(4) > div.attack.box_extend.txt_right.margin_right_10').text(),
               idxmin,
               minatk = -1, //debug
@@ -2607,7 +2612,7 @@
             ['a', '//a[text()="カード図鑑報酬が受け取れます"]'],
             ['a', '//a[text()="マテリアル図鑑報酬が受け取れます"]'],
             ['a', '//a[text()="トレジャーに出発できます"]'],
-            ['a', '//a[text()="MPが割り振れます"]'],
+            //['a', '//a[text()="MPが割り振れます"]'],
             ['a', '//a[text()="無料ガチャが出来ます"]'],
             ['a', '//a[text()="トレジャーの結果が出ています"]'],
             ['aJGMV_Time', 'rag_present_timer', 30 * 60 * 1000, 'a:contains("贈り物が届いてます")'],
@@ -2651,6 +2656,8 @@
             ['switch']]],
           [/newMission%2FAreaList%2F/, 'aJ', $('a[href*="newMission%2FMissionList%2F"]').last()],
           [/newMission%2FBossAppear/, 'aJ', 'a[href*="newMission%2FBossBattleFlash%2F"]'],
+          [['newMission/BossBattleFlash'], 'flashJT', '#container > canvas', 93, 344],
+          [['newMission/BossBattleResult'], 'aJ', '#js_StoryTalkNaviSkip'],
           [/newMission%2FMissionDetail%2F/, 'flashJT', '#execBtn'],
           [/newMission%2FMissionList%2F/, 'aJ', 'a[href*="newMission%2FMissionDetail%2F"]'],
           [/mypage%2FMaterialCollection%2F/, 'list', [
@@ -2828,14 +2835,16 @@
             ['hold'],
             ['aJ', '#mix > a:contains("おまかせ強化")'],
           ]],
-          [[/^mix(\/confirm\/0\/1\/1\/1\/2\/1\/1\/1\/0)/], 'aJ', '#mix > a'], // 強化する
+          [[/^mix\/confirm(?:_item)?\//], 'aJ', '#mix > a'], // 強化する
           [['mix/result'], 'aJ', '#mix > a:contains("続けて強化する")'],
           [/^mypage/, "list", [
             ['aJ', 'div.js-popup > div > ul > li > a:contains("未受け取りレイド報酬があります")'],
             ['aJ', 'div.js-popup > div > ul > li > a:contains("チームに新しいメンバーが加わりました")'],
+            ['aJ', 'div.js-popup > div > ul > li > a:contains("戦闘力ボーナスがあります")'],
             //['hold'],
             ['aJ', '#all > div.main_screen > div.btn-arenaWrap > div > a:contains("抗争中")'],
             ["aJ", "#all > div.main_screen > div.btn-bottomWrap > div.btn-quest > a"]]],
+          [['power_bonus'], 'aJ', this.cssmypage],
           [[/present($|\/index)/], 'list', [
             ['aJ', '#gift > a:contains("一括受け取り")']]],
           [['present/batch_receive'], 'list', [
