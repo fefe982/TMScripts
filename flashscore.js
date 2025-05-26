@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2024-08-08
+// @version      2025-05-26_18-10
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://gitee.com/yongxinwang82/TMScripts/raw/master/flashscore.js
@@ -594,6 +594,23 @@
         "Zheng Y.": "郑雨",
         "Zhou H. D.": "周昊东",
     }
+    function replace_name_player(p, href) {
+        let m = href.match(/\/player\/(.*)\/(.*)\//)
+        console.log(m)
+        if (!m) {
+            return false
+        }
+        let key = m[1] + "/" + m[2]
+        let r = full_names[key]
+        if (!r) {
+            r = full_names[m[1]]
+        }
+        if (!r) {
+            r = m[1].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+        }
+        p.textContent = p.textContent + " (" + r + ")";
+        return true
+    }
     function replace_name_match(p, match, href) {
         let v = GM_getValue(match)
         console.log(match, v)
@@ -615,20 +632,7 @@
             }
             return false
         }
-        let m = h.match(/\/player\/(.*)\/(.*)\//)
-        if (!m) {
-            return false
-        }
-        let key = m[1] + "/" + m[2]
-        let r = full_names[key]
-        if (!r) {
-            r = full_names[m[1]]
-        }
-        if (!r) {
-            r = m[1].split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-        }
-        p.textContent = p.textContent + " (" + r + ")";
-        return true
+        return replace_name_player(p, h);
     }
     function replace_name(p, sport) {
         if (p.nodeType == 1 && (p.childNodes.length != 1 || p.childNodes[0].nodeType != 3)) {
@@ -689,6 +693,14 @@
         let children = document.getElementsByClassName("participant__participantName");
         for (let p of children) {
             replace_name(p, sport);
+        }
+    }
+    if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
+        let children = document.getElementsByClassName("leftMenu__text");
+        for (let p of children) {
+            console.log(p);
+            console.log(p.parentElement.href);
+            replace_name_player(p, p.parentElement.href);
         }
     }
     let observer;
