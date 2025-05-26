@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-26_18-10
+// @version      2025-05-26_21-11
 // @description  try to take over the world!
 // @author       Yongxin Wang
-// @downloadURL  https://gitee.com/yongxinwang82/TMScripts/raw/master/flashscore.js
-// @updateURL    https://gitee.com/yongxinwang82/TMScripts/raw/master/flashscore.js
+// @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
+// @updateURL    https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
 // @match        https://www.flashscore.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=flashscore.com
 // @grant        GM_getValue
