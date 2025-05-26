@@ -741,4 +741,13 @@
     });
 
     observer.observe(document.body, { subtree: true, childList: true });
+    for (let key of GM_listValues()) {
+        let v = GM_getValue(key);
+        if (Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
+            console.log(`Deleting old value for key: ${key}`);
+            GM_deleteValue(key);
+        } else {
+            console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t)/1000/60/60} hours old`);
+        }
+    }
 })();
