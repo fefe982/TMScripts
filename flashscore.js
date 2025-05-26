@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-26_21-11
+// @version      2025-05-27_06-16
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -310,12 +310,49 @@
         }
     }
     let full_names = {
+        "chen-boyang": "陈柏阳",
+        "chen-yufei": "陈雨菲",
+        "cheng-xing": "程星",
+        "feng-yanzhe": "冯彦哲",
+        "gao-fangjie": "高昉洁",
+        "han-yue": "韩悦",
+        "huang-di": "黄荻",
+        "jia-yifan": "贾一凡",
+        "jiang-xinyu": "蒋欣玗",
+        "lee-chia-hao": "李佳豪",
+        "li-yijing": "李怡婧",
+        "li-shifeng": "李诗沣",
+        "liang-weikeng": "梁伟铿",
+        "liu-sheng-shu": "刘圣书",
+        "liu-yang": "刘阳",
+        "liu-yi": "刘毅",
+        "lu-guangzu": "陆光祖",
+        "luo-xumin": "罗徐敏",
+        "mitsuhashi-kenya": "三橋健也",
+        "okamura-hiroki": "岡村洋輝",
+        "shi-yuqi": "石宇奇",
+        "sung-shuo-yun": "宋硕芸",
+        "tan-ning": "谭宁",
+        "te-rigele": "特日格乐",
+        "wang-chang": "王昶",
+        "wang-xinyu-2001": "王欣瑜",
+        "wang-zhiyi": "王祉怡",
+        "watanabe-koki": "渡邉航貴",
+        "wei-yaxin": "魏雅欣",
+        "wu-fang-hsien": "吴芳嫺",
+        "yeung-nga-ting": "杨雅婷",
+        "yeung-pui-lam": "杨霈霖",
+        "yu-chien-hui": "余芊慧",
+        "yuan-yue-1998": "袁悦",
+        "yunchaokete-bu": "布云朝克特",
+        "zhang-chi": "张驰",
         "zhang-shuai": "张帅",
+        "zhang-shuxian": "张殊贤",
         "zhang-zhizhen": "张之臻",
         "zheng-qinwen": "郑钦文",
         "zheng-saisai": "郑赛赛",
+        "zhou-yi": "周意",
         "Aoyama S.": "青山修子",
-        "Bu Y.": "布云朝克特",
         "Chong E.": "张玮桓",
         "Gao X.": "高馨妤",
         "Guo H.": "郭涵煜",
@@ -324,7 +361,6 @@
         "Hozumi E.": "穂積絵莉",
         "Hsieh S-W.": "谢淑薇",
         "Ishii S.": "石井さやか",
-        "Jiang X.": "蒋欣玗",
         "Jin Y.": "金雨全",
         "Kato M.": "加藤未唯",
         "Li Z.": "李泽楷",
@@ -339,23 +375,18 @@
         "Shi H.": "石瀚",
         "Sun F.": "孙发京",
         "Tang Q.": "汤千慧",
-        "Te R.": "特日格乐",
         "Uchijima M.": "内島萌夏",
         "Wang A.": "王傲然",
         "Wang M.": "王美玲",
         "Wang Q.": "王蔷",
-        "Wang Xin.": "王欣瑜",
         "Wang Xiy.": "王曦雨",
         "Wang Y.": "王雅繁",
         "Wei S.": "韦思佳",
         "Wong C.": "黄泽林",
-        "Wu F.": "吴芳嫺",
         "Wu Y.": "吴易昺",
         "Xu Y.": "徐一幡",
         "Yang Y. Y.": "杨亚依",
         "Yao X.": "姚欣辛",
-        "Yuan Y.": "袁悦",
-        "Zhou Y.": "周意",
         "Chan B. H. W.": "陈颢桦",
         "Chang Y.": "张玉安",
         "Chen Meng": "陈梦",
@@ -436,32 +467,27 @@
         "Baek H. N.": "白荷娜",
         "Chan N. G.": "詹又蓁",
         "Chang C. H.": "张净惠",
-        "Chen B. Y.": "陈柏阳",
         "Chen C. K.": "陈政宽",
         "Chen F. H.": "陈芳卉",
         "Chen Q. C.": "陈清晨",
         "Chen S. F.": "陈胜发",
         "Chen Xu Jun": "陈旭君",
         "Chen Z. R.": "陈子睿",
-        "Cheng X.": "程星",
         "Cheng Y.": "郑育沛",
         "Chi Y. J.": "戚又仁",
         "Chiang C.": "江建苇",
         "Chiu H. C.": "邱相榤",
         "Chiu P.": "邱品蒨",
         "Chou T. Ch.": "周天成",
-        "Gao F. J.": "高昉洁",
         "Gunawan J.": "吴英伦",
         "Guo R. H.": "郭若涵",
         "Guo X. W.": "郭新娃",
-        "Han Y.": "韩悦",
         "Hatano R.": "秦野陸",
         "He J. T.": "何济霆",
         "Higashino A.": "東野有紗",
         "Hirokami R.": "廣上瑠依",
         "Hoki T.": "保木卓朗",
         "Hu Ling F.": "胡绫芳",
-        "Huang D.": "黄荻",
         "Huang Y. K.": "黄郁岂",
         "Huang Y. Q.": "黄雅琼",
         "Hung E-T.": "洪恩慈",
@@ -471,7 +497,6 @@
         "Ishikawa K.": "石川心菜",
         "Iwanaga R.": "岩永鈴",
         "Jeon H. J.": "全奕陈",
-        "Jia Y. F.": "贾一凡",
         "Jiang Z. B.": "蒋振邦",
         "Jheng Y. C.": "郑宇倢",
         "Kaneko Y.": "金子祐樹",
@@ -485,7 +510,6 @@
         "Konishi H.": "小西春七",
         "Kurihara A.": "栗原あかり",
         "Lee C. C.": "李芷蓁",
-        "Lee C. H.": "李佳豪",
         "Lee C. H. R.": "李晋熙",
         "Lee C. Y.": "李卓耀",
         "Lee F. C": "李芳至",
@@ -495,11 +519,8 @@
         "Lee Y. L.":"李幽琳",
         "Lei L. X.": "雷兰曦",
         "Leung Y. Y.": "梁悦仪",
-        "Li Y. J.": "李怡婧",
-        "Li S. F.": "李诗沣",
         "Li W. M.": "李汶妹",
         "Liang T. Y.": "梁庭瑜",
-        "Liang W. K.": "梁伟铿",
         "Liao J.-F.": "廖倬甫",
         "Lin Bing-Wei": "林秉纬",
         "Lin C.": "林芷均",
@@ -509,18 +530,13 @@
         "Lin Y. C.": "林煜杰",
         "Liu K. H.": "刘广珩",
         "Liu L.": "刘亮",
-        "Liu S. S.": "刘圣书",
-        "Liu Y.": "刘毅",
         "Lo S. Y. H.": "卢善恩",
         "Lu C. Y.": "卢敬尧",
-        "Lu G. Z.": "陆光祖",
         "Lu Ming Che": "卢明哲",
-        "Luo X. M.": "罗徐敏",
         "Matsumoto M.": "松本麻佑",
         "Matsutomo M.": "松友美佐紀",
         "Matsuyama N.": "松山奈未",
         "Midorikawa H.": "緑川大輝",
-        "Mitsuhashi K.": "三橋健也",
         "Miyazaki T.": "宮崎友花",
         "Nagahara W.": "永原和可那",
         "Nakanishi K.": "中西貴映",
@@ -533,14 +549,12 @@
         "Nishimoto K.": "西本拳太",
         "Obayashi T.": "大林拓真",
         "Ohori A.": "大堀彩",
-        "Okamura H.": "岡村洋輝",
         "Okuhara N.": "奥原希望",
         "Pai Yu P.": "白驭珀",
         "Pui P. F.": "裴鹏锋",
         "Ren X. Y.": "任翔宇",
         "Saito N.": "齋藤夏",
         "Sato A.": "佐藤灯",
-        "Shi Y. Q.": "石宇奇",
         "Shibata K.": "柴田一樹",
         "Shida C.": "志田千陽",
         "Shin S. C.": "申昇瓒",
@@ -548,18 +562,15 @@
         "Su L. Y.": "苏力扬",
         "Suizu M.": "水津愛美",
         "Sun Y. H.": "孙昱瑆",
-        "Sung S. Y.": "宋硕芸",
         "Sung Y.": "宋祐媗",
         "Tai T. Y.": "戴资颖",
         "Takahashi K.": "高橋洸士",
-        "Tan N.": "谭宁",
         "Tanaka Y.": "田中湧士",
         "Tang Chun M.": "邓俊文",
         "Teng Ch. H.": "邓淳薰",
         "Tsai R. L.": "蔡渃琳",
         "Tse Y. S.": "谢影雪",
         "Tsuneyama K.": "常山幹太",
-        "Wang C.": "王昶",
         "Wang Chi-Lin": "王齐麟",
         "Wang P.": "王柏崴",
         "Wang T. G.": "王汀戈",
@@ -567,11 +578,8 @@
         "Wang Y. Q.": "汪郁乔",
         "Wang Y. Z.": "王眱祯",
         "Wang Z. X.": "王正行",
-        "Wang Z. Y.": "王祉怡",
-        "Watanabe K.": "渡邉航貴",
         "Watanabe Y.": "渡辺勇大",
         "Wei C. W.": "魏俊纬",
-        "Wei Y. X.": "魏雅欣",
         "Weng H. Y.": "翁泓阳",
         "Wu H.": "吴轩毅",
         "Xie H. N.": "谢浩南",
@@ -583,18 +591,16 @@
         "Yang Po-Hsuan": "杨博轩",
         "Ye H. W.": "叶宏蔚",
         "Yen Yu L.": "林彦妤",
-        "Yeung Nga T.": "杨雅婷",
-        "Yeung P. L.": "杨霈霖",
-        "Yu C. H.": "余芊慧",
         "Zeng W. H.": "曾维瀚",
-        "Zhang C.": "张驰",
-        "Zhang S. X.": "张殊贤",
         "Zhang Y. M.": "张艺曼",
         "Zheng S. W.": "郑思维",
         "Zheng Y.": "郑雨",
         "Zhou H. D.": "周昊东",
     }
     function replace_name_player(p, href) {
+        if (p.textContent.endsWith(")")) {
+            return true;
+        }
         let m = href.match(/\/player\/(.*)\/(.*)\//)
         console.log(m)
         if (!m) {
@@ -659,50 +665,6 @@
         }
     }
     let sport = "";
-    if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-        if (window.location.href.indexOf("#") < 0) {
-            return
-        }
-        let m = window.location.href.match(/match\/[^/]+\/[^/]+/)
-        let key = m[0]
-        console.log(m[0])
-        let val = {t: Date.now()}
-        let children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
-        console.log(children)
-        for (let p of children) {
-            console.log(p)
-            val[p.textContent] = p.attributes.href.value
-        }
-        console.log(val)
-        GM_setValue(key, val)
-        if (GM_getValue("navback")) {
-            GM_deleteValue("navback")
-            history.back()
-        }
-    }
-    if (window.location.href.startsWith("https://www.flashscore.com/match/") ||
-        window.location.href.startsWith("https://www.flashscore.com/draw/") ||
-        window.location.href.startsWith("https://www.flashscore.com/player/") ||
-        window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
-        window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
-        window.location.href.startsWith("https://www.flashscore.com/tennis/")) {
-        let sport_eles = document.body.querySelectorAll("body > sport");
-        console.log(sport_eles.length);
-        sport = sport_eles[0].getAttribute("name");
-        console.log(sport);
-        let children = document.getElementsByClassName("participant__participantName");
-        for (let p of children) {
-            replace_name(p, sport);
-        }
-    }
-    if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
-        let children = document.getElementsByClassName("leftMenu__text");
-        for (let p of children) {
-            console.log(p);
-            console.log(p.parentElement.href);
-            replace_name_player(p, p.parentElement.href);
-        }
-    }
     let observer;
     observer = new MutationObserver((mutations) => {
         for (let mutation of mutations) {
@@ -712,6 +674,11 @@
             for (let node of mutation.addedNodes) {
                 if (node.nodeType != 1) {
                     continue;
+                }
+                let children = document.getElementsByClassName("leftMenu__text");
+                for (let p of children) {
+                    console.log("mutate left menu", p, p.parentElement.href);
+                    replace_name_player(p, p.parentElement.href);
                 }
                 if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
                     let children = node.getElementsByClassName("event__participant");
@@ -753,6 +720,52 @@
     });
 
     observer.observe(document.body, { subtree: true, childList: true });
+    if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
+        if (window.location.href.indexOf("#") < 0) {
+            return
+        }
+        let m = window.location.href.match(/match\/[^/]+\/[^/]+/)
+        let key = m[0]
+        console.log(m[0])
+        let val = {t: Date.now()}
+        let children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
+        console.log(children)
+        for (let p of children) {
+            console.log(p)
+            val[p.textContent] = p.attributes.href.value
+        }
+        console.log(val)
+        GM_setValue(key, val)
+        if (GM_getValue("navback")) {
+            GM_deleteValue("navback")
+            history.back()
+        }
+    }
+    if (window.location.href.startsWith("https://www.flashscore.com/match/") ||
+        window.location.href.startsWith("https://www.flashscore.com/draw/") ||
+        window.location.href.startsWith("https://www.flashscore.com/player/") ||
+        window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
+        window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
+        window.location.href.startsWith("https://www.flashscore.com/tennis/")) {
+        let sport_eles = document.body.querySelectorAll("body > sport");
+        console.log(sport_eles.length);
+        sport = sport_eles[0].getAttribute("name");
+        console.log(sport);
+        let children = document.querySelectorAll(".participant__participantName:not(:has(.participant__participantName))");
+        for (let p of children) {
+            if (p.tagName == "A") {
+                replace_name_player(p, p.href);
+            } else {
+                replace_name(p, sport);
+            }
+        }
+        children = document.getElementsByClassName("leftMenu__text");
+        for (let p of children) {
+            console.log(p);
+            console.log(p.parentElement.href);
+            replace_name_player(p, p.parentElement.href);
+        }
+    }
     for (let key of GM_listValues()) {
         let v = GM_getValue(key);
         if (Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
