@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-27_06-16
+// @version      2025-05-27_17-47
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -311,23 +311,30 @@
     }
     let full_names = {
         "chen-boyang": "陈柏阳",
+        "chen-fanghui": "陈芳卉",
         "chen-yufei": "陈雨菲",
         "cheng-xing": "程星",
         "feng-yanzhe": "冯彦哲",
         "gao-fangjie": "高昉洁",
+        "guo-xinwa": "郭新娃",
         "han-yue": "韩悦",
+        "hsu-wen-chi": "许玟琪",
+        "hu-ling-fang": "胡绫芳",
         "huang-di": "黄荻",
+        "jheng-yu-chieh": "郑宇倢",
         "jia-yifan": "贾一凡",
         "jiang-xinyu": "蒋欣玗",
         "lee-chia-hao": "李佳豪",
         "li-yijing": "李怡婧",
         "li-shifeng": "李诗沣",
         "liang-weikeng": "梁伟铿",
+        "liu-kuang-heng": "刘广珩",
         "liu-sheng-shu": "刘圣书",
         "liu-yang": "刘阳",
         "liu-yi": "刘毅",
         "lu-guangzu": "陆光祖",
         "luo-xumin": "罗徐敏",
+        "midorikawa-hiroki": "緑川大輝",
         "mitsuhashi-kenya": "三橋健也",
         "okamura-hiroki": "岡村洋輝",
         "shi-yuqi": "石宇奇",
@@ -340,6 +347,8 @@
         "watanabe-koki": "渡邉航貴",
         "wei-yaxin": "魏雅欣",
         "wu-fang-hsien": "吴芳嫺",
+        "yamashita-kyohei": "山下恭平",
+        "yang-po-han": "杨博涵",
         "yeung-nga-ting": "杨雅婷",
         "yeung-pui-lam": "杨霈霖",
         "yu-chien-hui": "余芊慧",
@@ -468,7 +477,6 @@
         "Chan N. G.": "詹又蓁",
         "Chang C. H.": "张净惠",
         "Chen C. K.": "陈政宽",
-        "Chen F. H.": "陈芳卉",
         "Chen Q. C.": "陈清晨",
         "Chen S. F.": "陈胜发",
         "Chen Xu Jun": "陈旭君",
@@ -481,24 +489,20 @@
         "Chou T. Ch.": "周天成",
         "Gunawan J.": "吴英伦",
         "Guo R. H.": "郭若涵",
-        "Guo X. W.": "郭新娃",
         "Hatano R.": "秦野陸",
         "He J. T.": "何济霆",
         "Higashino A.": "東野有紗",
         "Hirokami R.": "廣上瑠依",
         "Hoki T.": "保木卓朗",
-        "Hu Ling F.": "胡绫芳",
         "Huang Y. K.": "黄郁岂",
         "Huang Y. Q.": "黄雅琼",
         "Hung E-T.": "洪恩慈",
         "Hsieh P. S.": "谢沛珊",
-        "Hsu W. Ch.": "许玟琪",
         "Hsu Y. H.": "许尹鏸",
         "Ishikawa K.": "石川心菜",
         "Iwanaga R.": "岩永鈴",
         "Jeon H. J.": "全奕陈",
         "Jiang Z. B.": "蒋振邦",
-        "Jheng Y. C.": "郑宇倢",
         "Kaneko Y.": "金子祐樹",
         "Kato Y.": "加藤佑奈",
         "Kawazoe M.": "川添麻依子",
@@ -528,7 +532,6 @@
         "Lin H. T.": "林湘缇",
         "Lin J. Y.": "林芝昀",
         "Lin Y. C.": "林煜杰",
-        "Liu K. H.": "刘广珩",
         "Liu L.": "刘亮",
         "Lo S. Y. H.": "卢善恩",
         "Lu C. Y.": "卢敬尧",
@@ -536,7 +539,6 @@
         "Matsumoto M.": "松本麻佑",
         "Matsutomo M.": "松友美佐紀",
         "Matsuyama N.": "松山奈未",
-        "Midorikawa H.": "緑川大輝",
         "Miyazaki T.": "宮崎友花",
         "Nagahara W.": "永原和可那",
         "Nakanishi K.": "中西貴映",
@@ -587,7 +589,6 @@
         "Yamaguchi A.": "山口茜",
         "Yang C. T.": "杨景惇",
         "Yang C. Y.": "杨筑云",
-        "Yang P. H.": "杨博涵",
         "Yang Po-Hsuan": "杨博轩",
         "Ye H. W.": "叶宏蔚",
         "Yen Yu L.": "林彦妤",
@@ -602,7 +603,6 @@
             return true;
         }
         let m = href.match(/\/player\/(.*)\/(.*)\//)
-        console.log(m)
         if (!m) {
             return false
         }
@@ -618,6 +618,10 @@
         return true
     }
     function replace_name_match(p, match, href) {
+        let n = p.textContent
+        if (n.endsWith(")")) {
+            return true;
+        }
         let v = GM_getValue(match)
         console.log(match, v)
         if (!v) {
@@ -628,7 +632,6 @@
             }
             return false
         }
-        let n = p.textContent
         let h = v[n]
         if (h == null) {
             console.log(href)
@@ -652,7 +655,6 @@
             let match = p.parentNode.querySelector("a.eventRowLink")
             if (match != null) {
                 let m = match.href.match(/match\/[^/]+\/[^/]+/)
-                let key = m[0]
                 console.log(m[0])
                 if (replace_name_match(p, m[0], match.href)) {
                     return
@@ -675,7 +677,7 @@
                 if (node.nodeType != 1) {
                     continue;
                 }
-                let children = document.getElementsByClassName("leftMenu__text");
+                let children = node.getElementsByClassName("leftMenu__text");
                 for (let p of children) {
                     console.log("mutate left menu", p, p.parentElement.href);
                     replace_name_player(p, p.parentElement.href);
@@ -759,20 +761,20 @@
                 replace_name(p, sport);
             }
         }
-        children = document.getElementsByClassName("leftMenu__text");
-        for (let p of children) {
-            console.log(p);
-            console.log(p.parentElement.href);
-            replace_name_player(p, p.parentElement.href);
-        }
+    }
+    let children = document.getElementsByClassName("leftMenu__text");
+    for (let p of children) {
+        // console.log(p);
+        // console.log(p.parentElement.href);
+        replace_name_player(p, p.parentElement.href);
     }
     for (let key of GM_listValues()) {
         let v = GM_getValue(key);
         if (Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
-            console.log(`Deleting old value for key: ${key}`);
+            console.log(`Deleting old value for key: ${key}`, v);
             GM_deleteValue(key);
         } else {
-            console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t)/1000/60/60} hours old`);
+            console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t)/1000/60/60} hours old`, v);
         }
     }
 })();
