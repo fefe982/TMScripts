@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-27_17-47
+// @version      2025-05-28_08-47
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -598,6 +598,7 @@
         "Zheng Y.": "郑雨",
         "Zhou H. D.": "周昊东",
     }
+    let nav_away = false;
     function replace_name_player(p, href) {
         if (p.textContent.endsWith(")")) {
             return true;
@@ -625,19 +626,27 @@
         let v = GM_getValue(match)
         console.log(match, v)
         if (!v) {
-            console.log(href)
+            console.log("attempt to nav to", href)
             if (href) {
                 GM_setValue("navback", true)
-                window.location.href = href
+                if (!nav_away) {
+                    console.log("nav to", href)
+                    window.location.href = href
+                    nav_away = true
+                }
             }
             return false
         }
         let h = v[n]
         if (h == null) {
-            console.log(href)
+            console.log("attempt to nav to", href, v, n)
             if (href) {
                 GM_setValue("navback", true)
-                window.location.href = href
+                if (!nav_away) {
+                   console.log("nav to", href, v, n)
+                    window.location.href = href
+                    nav_away = true
+                }
             }
             return false
         }
