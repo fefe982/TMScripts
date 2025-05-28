@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-28_08-47
+// @version      2025-05-29_06-42
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -310,10 +310,12 @@
         }
     }
     let full_names = {
+        "an-se-young": "安洗莹",
         "chen-boyang": "陈柏阳",
         "chen-fanghui": "陈芳卉",
         "chen-yufei": "陈雨菲",
         "cheng-xing": "程星",
+        "chiu-hsiang-chieh": "邱相榤",
         "feng-yanzhe": "冯彦哲",
         "gao-fangjie": "高昉洁",
         "guo-xinwa": "郭新娃",
@@ -342,6 +344,7 @@
         "tan-ning": "谭宁",
         "te-rigele": "特日格乐",
         "wang-chang": "王昶",
+        "wang-chi-lin": "王齐麟",
         "wang-xinyu-2001": "王欣瑜",
         "wang-zhiyi": "王祉怡",
         "watanabe-koki": "渡邉航貴",
@@ -484,7 +487,6 @@
         "Cheng Y.": "郑育沛",
         "Chi Y. J.": "戚又仁",
         "Chiang C.": "江建苇",
-        "Chiu H. C.": "邱相榤",
         "Chiu P.": "邱品蒨",
         "Chou T. Ch.": "周天成",
         "Gunawan J.": "吴英伦",
@@ -573,7 +575,6 @@
         "Tsai R. L.": "蔡渃琳",
         "Tse Y. S.": "谢影雪",
         "Tsuneyama K.": "常山幹太",
-        "Wang Chi-Lin": "王齐麟",
         "Wang P.": "王柏崴",
         "Wang T. G.": "王汀戈",
         "Wang T. W.": "王子维",
