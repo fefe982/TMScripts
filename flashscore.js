@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-05-30_06-32
+// @version      2025-05-31_21-29
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -325,10 +325,14 @@
         "hsu-wen-chi": "许玟琪",
         "hu-ling-fang": "胡绫芳",
         "huang-di": "黄荻",
+        "iwanaga-rin": "岩永鈴",
         "jheng-yu-chieh": "郑宇倢",
         "jia-yifan": "贾一凡",
         "jiang-xinyu": "蒋欣玗",
         "kim-ga-eun": "金佳恩",
+        "kim-hye-jeong": "金慧贞",
+        "kim-won-ho": "金元浩",
+        "kong-hee-yong": "孔熙容",
         "lee-chia-hao": "李佳豪",
         "li-yijing": "李怡婧",
         "li-shifeng": "李诗沣",
@@ -342,8 +346,11 @@
         "luo-xumin": "罗徐敏",
         "midorikawa-hiroki": "緑川大輝",
         "mitsuhashi-kenya": "三橋健也",
+        "nakanishi-kie": "中西貴映",
         "naraoka-kodai": "奈良岡功大",
+        "nidaira-natsuki": "仁平菜月",
         "okamura-hiroki": "岡村洋輝",
+        "seo-seung-jae": "徐承宰",
         "shi-yuqi": "石宇奇",
         "sung-shuo-yun": "宋硕芸",
         "tan-ning": "谭宁",
@@ -357,6 +364,7 @@
         "watanabe-koki": "渡邉航貴",
         "wei-yaxin": "魏雅欣",
         "wu-fang-hsien": "吴芳嫺",
+        "yamaguchi-akane": "山口茜",
         "yamashita-kyohei": "山下恭平",
         "yang-chu-yun": "杨筑云",
         "yang-po-han": "杨博涵",
@@ -509,7 +517,6 @@
         "Hsieh P. S.": "谢沛珊",
         "Hsu Y. H.": "许尹鏸",
         "Ishikawa K.": "石川心菜",
-        "Iwanaga R.": "岩永鈴",
         "Jeon H. J.": "全奕陈",
         "Jiang Z. B.": "蒋振邦",
         "Kaneko Y.": "金子祐樹",
@@ -519,7 +526,6 @@
         "Kim S. Y.": "金昭映",
         "Kobayashi Y.": "小林優吾",
         "Konegawa M.": "古根川美桜",
-        "Kong H. Y.": "孔熙容",
         "Konishi H.": "小西春七",
         "Kurihara A.": "栗原あかり",
         "Lee C. C.": "李芷蓁",
@@ -549,11 +555,9 @@
         "Matsuyama N.": "松山奈未",
         "Miyazaki T.": "宮崎友花",
         "Nagahara W.": "永原和可那",
-        "Nakanishi K.": "中西貴映",
         "Ng Ka L. A.": "伍家朗",
         "Ng Tsz Y.": "吴芷柔",
         "Ng W. Y.": "吴咏瑢",
-        "Nidaira N.": "仁平菜月",
         "Nishi H.": "西大輝",
         "Nishimoto K.": "西本拳太",
         "Obayashi T.": "大林拓真",
@@ -591,7 +595,6 @@
         "Wu H.": "吴轩毅",
         "Xie H. N.": "谢浩南",
         "Yamada N.": "山田尚輝",
-        "Yamaguchi A.": "山口茜",
         "Yang C. T.": "杨景惇",
         "Yang Po-Hsuan": "杨博轩",
         "Ye H. W.": "叶宏蔚",
