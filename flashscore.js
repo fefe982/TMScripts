@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-01_18-42
+// @version      2025-06-04_07-06
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -325,6 +325,8 @@
         "hsu-wen-chi": "许玟琪",
         "hu-ling-fang": "胡绫芳",
         "huang-di": "黄荻",
+        "hung-en-tzu": "洪恩慈",
+        "hsieh-pei-shan": "谢沛珊",
         "iwanaga-rin": "岩永鈴",
         "jheng-yu-chieh": "郑宇倢",
         "jia-yifan": "贾一凡",
@@ -354,6 +356,7 @@
         "shi-yuqi": "石宇奇",
         "sung-shuo-yun": "宋硕芸",
         "tan-ning": "谭宁",
+        "tanaka-yuji": "田中湧士",
         "te-rigele": "特日格乐",
         "teng-chun-hsun": "邓淳薰",
         "wang-aoran": "王傲然",
@@ -513,8 +516,6 @@
         "Hoki T.": "保木卓朗",
         "Huang Y. K.": "黄郁岂",
         "Huang Y. Q.": "黄雅琼",
-        "Hung E-T.": "洪恩慈",
-        "Hsieh P. S.": "谢沛珊",
         "Hsu Y. H.": "许尹鏸",
         "Ishikawa K.": "石川心菜",
         "Jeon H. J.": "全奕陈",
@@ -578,7 +579,6 @@
         "Sung Y.": "宋祐媗",
         "Tai T. Y.": "戴资颖",
         "Takahashi K.": "高橋洸士",
-        "Tanaka Y.": "田中湧士",
         "Tang Chun M.": "邓俊文",
         "Tsai R. L.": "蔡渃琳",
         "Tse Y. S.": "谢影雪",
