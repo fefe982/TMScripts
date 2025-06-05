@@ -370,7 +370,7 @@
         "wang-chi-lin": "王齐麟",
         "wang-xinyu-2001": "王欣瑜",
         "wang-zhiyi": "王祉怡",
-        "Wang-zhengxing": "王正行",
+        "wang-zhengxing": "王正行",
         "watanabe-koki": "渡邉航貴",
         "wei-yaxin": "魏雅欣",
         "wu-fang-hsien": "吴芳嫺",
