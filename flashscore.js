@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-05_20-03
+// @version      2025-06-06_06-10
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -316,8 +316,10 @@
         "chen-yufei": "陈雨菲",
         "cheng-xing": "程星",
         "chiu-hsiang-chieh": "邱相榤",
+        "chou-tien-chen": "周天成",
         "cui-jie": "崔杰",
         "feng-yanzhe": "冯彦哲",
+        "fukushima-yuki": "福島由紀",
         "gao-fangjie": "高昉洁",
         "guo-xinwa": "郭新娃",
         "han-yue": "韩悦",
@@ -347,6 +349,7 @@
         "liu-yi": "刘毅",
         "lu-guangzu": "陆光祖",
         "luo-xumin": "罗徐敏",
+        "matsumoto-mayu": "松本麻佑",
         "midorikawa-hiroki": "緑川大輝",
         "mitsuhashi-kenya": "三橋健也",
         "miyazaki-tomoka": "宮崎友花",
@@ -354,6 +357,7 @@
         "naraoka-kodai": "奈良岡功大",
         "nidaira-natsuki": "仁平菜月",
         "okamura-hiroki": "岡村洋輝",
+        "saito-natsu": "齋藤夏",
         "seo-seung-jae": "徐承宰",
         "shi-yuqi": "石宇奇",
         "sung-shuo-yun": "宋硕芸",
@@ -366,6 +370,7 @@
         "wang-chi-lin": "王齐麟",
         "wang-xinyu-2001": "王欣瑜",
         "wang-zhiyi": "王祉怡",
+        "Wang-zhengxing": "王正行",
         "watanabe-koki": "渡邉航貴",
         "wei-yaxin": "魏雅欣",
         "wu-fang-hsien": "吴芳嫺",
@@ -508,7 +513,6 @@
         "Chi Y. J.": "戚又仁",
         "Chiang C.": "江建苇",
         "Chiu P.": "邱品蒨",
-        "Chou T. Ch.": "周天成",
         "Gunawan J.": "吴英伦",
         "Guo R. H.": "郭若涵",
         "Hatano R.": "秦野陸",
@@ -552,7 +556,6 @@
         "Lo S. Y. H.": "卢善恩",
         "Lu C. Y.": "卢敬尧",
         "Lu Ming Che": "卢明哲",
-        "Matsumoto M.": "松本麻佑",
         "Matsutomo M.": "松友美佐紀",
         "Matsuyama N.": "松山奈未",
         "Nagahara W.": "永原和可那",
@@ -567,7 +570,6 @@
         "Pai Yu P.": "白驭珀",
         "Pui P. F.": "裴鹏锋",
         "Ren X. Y.": "任翔宇",
-        "Saito N.": "齋藤夏",
         "Sato A.": "佐藤灯",
         "Shibata K.": "柴田一樹",
         "Shida C.": "志田千陽",
@@ -588,7 +590,6 @@
         "Wang T. W.": "王子维",
         "Wang Y. Q.": "汪郁乔",
         "Wang Y. Z.": "王眱祯",
-        "Wang Z. X.": "王正行",
         "Watanabe Y.": "渡辺勇大",
         "Wei C. W.": "魏俊纬",
         "Weng H. Y.": "翁泓阳",
