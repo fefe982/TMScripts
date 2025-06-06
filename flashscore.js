@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-06_06-10
+// @version      2025-06-07_05-54
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -311,6 +311,7 @@
     }
     let full_names = {
         "an-se-young": "安洗莹",
+        "baek-ha-na": "白荷娜",
         "chen-boyang": "陈柏阳",
         "chen-fanghui": "陈芳卉",
         "chen-yufei": "陈雨菲",
@@ -338,6 +339,7 @@
         "kim-won-ho": "金元浩",
         "kong-hee-yong": "孔熙容",
         "lee-chia-hao": "李佳豪",
+        "lee-so-hee": "李昭希",
         "li-yijing": "李怡婧",
         "li-shifeng": "李诗沣",
         "liang-weikeng": "梁伟铿",
@@ -391,6 +393,7 @@
         "zheng-qinwen": "郑钦文",
         "zheng-saisai": "郑赛赛",
         "zhou-yi": "周意",
+        "zhu-lin": "朱琳",
         "Aoyama S.": "青山修子",
         "Chong E.": "张玮桓",
         "Gao X.": "高馨妤",
@@ -501,7 +504,6 @@
         "Zhu Y.": "朱雨玲",
         "Zong G.": "纵歌曼",
         "Akechi H.": "明地陽菜",
-        "Baek H. N.": "白荷娜",
         "Chan N. G.": "詹又蓁",
         "Chang C. H.": "张净惠",
         "Chen C. K.": "陈政宽",
@@ -541,7 +543,6 @@
         "Lee F. C": "李芳至",
         "Lee F. J.": "李芳任",
         "Lee J-H.": "李哲辉",
-        "Lee S. H.": "李昭希",
         "Lee Y. L.":"李幽琳",
         "Lei L. X.": "雷兰曦",
         "Leung Y. Y.": "梁悦仪",
