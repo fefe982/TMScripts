@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-15_05-50
+// @version      2025-06-15_06-23
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -474,9 +474,38 @@
                 setTimeout(wait_for_load, 1000)
                 return
             }
+            let player_met = GM_getValue("__player_met", {})
+            let match_time = document.querySelector("div.duelParticipant div.duelParticipant__startTime div").textContent
+            console.log(match_time)
+            let m_time = match_time.match("([0-9]+)\.([0-9]+)\.([0-9]+) ([0-9]+):([0-9]+)")
+            let date = 0;
+            if (m_time) {
+                date = new Date(m_time[3], m_time[2] - 1, m_time[1], m_time[4], m_time[5]).getTime()
+            }
             for (let p of children) {
                 console.log(p)
-                val[p.textContent] = p.attributes.href.value
+                let href = p.attributes.href.value
+                val[p.textContent] = href
+                let m = href.match(/\/player\/(.*)\/(.*)\//)
+                if (!m || !date) {
+                    continue
+                }
+                let key = m[1] + "/" + m[2]
+                if (!(key in full_names)) {
+                    if (m[1] in full_names) {
+                        key = m[1]
+                    } else {
+                        key = ""
+                    }
+                }
+                if (key) {
+                    let odate = player_met[key] || 0
+                    player_met[key] = Math.max(odate, date)
+                }
+            }
+            console.log(player_met)
+            if (date) {
+                GM_setValue("__player_met", player_met)
             }
             console.log(val)
             GM_setValue(key, val)
@@ -513,7 +542,16 @@
         replace_name_player(p, p.parentElement.href);
     }
     for (let key of GM_listValues()) {
+        if (key.startsWith("__")) {
+            console.log("met special key: " + key);
+            continue;
+        }
         let v = GM_getValue(key);
+        if (!("t" in v)) {
+            console.log("Deleting key without timestamp: " + key + ", " + v);
+            GM_deleteValue(key);
+            continue;
+        }
         if (Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
             console.log(`Deleting old value for key: ${key}`, v);
             GM_deleteValue(key);
