@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-09_05-14
+// @version      2025-06-15_05-50
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -463,22 +463,29 @@
         if (window.location.href.indexOf("#") < 0) {
             return
         }
-        let m = window.location.href.match(/match\/[^/]+\/[^/]+/)
-        let key = m[0]
-        console.log(m[0])
-        let val = {t: Date.now()}
-        let children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
-        console.log(children)
-        for (let p of children) {
-            console.log(p)
-            val[p.textContent] = p.attributes.href.value
+        function wait_for_load() {
+            let m = window.location.href.match(/match\/[^/]+\/[^/]+/)
+            let key = m[0]
+            console.log(m[0])
+            let val = {t: Date.now()}
+            let children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
+            console.log(children)
+            if (children.length == 0) {
+                setTimeout(wait_for_load, 1000)
+                return
+            }
+            for (let p of children) {
+                console.log(p)
+                val[p.textContent] = p.attributes.href.value
+            }
+            console.log(val)
+            GM_setValue(key, val)
+            if (GM_getValue("navback")) {
+                GM_deleteValue("navback")
+                history.back()
+            }
         }
-        console.log(val)
-        GM_setValue(key, val)
-        if (GM_getValue("navback")) {
-            GM_deleteValue("navback")
-            history.back()
-        }
+        wait_for_load()
     }
     if (window.location.href.startsWith("https://www.flashscore.com/match/") ||
         window.location.href.startsWith("https://www.flashscore.com/draw/") ||
