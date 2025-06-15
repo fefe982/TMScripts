@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-15_20-46
+// @version      2025-06-16_05-57
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -357,7 +357,7 @@
         let v = GM_getValue(match)
         console.log(match, v)
         if (!v) {
-            console.log("attempt to nav to", href)
+            console.log("attempt to nav to", href, nav_away)
             if (href) {
                 GM_setValue("navback", true)
                 if (!nav_away) {
@@ -395,9 +395,22 @@
             window.location.href.startsWith("https://www.flashscore.com/table-tennis/")) {
             let match = p.parentNode.querySelector("a.eventRowLink")
             if (match != null) {
+                let flags = p.parentNode.querySelectorAll("span.flag")
+                let href = null
+                for (let flag of flags) {
+                    let value = flag.attributes["title"].value
+                    if ((value == "China") ||
+                        (value == "Taiwan") || 
+                        (value == "Hong Kong") ||
+                        (value == "Japan") ||
+                        (value == "South Korea") ||
+                        (value == "Singapore")) {
+                        href = match.href
+                    }
+                }
                 let m = match.href.match(/match\/[^/]+\/[^/]+/)
                 console.log(m[0])
-                if (replace_name_match(p, m[0], match.href)) {
+                if (replace_name_match(p, m[0], href)) {
                     return
                 }
             }
