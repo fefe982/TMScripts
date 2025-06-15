@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-15_18-04
+// @version      2025-06-15_20-44
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -26,6 +26,7 @@
     let full_names = {
         "an-se-young": "安洗莹",
         "baek-ha-na": "白荷娜",
+        "calderano-hugo": "雨果",
         "chen-boyang": "陈柏阳",
         "chen-fanghui": "陈芳卉",
         "chen-yufei": "陈雨菲",
@@ -51,6 +52,7 @@
         "jiang-xinyu": "蒋欣玗",
         "kim-ga-eun": "金佳恩",
         "kim-hye-jeong": "金慧贞",
+        "kim-nayeong": "金娜英",
         "kim-won-ho": "金元浩",
         "kong-hee-yong": "孔熙容",
         "lee-chia-hao": "李佳豪",
@@ -58,6 +60,7 @@
         "li-yijing": "李怡婧",
         "li-shifeng": "李诗沣",
         "liang-weikeng": "梁伟铿",
+        "lim-jonghoon": "林钟勋",
         "lin-chun-yi": "林俊易",
         "lin-hsiang-ti": "林湘缇",
         "liu-kuang-heng": "刘广珩",
@@ -74,8 +77,10 @@
         "naraoka-kodai": "奈良岡功大",
         "nidaira-natsuki": "仁平菜月",
         "odo-satsuki": "大藤沙月",
+        "oh-junsung": "吴晙诚",
         "okamura-hiroki": "岡村洋輝",
         "osaka-naomi": "大坂なおみ",
+        "ryu-hanna": "柳韩娜",
         "saito-natsu": "齋藤夏",
         "seo-seung-jae": "徐承宰",
         "shi-xunyao": "石洵瑶",
@@ -86,6 +91,7 @@
         "tanaka-yuji": "田中湧士",
         "te-rigele": "特日格乐",
         "teng-chun-hsun": "邓淳薰",
+        "togami-shunsuke": "戸上隼輔",
         "wang-aoran": "王傲然",
         "wang-chang": "王昶",
         "wang-chi-lin": "王齐麟",
@@ -171,7 +177,6 @@
         "Joo Cheonhui": "朱芊曦",
         "Kao C.-J.": "高承睿",
         "Kihara M.": "木原美悠",
-        "Kim N.": "金娜英",
         "Kuai M.": "蒯曼",
         "Lam Y. L.": "林依諾",
         "Lee E.": "李恩惠",
@@ -198,7 +203,6 @@
         "Suh H.": "徐孝元",
         "Sun Y.": "孙颖莎",
         "Tanaka Y.": "田中佑汰",
-        "Togami S.": "戸上隼輔",
         "Uda Y.": "宇田幸矢",
         "Wang C.": "王楚钦",
         "Wang M.": "王曼昱",
