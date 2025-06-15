@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-15_06-23
+// @version      2025-06-15_18-04
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -557,6 +557,22 @@
             GM_deleteValue(key);
         } else {
             console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t)/1000/60/60} hours old`, v);
+        }
+    }
+    let player_met = GM_getValue("__player_met", {});
+    for (let key in player_met) {
+        if (!(key in full_names)) {
+            console.log(`player ${key}, last met ${new Date(player_met[key]).toISOString()}, not found in full names, deleting`)
+            delete player_met[key]
+        } else if (Date.now() - player_met[key] > 1000 * 60 * 60 * 24 * 30) {
+            console.log(`player ${key}, ${full_names[key]}, last met ${new Date(player_met[key]).toISOString()}, met ${(Date.now() - player_met[key])/1000/60/60/24} days ago`);
+        } else {
+            console.log(`player ${key}, ${full_names[key]}, last met ${new Date(player_met[key]).toISOString()}, met ${(Date.now() - player_met[key])/1000/60/60/24} days ago`);
+        }
+    }
+    for (let key in full_names) {
+        if (!(key in player_met)) {
+            console.log(`player ${key}, ${full_names[key]}, never met`);
         }
     }
 })();
