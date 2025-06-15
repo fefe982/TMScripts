@@ -20,7 +20,7 @@
   console.log("oops, tampermonkey: " + window.location.href);
   let replaces = {
     tennis: {},
-    "table-tennis": {},
+    "table-tennis": { "Calderano H.": "雨果" },
     badminton: {},
   };
   let full_names = {
@@ -402,17 +402,21 @@
       if (match != null) {
         let flags = p.parentNode.querySelectorAll("span.flag");
         let href = null;
-        for (let flag of flags) {
-          let value = flag.attributes["title"].value;
-          if (
-            value == "China" ||
-            value == "Taiwan" ||
-            value == "Hong Kong" ||
-            value == "Japan" ||
-            value == "South Korea" ||
-            value == "Singapore"
-          ) {
-            href = match.href;
+        if (replace[p.textContent]) {
+          href = match.href;
+        } else {
+          for (let flag of flags) {
+            let value = flag.attributes["title"].value;
+            if (
+              value == "China" ||
+              value == "Taiwan" ||
+              value == "Hong Kong" ||
+              value == "Japan" ||
+              value == "South Korea" ||
+              value == "Singapore"
+            ) {
+              href = match.href;
+            }
           }
         }
         let m = match.href.match(/match\/[^/]+\/[^/]+/);
