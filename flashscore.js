@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-16_05-57
+// @version      2025-06-16_06-15
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -20,7 +20,7 @@
   console.log("oops, tampermonkey: " + window.location.href);
   let replaces = {
     tennis: {},
-    "table-tennis": { "Calderano H.": "雨果" },
+    "table-tennis": { "Calderano H.": "雨果", "Ni X.": "倪夏莲" },
     badminton: {},
   };
   let full_names = {
@@ -396,7 +396,9 @@
     }
     if (
       window.location.href.startsWith("https://www.flashscore.com/favorites/") ||
-      window.location.href.startsWith("https://www.flashscore.com/table-tennis/")
+      window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
+      window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
+      window.location.href.startsWith("https://www.flashscore.com/tennis/")
     ) {
       let match = p.parentNode.querySelector("a.eventRowLink");
       if (match != null) {
@@ -412,8 +414,7 @@
               value == "Taiwan" ||
               value == "Hong Kong" ||
               value == "Japan" ||
-              value == "South Korea" ||
-              value == "Singapore"
+              value == "South Korea"
             ) {
               href = match.href;
             }
