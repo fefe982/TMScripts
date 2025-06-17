@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-18_06-19
+// @version      2025-06-18_07-07
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -56,6 +56,7 @@
     "jia-yifan": "贾一凡",
     "jiang-xinyu": "蒋欣玗",
     "joo-cheonhui": "朱芊曦",
+    "kato-miyu": "加藤未唯",
     "kim-ga-eun": "金佳恩",
     "kim-hye-jeong": "金慧贞",
     "kim-nayeong": "金娜英",
@@ -145,7 +146,6 @@
     "Hontama M.": "本玉真唯",
     "Ishii S.": "石井さやか",
     "Jin Y.": "金雨全",
-    "Kato M.": "加藤未唯",
     "Li Z.": "李泽楷",
     "Ma Y.": "马烨欣",
     "Ninomiya M.": "二宮真琴",
