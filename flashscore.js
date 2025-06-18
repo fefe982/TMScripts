@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-18_20-23
+// @version      2025-06-18_20-50
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -27,6 +27,7 @@
     "an-se-young": "安洗莹",
     "baek-ha-na": "白荷娜",
     "calderano-hugo": "雨果",
+    "chan-baldwin-ho-wah": "陈颢桦",
     "chen-boyang": "陈柏阳",
     "chen-fanghui": "陈芳卉",
     "chen-yuanyu": "陈元宇",
@@ -64,6 +65,7 @@
     "kim-nayeong": "金娜英",
     "kim-won-ho": "金元浩",
     "kong-hee-yong": "孔熙容",
+    "lam-yee-lok": "林依諾",
     "lee-chia-hao": "李佳豪",
     "lee-eunhye-2000": "李恩惠",
     "lee-so-hee": "李昭希",
@@ -121,6 +123,7 @@
     "wu-fang-hsien": "吴芳嫺",
     "wu-yibing": "吴易昺",
     "xu-haidong": "徐海东",
+    "xu-yi": "徐奕",
     "xu-yingbin": "徐瑛彬",
     "yamaguchi-akane": "山口茜",
     "yamashita-kyohei": "山下恭平",
@@ -167,7 +170,6 @@
     "Wong C.": "黄泽林",
     "Xu Y.": "徐一幡",
     "Yao X.": "姚欣辛",
-    "Chan B. H. W.": "陈颢桦",
     "Chang Y.": "张玉安",
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
@@ -190,7 +192,6 @@
     "Kao C.-J.": "高承睿",
     "Kihara M.": "木原美悠",
     "Kuai M.": "蒯曼",
-    "Lam Y. L.": "林依諾",
     "Lee H. Ch.": "李皓晴",
     "Lee S.": "李尚洙",
     "Li Y. J.": "李彦军",
@@ -221,7 +222,6 @@
     "Wen R.": "温瑞波",
     "Wong Chun Ting": "黄镇廷",
     "Xiang P.": "向鹏",
-    "Xu Yi": "徐奕",
     "Xue F.": "薛飞",
     "Yiu K. T.": "姚钧涛",
     "Yokotani J.": "横谷晟",
