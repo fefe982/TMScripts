@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-18_20-50
+// @version      2025-06-18_20-57
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -30,6 +30,7 @@
     "chan-baldwin-ho-wah": "陈颢桦",
     "chen-boyang": "陈柏阳",
     "chen-fanghui": "陈芳卉",
+    "chen-yi": "陈熠",
     "chen-yuanyu": "陈元宇",
     "chen-yufei": "陈雨菲",
     "cheng-xing": "程星",
@@ -44,6 +45,8 @@
     "gao-fangjie": "高昉洁",
     "guo-xinwa": "郭新娃",
     "han-yue": "韩悦",
+    "harimoto-miwa": "張本美和",
+    "harimoto-tomokazu": "張本智和",
     "he-zhuojia": "何卓佳",
     "hozumi-eri": "穂積絵莉",
     "hsieh-su-wei": "谢淑薇",
@@ -174,15 +177,12 @@
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
     "Chen X.": "陈幸同",
-    "Chen Y.": "陈熠",
     "Cheng I-C.": "郑怡静",
     "Chien T.": "简彤娟",
     "Doo H. K.": "杜凱琹",
     "Fan S.": "范思琦",
     "Fan Z.": "樊振东",
     "Feng Y.-H.": "冯翊新",
-    "Harimoto M.": "張本美和",
-    "Harimoto T.": "張本智和",
     "Hayata H.": "早田ひな",
     "Hirano M.": "平野美宇",
     "Huang Y-H.": "黃怡樺",
