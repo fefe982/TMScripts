@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-18_20-57
+// @version      2025-06-19_04-58
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -39,8 +39,10 @@
     "chong-eudice": "张玮桓",
     "chou-tien-chen": "周天成",
     "cui-jie": "崔杰",
+    "doo-hoi-kem": "杜凱琹",
     "fan-shuhan": "范淑涵",
     "feng-yanzhe": "冯彦哲",
+    "feng-yi-hsin": "冯翊新",
     "fukushima-yuki": "福島由紀",
     "gao-fangjie": "高昉洁",
     "guo-xinwa": "郭新娃",
@@ -63,6 +65,7 @@
     "jiang-xinyu": "蒋欣玗",
     "joo-cheonhui": "朱芊曦",
     "kato-miyu": "加藤未唯",
+    "kihara-miyuu": "木原美悠",
     "kim-ga-eun": "金佳恩",
     "kim-hye-jeong": "金慧贞",
     "kim-nayeong": "金娜英",
@@ -88,6 +91,7 @@
     "luo-xumin": "罗徐敏",
     "ma-yexin": "马烨欣",
     "matsumoto-mayu": "松本麻佑",
+    "matsushima-sora": "松島輝空",
     "midorikawa-hiroki": "緑川大輝",
     "mitsuhashi-kenya": "三橋健也",
     "miyazaki-tomoka": "宮崎友花",
@@ -99,6 +103,7 @@
     "oh-junsung": "吴晙诚",
     "okamura-hiroki": "岡村洋輝",
     "osaka-naomi": "大坂なおみ",
+    "qian-tianyi": "钱天一",
     "ryu-hanna": "柳韩娜",
     "saito-natsu": "齋藤夏",
     "sakamoto-rei": "坂本怜",
@@ -106,16 +111,19 @@
     "shi-xunyao": "石洵瑶",
     "shi-yuqi": "石宇奇",
     "shin-yubin": "申裕斌",
+    "shinozuka-hiroto": "篠塚大登",
     "sun-fajing": "孙发京",
     "sung-shuo-yun": "宋硕芸",
     "tan-ning": "谭宁",
     "tanaka-yuji": "田中湧士",
+    "tanaka-yuta": "田中佑汰",
     "te-rigele": "特日格乐",
     "teng-chun-hsun": "邓淳薰",
     "togami-shunsuke": "戸上隼輔",
     "wang-aoran": "王傲然",
     "wang-chang": "王昶",
     "wang-chi-lin": "王齐麟",
+    "wang-xiaotong": "王晓彤",
     "wang-xinyu-2001": "王欣瑜",
     "wang-xiyu": "王曦雨",
     "wang-zhiyi": "王祉怡",
@@ -123,11 +131,13 @@
     "watanabe-koki": "渡邉航貴",
     "wei-yaxin": "魏雅欣",
     "wen-ruibo": "温瑞博",
+    "wong-chun-ting": "黄镇廷",
     "wu-fang-hsien": "吴芳嫺",
     "wu-yibing": "吴易昺",
     "xu-haidong": "徐海东",
     "xu-yi": "徐奕",
     "xu-yingbin": "徐瑛彬",
+    "xue-fei": "薛飞",
     "yamaguchi-akane": "山口茜",
     "yamashita-kyohei": "山下恭平",
     "yang-chu-yun": "杨筑云",
@@ -148,6 +158,7 @@
     "zhang-zhizhen": "张之臻",
     "zheng-qinwen": "郑钦文",
     "zheng-saisai": "郑赛赛",
+    "zhou-qihao": "周启豪",
     "zhou-yi": "周意",
     "zhu-chengzhu": "朱成竹",
     "zhu-lin": "朱琳",
@@ -179,10 +190,8 @@
     "Chen X.": "陈幸同",
     "Cheng I-C.": "郑怡静",
     "Chien T.": "简彤娟",
-    "Doo H. K.": "杜凱琹",
     "Fan S.": "范思琦",
     "Fan Z.": "樊振东",
-    "Feng Y.-H.": "冯翊新",
     "Hayata H.": "早田ひな",
     "Hirano M.": "平野美宇",
     "Huang Y-H.": "黃怡樺",
@@ -190,7 +199,6 @@
     "Ito M.": "伊藤美誠",
     "Jeon J.": "田志希",
     "Kao C.-J.": "高承睿",
-    "Kihara M.": "木原美悠",
     "Kuai M.": "蒯曼",
     "Lee H. Ch.": "李皓晴",
     "Lee S.": "李尚洙",
@@ -204,29 +212,21 @@
     "Lin Y.-J.": "林昀儒",
     "Lum N.": "林文政",
     "Ma L.": "马龙",
-    "Matsushima S.": "松島輝空",
     "Mori S.": "森さくら",
     "Nagasaki M.": "長崎美柚",
     "Ni X.": "倪夏莲",
-    "Qian T.": "钱天一",
     "Qin Y.": "覃予萱",
-    "Shinozuka H.": "篠塚大登",
     "Suh H.": "徐孝元",
     "Sun Y.": "孙颖莎",
-    "Tanaka Y.": "田中佑汰",
     "Uda Y.": "宇田幸矢",
     "Wang C.": "王楚钦",
     "Wang M.": "王曼昱",
-    "Wang X.": "王晓彤",
     "Wang Yidi": "王艺迪",
     "Wen R.": "温瑞波",
-    "Wong Chun Ting": "黄镇廷",
     "Xiang P.": "向鹏",
-    "Xue F.": "薛飞",
     "Yiu K. T.": "姚钧涛",
     "Yokotani J.": "横谷晟",
     "Zeng B.": "曾蓓勋",
-    "Zhou Q.": "周启豪",
     "Zhu Y.": "朱雨玲",
     "Zong G.": "纵歌曼",
     "Akechi H.": "明地陽菜",
@@ -433,10 +433,10 @@
         }
       }
     }
-    let r = replace[p.textContent];
-    if (r) {
-      p.textContent = p.textContent + " (" + r + ")";
-    }
+    // let r = replace[p.textContent];
+    // if (r) {
+    //   p.textContent = p.textContent + " (" + r + ")";
+    // }
   }
   let sport = "";
   let observer;
