@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-19_04-58
+// @version      2025-06-19_05-56
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -46,6 +46,7 @@
     "fukushima-yuki": "福島由紀",
     "gao-fangjie": "高昉洁",
     "guo-xinwa": "郭新娃",
+    "han-feier": "韩菲儿",
     "han-yue": "韩悦",
     "harimoto-miwa": "張本美和",
     "harimoto-tomokazu": "張本智和",
@@ -73,7 +74,7 @@
     "kong-hee-yong": "孔熙容",
     "lam-yee-lok": "林依諾",
     "lee-chia-hao": "李佳豪",
-    "lee-eunhye-2000": "李恩惠",
+    "lee-eunhye": "李恩惠",
     "lee-so-hee": "李昭希",
     "li-hon-ming": "李漢銘",
     "li-yijing": "李怡婧",
@@ -97,6 +98,7 @@
     "miyazaki-tomoka": "宮崎友花",
     "nakanishi-kie": "中西貴映",
     "naraoka-kodai": "奈良岡功大",
+    "ng-wing-lam": "吳詠琳",
     "nidaira-natsuki": "仁平菜月",
     "ninomiya-makoto": "二宮真琴",
     "odo-satsuki": "大藤沙月",
@@ -107,6 +109,7 @@
     "ryu-hanna": "柳韩娜",
     "saito-natsu": "齋藤夏",
     "sakamoto-rei": "坂本怜",
+    "sato-hitomi": "佐藤瞳",
     "seo-seung-jae": "徐承宰",
     "shi-xunyao": "石洵瑶",
     "shi-yuqi": "石宇奇",
@@ -143,8 +146,11 @@
     "yang-chu-yun": "杨筑云",
     "yang-po-han": "杨博涵",
     "yang-ya-yi": "杨亚依",
+    "yang-yiyun": "杨屹韵",
+    "yao-xinxin": "姚欣辛",
     "yeung-nga-ting": "杨雅婷",
     "yeung-pui-lam": "杨霈霖",
+    "yiu-kwan-to": "姚钧涛",
     "yokoi-sakura": "横井咲桜",
     "yoshimura-maharu": "吉村真晴",
     "yoshiyama-ryoichi": "吉山僚一",
@@ -162,6 +168,7 @@
     "zhou-yi": "周意",
     "zhu-chengzhu": "朱成竹",
     "zhu-lin": "朱琳",
+    "zhu-ziyu": "朱梓予",
     "Aoyama S.": "青山修子",
     "Gao X.": "高馨妤",
     "Guo H.": "郭涵煜",
@@ -183,7 +190,6 @@
     "Wei S.": "韦思佳",
     "Wong C.": "黄泽林",
     "Xu Y.": "徐一幡",
-    "Yao X.": "姚欣辛",
     "Chang Y.": "张玉安",
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
@@ -224,7 +230,6 @@
     "Wang Yidi": "王艺迪",
     "Wen R.": "温瑞波",
     "Xiang P.": "向鹏",
-    "Yiu K. T.": "姚钧涛",
     "Yokotani J.": "横谷晟",
     "Zeng B.": "曾蓓勋",
     "Zhu Y.": "朱雨玲",
