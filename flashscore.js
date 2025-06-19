@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-20_05-26
+// @version      2025-06-20_05-52
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -132,6 +132,7 @@
     "wang-aoran": "王傲然",
     "wang-chang": "王昶",
     "wang-chi-lin": "王齐麟",
+    "wang-meiling": "王美玲",
     "wang-xiaotong": "王晓彤",
     "wang-xinyu-2001": "王欣瑜",
     "wang-xiyu": "王曦雨",
@@ -192,7 +193,6 @@
     "Shi H.": "石瀚",
     "Tang Q.": "汤千慧",
     "Uchijima M.": "内島萌夏",
-    "Wang M.": "王美玲",
     "Wang Q.": "王蔷",
     "Wang Y.": "王雅繁",
     "Wei S.": "韦思佳",
