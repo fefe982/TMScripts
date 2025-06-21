@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-20_05-52
+// @version      2025-06-21_09-37
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -147,6 +147,7 @@
     "xiang-peng": "向鹏",
     "xu-haidong": "徐海东",
     "xu-yi": "徐奕",
+    "xu-yi-fan": "徐一幡",
     "xu-yingbin": "徐瑛彬",
     "xue-fei": "薛飞",
     "yamaguchi-akane": "山口茜",
@@ -155,6 +156,7 @@
     "yang-po-han": "杨博涵",
     "yang-ya-yi": "杨亚依",
     "yang-yiyun": "杨屹韵",
+    "yang-zhaoxuan": "杨钊煊",
     "yao-xinxin": "姚欣辛",
     "yeung-nga-ting": "杨雅婷",
     "yeung-pui-lam": "杨霈霖",
@@ -197,7 +199,6 @@
     "Wang Y.": "王雅繁",
     "Wei S.": "韦思佳",
     "Wong C.": "黄泽林",
-    "Xu Y.": "徐一幡",
     "Chang Y.": "张玉安",
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
@@ -510,9 +511,9 @@
       return;
     }
     function wait_for_load() {
-      let m = window.location.href.match(/match\/[^/]+\/[^/]+/);
+      let m = /match\/[^/]+\/[^/]+/.exec(window.location.href);
       let key = m[0];
-      console.log(m[0]);
+      console.log(key);
       let val = { t: Date.now() };
       let children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
       console.log(children);
@@ -523,7 +524,7 @@
       let player_met = GM_getValue("__player_met", {});
       let match_time = document.querySelector("div.duelParticipant div.duelParticipant__startTime div").textContent;
       console.log(match_time);
-      let m_time = match_time.match("([0-9]+).([0-9]+).([0-9]+) ([0-9]+):([0-9]+)");
+      let m_time = /(\d+).(\d+).(\d+) (\d+):(\d+)/.exec(match_time);
       let date = 0;
       if (m_time) {
         date = new Date(m_time[3], m_time[2] - 1, m_time[1], m_time[4], m_time[5]).getTime();
