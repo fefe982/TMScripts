@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         mlb
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-11
+// @version      2025-06-21
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @match        https://www.mlb.com/gameday/*
@@ -48,31 +48,29 @@
       p.textContent = kmph + " kmph";
     }
   }
+  function replace_fazIkQ(p) {
+    if (p.childNodes[0].textContent == "Weather") {
+      let m = p.childNodes[2].textContent.match(/^(\d+) degrees(.*)$/);
+      if (!m) {
+        return;
+      }
+      let deg = ((parseInt(m[1]) - 32) / 1.8).toFixed(1);
+      p.childNodes[2].textContent = deg + " ℃" + m[2];
+    }
+    if (p.childNodes[0].textContent == "Wind") {
+      let m = p.childNodes[2].textContent.match(/^(\d+) mph(.*)$/);
+      if (!m) {
+        return;
+      }
+      let mph = parseFloat(m[1]);
+      let mps = mph_to_mps(mph);
+      p.childNodes[2].textContent = mps + " m/s" + m[2];
+    }
+  }
   function replaceEnvironment(root) {
     let children = root.querySelectorAll(".fazIkQ");
     for (let p of children) {
-      if (p.attributes["__tag"]) {
-        continue;
-      }
-      p.attributes["__tag"] = "1";
-      if (p.childNodes[0].textContent == "Weather") {
-        let m = p.childNodes[2].textContent.match(/^(\d+) degrees(.*)$/);
-        if (!m) {
-          continue;
-        }
-        let deg = ((parseInt(m[1]) - 32) / 1.8).toFixed(1);
-        p.childNodes[2].textContent = deg + " ℃" + m[2];
-      }
-      if (p.childNodes[0].textContent == "Wind") {
-        console.log(p.childNodes[2].textContent);
-        let m = p.childNodes[2].textContent.match(/^(\d+) mph(.*)$/);
-        if (!m) {
-          continue;
-        }
-        let mph = parseFloat(m[1]);
-        let mps = mph_to_mps(mph);
-        p.childNodes[2].textContent = mps + " m/s" + m[2];
-      }
+      replace_fazIkQ(p);
     }
   }
   function replaceContent(root) {
@@ -84,6 +82,9 @@
   const observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
       if (mutation.type != "childList") {
+        if (mutation.target.parentElement.classList.contains("fazIkQ")) {
+          replace_fazIkQ(mutation.target.parentElement);
+        }
         continue;
       }
       for (let node of mutation.addedNodes) {
@@ -94,5 +95,9 @@
       }
     }
   });
-  observer.observe(document.body, { subtree: true, childList: true });
+  observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+    characterData: true,
+  });
 })();
