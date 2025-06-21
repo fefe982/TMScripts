@@ -403,7 +403,7 @@
     return replace_name_player(p, h);
   }
   function replace_name(p, sport) {
-    if (p.nodeType == 1 && (p.childNodes.length != 1 || p.childNodes[0].nodeType != 3)) {
+    if (p.nodeType == 1 && (p.childNodes.length == 0 || p.childNodes[0].nodeType != 3)) {
       return;
     }
     let replace = replaces[sport];
@@ -438,15 +438,14 @@
         }
         let m = match.href.match(/match\/[^/]+\/[^/]+/);
         console.log(m[0]);
-        if (replace_name_match(p, m[0], href)) {
-          return;
-        }
+        replace_name_match(p, m[0], href);
       }
     }
-    // let r = replace[p.textContent];
-    // if (r) {
-    //   p.textContent = p.textContent + " (" + r + ")";
-    // }
+    if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
+      let m = p.parentNode.parentNode.href.match(/match\/[^/]+\/[^/]+/);
+      console.log(m[0]);
+      replace_name_match(p, m[0], null);
+    }
   }
   let sport = "";
   let observer;
@@ -472,17 +471,10 @@
             replace_name(p, sport);
           }
         } else if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-          // console.log(node);
-          let children = node.getElementsByClassName("participant__participantName");
-          for (let p of children) {
-            console.log(p);
-            if (p.childNodes.length == 2 && p.childNodes[1].nodeType == 3) {
-              console.log(p.childNodes[1]);
-              replace_name(p.childNodes[1], sport);
-            }
+          for (let p of node.querySelectorAll("a.participant__participantName")) {
+            replace_name_player(p, p.href);
           }
-          children = node.querySelectorAll(".h2h__participantInner, .bracket__name");
-          for (let p of children) {
+          for (let p of node.querySelectorAll(".h2h__participantInner")) {
             replace_name(p, sport);
           }
         } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
