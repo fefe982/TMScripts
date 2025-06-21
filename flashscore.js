@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-21_09-37
+// @version      2025-06-21_18-59
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -343,6 +343,10 @@
     "Zhou H. D.": "周昊东",
   };
   let nav_away = false;
+  function get_match_key(href) {
+    let m = href.match(/match\/[^/]+\/[^/]+/);
+    return m[0];
+  }
   function replace_name_player(p, href) {
     if (p.textContent.endsWith(")")) {
       return true;
@@ -436,19 +440,22 @@
             }
           }
         }
-        let m = match.href.match(/match\/[^/]+\/[^/]+/);
-        console.log(m[0]);
-        replace_name_match(p, m[0], href);
+        replace_name_match(p, get_match_key(match.href), href);
       }
     }
     if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-      let m = p.parentNode.parentNode.href.match(/match\/[^/]+\/[^/]+/);
-      console.log(m[0]);
-      replace_name_match(p, m[0], null);
+      replace_name_match(p, replace_name_match(p.parentNode.parentNode.href), null);
     }
   }
   let sport = "";
   let observer;
+  function hanlde_draw_observer(node) {
+    for (let p of node.querySelectorAll(".series")) {
+      for (let player of p.parentNode.parentNode.querySelectorAll(".bracket__name")) {
+        replace_name_match(player, get_match_key(p.href), null);
+      }
+    }
+  }
   observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
       if (mutation.type != "childList") {
@@ -477,11 +484,9 @@
           for (let p of node.querySelectorAll(".h2h__participantInner")) {
             replace_name(p, sport);
           }
+          hanlde_draw_observer(node);
         } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
-          let children = node.getElementsByClassName("bracket__name");
-          for (let p of children) {
-            replace_name(p, sport);
-          }
+          hanlde_draw_observer(node);
         } else if (
           window.location.href.startsWith("https://www.flashscore.com/player/") ||
           window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
@@ -578,8 +583,6 @@
   }
   let children = document.getElementsByClassName("leftMenu__text");
   for (let p of children) {
-    // console.log(p);
-    // console.log(p.parentElement.href);
     replace_name_player(p, p.parentElement.href);
   }
   for (let key of GM_listValues()) {
@@ -608,12 +611,6 @@
       );
       delete player_met[key];
     } else if (Date.now() - player_met[key] > 1000 * 60 * 60 * 24 * 30) {
-      console.log(
-        `player ${key}, ${full_names[key]}, last met ${new Date(player_met[key]).toISOString()}, met ${
-          (Date.now() - player_met[key]) / 1000 / 60 / 60 / 24
-        } days ago`
-      );
-    } else {
       console.log(
         `player ${key}, ${full_names[key]}, last met ${new Date(player_met[key]).toISOString()}, met ${
           (Date.now() - player_met[key]) / 1000 / 60 / 60 / 24
