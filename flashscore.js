@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-22_11-42
+// @version      2025-06-23_06-57
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -25,13 +25,15 @@
   };
   let full_names = {
     "an-se-young": "安洗莹",
+    "aoyama-shuko": "青山修子",
+    "bai-yan": "柏衍",
     "baek-ha-na": "白荷娜",
     "calderano-hugo": "雨果",
     "chan-baldwin-ho-wah": "陳顥樺",
     "chen-boyang": "陈柏阳",
     "chen-fanghui": "陈芳卉",
     "chen-yi": "陈熠",
-    "chen-yuanyu": "陈元宇",
+    "chen-yuanyu": "陈垣宇",
     "chen-yufei": "陈雨菲",
     "cheng-xing": "程星",
     "chiu-hsiang-chieh": "邱相榤",
@@ -45,6 +47,7 @@
     "feng-yi-hsin": "冯翊新",
     "fukushima-yuki": "福島由紀",
     "gao-fangjie": "高昉洁",
+    "guo-hanyu": "郭涵煜",
     "guo-xinwa": "郭新娃",
     "han-feier": "韩菲儿",
     "han-yue": "韩悦",
@@ -126,9 +129,11 @@
     "tan-ning": "谭宁",
     "tanaka-yuji": "田中湧士",
     "tanaka-yuta": "田中佑汰",
+    "tang-qianhui": "汤千慧",
     "te-rigele": "特日格乐",
     "teng-chun-hsun": "邓淳薰",
     "togami-shunsuke": "戸上隼輔",
+    "uchijima-moyuka": "内島萌夏",
     "wang-aoran": "王傲然",
     "wang-chang": "王昶",
     "wang-chi-lin": "王齐麟",
@@ -141,6 +146,7 @@
     "watanabe-koki": "渡邉航貴",
     "wei-yaxin": "魏雅欣",
     "wen-ruibo": "温瑞博",
+    "wong-chak-lam-coleman": "黄泽林",
     "wong-chun-ting": "黃鎮廷",
     "wu-fang-hsien": "吴芳嫺",
     "wu-yibing": "吴易昺",
@@ -181,9 +187,7 @@
     "zhu-lin": "朱琳",
     "zhu-yuling": "朱雨玲",
     "zhu-ziyu": "朱梓予",
-    "Aoyama S.": "青山修子",
     "Gao X.": "高馨妤",
-    "Guo H.": "郭涵煜",
     "Hibino N.": "日比野菜緒",
     "Hontama M.": "本玉真唯",
     "Ishii S.": "石井さやか",
@@ -194,12 +198,8 @@
     "Ren Y.": "任钰菲",
     "Shang J.": "商竣程",
     "Shi H.": "石瀚",
-    "Tang Q.": "汤千慧",
-    "Uchijima M.": "内島萌夏",
-    "Wang Q.": "王蔷",
     "Wang Y.": "王雅繁",
     "Wei S.": "韦思佳",
-    "Wong C.": "黄泽林",
     "Chang Y.": "张玉安",
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
