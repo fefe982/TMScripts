@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-21_18-59
+// @version      2025-06-22_11-42
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -179,6 +179,7 @@
     "zhou-yi": "周意",
     "zhu-chengzhu": "朱成竹",
     "zhu-lin": "朱琳",
+    "zhu-yuling": "朱雨玲",
     "zhu-ziyu": "朱梓予",
     "Aoyama S.": "青山修子",
     "Gao X.": "高馨妤",
@@ -237,7 +238,6 @@
     "Wen R.": "温瑞波",
     "Yokotani J.": "横谷晟",
     "Zeng B.": "曾蓓勋",
-    "Zhu Y.": "朱雨玲",
     "Zong G.": "纵歌曼",
     "Akechi H.": "明地陽菜",
     "Chan N. G.": "詹又蓁",
@@ -433,6 +433,7 @@
               value == "China" ||
               value == "Taiwan" ||
               value == "Hong Kong" ||
+              value == "Macao" ||
               value == "Japan" ||
               value == "South Korea"
             ) {
@@ -454,6 +455,8 @@
       for (let player of p.parentNode.parentNode.querySelectorAll(".bracket__name")) {
         replace_name_match(player, get_match_key(p.href), null);
       }
+      let height = p.parentNode.parentNode.childNodes[0].offsetHeight;
+      p.parentNode.style.top = "calc(50% + " + height / 2 + "px)";
     }
   }
   observer = new MutationObserver((mutations) => {
