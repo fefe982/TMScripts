@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-24_06-26
+// @version      2025-06-25_20-55
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -30,6 +30,7 @@
     "baek-ha-na": "白荷娜",
     "calderano-hugo": "雨果",
     "chan-baldwin-ho-wah": "陈颢桦",
+    "chang-ching-hui": "张净惠",
     "chang-ko-chi": "张课琦",
     "chen-boyang": "陈柏阳",
     "chen-cheng-kuan": "陈政宽",
@@ -78,9 +79,12 @@
     "huang-jui-hsuan": "黄睿璿",
     "huang-ping-hsien": "黄品衔",
     "huang-youzheng": "黄友政",
+    "huang-yu-hsun": "黄宥薰",
     "huang-yu-jie": "黃愉偼",
+    "huang-yu-kai": "黄郁岂",
     "hung-en-tzu": "洪恩慈",
     "hung-hsin-en": "洪妡恩",
+    "hung-yi-ting": "洪毅婷",
     "hung-yu-en": "洪妤恩",
     "hsieh-pei-shan": "谢沛珊",
     "hsu-yin-hui": "许尹鏸",
@@ -99,6 +103,7 @@
     "kim-won-ho": "金元浩",
     "kong-hee-yong": "孔熙容",
     "kong-tsz-lam": "江芷林",
+    "kuo-kuan-lin": "郭冠麟",
     "kwan-man-ho": "关文皓",
     "lai-po-yu": "赖柏佑",
     "lam-siu-hang": "林兆恒",
@@ -121,6 +126,7 @@
     "lin-bing-wei": "林秉纬",
     "lin-chun-yi": "林俊易",
     "lin-hsiang-ti": "林湘缇",
+    "lin-jhih-yun": "林芝昀",
     "liu-kuang-heng": "刘广珩",
     "liu-sheng-shu": "刘圣书",
     "liu-weishan": "刘炜珊",
@@ -170,6 +176,7 @@
     "tang-qianhui": "汤千慧",
     "te-rigele": "特日格乐",
     "teng-chun-hsun": "邓淳薰",
+    "ting-yen-chen": "丁彦宸",
     "togami-shunsuke": "戸上隼輔",
     "tsai-fu-cheng": "蔡富丞",
     "tung-ciou-tong": "董秋彤",
@@ -205,6 +212,7 @@
     "yamaguchi-akane": "山口茜",
     "yamashita-kyohei": "山下恭平",
     "yang-po-chih": "杨博智",
+    "yang-ching-tun": "杨景惇",
     "yang-chu-yun": "杨筑云",
     "yang-po-han": "杨博涵",
     "yang-ya-yi": "杨亚依",
@@ -283,7 +291,6 @@
     "Zong G.": "纵歌曼",
     "Akechi H.": "明地陽菜",
     "Chan N. G.": "詹又蓁",
-    "Chang C. H.": "张净惠",
     "Chen Q. C.": "陈清晨",
     "Chen S. F.": "陈胜发",
     "Chen Xu Jun": "陈旭君",
@@ -297,7 +304,6 @@
     "Higashino A.": "東野有紗",
     "Hirokami R.": "廣上瑠依",
     "Hoki T.": "保木卓朗",
-    "Huang Y. K.": "黄郁岂",
     "Huang Y. Q.": "黄雅琼",
     "Ishikawa K.": "石川心菜",
     "Jeon H. J.": "全奕陈",
@@ -319,7 +325,6 @@
     "Leung Y. Y.": "梁悦仪",
     "Li W. M.": "李汶妹",
     "Lin C.": "林芷均",
-    "Lin J. Y.": "林芝昀",
     "Liu L.": "刘亮",
     "Lo S. Y. H.": "卢善恩",
     "Lu C. Y.": "卢敬尧",
@@ -357,7 +362,6 @@
     "Weng H. Y.": "翁泓阳",
     "Xie H. N.": "谢浩南",
     "Yamada N.": "山田尚輝",
-    "Yang C. T.": "杨景惇",
     "Yang Po-Hsuan": "杨博轩",
     "Ye H. W.": "叶宏蔚",
     "Zeng W. H.": "曾维瀚",
