@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-25_20-55
+// @version      2025-06-26_05-47
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -24,6 +24,7 @@
     badminton: {},
   };
   let full_names = {
+    "an-jaehyun": "安宰贤",
     "an-se-young": "安洗莹",
     "aoyama-shuko": "青山修子",
     "bai-yan": "柏衍",
@@ -44,6 +45,8 @@
     "cheng-xing": "程星",
     "chiang-chien-wei": "江建苇",
     "chiu-hsiang-chieh": "邱相榤",
+    "cho-daeseong": "赵大成",
+    "choi-haeeun": "崔海恩",
     "choi-hyojoo": "崔孝珠",
     "chong-eudice": "张玮桓",
     "chou-tien-chen": "周天成",
@@ -78,6 +81,7 @@
     "huang-di": "黄荻",
     "huang-jui-hsuan": "黄睿璿",
     "huang-ping-hsien": "黄品衔",
+    "huang-yi-hua": "黄怡桦",
     "huang-youzheng": "黄友政",
     "huang-yu-hsun": "黄宥薰",
     "huang-yu-jie": "黃愉偼",
@@ -100,6 +104,8 @@
     "kim-ga-eun": "金佳恩",
     "kim-hye-jeong": "金慧贞",
     "kim-nayeong": "金娜英",
+    "kim-seongjin": "金成珍",
+    "kim-seoyun": "金谞润",
     "kim-won-ho": "金元浩",
     "kong-hee-yong": "孔熙容",
     "kong-tsz-lam": "江芷林",
@@ -112,6 +118,7 @@
     "lee-chia-hsin": "李佳馨",
     "lee-chih-chen": "李芷蓁",
     "lee-karen-man-hoi": "李凱敏",
+    "lee-daeun": "李达恩",
     "lee-eunhye": "李恩惠",
     "lee-fang-chih": "李芳至",
     "lee-fang-jen": "李芳任",
@@ -145,12 +152,13 @@
     "nagasaki-miyu": "長崎美柚",
     "nakanishi-kie": "中西貴映",
     "naraoka-kodai": "奈良岡功大",
-    "ng-wing-lam": "吳詠琳",
+    "ng-wing-lam": "吴咏琳",
     "nidaira-natsuki": "仁平菜月",
     "ninomiya-makoto": "二宮真琴",
     "nishimoto-kenta": "西本拳太",
     "odo-satsuki": "大藤沙月",
     "oh-junsung": "吴晙诚",
+    "oikawa-mizuki": "及川瑞基",
     "okamura-hiroki": "岡村洋輝",
     "okuhara-nozomi": "奥原希望",
     "osaka-naomi": "大坂なおみ",
@@ -199,6 +207,7 @@
     "wong-chak-lam-coleman": "黄泽林",
     "wong-chun-ting": "黄镇廷",
     "wong-hoi-tung": "黄凯彤",
+    "woo-hyeonggyu": "禹衡圭",
     "wu-fang-hsien": "吴芳嫺",
     "wu-guan-xun": "吴冠勋",
     "wu-yibing": "吴易昺",
@@ -241,6 +250,7 @@
     "zhou-yi": "周意",
     "zhu-chengzhu": "朱成竹",
     "zhu-lin": "朱琳",
+    "zhu-sibing": "朱思冰",
     "zhu-yuling": "朱雨玲",
     "zhu-ziyu": "朱梓予",
     "Jin Y.": "金雨全",
@@ -260,7 +270,6 @@
     "Fan S.": "范思琦",
     "Fan Z.": "樊振东",
     "Hirano M.": "平野美宇",
-    "Huang Y-H.": "黃怡樺",
     "Huang Y.-C.": "黄彦诚",
     "Ito M.": "伊藤美誠",
     "Jeon J.": "田志希",
