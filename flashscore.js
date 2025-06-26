@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-26_05-47
+// @version      2025-06-27_05-08
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -162,6 +162,7 @@
     "okamura-hiroki": "岡村洋輝",
     "okuhara-nozomi": "奥原希望",
     "osaka-naomi": "大坂なおみ",
+    "park-gyuhyeon": "朴奎炫",
     "po-li-wei": "柏礼维",
     "qian-tianyi": "钱天一",
     "ryu-hanna": "柳韩娜",
@@ -210,10 +211,10 @@
     "woo-hyeonggyu": "禹衡圭",
     "wu-fang-hsien": "吴芳嫺",
     "wu-guan-xun": "吴冠勋",
+    "wu-hsuan-yi": "吴轩毅",
     "wu-yibing": "吴易昺",
     "xiang-peng": "向鹏",
     "xu-haidong": "徐海东",
-    "wu-hsuan-yi": "吴轩毅",
     "xu-yi": "徐奕",
     "xu-yi-fan": "徐一幡",
     "xu-yingbin": "徐瑛彬",
@@ -223,6 +224,7 @@
     "yang-po-chih": "杨博智",
     "yang-ching-tun": "杨景惇",
     "yang-chu-yun": "杨筑云",
+    "yang-haeun": "梁夏银",
     "yang-po-han": "杨博涵",
     "yang-ya-yi": "杨亚依",
     "yang-yiyun": "杨屹韵",
