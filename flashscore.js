@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-27_05-08
+// @version      2025-06-28_12-52
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -156,6 +156,7 @@
     "nidaira-natsuki": "仁平菜月",
     "ninomiya-makoto": "二宮真琴",
     "nishimoto-kenta": "西本拳太",
+    "nishioka-yoshihito": "西岡良仁",
     "odo-satsuki": "大藤沙月",
     "oh-junsung": "吴晙诚",
     "oikawa-mizuki": "及川瑞基",
@@ -258,7 +259,6 @@
     "Jin Y.": "金雨全",
     "Li Z.": "李泽楷",
     "Nishikori K.": "錦織圭",
-    "Nishioka Y.": "西岡良仁",
     "Ren Y.": "任钰菲",
     "Shang J.": "商竣程",
     "Shi H.": "石瀚",
