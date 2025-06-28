@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-28_12-52
+// @version      2025-06-29_07-20
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -30,6 +30,7 @@
     "bai-yan": "柏衍",
     "baek-ha-na": "白荷娜",
     "calderano-hugo": "雨果",
+    "chan-hao-ching": "詹皓晴",
     "chan-baldwin-ho-wah": "陈颢桦",
     "chang-ching-hui": "张净惠",
     "chang-ko-chi": "张课琦",
@@ -92,7 +93,9 @@
     "hung-yu-en": "洪妤恩",
     "hsieh-pei-shan": "谢沛珊",
     "hsu-yin-hui": "许尹鏸",
+    "imamura-masamichi": "今村昌倫",
     "ishii-sayaka": "石井さやか",
+    "ito-aoi": "伊藤あおい",
     "iwanaga-rin": "岩永鈴",
     "jheng-yu-chieh": "郑宇倢",
     "jia-yifan": "贾一凡",
@@ -143,13 +146,16 @@
     "lu-guangzu": "陆光祖",
     "luo-xumin": "罗徐敏",
     "ma-yexin": "马烨欣",
+    "matsuda-ryuki": "松田龍樹",
     "matsumoto-mayu": "松本麻佑",
     "matsushima-sora": "松島輝空",
     "midorikawa-hiroki": "緑川大輝",
     "mitsuhashi-kenya": "三橋健也",
     "miyazaki-tomoka": "宮崎友花",
+    "mochizuki-shintaro": "望月慎太郎",
     "mori-sakura": "森さくら",
     "nagasaki-miyu": "長崎美柚",
+    "nakagawa-naoki": "中川直樹",
     "nakanishi-kie": "中西貴映",
     "naraoka-kodai": "奈良岡功大",
     "ng-wing-lam": "吴咏琳",
@@ -157,6 +163,7 @@
     "ninomiya-makoto": "二宮真琴",
     "nishimoto-kenta": "西本拳太",
     "nishioka-yoshihito": "西岡良仁",
+    "noguchi-rio": "野口莉央",
     "odo-satsuki": "大藤沙月",
     "oh-junsung": "吴晙诚",
     "oikawa-mizuki": "及川瑞基",
@@ -173,6 +180,7 @@
     "seo-seung-jae": "徐承宰",
     "shi-xunyao": "石洵瑶",
     "shi-yuqi": "石宇奇",
+    "shibahara-ena": "柴原瑛菜",
     "shin-yubin": "申裕斌",
     "shinozuka-hiroto": "篠塚大登",
     "su-ching-heng": "苏敬恒",
@@ -180,6 +188,7 @@
     "sun-fajing": "孙发京",
     "sun-liang-ching": "孙亮晴",
     "sung-shuo-yun": "宋硕芸",
+    "tajima-naoki": "田島尚輝",
     "tan-ning": "谭宁",
     "tanaka-yuji": "田中湧士",
     "tanaka-yuta": "田中佑汰",
@@ -189,6 +198,7 @@
     "ting-yen-chen": "丁彦宸",
     "togami-shunsuke": "戸上隼輔",
     "tsai-fu-cheng": "蔡富丞",
+    "tseng-chun-hsin": "曾俊欣",
     "tung-ciou-tong": "董秋彤",
     "uchijima-moyuka": "内島萌夏",
     "wang-aoran": "王傲然",
