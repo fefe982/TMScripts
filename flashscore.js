@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-06-29_07-20
+// @version      2025-07-01_05-38
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -24,6 +24,7 @@
     badminton: {},
   };
   let full_names = {
+    "aizawa-tori": "相澤桃李",
     "an-jaehyun": "安宰贤",
     "an-se-young": "安洗莹",
     "aoyama-shuko": "青山修子",
@@ -65,6 +66,7 @@
     "han-yue": "韩悦",
     "harimoto-miwa": "張本美和",
     "harimoto-tomokazu": "張本智和",
+    "hatano-riku": "秦野陸",
     "hayata-hina": "早田ひな",
     "he-zhi-wei": "何志伟",
     "he-zhuojia": "何卓佳",
@@ -144,6 +146,7 @@
     "liu-yi": "刘毅",
     "lin-yu-chieh": "林煜杰",
     "lu-guangzu": "陆光祖",
+    "lu-ming-che": "卢明哲",
     "luo-xumin": "罗徐敏",
     "ma-yexin": "马烨欣",
     "matsuda-ryuki": "松田龍樹",
@@ -164,7 +167,9 @@
     "nishimoto-kenta": "西本拳太",
     "nishioka-yoshihito": "西岡良仁",
     "noguchi-rio": "野口莉央",
+    "obayashi-takuma": "大林拓真",
     "odo-satsuki": "大藤沙月",
+    "ogawa-shogo": "小川翔悟",
     "oh-junsung": "吴晙诚",
     "oikawa-mizuki": "及川瑞基",
     "okamura-hiroki": "岡村洋輝",
@@ -176,6 +181,7 @@
     "ryu-hanna": "柳韩娜",
     "saito-natsu": "齋藤夏",
     "sakamoto-rei": "坂本怜",
+    "sano-daisuke": "佐野大輔",
     "sato-hitomi": "佐藤瞳",
     "seo-seung-jae": "徐承宰",
     "shi-xunyao": "石洵瑶",
@@ -185,13 +191,16 @@
     "shinozuka-hiroto": "篠塚大登",
     "su-ching-heng": "苏敬恒",
     "su-li-yang": "苏力扬",
+    "suizu-manami": "水津愛美",
     "sun-fajing": "孙发京",
     "sun-liang-ching": "孙亮晴",
     "sung-shuo-yun": "宋硕芸",
     "tajima-naoki": "田島尚輝",
+    "takahashi-koo": "高橋洸士",
     "tan-ning": "谭宁",
     "tanaka-yuji": "田中湧士",
     "tanaka-yuta": "田中佑汰",
+    "tang-kai-wei": "唐凯威",
     "tang-qianhui": "汤千慧",
     "te-rigele": "特日格乐",
     "teng-chun-hsun": "邓淳薰",
@@ -320,7 +329,6 @@
     "Chiu P.": "邱品蒨",
     "Gunawan J.": "吴英伦",
     "Guo R. H.": "郭若涵",
-    "Hatano R.": "秦野陸",
     "He J. T.": "何济霆",
     "Higashino A.": "東野有紗",
     "Hirokami R.": "廣上瑠依",
@@ -357,7 +365,6 @@
     "Ng Tsz Y.": "吴芷柔",
     "Ng W. Y.": "吴咏瑢",
     "Nishi H.": "西大輝",
-    "Obayashi T.": "大林拓真",
     "Ohori A.": "大堀彩",
     "Pai Yu P.": "白驭珀",
     "Pui P. F.": "裴鹏锋",
@@ -366,11 +373,9 @@
     "Shibata K.": "柴田一樹",
     "Shida C.": "志田千陽",
     "Shin S. C.": "申昇瓒",
-    "Suizu M.": "水津愛美",
     "Sun Y. H.": "孙昱瑆",
     "sung-yu-hsuan": "宋祐媗",
     "Tai T. Y.": "戴资颖",
-    "Takahashi K.": "高橋洸士",
     "Tang Chun M.": "邓俊文",
     "Tsai R. L.": "蔡渃琳",
     "Tse Y. S.": "谢影雪",
