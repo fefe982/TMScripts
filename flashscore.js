@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-01_05-38
+// @version      2025-07-03_05-04
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -72,6 +72,7 @@
     "he-zhuojia": "何卓佳",
     "hibino-nao": "日比野菜緒",
     "ho-kwan-kit": "何钧杰",
+    "ho-ray": "何承叡",
     "hontama-mai": "本玉真唯",
     "hozumi-eri": "穂積絵莉",
     "hsieh-su-wei": "谢淑薇",
