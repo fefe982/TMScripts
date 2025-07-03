@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-03_05-04
+// @version      2025-07-03_20-17
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -85,6 +85,7 @@
     "huang-di": "黄荻",
     "huang-jui-hsuan": "黄睿璿",
     "huang-ping-hsien": "黄品衔",
+    "huang-yan-cheng": "黄彦诚",
     "huang-yi-hua": "黄怡桦",
     "huang-youzheng": "黄友政",
     "huang-yu-hsun": "黄宥薰",
@@ -131,9 +132,11 @@
     "lee-so-hee": "李昭希",
     "li-hon-ming": "李漢銘",
     "li-yijing": "李怡婧",
+    "li-yu-jhun": "李昱谆",
     "li-shifeng": "李诗沣",
     "liang-ting-yu": "梁庭瑜",
     "liang-weikeng": "梁伟铿",
+    "liao-cheng-ting": "廖振珽",
     "liao-jhuo-fu": "廖倬甫",
     "lim-jonghoon": "林钟勋",
     "lin-bing-wei": "林秉纬",
@@ -292,17 +295,14 @@
     "Fan S.": "范思琦",
     "Fan Z.": "樊振东",
     "Hirano M.": "平野美宇",
-    "Huang Y.-C.": "黄彦诚",
     "Ito M.": "伊藤美誠",
     "Jeon J.": "田志希",
     "Kuai M.": "蒯曼",
     "Lee H. Ch.": "李皓晴",
     "Lee S.": "李尚洙",
     "Li Y. J.": "李彦军",
-    "Li Y.-J.": "李昱谆",
     "Liang J.": "梁靖崑",
     "Liang Y.": "梁俨苧",
-    "Liao C.-T.": "廖振珽",
     "Lin G.": "林高远",
     "Lin S.": "林诗栋",
     "Lin Y.-J.": "林昀儒",
