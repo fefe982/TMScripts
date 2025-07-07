@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-06_15-14
+// @version      2025-07-08_05-02
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -51,6 +51,7 @@
     "chien-tung-chuan": "简彤娟",
     "chiu-hsiang-chieh": "邱相榤",
     "cho-daeseong": "赵大成",
+    "cho-seungmin": "赵胜敏",
     "choi-haeeun": "崔海恩",
     "choi-hyojoo": "崔孝珠",
     "chong-eudice": "张玮桓",
@@ -110,6 +111,7 @@
     "jheng-yu-chieh": "郑宇倢",
     "jia-yifan": "贾一凡",
     "jiang-xinyu": "蒋欣玗",
+    "jin-yuquan": "金雨全",
     "joo-cheonhui": "朱芊曦",
     "kao-cheng-jui": "高承睿",
     "kato-miyu": "加藤未唯",
@@ -142,6 +144,7 @@
     "li-yijing": "李怡婧",
     "li-yu-jhun": "李昱谆",
     "li-shifeng": "李诗沣",
+    "li-zekai": "李泽楷",
     "liang-jingkun": "梁靖崑",
     "liang-ting-yu": "梁庭瑜",
     "liang-weikeng": "梁伟铿",
@@ -196,12 +199,14 @@
     "park-gyuhyeon": "朴奎炫",
     "po-li-wei": "柏礼维",
     "qian-tianyi": "钱天一",
+    "ren-yufei": "任钰菲",
     "ryu-hanna": "柳韩娜",
     "saito-natsu": "齋藤夏",
     "sakamoto-rei": "坂本怜",
     "sano-daisuke": "佐野大輔",
     "sato-hitomi": "佐藤瞳",
     "seo-seung-jae": "徐承宰",
+    "shi-han": "石瀚",
     "shi-xunyao": "石洵瑶",
     "shi-yuqi": "石宇奇",
     "shibahara-ena": "柴原瑛菜",
@@ -299,12 +304,8 @@
     "zhu-sibing": "朱思冰",
     "zhu-yuling": "朱雨玲",
     "zhu-ziyu": "朱梓予",
-    "Jin Y.": "金雨全",
-    "Li Z.": "李泽楷",
     "Nishikori K.": "錦織圭",
-    "Ren Y.": "任钰菲",
     "Shang J.": "商竣程",
-    "Shi H.": "石瀚",
     "Wang Y.": "王雅繁",
     "Chang Y.": "张玉安",
     "Chen Meng": "陈梦",
