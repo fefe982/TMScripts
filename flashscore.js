@@ -464,9 +464,11 @@
       return false;
     }
     if (v.stage) {
-      const tnode = p.parentNode.querySelector("div.event__time") || p.parentNode.querySelector("div.event__stage");
-      if (tnode && !tnode.textContent.endsWith("]")) {
-        tnode.textContent = tnode.textContent + " [" + v.stage + "]";
+      const tnode =
+        p.parentNode.querySelector("div.event__time") || p.parentNode.querySelector("div.event__stage--block");
+      if (tnode && tnode.lastChild.textContent != v.stage) {
+        tnode.appendChild(document.createElement("br"));
+        tnode.appendChild(document.createTextNode(v.stage));
       }
     }
     return replace_name_player(p, h);
