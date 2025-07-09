@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-08_05-02
+// @version      2025-07-10_07-10
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -433,7 +433,7 @@
   }
   function replace_name_match(p, match, href) {
     let n = p.textContent;
-    if (n.endsWith(")")) {
+    if (!n || n.endsWith(")")) {
       return true;
     }
     let v = GM_getValue(match);
@@ -462,6 +462,12 @@
         }
       }
       return false;
+    }
+    if (v.stage) {
+      const tnode = p.parentNode.querySelector("div.event__time") || p.parentNode.querySelector("div.event__stage");
+      if (tnode && !tnode.textContent.endsWith(")")) {
+        tnode.textContent = tnode.textContent + " (" + v.stage + ")";
+      }
     }
     return replace_name_player(p, h);
   }
@@ -570,8 +576,7 @@
       return;
     }
     function wait_for_load() {
-      let m = /match\/[^/]+\/[^/]+/.exec(window.location.href);
-      let key = m[0];
+      let key = get_match_key(window.location.href);
       console.log(key);
       let val = { t: Date.now() };
       let children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
@@ -608,6 +613,13 @@
           let odate = player_met[key] || 0;
           player_met[key] = Math.max(odate, date);
         }
+      }
+      let stage = document.querySelector(
+        ".wcl-breadcrumbItem_CiWQ7:last-child .wcl-breadcrumbItemLabel_ogiBc"
+      ).textContent;
+      let stagesplit = stage.split(" - ");
+      if (stagesplit.length == 2) {
+        val.stage = stagesplit[1];
       }
       console.log(player_met);
       if (date) {
@@ -680,6 +692,7 @@
       );
     }
   }
+  GM_setValue("__player_met", player_met);
   for (let key in full_names) {
     if (!(key in player_met)) {
       console.log(`player ${key}, ${full_names[key]}, never met`);
