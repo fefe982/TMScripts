@@ -465,8 +465,8 @@
     }
     if (v.stage) {
       const tnode = p.parentNode.querySelector("div.event__time") || p.parentNode.querySelector("div.event__stage");
-      if (tnode && !tnode.textContent.endsWith(")")) {
-        tnode.textContent = tnode.textContent + " (" + v.stage + ")";
+      if (tnode && !tnode.textContent.endsWith("]")) {
+        tnode.textContent = tnode.textContent + " [" + v.stage + "]";
       }
     }
     return replace_name_player(p, h);
