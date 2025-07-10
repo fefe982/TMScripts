@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-10_07-10
+// @version      2025-07-11_05-46
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -406,30 +406,51 @@
     let m = href.match(/match\/[^/]+\/[^/]+/);
     return m[0];
   }
-  function replace_name_player(p, href) {
-    if (p.textContent.endsWith(")")) {
-      return true;
-    }
+  function get_player_key(href) {
     let m = href.match(/\/player\/(.*)\/(.*)\//);
     if (!m) {
-      return false;
+      return ["", ""];
     }
     let key = m[1] + "/" + m[2];
+    if (!(key in full_names)) {
+      if (m[1] in full_names) {
+        key = m[1];
+      } else {
+        key = "";
+      }
+    }
+    return [key, m[1]];
+  }
+  function replace_name_player(p, play_info) {
+    if (p.textContent.endsWith(")")) {
+      return;
+    }
+    let rank = 0;
+    let href = "";
+    if (typeof play_info == "object") {
+      rank = play_info.rank;
+      href = play_info.href;
+    } else {
+      href = play_info;
+    }
+    let [key, raw_name] = get_player_key(href);
     let r = full_names[key];
     if (!r) {
-      r = full_names[m[1]];
-    }
-    if (!r) {
-      r = m[1]
+      if (!raw_name) {
+        return;
+      }
+      r = raw_name
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
+    }
+    if (rank) {
+      r = r + " (" + rank + ")";
     }
     if (full_names[p.textContent]) {
       r = r + " [" + full_names[p.textContent] + "]";
     }
     p.textContent = p.textContent + " (" + r + ")";
-    return true;
   }
   function replace_name_match(p, match, href) {
     let n = p.textContent;
@@ -512,7 +533,7 @@
       }
     }
     if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-      replace_name_match(p, replace_name_match(p.parentNode.parentNode.href), null);
+      replace_name_match(p, get_match_key(p.parentNode.parentNode.href), null);
     }
   }
   let sport = "";
@@ -595,22 +616,20 @@
       if (m_time) {
         date = new Date(m_time[3], m_time[2] - 1, m_time[1], m_time[4], m_time[5]).getTime();
       }
+      if (!date) {
+        return;
+      }
       for (let p of children) {
         console.log(p);
         let href = p.attributes.href.value;
-        val[p.textContent] = href;
-        let m = href.match(/\/player\/(.*)\/(.*)\//);
-        if (!m || !date) {
-          continue;
+        let rank_ele = p.parentNode.parentNode.parentNode.querySelector(".participant__participantRank");
+        let rank = 0;
+        if (rank_ele) {
+          rank = parseInt(rank_ele.childNodes[2].textContent);
         }
-        let key = m[1] + "/" + m[2];
-        if (!(key in full_names)) {
-          if (m[1] in full_names) {
-            key = m[1];
-          } else {
-            key = "";
-          }
-        }
+        console.log(href, rank);
+        val[p.textContent] = { href, rank };
+        let [key] = get_player_key(href);
         if (key) {
           let odate = player_met[key] || 0;
           player_met[key] = Math.max(odate, date);
@@ -675,16 +694,15 @@
     if (Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
       console.log(`Deleting old value for key: ${key}`, v);
       GM_deleteValue(key);
-    } else {
-      console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t) / 1000 / 60 / 60} hours old`, v);
     }
+    // } else {
+    //   console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t) / 1000 / 60 / 60} hours old`, v);
+    // }
   }
   let player_met = GM_getValue("__player_met", {});
   for (let key in player_met) {
     if (!(key in full_names)) {
-      console.log(
-        `player ${key}, last met ${new Date(player_met[key]).toISOString()}, not found in full names, deleting`
-      );
+      //   `player ${key}, last met ${new Date(player_met[key]).toISOString()}, not found in full names, deleting`
       delete player_met[key];
     } else if (Date.now() - player_met[key] > 1000 * 60 * 60 * 24 * 30) {
       console.log(
