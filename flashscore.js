@@ -421,10 +421,20 @@
     }
     return [key, m[1]];
   }
+
   function replace_name_player(p, play_info) {
     if (p.textContent.endsWith(")")) {
       return;
     }
+    const formatRank = (rank) => {
+      return rank ? " (" + rank + ")" : "";
+    };
+    const formatRawName = (raw_nanme) => {
+      return raw_name
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+    };
     let rank = 0;
     let href = "";
     if (typeof play_info == "object") {
@@ -435,22 +445,17 @@
     }
     let [key, raw_name] = get_player_key(href);
     let r = full_names[key];
-    if (!r) {
+    if (r) {
+      r = formatRawName(raw_name) + " (" + r + formatRank(rank) + ")";
+    } else {
       if (!raw_name) {
         return;
       }
-      r = raw_name
-        .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
+      let old_name = full_names[p.textContent];
+      old_name = old_name ? " [" + old_name + "]" : "";
+      r = p.textContent + " (" + formatRawName(raw_name) + old_name + formatRank(rank) + ")";
     }
-    if (rank) {
-      r = r + " (" + rank + ")";
-    }
-    if (full_names[p.textContent]) {
-      r = r + " [" + full_names[p.textContent] + "]";
-    }
-    p.textContent = p.textContent + " (" + r + ")";
+    p.textContent = r;
   }
   function replace_name_match(p, match, href) {
     let n = p.textContent;
