@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-12_06-22
+// @version      2025-07-12_11-42
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -486,7 +486,6 @@
       return true;
     }
     let v = GM_getValue(match);
-    console.log(match, v);
     if (!v) {
       console.log("attempt to nav to", href, nav_away);
       if (href) {
@@ -512,16 +511,35 @@
       }
       return false;
     }
-    if (v.stage) {
-      const tnode =
-        p.parentNode.querySelector("div.event__time") || p.parentNode.querySelector("div.event__stage--block");
-      if (tnode && tnode.lastChild.textContent != v.stage) {
-        tnode.appendChild(document.createElement("br"));
-        tnode.appendChild(document.createTextNode(v.stage));
-      }
-    }
     return replace_name_player(p, h);
   }
+  const updateEventStage = (tnode) => {
+    let mnode = tnode.parentNode;
+    while (mnode && !mnode.classList.contains("event__match")) {
+      mnode = mnode.parentNode;
+    }
+    mnode = mnode?.querySelector(".eventRowLink");
+    if (!mnode) {
+      return;
+    }
+    const match = get_match_key(mnode.href);
+    if (!match) {
+      return;
+    }
+    const v = GM_getValue(match);
+    if (!v?.stage) {
+      return;
+    }
+    if (tnode && tnode.lastChild.textContent != v.stage) {
+      tnode.appendChild(document.createElement("br"));
+      tnode.appendChild(document.createTextNode(v.stage));
+    }
+  };
+  const updateEventStageP = (node) => {
+    for (const tnode of node.querySelectorAll("div.event__time, div.event__stage--block")) {
+      updateEventStage(tnode);
+    }
+  };
   function replace_name(p, sport) {
     if (p.nodeType == 1 && (p.childNodes.length == 0 || p.childNodes[0].nodeType != 3)) {
       return;
@@ -575,53 +593,77 @@
       p.parentNode.style.top = "calc(50% + " + height / 2 + "px)";
     }
   }
+  const udpateElement = (node) => {
+    if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
+      let children = node.getElementsByClassName("event__participant");
+      for (let p of children) {
+        let sport = p.parentElement.parentElement.classList[1];
+        console.log(sport);
+        replace_name(p, sport);
+      }
+    } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
+      hanlde_draw_observer(node);
+    } else if (
+      window.location.href.startsWith("https://www.flashscore.com/match/") ||
+      window.location.href.startsWith("https://www.flashscore.com/player/") ||
+      window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
+      window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
+      window.location.href.startsWith("https://www.flashscore.com/tennis/")
+    ) {
+      let sport_eles = document.body.querySelectorAll("body > sport");
+      console.log(sport_eles.length);
+      sport = sport_eles[0].getAttribute("name");
+      console.log(sport);
+      let children = node.querySelectorAll(".participant__participantName:not(:has(.participant__participantName))");
+      for (let p of children) {
+        if (p.tagName == "A") {
+          replace_name_player(p, p.href);
+        } else {
+          replace_name(p, sport);
+        }
+      }
+      if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
+        for (let p of node.querySelectorAll(".h2h__participantInner")) {
+          replace_name(p, sport);
+        }
+        hanlde_draw_observer(node);
+      } else {
+        let children = node.getElementsByClassName("event__participant");
+        for (let p of children) {
+          replace_name(p, sport);
+        }
+      }
+    }
+    updateEventStageP(node);
+    let children = node.getElementsByClassName("leftMenu__text");
+    for (let p of children) {
+      replace_name_player(p, p.parentElement.href);
+    }
+  };
   observer = new MutationObserver((mutations) => {
     for (let mutation of mutations) {
+      if (mutation.type == "characterData") {
+        if (mutation.target.parentNode.classList.contains("event__stage--block")) {
+          updateEventStage(mutation.target.parentNode);
+        }
+        continue;
+      }
       if (mutation.type != "childList") {
         continue;
       }
       for (let node of mutation.addedNodes) {
-        if (node.nodeType != 1) {
-          continue;
-        }
-        let children = node.getElementsByClassName("leftMenu__text");
-        for (let p of children) {
-          console.log("mutate left menu", p, p.parentElement.href);
-          replace_name_player(p, p.parentElement.href);
-        }
-        if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
-          let children = node.getElementsByClassName("event__participant");
-          for (let p of children) {
-            let sport = p.parentElement.parentElement.classList[1];
-            console.log(sport);
-            replace_name(p, sport);
-          }
-        } else if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-          for (let p of node.querySelectorAll("a.participant__participantName")) {
-            replace_name_player(p, p.href);
-          }
-          for (let p of node.querySelectorAll(".h2h__participantInner")) {
-            replace_name(p, sport);
-          }
-          hanlde_draw_observer(node);
-        } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
-          hanlde_draw_observer(node);
-        } else if (
-          window.location.href.startsWith("https://www.flashscore.com/player/") ||
-          window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
-          window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
-          window.location.href.startsWith("https://www.flashscore.com/tennis/")
-        ) {
-          let children = node.getElementsByClassName("event__participant");
-          for (let p of children) {
-            replace_name(p, sport);
+        if (node.nodeType == node.ELEMENT_NODE) {
+          udpateElement(node);
+        } else if (node.nodeType == node.TEXT_NODE) {
+          if (node.parentNode.classList.contains("event__stage--block")) {
+            updateEventStage(node.parentNode);
           }
         }
       }
     }
   });
 
-  observer.observe(document.body, { subtree: true, childList: true });
+  observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
     if (window.location.href.indexOf("#") < 0) {
       return;
@@ -683,31 +725,7 @@
     }
     wait_for_load();
   }
-  if (
-    window.location.href.startsWith("https://www.flashscore.com/match/") ||
-    window.location.href.startsWith("https://www.flashscore.com/draw/") ||
-    window.location.href.startsWith("https://www.flashscore.com/player/") ||
-    window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
-    window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
-    window.location.href.startsWith("https://www.flashscore.com/tennis/")
-  ) {
-    let sport_eles = document.body.querySelectorAll("body > sport");
-    console.log(sport_eles.length);
-    sport = sport_eles[0].getAttribute("name");
-    console.log(sport);
-    let children = document.querySelectorAll(".participant__participantName:not(:has(.participant__participantName))");
-    for (let p of children) {
-      if (p.tagName == "A") {
-        replace_name_player(p, p.href);
-      } else {
-        replace_name(p, sport);
-      }
-    }
-  }
-  let children = document.getElementsByClassName("leftMenu__text");
-  for (let p of children) {
-    replace_name_player(p, p.parentElement.href);
-  }
+  udpateElement(document.body);
   for (let key of GM_listValues()) {
     if (key.startsWith("__")) {
       console.log("met special key: " + key);
