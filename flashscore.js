@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-12_11-42
+// @version      2025-07-16_07-16
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -12,18 +12,21 @@
 // @grant        GM_setValue
 // @grant        GM_deleteValue
 // @grant        GM_listValues
+// @grant        GM_addValueChangeListener
+// @grant        GM_removeValueChangeListener
+// @grant        GM_openInTab
 // @noframes
 // ==/UserScript==
 
 (function () {
   "use strict";
   console.log("oops, tampermonkey: " + window.location.href);
-  let replaces = {
+  const replaces = {
     tennis: {},
     "table-tennis": { "Calderano H.": "雨果", "Ni X.": "倪夏莲" },
     badminton: {},
   };
-  let full_names = {
+  const full_names = {
     "aizawa-tori": "相澤桃李",
     "an-jaehyun": "安宰贤",
     "an-se-young": "安洗莹",
@@ -425,7 +428,11 @@
     "Zheng Y.": "郑雨",
     "Zhou H. D.": "周昊东",
   };
-  let nav_away = false;
+  const tab_jobs = {};
+  const pending_job = {};
+  if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
+    GM_deleteValue("match/tennis/trluysvm");
+  }
   function get_match_key(href) {
     let m = href.match(/match\/[^/]+\/[^/]+/);
     return m[0];
@@ -487,31 +494,24 @@
       return true;
     }
     let v = GM_getValue(match);
-    if (!v) {
-      console.log("attempt to nav to", href, nav_away);
-      if (href) {
-        GM_setValue("navback", true);
-        if (!nav_away) {
-          console.log("nav to", href);
-          window.location.href = href;
-          nav_away = true;
+    if (!v || !v[n]) {
+      if (!(match in tab_jobs) && href) {
+        const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
+          GM_removeValueChangeListener(listener);
+          if (match in tab_jobs) {
+            tab_jobs[match].close();
+            delete tab_jobs[match];
+          }
+          replace_name_match(p, match, null);
+        });
+        if (!(match in pending_job)) {
+          console.log("create pending job", match);
+          pending_job[match] = href;
         }
       }
       return false;
     }
     let h = v[n];
-    if (h == null) {
-      console.log("attempt to nav to", href, v, n);
-      if (href) {
-        GM_setValue("navback", true);
-        if (!nav_away) {
-          console.log("nav to", href, v, n);
-          window.location.href = href;
-          nav_away = true;
-        }
-      }
-      return false;
-    }
     return replace_name_player(p, h);
   }
   const updateEventStage = (tnode) => {
@@ -719,10 +719,6 @@
       }
       console.log(val);
       GM_setValue(key, val);
-      if (GM_getValue("navback")) {
-        GM_deleteValue("navback");
-        history.back();
-      }
     }
     wait_for_load();
   }
@@ -765,4 +761,12 @@
       console.log(`player ${key}, ${full_names[key]}, never met`);
     }
   }
+  setInterval(() => {
+    for (const match in pending_job) {
+      const href = pending_job[match];
+      delete pending_job[match];
+      tab_jobs[match] = GM_openInTab(href);
+      break;
+    }
+  }, 1000);
 })();
