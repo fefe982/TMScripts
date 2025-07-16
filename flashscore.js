@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-16_07-16
+// @version      2025-07-16_19-46
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -430,9 +430,6 @@
   };
   const tab_jobs = {};
   const pending_job = {};
-  if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
-    GM_deleteValue("match/tennis/trluysvm");
-  }
   function get_match_key(href) {
     let m = href.match(/match\/[^/]+\/[^/]+/);
     return m[0];
