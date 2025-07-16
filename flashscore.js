@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-16_19-46
+// @version      2025-07-16_21-30
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -23,7 +23,7 @@
   console.log("oops, tampermonkey: " + window.location.href);
   const replaces = {
     tennis: {},
-    "table-tennis": { "Calderano H.": "雨果", "Ni X.": "倪夏莲" },
+    "table-tennis": {},
     badminton: {},
   };
   const full_names = {
@@ -258,6 +258,7 @@
     "sun-liang-ching": "孙亮晴",
     "sun-yingsha": "孙颖莎",
     "sung-shuo-yun": "宋硕芸",
+    "sung-yu-hsuan": "宋祐媗",
     "tajima-naoki": "田島尚輝",
     "takahashi-koo": "高橋洸士",
     "takahashi-miyu": "髙橋美優",
@@ -415,7 +416,6 @@
     "Shibata K.": "柴田一樹",
     "Shin S. C.": "申昇瓒",
     "Sun Y. H.": "孙昱瑆",
-    "sung-yu-hsuan": "宋祐媗",
     "Tai T. Y.": "戴资颖",
     "Tsai R. L.": "蔡渃琳",
     "Tsuneyama K.": "常山幹太",
@@ -474,14 +474,14 @@
     let [key, raw_name] = get_player_key(href);
     let r = full_names[key];
     if (r) {
-      r = formatRawName(raw_name) + " (" + r + formatRank(rank) + ")";
+      r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
       if (!raw_name) {
         return;
       }
       let old_name = full_names[p.textContent];
       old_name = old_name ? " [" + old_name + "]" : "";
-      r = p.textContent + " (" + formatRawName(raw_name) + old_name + formatRank(rank) + ")";
+      r = formatRawName(raw_name) + " (" + old_name + ")" + formatRank(rank);
     }
     p.textContent = r;
   }
@@ -554,26 +554,7 @@
     ) {
       let match = p.parentNode.querySelector("a.eventRowLink");
       if (match != null) {
-        let flags = p.parentNode.querySelectorAll("span.flag");
-        let href = null;
-        if (replace[p.textContent]) {
-          href = match.href;
-        } else {
-          for (let flag of flags) {
-            let value = flag.attributes["title"].value;
-            if (
-              value == "China" ||
-              value == "Taiwan" ||
-              value == "Hong Kong" ||
-              value == "Macao" ||
-              value == "Japan" ||
-              value == "South Korea"
-            ) {
-              href = match.href;
-            }
-          }
-        }
-        replace_name_match(p, get_match_key(match.href), href);
+        replace_name_match(p, get_match_key(match.href), match.href);
       }
     }
     if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
