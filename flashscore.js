@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-16_21-30
+// @version      2025-07-16_22-04
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -477,6 +477,7 @@
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
       if (!raw_name) {
+        r = p.textContent + "()";
         return;
       }
       let old_name = full_names[p.textContent];
@@ -485,6 +486,21 @@
     }
     p.textContent = r;
   }
+
+  const addMatchListener = (match, href, callback) => {
+    const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
+      GM_removeValueChangeListener(listener);
+      if (match in tab_jobs) {
+        tab_jobs[match].close();
+        delete tab_jobs[match];
+      }
+      callback();
+    });
+    if (!(match in pending_job)) {
+      console.log("create pending job", match);
+      pending_job[match] = href;
+    }
+  };
   function replace_name_match(p, match, href) {
     let n = p.textContent;
     if (!n || n.endsWith(")")) {
@@ -493,18 +509,10 @@
     let v = GM_getValue(match);
     if (!v || !v[n]) {
       if (!(match in tab_jobs) && href) {
-        const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
-          GM_removeValueChangeListener(listener);
-          if (match in tab_jobs) {
-            tab_jobs[match].close();
-            delete tab_jobs[match];
-          }
+        console.log("name match", v);
+        addMatchListener(match, href, () => {
           replace_name_match(p, match, null);
         });
-        if (!(match in pending_job)) {
-          console.log("create pending job", match);
-          pending_job[match] = href;
-        }
       }
       return false;
     }
@@ -526,6 +534,14 @@
     }
     const v = GM_getValue(match);
     if (!v?.stage) {
+      if (!(match in tab_jobs)) {
+        addMatchListener(match, mnode.href, () => {
+          updateEventStage(tnode);
+        });
+      }
+      return;
+    }
+    if (v.stage == "__null__") {
       return;
     }
     if (tnode && tnode.lastChild.textContent != v.stage) {
@@ -690,6 +706,8 @@
       let stagesplit = stage.split(" - ");
       if (stagesplit.length == 2) {
         val.stage = stagesplit[1];
+      } else {
+        val.stage = "__null__";
       }
       console.log(player_met);
       if (date) {
