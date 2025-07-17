@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-16_22-04
+// @version      2025-07-18_06-00
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -451,7 +451,7 @@
   }
 
   function replace_name_player(p, play_info) {
-    if (p.textContent.endsWith(")")) {
+    if ("mod" in p.attributes) {
       return;
     }
     const formatRank = (rank) => {
@@ -477,14 +477,15 @@
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
       if (!raw_name) {
-        r = p.textContent + "()";
         return;
       }
       let old_name = full_names[p.textContent];
       old_name = old_name ? " [" + old_name + "]" : "";
-      r = formatRawName(raw_name) + " (" + old_name + ")" + formatRank(rank);
+      r = formatRawName(raw_name) + old_name + formatRank(rank);
     }
     p.textContent = r;
+    p.setAttribute("mod", "1");
+    console.log(p.attributes);
   }
 
   const addMatchListener = (match, href, callback) => {
@@ -507,7 +508,7 @@
       return true;
     }
     let v = GM_getValue(match);
-    if (!v || !v[n]) {
+    if (!v?.[n]) {
       if (!(match in tab_jobs) && href) {
         console.log("name match", v);
         addMatchListener(match, href, () => {
