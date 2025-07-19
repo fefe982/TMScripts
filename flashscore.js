@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-18_06-42
+// @version      2025-07-19_08-24
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -485,7 +485,6 @@
     }
     p.textContent = r;
     p.setAttribute("mod", "1");
-    console.log(p.attributes);
   }
 
   const addMatchListener = (match, href, callback) => {
@@ -503,14 +502,14 @@
     }
   };
   function replace_name_match(p, match, href) {
-    const n = p.textContent;
-    if (!n || n.endsWith(")")) {
-      return true;
+    if ("mod" in p.attributes) {
+      return;
     }
+    const n = p.textContent;
     const v = GM_getValue(match);
     if (!v?.[n]) {
+      console.log(match, v);
       if (!(match in tab_jobs) && href) {
-        console.log("name match", v);
         addMatchListener(match, href, () => {
           replace_name_match(p, match, null);
         });
@@ -591,7 +590,6 @@
       const children = node.getElementsByClassName("event__participant");
       for (const p of children) {
         const sport = p.parentElement.parentElement.classList[1];
-        console.log(sport);
         replace_name(p, sport);
       }
     } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
@@ -604,9 +602,7 @@
       window.location.href.startsWith("https://www.flashscore.com/tennis/")
     ) {
       const sport_eles = document.body.querySelectorAll("body > sport");
-      console.log(sport_eles.length);
       sport = sport_eles[0].getAttribute("name");
-      console.log(sport);
       const children = node.querySelectorAll(".participant__participantName:not(:has(.participant__participantName))");
       for (const p of children) {
         if (p.tagName == "A") {
@@ -754,6 +750,36 @@
       console.log(`player ${key}, ${full_names[key]}, never met`);
     }
   }
+  (function () {
+    const exchangeSport = (mainhref, minorhref) => {
+      const main = document.querySelector(`.menuTop__item[href="${mainhref}"]`);
+      console.log(`.menuTop_item[a='${mainhref}']`);
+      const minor = document.querySelector(`.menuMinority__item[href='${minorhref}']`);
+      const mainminor = document.querySelector(`.menuMinority__item[href='${mainhref}']`);
+      console.log(main, minor, mainminor);
+      if (main && minor && mainminor) {
+        mainminor.classList.remove("menuMinority__item--hidden");
+        console.log("minor class", mainminor.classList);
+        minor.classList.add("menuMinority__item--hidden");
+        main.href = minorhref;
+        console.log(main.children[0].children[0]);
+        main.children[0].removeChild(main.children[0].children[0]);
+        main.children[0].appendChild(minor.children[0].children[0]);
+        main.setAttribute("data-sport-id", minor.getAttribute("data-sport-id"));
+        main.children[1].textContent = minor.children[1].textContent;
+        return true;
+      }
+      return false;
+    };
+    console.log("exchanging sports");
+    const exchange = [
+      ["/basketball/", "/badminton/"],
+      ["/hockey/", "/table-tennis/"],
+    ];
+    for (const [mainhref, minorhref] of exchange) {
+      exchangeSport(mainhref, minorhref);
+    }
+  })();
   setInterval(() => {
     for (const match in pending_job) {
       const href = pending_job[match];
