@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-19_08-24
+// @version      2025-07-21_05-22
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -65,6 +65,7 @@
     "chou-tien-chen": "周天成",
     "cui-jie": "崔杰",
     "doo-hoi-kem": "杜凯琹",
+    "fan-ka-yan": "范嘉茵",
     "fan-shuhan": "范淑涵",
     "feng-yanzhe": "冯彦哲",
     "feng-yi-hsin": "冯翊新",
@@ -76,6 +77,7 @@
     "guo-hanyu": "郭涵煜",
     "guo-xinwa": "郭新娃",
     "han-feier": "韩菲儿",
+    "han-qianxi": "韩千禧",
     "han-yue": "韩悦",
     "hara-nanako": "原菜那子",
     "harimoto-miwa": "張本美和",
@@ -256,6 +258,7 @@
     "suizu-manami": "水津愛美",
     "sun-fajing": "孙发京",
     "sun-liang-ching": "孙亮晴",
+    "sun-wen-jun": "孙文骏",
     "sun-yingsha": "孙颖莎",
     "sung-shuo-yun": "宋硕芸",
     "sung-yu-hsuan": "宋祐媗",
@@ -330,6 +333,7 @@
     "yang-yiyun": "杨屹韵",
     "yang-zhaoxuan": "杨钊煊",
     "yao-xinxin": "姚欣辛",
+    "yau-mau-ying": "尤漫莹",
     "ye-hong-wei": "叶宏蔚",
     "yen-yu-lin": "林彦妤",
     "yeung-nga-ting": "杨雅婷",
@@ -697,8 +701,8 @@
         ".wcl-breadcrumbItem_CiWQ7:last-child .wcl-breadcrumbItemLabel_ogiBc"
       ).textContent;
       const stagesplit = stage.split(" - ");
-      if (stagesplit.length == 2) {
-        val.stage = stagesplit[1];
+      if (stagesplit.length > 1) {
+        val.stage = stagesplit.pop();
       } else {
         val.stage = "__null__";
       }
