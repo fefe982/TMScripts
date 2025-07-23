@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-21_05-22
+// @version      2025-07-24_06-00
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -40,6 +40,7 @@
     "chan-nicole-gonzales": "詹又蓁",
     "chang-ching-hui": "张净惠",
     "chang-ko-chi": "张课琦",
+    "chang-yu-an": "张玉安",
     "chen-boyang": "陈柏阳",
     "chen-cheng-kuan": "陈政宽",
     "chen-fanghui": "陈芳卉",
@@ -76,6 +77,7 @@
     "gunji-riko": "郡司莉子",
     "guo-hanyu": "郭涵煜",
     "guo-xinwa": "郭新娃",
+    "hamada-kazuki": "濵田一輝",
     "han-feier": "韩菲儿",
     "han-qianxi": "韩千禧",
     "han-yue": "韩悦",
@@ -146,11 +148,13 @@
     "kim-seoyun": "金谞润",
     "kim-won-ho": "金元浩",
     "kiyose-riko": "清瀬璃子",
+    "kobayashi-hiromu": "小林広夢",
     "kobayashi-yugo": "小林優吾",
     "kong-hee-yong": "孔熙容",
     "kong-tsz-lam": "江芷林",
     "konishi-haruna": "小西春七",
     "kuai-man": "蒯曼",
+    "kuo-guan-hong": "郭冠宏",
     "kuo-kuan-lin": "郭冠麟",
     "kwan-man-ho": "关文皓",
     "lai-po-yu": "赖柏佑",
@@ -187,6 +191,7 @@
     "lin-hsiang-ti": "林湘缇",
     "lin-jhih-yun": "林芝昀",
     "lin-shidong": "林诗栋",
+    "lin-yen-chun": "林彦均",
     "lin-yun-ju": "林昀儒",
     "liu-kuang-heng": "刘广珩",
     "liu-sheng-shu": "刘圣书",
@@ -254,6 +259,7 @@
     "sim-yu-jin": "沈有振",
     "su-ching-heng": "苏敬恒",
     "su-li-yang": "苏力扬",
+    "su-tsz-tung": "苏籽童",
     "sugiyama-kaoru": "杉山薫",
     "suizu-manami": "水津愛美",
     "sun-fajing": "孙发京",
@@ -342,6 +348,7 @@
     "yokoi-sakura": "横井咲桜",
     "yoshimura-maharu": "吉村真晴",
     "yoshiyama-ryoichi": "吉山僚一",
+    "you-xiaodi": "尤晓迪",
     "yu-chien-hui": "余芊慧",
     "yuan-licen": "袁励岑",
     "yuan-yue-1998": "袁悦",
@@ -365,7 +372,6 @@
     "Nishikori K.": "錦織圭",
     "Shang J.": "商竣程",
     "Wang Y.": "王雅繁",
-    "Chang Y.": "张玉安",
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
     "Fan S.": "范思琦",
