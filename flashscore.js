@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-24_06-00
+// @version      2025-07-26_07-15
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -44,6 +44,7 @@
     "chen-boyang": "陈柏阳",
     "chen-cheng-kuan": "陈政宽",
     "chen-fanghui": "陈芳卉",
+    "chen-qingchen": "陈清晨",
     "chen-su-yu": "陈肃谕",
     "chen-xingtong": "陈幸同",
     "chen-yan-fei": "陈妍妃",
@@ -139,6 +140,7 @@
     "kao-cheng-jui": "高承睿",
     "kato-miyu": "加藤未唯",
     "kawazoe-maiko": "川添麻依子",
+    "keng-shuliang": "坑姝良",
     "ki-dong-ju": "奇东柱",
     "kihara-miyuu": "木原美悠",
     "kim-ga-eun": "金佳恩",
@@ -341,6 +343,7 @@
     "yao-xinxin": "姚欣辛",
     "yau-mau-ying": "尤漫莹",
     "ye-hong-wei": "叶宏蔚",
+    "yeh-yi-tian": "叶伊恬",
     "yen-yu-lin": "林彦妤",
     "yeung-nga-ting": "杨雅婷",
     "yeung-pui-lam": "杨霈霖",
@@ -389,7 +392,6 @@
     "Zeng B.": "曾蓓勋",
     "Zong G.": "纵歌曼",
     "Akechi H.": "明地陽菜",
-    "Chen Q. C.": "陈清晨",
     "Chen S. F.": "陈胜发",
     "Chen Xu Jun": "陈旭君",
     "Cheng Y.": "郑育沛",
@@ -401,7 +403,6 @@
     "Jeon H. J.": "全奕陈",
     "Kaneko Y.": "金子祐樹",
     "Kato Y.": "加藤佑奈",
-    "Keng S. L.": "坑姝良",
     "Kim S. Y.": "金昭映",
     "Konegawa M.": "古根川美桜",
     "Kurihara A.": "栗原あかり",
@@ -497,16 +498,21 @@
     p.setAttribute("mod", "1");
   }
 
-  const addMatchListener = (match, href, callback) => {
-    const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
-      GM_removeValueChangeListener(listener);
-      if (match in tab_jobs) {
-        tab_jobs[match].close();
-        delete tab_jobs[match];
-      }
-      callback();
-    });
+  const addMatchListener = (match, href) => {
     if (!(match in pending_job)) {
+      const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
+        GM_removeValueChangeListener(listener);
+        if (match in tab_jobs) {
+          tab_jobs[match].close();
+          delete tab_jobs[match];
+        }
+        const eventRowLink = document.querySelector("a.eventRowLink[href='" + href + "']");
+        for (const p of eventRowLink.parentElement.querySelectorAll("div.event__participant")) {
+          replace_name_match(p, match, null);
+        }
+        updateEventStage(eventRowLink.parentElement.querySelector("div.event__time, div.event__stage--block"), match);
+        console.log("listener for " + match + " fired", key, old_val, new_val);
+      });
       console.log("create pending job", match);
       pending_job[match] = href;
     }
@@ -520,33 +526,32 @@
     if (!v?.[n]) {
       console.log(match, v);
       if (!(match in tab_jobs) && href) {
-        addMatchListener(match, href, () => {
-          replace_name_match(p, match, null);
-        });
+        addMatchListener(match, href);
       }
       return false;
     }
     return replace_name_player(p, v[n]);
   }
-  const updateEventStage = (tnode) => {
-    let mnode = tnode.parentNode;
-    while (mnode && !mnode.classList.contains("event__match")) {
-      mnode = mnode.parentNode;
+  const updateEventStage = (tnode, match) => {
+    let mnode;
+    if (!match) {
+      mnode = tnode.parentNode;
+      while (mnode && !mnode.classList.contains("event__match")) {
+        mnode = mnode.parentNode;
+      }
+      mnode = mnode?.querySelector(".eventRowLink");
+      if (!mnode) {
+        return;
+      }
+      match = get_match_key(mnode.href);
     }
-    mnode = mnode?.querySelector(".eventRowLink");
-    if (!mnode) {
-      return;
-    }
-    const match = get_match_key(mnode.href);
     if (!match) {
       return;
     }
     const v = GM_getValue(match);
     if (!v?.stage) {
-      if (!(match in tab_jobs)) {
-        addMatchListener(match, mnode.href, () => {
-          updateEventStage(tnode);
-        });
+      if (!(match in tab_jobs) && mnode) {
+        addMatchListener(match, mnode.href);
       }
       return;
     }
@@ -794,6 +799,7 @@
     for (const match in pending_job) {
       const href = pending_job[match];
       delete pending_job[match];
+      console.log(`opening ${href}`);
       tab_jobs[match] = GM_openInTab(href);
       break;
     }
