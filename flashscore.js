@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-28_06-33
+// @version      2025-07-28_07-07
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -550,9 +550,6 @@
     }
     const v = GM_getValue(match);
     if (!v?.stage) {
-      if (!(match in tab_jobs) && mnode) {
-        addMatchListener(match, mnode.href);
-      }
       return;
     }
     if (v.stage == "__null__") {
@@ -702,7 +699,7 @@
           rank = parseInt(rank_ele.childNodes[2].textContent);
         }
         console.log(href, rank);
-        const player_key = p.attributes.mod.value || p.textContent;
+        const player_key = p.attributes.mod?.value || p.textContent;
         val[player_key] = { href, rank };
         const [key] = get_player_key(href);
         if (key) {
