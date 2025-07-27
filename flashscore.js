@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-28_04-49
+// @version      2025-07-28_06-33
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -494,8 +494,8 @@
       old_name = old_name ? " [" + old_name + "]" : "";
       r = formatRawName(raw_name) + old_name + formatRank(rank);
     }
+    p.setAttribute("mod", p.textContent);
     p.textContent = r;
-    p.setAttribute("mod", "1");
   }
 
   const addMatchListener = (match, href) => {
@@ -682,7 +682,7 @@
         setTimeout(wait_for_load, 1000);
         return;
       }
-      const player_met = GM_getValue("__player_met", {});
+      const player_met = {};
       const match_time = document.querySelector("div.duelParticipant div.duelParticipant__startTime div").textContent;
       console.log(match_time);
       const m_time = /(\d+).(\d+).(\d+) (\d+):(\d+)/.exec(match_time);
@@ -702,7 +702,8 @@
           rank = parseInt(rank_ele.childNodes[2].textContent);
         }
         console.log(href, rank);
-        val[p.textContent] = { href, rank };
+        const player_key = p.attributes.mod.value || p.textContent;
+        val[player_key] = { href, rank };
         const [key] = get_player_key(href);
         if (key) {
           player_met[key] = Math.max(player_met[key] || 0, date);
@@ -717,9 +718,10 @@
       } else {
         val.stage = "__null__";
       }
-      console.log(player_met);
-      if (date) {
-        GM_setValue("__player_met", player_met);
+      if (date && player_met) {
+        const saved_player_met = { ...GM_getValue("__player_met", {}), ...player_met };
+        GM_setValue("__player_met", saved_player_met);
+        console.log(saved_player_met);
       }
       console.log(val);
       GM_setValue(key, val);
