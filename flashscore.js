@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-27_21-37
+// @version      2025-07-28_04-49
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -250,6 +250,7 @@
     "sano-daisuke": "佐野大輔",
     "sato-hitomi": "佐藤瞳",
     "seo-seung-jae": "徐承宰",
+    "shang-juncheng": "商竣程",
     "shi-han": "石瀚",
     "shi-xunyao": "石洵瑶",
     "shi-yuqi": "石宇奇",
@@ -374,7 +375,6 @@
     "zhu-yuling": "朱雨玲",
     "zhu-ziyu": "朱梓予",
     "Nishikori K.": "錦織圭",
-    "Shang J.": "商竣程",
     "Chen Meng": "陈梦",
     "Chen S-Y.": "陈思羽",
     "Fan S.": "范思琦",
