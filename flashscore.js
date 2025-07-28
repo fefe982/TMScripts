@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-28_20-46
+// @version      2025-07-28_20-59
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -441,6 +441,32 @@
   };
   const tab_jobs = {};
   const pending_job = {};
+  let timer = null;
+  let num_jobs = 0;
+  const startTimer = () => {
+    if (timer) {
+      return;
+    }
+    const check_pending_job = () => {
+      console.log("check pending job", tab_jobs.length);
+      if (num_jobs < 5) {
+        for (const match in pending_job) {
+          const href = pending_job[match];
+          delete pending_job[match];
+          num_jobs++;
+          console.log(`opening ${href}`);
+          tab_jobs[match] = GM_openInTab(href);
+          break;
+        }
+      }
+      if (pending_job) {
+        timer = setTimeout(check_pending_job, 1000);
+      } else {
+        timer = null;
+      }
+    };
+    timer = setTimeout(check_pending_job, 1000);
+  };
   function get_match_key(href) {
     const m = href.match(/match\/[^/]+\/[^/]+/);
     return m[0];
@@ -505,6 +531,7 @@
         if (match in tab_jobs) {
           tab_jobs[match].close();
           delete tab_jobs[match];
+          num_jobs--;
         }
         const eventRowLink = document.querySelector("a.eventRowLink[href='" + href + "']");
         for (const p of eventRowLink.parentElement.querySelectorAll("div.event__participant")) {
@@ -515,6 +542,7 @@
       });
       console.log("create pending job", match);
       pending_job[match] = href;
+      startTimer();
     }
   };
   function replace_name_match(p, match, href) {
@@ -776,13 +804,4 @@
       exchangeSport(mainhref, minorhref);
     }
   })();
-  setInterval(() => {
-    for (const match in pending_job) {
-      const href = pending_job[match];
-      delete pending_job[match];
-      console.log(`opening ${href}`);
-      tab_jobs[match] = GM_openInTab(href);
-      break;
-    }
-  }, 1000);
 })();
