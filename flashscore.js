@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-07-28_07-07
+// @version      2025-07-28_20-46
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -679,7 +679,6 @@
         setTimeout(wait_for_load, 1000);
         return;
       }
-      const player_met = {};
       const match_time = document.querySelector("div.duelParticipant div.duelParticipant__startTime div").textContent;
       console.log(match_time);
       const m_time = /(\d+).(\d+).(\d+) (\d+):(\d+)/.exec(match_time);
@@ -703,7 +702,9 @@
         val[player_key] = { href, rank };
         const [key] = get_player_key(href);
         if (key) {
-          player_met[key] = Math.max(player_met[key] || 0, date);
+          const player = GM_getValue("player/" + key, {});
+          player.t = Math.max(player.t || 0, date);
+          GM_setValue("player/" + key, player);
         }
       }
       const stage = document.querySelector(
@@ -714,11 +715,6 @@
         val.stage = stagesplit.pop();
       } else {
         val.stage = "__null__";
-      }
-      if (date && player_met) {
-        const saved_player_met = { ...GM_getValue("__player_met", {}), ...player_met };
-        GM_setValue("__player_met", saved_player_met);
-        console.log(saved_player_met);
       }
       console.log(val);
       GM_setValue(key, val);
@@ -737,7 +733,7 @@
       GM_deleteValue(key);
       continue;
     }
-    if (Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
+    if (key.startsWith("match/") && Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
       console.log(`Deleting old value for key: ${key}`, v);
       GM_deleteValue(key);
     }
@@ -745,22 +741,8 @@
     //   console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t) / 1000 / 60 / 60} hours old`, v);
     // }
   }
-  const player_met = GM_getValue("__player_met", {});
-  for (const key in player_met) {
-    if (!(key in full_names)) {
-      //   `player ${key}, last met ${new Date(player_met[key]).toISOString()}, not found in full names, deleting`
-      delete player_met[key];
-    } else if (Date.now() - player_met[key] > 1000 * 60 * 60 * 24 * 30) {
-      console.log(
-        `player ${key}, ${full_names[key]}, last met ${new Date(player_met[key]).toISOString()}, met ${
-          (Date.now() - player_met[key]) / 1000 / 60 / 60 / 24
-        } days ago`
-      );
-    }
-  }
-  GM_setValue("__player_met", player_met);
   for (const key in full_names) {
-    if (!(key in player_met)) {
+    if (!GM_getValue("player/" + key)) {
       console.log(`player ${key}, ${full_names[key]}, never met`);
     }
   }
