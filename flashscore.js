@@ -15,12 +15,28 @@
 // @grant        GM_addValueChangeListener
 // @grant        GM_removeValueChangeListener
 // @grant        GM_openInTab
+// @grant        GM_addStyle
 // @noframes
 // ==/UserScript==
 
 (function () {
   "use strict";
   console.log("oops, tampermonkey: " + window.location.href);
+  GM_addStyle(`.seoAdWrapper, .adsclick, #rc-top, iframe, .adsenvelope {
+    display:none !important
+}
+.leftMenu__text, .bracket__name {
+    text-wrap: wrap !important
+}
+.bracket {
+    grid-template-rows: auto auto !important;
+}
+.bracket__participantRow {
+    grid-template-rows: auto;
+}
+.bracket--doubles .bracket__participantRow {
+    grid-template-rows: auto auto;
+}`);
   const replaces = {
     tennis: {},
     "table-tennis": {},
@@ -465,7 +481,6 @@
       return;
     }
     const check_pending_job = () => {
-      console.log("check pending job", tab_jobs.length);
       if (num_jobs < 5) {
         for (const match in pending_job) {
           const href = pending_job[match];
@@ -482,7 +497,7 @@
         timer = null;
       }
     };
-    timer = setTimeout(check_pending_job, 1000);
+    check_pending_job();
   };
   function get_match_key(href) {
     const m = href.match(/match\/[^/]+\/[^/]+/);
@@ -763,6 +778,7 @@
       }
       console.log(val);
       GM_setValue(key, val);
+      console.log(key, GM_getValue(key));
     }
     wait_for_load();
   }
