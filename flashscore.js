@@ -20,7 +20,7 @@
 // @noframes
 // ==/UserScript==
 
-(function () {
+(async function () {
   "use strict";
   console.log("oops, tampermonkey: " + window.location.href);
   GM_addStyle(`.seoAdWrapper, .adsclick, #rc-top, iframe, .adsenvelope {
@@ -517,16 +517,16 @@
     });
     return resp.response;
   };
-  const update_translation = async (key, translation) => {
+  const update_player = async (player) => {
     const resp = await GM.xmlHttpRequest({
       method: "POST",
-      url: "http://localhost:5173/api/flashscore_player?key=" + encodeURIComponent(key),
-      data: JSON.stringify({ translation: translation }),
+      url: "http://localhost:5173/api/flashscore_player",
+      data: JSON.stringify(player),
       headers: {
         "Content-Type": "application/json",
       },
     });
-    console.log("update_translation", key, translation, resp);
+    console.log("update_player", player, resp);
     return resp.response;
   };
   const tab_jobs = {};
@@ -603,7 +603,7 @@
     let r = full_names[key] || player_info_db?.translation;
     if (r) {
       if (!player_info_db?.translation) {
-        update_translation(full_key, r);
+        update_player({ key: full_key, translation: r });
       }
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
@@ -795,7 +795,10 @@
     if (window.location.href.indexOf("#") < 0) {
       return;
     }
-    function wait_for_load() {
+    async function wait_for_load() {
+      const sport_eles = document.body.querySelectorAll("body > sport");
+      const sport = sport_eles[0].getAttribute("name");
+      const sport_id = await get_sport_id(sport);
       const key = get_match_key(window.location.href);
       console.log(key);
       const val = { t: Date.now() };
@@ -826,12 +829,13 @@
         console.log(href, rank);
         const player_key = p.attributes.mod?.value || p.textContent;
         val[player_key] = { href, rank };
-        const [key] = get_player_key(href);
+        const [key, , full_key] = get_player_key(href);
         if (key) {
           const player = GM_getValue("player/" + key, {});
           player.t = Math.max(player.t || 0, date);
           GM_setValue("player/" + key, player);
         }
+        update_player({ key: full_key, display: p.textContent, sport: sport_id, last_seen: date });
       }
       const stage = document.querySelector(
         ".wcl-breadcrumbItem_CiWQ7:last-child .wcl-breadcrumbItemLabel_ogiBc"
@@ -846,7 +850,7 @@
       GM_setValue(key, val);
       console.log(key, GM_getValue(key));
     }
-    wait_for_load();
+    await wait_for_load();
   }
   udpateElement(document.body);
   for (const key of GM_listValues()) {
