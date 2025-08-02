@@ -16,6 +16,7 @@
 // @grant        GM_removeValueChangeListener
 // @grant        GM_openInTab
 // @grant        GM_addStyle
+// @grant        GM_xmlhttpRequest
 // @noframes
 // ==/UserScript==
 
@@ -487,6 +488,47 @@
     "Zheng Y.": "郑雨",
     "Zhou H. D.": "周昊东",
   };
+  const get_sport_id = async (sport) => {
+    if (!(sport in replaces)) {
+      return null;
+    }
+    if (!replaces[sport].id) {
+      const sport_id_resp = await GM.xmlHttpRequest({
+        method: "GET",
+        url: "http://localhost:5173/api/sport?sport=" + sport,
+      });
+      const sport_id = sport_id_resp.response;
+      replaces[sport].id = sport_id;
+    }
+    return replaces[sport].id;
+  };
+  const get_player = async (key, display, sport_id) => {
+    let url = "http://localhost:5173/api/flashscore_player?key=" + encodeURIComponent(key);
+    if (display) {
+      url = url + "&display=" + encodeURIComponent(display);
+    }
+    if (sport_id) {
+      url = url + "&sport=" + sport_id;
+    }
+    const resp = await GM.xmlHttpRequest({
+      method: "GET",
+      url: url,
+      responseType: "json",
+    });
+    return resp.response;
+  };
+  const update_translation = async (key, translation) => {
+    const resp = await GM.xmlHttpRequest({
+      method: "POST",
+      url: "http://localhost:5173/api/flashscore_player?key=" + encodeURIComponent(key),
+      data: JSON.stringify({ translation: translation }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("update_translation", key, translation, resp);
+    return resp.response;
+  };
   const tab_jobs = {};
   const pending_job = {};
   let timer = null;
@@ -524,6 +566,7 @@
       return ["", ""];
     }
     let key = m[1] + "/" + m[2];
+    const full_key = key;
     if (!(key in full_names)) {
       if (m[1] in full_names) {
         key = m[1];
@@ -531,17 +574,17 @@
         key = "";
       }
     }
-    return [key, m[1]];
+    return [key, m[1], full_key];
   }
 
-  function replace_name_player(p, play_info) {
+  async function replace_name_player(p, play_info, sport_id) {
     if ("mod" in p.attributes) {
       return;
     }
     const formatRank = (rank) => {
       return rank ? " (" + rank + ")" : "";
     };
-    const formatRawName = (raw_nanme) => {
+    const formatRawName = (raw_name) => {
       return raw_name
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
@@ -555,9 +598,13 @@
     } else {
       href = play_info;
     }
-    const [key, raw_name] = get_player_key(href);
-    let r = full_names[key];
+    const [key, raw_name, full_key] = get_player_key(href);
+    const player_info_db = await get_player(full_key, p.textContent, sport_id);
+    let r = full_names[key] || player_info_db?.translation;
     if (r) {
+      if (!player_info_db?.translation) {
+        update_translation(full_key, r);
+      }
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
       if (!raw_name) {
@@ -571,7 +618,7 @@
     p.textContent = r;
   }
 
-  const addMatchListener = (match, href) => {
+  const addMatchListener = (match, href, sport_id) => {
     if (!(match in pending_job)) {
       const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
         GM_removeValueChangeListener(listener);
@@ -582,7 +629,7 @@
         }
         const eventRowLink = document.querySelector("a.eventRowLink[href='" + href + "']");
         for (const p of eventRowLink.parentElement.querySelectorAll("div.event__participant")) {
-          replace_name_match(p, match, null);
+          replace_name_match(p, match, null, sport_id);
         }
         updateEventStage(eventRowLink.parentElement.querySelector("div.event__time, div.event__stage--block"), match);
         console.log("listener for " + match + " fired", key, old_val, new_val);
@@ -592,7 +639,7 @@
       startTimer();
     }
   };
-  function replace_name_match(p, match, href) {
+  async function replace_name_match(p, match, href, sport_id) {
     if ("mod" in p.attributes) {
       return;
     }
@@ -601,11 +648,11 @@
     if (!v?.[n]) {
       console.log(match, v);
       if (!(match in tab_jobs) && href) {
-        addMatchListener(match, href);
+        addMatchListener(match, href, sport_id);
       }
       return false;
     }
-    return replace_name_player(p, v[n]);
+    return await replace_name_player(p, v[n], sport_id);
   }
   const updateEventStage = (tnode, match) => {
     let mnode;
@@ -640,7 +687,7 @@
       updateEventStage(tnode);
     }
   };
-  function replace_name(p, sport) {
+  function replace_name(p, sport, sport_id) {
     if (p.nodeType == 1 && (p.childNodes.length == 0 || p.childNodes[0].nodeType != 3)) {
       return;
     }
@@ -655,32 +702,35 @@
     ) {
       const match = p.parentNode.querySelector("a.eventRowLink");
       if (match != null) {
-        replace_name_match(p, get_match_key(match.href), match.href);
+        replace_name_match(p, get_match_key(match.href), match.href, sport_id);
       }
     }
     if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-      replace_name_match(p, get_match_key(p.parentNode.parentNode.href), null);
+      replace_name_match(p, get_match_key(p.parentNode.parentNode.href), null, sport_id);
     }
   }
-  let sport = "";
-  function hanlde_draw_observer(node) {
+  function hanlde_draw_observer(node, sport_id) {
     for (const p of node.querySelectorAll(".series")) {
       for (const player of p.parentNode.parentNode.querySelectorAll(".bracket__name")) {
-        replace_name_match(player, get_match_key(p.href), null);
+        replace_name_match(player, get_match_key(p.href), null, sport_id);
       }
       const height = p.parentNode.parentNode.childNodes[0].offsetHeight;
       p.parentNode.style.top = "calc(50% + " + height / 2 + "px)";
     }
   }
-  const udpateElement = (node) => {
+  const udpateElement = async (node) => {
     if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
       const children = node.getElementsByClassName("event__participant");
       for (const p of children) {
         const sport = p.parentElement.parentElement.classList[1];
-        replace_name(p, sport);
+        const sport_id = await get_sport_id(sport);
+        replace_name(p, sport, sport_id);
       }
     } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
-      hanlde_draw_observer(node);
+      const sport_eles = document.body.querySelectorAll("body > sport");
+      const sport = sport_eles[0].getAttribute("name");
+      const sport_id = await get_sport_id(sport);
+      hanlde_draw_observer(node, sport_id);
     } else if (
       window.location.href.startsWith("https://www.flashscore.com/match/") ||
       window.location.href.startsWith("https://www.flashscore.com/player/") ||
@@ -689,24 +739,25 @@
       window.location.href.startsWith("https://www.flashscore.com/tennis/")
     ) {
       const sport_eles = document.body.querySelectorAll("body > sport");
-      sport = sport_eles[0].getAttribute("name");
+      const sport = sport_eles[0].getAttribute("name");
+      const sport_id = await get_sport_id(sport);
       const children = node.querySelectorAll(".participant__participantName:not(:has(.participant__participantName))");
       for (const p of children) {
         if (p.tagName == "A") {
-          replace_name_player(p, p.href);
+          replace_name_player(p, p.href, sport_id);
         } else {
-          replace_name(p, sport);
+          replace_name(p, sport, sport_id);
         }
       }
       if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
         for (const p of node.querySelectorAll(".h2h__participantInner")) {
-          replace_name(p, sport);
+          replace_name(p, sport, sport_id);
         }
-        hanlde_draw_observer(node);
+        hanlde_draw_observer(node, sport_id);
       } else {
         const children = node.getElementsByClassName("event__participant");
         for (const p of children) {
-          replace_name(p, sport);
+          replace_name(p, sport, sport_id);
         }
       }
     }
