@@ -28,17 +28,13 @@
     const item = document.querySelector("#mat-option-0 > span");
     if (item) {
       item.click();
-      //   console.log(item, "clicked");
       return;
     }
     const sel = document.querySelector("#mat-select-0 > div > div.mat-select-value");
     if (sel) {
       sel.click();
-      //   console.log(sel, "clicked");
       setTimeout(clickFirstPage, 1000);
-      //   return;
     }
-    // console.log("first page failed");
   };
   const save_data = async () => {
     console.log("saving collected");
@@ -71,7 +67,6 @@
           rank_time: new Date(item.PublishDate).getTime(),
         }),
       });
-      break;
     }
   };
   unsafeWindow.XMLHttpRequest.prototype.send = function (data) {
@@ -94,12 +89,9 @@
               ["XD"].includes(url.searchParams.get("SubEventCode"))
             ) {
               const res = JSON.parse(this.response).Result;
-              //   console.log(res);
               collected.push(...res);
-              //   console.log(collected);
               pages.push(url.searchParams.get("StartRank"));
               if (res.length > 0) {
-                // console.log("next page");
                 clickNextPage();
               } else {
                 clickFirstPage();
