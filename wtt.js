@@ -36,7 +36,7 @@
       setTimeout(clickFirstPage, 1000);
     }
   };
-  const save_data = async () => {
+  const save_doubles_data = async () => {
     console.log("saving collected");
     const sport_id_resp = await GM.xmlHttpRequest({
       method: "GET",
@@ -69,24 +69,69 @@
       });
     }
   };
+  const save_singles_data = async () => {
+    console.log("saving collected");
+    const sport_id_resp = await GM.xmlHttpRequest({
+      method: "GET",
+      url: endpoint + "/api/sport?sport=table-tennis",
+    });
+    const sport_id = sport_id_resp.response;
+    for (const item of collected) {
+      const player = {
+        key: item.IttfId,
+        display: item.PlayerName,
+        sport: sport_id,
+        rank: item.CurrentRank,
+        rank_time: new Date(item.PublishDate).getTime(),
+      };
+      await GM.xmlHttpRequest({
+        method: "POST",
+        url: endpoint + "/api/player_info",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify(player),
+      });
+    }
+  };
   unsafeWindow.XMLHttpRequest.prototype.send = function (data) {
     this.addEventListener(
       "readystatechange",
       function () {
         "https://wttcmsapigateway-new.azure-api.net/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingPairs?SubEventCode=XD&CategoryCode=SEN&StartRank=101&EndRank=200";
-
+        "https://wttcmsapigateway-new.azure-api.net/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals?CategoryCode=SEN&SubEventCode=MS&StartRank=1&EndRank=100";
         if (this.readyState === 4) {
           const url = new URL(this.responseURL);
           if (url.pathname === "/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingPairs") {
             if (pages.includes(url.searchParams.get("StartRank"))) {
               unsafeWindow.XMLHttpRequest.prototype.send = send;
               console.log(collected);
-              setTimeout(save_data, 1000);
+              setTimeout(save_doubles_data, 1000);
               return;
             }
             if (
               url.searchParams.get("CategoryCode") === "SEN" &&
               ["XD"].includes(url.searchParams.get("SubEventCode"))
+            ) {
+              const res = JSON.parse(this.response).Result;
+              collected.push(...res);
+              pages.push(url.searchParams.get("StartRank"));
+              if (res.length > 0) {
+                clickNextPage();
+              } else {
+                clickFirstPage();
+              }
+            }
+          } else if (url.pathname === "/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals") {
+            if (pages.includes(url.searchParams.get("StartRank"))) {
+              unsafeWindow.XMLHttpRequest.prototype.send = send;
+              console.log(collected);
+              setTimeout(save_singles_data, 1000);
+              return;
+            }
+            if (
+              url.searchParams.get("CategoryCode") === "SEN" &&
+              ["MS", "WS"].includes(url.searchParams.get("SubEventCode"))
             ) {
               const res = JSON.parse(this.response).Result;
               collected.push(...res);
