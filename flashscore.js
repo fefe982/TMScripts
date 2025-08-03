@@ -526,7 +526,20 @@
         "Content-Type": "application/json",
       },
     });
-    console.log("update_player", player, resp);
+    // . console.log("update_player", player, resp);
+    return resp.response;
+  };
+  const get_doubles_rank = async (key1, key2) => {
+    const resp = await GM.xmlHttpRequest({
+      method: "GET",
+      url:
+        "http://localhost:5173/api/doubles_rank?player1=" +
+        encodeURIComponent(key1) +
+        "&player2=" +
+        encodeURIComponent(key2),
+      responseType: "json",
+    });
+    console.log(resp);
     return resp.response;
   };
   const tab_jobs = {};
@@ -823,8 +836,35 @@
         const href = p.attributes.href.value;
         const rank_ele = p.parentNode.parentNode.parentNode.querySelector(".participant__participantRank");
         let rank = 0;
-        if (rank_ele) {
+        if (rank_ele?.childNodes?.length > 2) {
           rank = parseInt(rank_ele.childNodes[2].textContent);
+        } else {
+          let name_wrapper = p.parentNode;
+          while (!name_wrapper.classList.contains("participant__participantNameWrapper")) {
+            name_wrapper = name_wrapper.parentNode;
+            console.log("go up !!!!");
+          }
+          if (name_wrapper.attributes.rank?.value != undefined) {
+            rank = parseInt(name_wrapper.attributes.rank.value);
+          } else {
+            const players = name_wrapper.querySelectorAll(".participant__participantName");
+            if (players.length == 2) {
+              const [, , key1] = get_player_key(players[0].href);
+              const [, , key2] = get_player_key(players[1].href);
+              const drank = await get_doubles_rank(key1, key2);
+              if (drank.rank) {
+                rank = drank.rank;
+                const ele = document.createElement("DIV");
+                ele.classList.add("participant__participantRank");
+                const rank_text = document.createTextNode(drank.rank);
+                ele.appendChild(rank_text);
+                name_wrapper.parentNode.appendChild(ele);
+                console.log("added rank", rank, name_wrapper);
+              }
+              console.log("rank !!!!!", rank, drank);
+              name_wrapper.setAttribute("rank", rank);
+            }
+          }
         }
         console.log(href, rank);
         const player_key = p.attributes.mod?.value || p.textContent;
