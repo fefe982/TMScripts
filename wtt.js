@@ -111,7 +111,7 @@
             }
             if (
               url.searchParams.get("CategoryCode") === "SEN" &&
-              ["XD"].includes(url.searchParams.get("SubEventCode"))
+              ["XD", "MD", "WD"].includes(url.searchParams.get("SubEventCode"))
             ) {
               const res = JSON.parse(this.response).Result;
               collected.push(...res);
