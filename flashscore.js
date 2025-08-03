@@ -847,7 +847,7 @@
           if (name_wrapper.attributes.rank?.value != undefined) {
             rank = parseInt(name_wrapper.attributes.rank.value);
           } else {
-            const players = name_wrapper.querySelectorAll(".participant__participantName");
+            const players = name_wrapper.querySelectorAll("a.participant__participantName");
             if (players.length == 2) {
               const [, , key1] = get_player_key(players[0].href);
               const [, , key2] = get_player_key(players[1].href);
@@ -863,6 +863,19 @@
               }
               console.log("rank !!!!!", rank, drank);
               name_wrapper.setAttribute("rank", rank);
+            } else if (players.length == 1) {
+              const [, , key] = get_player_key(players[0].href);
+              const player = await get_player(key);
+              console.log("rank !!!!!", rank, player);
+              if (player.rank) {
+                rank = player.rank;
+                const ele = document.createElement("DIV");
+                ele.classList.add("participant__participantRank");
+                const rank_text = document.createTextNode(player.rank);
+                ele.appendChild(rank_text);
+                name_wrapper.parentNode.appendChild(ele);
+                console.log("added rank", rank, name_wrapper);
+              }
             }
           }
         }
