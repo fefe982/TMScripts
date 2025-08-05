@@ -488,21 +488,40 @@
     "Zheng Y.": "郑雨",
     "Zhou H. D.": "周昊东",
   };
+  const check_db = GM_getValue("__check_db", 1);
+  const last_db_check = GM_getValue("__check_timestampe", 0);
+  if (check_db == 1) {
+    GM_setValue("__check_db", 0);
+    GM_setValue("__check_timestampe", new Date().getTime());
+  }
   const get_sport_id = async (sport) => {
     if (!(sport in replaces)) {
       return null;
     }
-    if (!replaces[sport].id) {
+    const sports = GM_getValue("__sports", {});
+    if (!(sport in sports)) {
+      sports[sport] = {};
+    }
+    if (!sports[sport].id) {
       const sport_id_resp = await GM.xmlHttpRequest({
         method: "GET",
         url: "http://localhost:5173/api/sport?sport=" + sport,
       });
       const sport_id = sport_id_resp.response;
-      replaces[sport].id = sport_id;
+      sports[sport].id = sport_id;
+      GM_setValue("__sports", sports);
     }
-    return replaces[sport].id;
+    return sports[sport].id;
   };
+  const checked_player = new Set();
   const get_player = async (key, display, sport_id) => {
+    if (check_db == 0 || key in checked_player) {
+      const player = GM_getValue(key, {});
+      if ((player.check_timestamp || 0) > last_db_check) {
+        console.log(player);
+        return player.resp;
+      }
+    }
     let url = "http://localhost:5173/api/flashscore_player?key=" + encodeURIComponent(key);
     if (display) {
       url = url + "&display=" + encodeURIComponent(display);
@@ -515,7 +534,12 @@
       url: url,
       responseType: "json",
     });
-    return resp.response;
+    const player = GM_getValue(key, {});
+    player.resp = resp.response || {};
+    player.check_timestamp = new Date().getTime();
+    GM_setValue(key, player);
+    checked_player.add(key);
+    return resp.response || {};
   };
   const update_player = async (player) => {
     const resp = await GM.xmlHttpRequest({
@@ -526,7 +550,6 @@
         "Content-Type": "application/json",
       },
     });
-    // . console.log("update_player", player, resp);
     return resp.response;
   };
   const get_doubles_rank = async (key1, key2) => {
@@ -560,6 +583,8 @@
           tab_jobs[match] = GM_openInTab(href);
           break;
         }
+      } else {
+        console.log(tab_jobs);
       }
       if (pending_job) {
         timer = setTimeout(check_pending_job, 1000);
