@@ -489,10 +489,10 @@
     "Zhou H. D.": "周昊东",
   };
   const check_db = GM_getValue("__check_db", 1);
-  const last_db_check = GM_getValue("__check_timestampe", 0);
+  const last_db_check = GM_getValue("__check_timestamp", 0);
   if (check_db == 1) {
     GM_setValue("__check_db", 0);
-    GM_setValue("__check_timestampe", new Date().getTime());
+    GM_setValue("__check_timestamp", new Date().getTime());
   }
   const get_sport_id = async (sport) => {
     if (!(sport in replaces)) {
@@ -520,6 +520,8 @@
       if ((player.check_timestamp || 0) > last_db_check) {
         console.log(player);
         return player.resp;
+      } else {
+        console.log("timestamp expired", key, player);
       }
     }
     let url = "http://localhost:5173/api/flashscore_player?key=" + encodeURIComponent(key);
@@ -640,7 +642,7 @@
     const player_info_db = await get_player(full_key, p.textContent, sport_id);
     let r = full_names[key] || player_info_db?.translation;
     if (r) {
-      if (!player_info_db?.translation) {
+      if (!player_info_db?.translation && player_info_db.sport) {
         update_player({ key: full_key, translation: r });
       }
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
@@ -937,7 +939,7 @@
       continue;
     }
     const v = GM_getValue(key);
-    if (!("t" in v)) {
+    if (!("t" in v || "check_timestamp" in v)) {
       console.log("Deleting key without timestamp: " + key + ", " + v);
       GM_deleteValue(key);
       continue;
