@@ -8,6 +8,7 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=worldtabletennis.com
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
+// @connect      localhost
 // ==/UserScript==
 
 (async function () {
