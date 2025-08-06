@@ -498,6 +498,9 @@
     if (!(sport in replaces)) {
       return null;
     }
+    if (replaces[sport].id) {
+      return replaces[sport].id;
+    }
     const sports = GM_getValue("__sports", {});
     if (!(sport in sports)) {
       sports[sport] = {};
@@ -511,10 +514,11 @@
       sports[sport].id = sport_id;
       GM_setValue("__sports", sports);
     }
+    replaces[sport].id = sports[sport].id;
     return sports[sport].id;
   };
   const checked_player = new Set();
-  const get_player = async (key, display, sport_id) => {
+  const get_cached_value = (key) => {
     if (check_db == 0 || key in checked_player) {
       const player = GM_getValue(key, {});
       if ((player.check_timestamp || 0) > last_db_check) {
@@ -524,6 +528,21 @@
         console.log("timestamp expired", key, player);
       }
     }
+    return null;
+  };
+  const save_cache_value = (key, value) => {
+    const player = GM_getValue(key, {});
+    player.resp = value || {};
+    player.check_timestamp = new Date().getTime();
+    GM_setValue(key, player);
+    checked_player.add(key);
+  };
+  const get_player = async (key, display, sport_id) => {
+    const cached = get_cached_value(key);
+    if (cached) {
+      return cached;
+    }
+    console.log(key, display, sport_id);
     let url = "http://localhost:5173/api/flashscore_player?key=" + encodeURIComponent(key);
     if (display) {
       url = url + "&display=" + encodeURIComponent(display);
@@ -536,11 +555,9 @@
       url: url,
       responseType: "json",
     });
-    const player = GM_getValue(key, {});
-    player.resp = resp.response || {};
-    player.check_timestamp = new Date().getTime();
-    GM_setValue(key, player);
-    checked_player.add(key);
+    if (resp.response || sport_id) {
+      save_cache_value(key, resp.response);
+    }
     return resp.response || {};
   };
   const update_player = async (player) => {
@@ -555,6 +572,27 @@
     return resp.response;
   };
   const get_doubles_rank = async (key1, key2) => {
+    if (!key2) {
+      key2 = null;
+    } else if (key1 > key2) {
+      const tmp = key1;
+      key1 = key2;
+      key2 = tmp;
+    }
+    const dkey = "doubles:" + key1 + ":" + key2;
+    const cached = get_cached_value(dkey);
+    if (cached) {
+      return cached;
+    }
+    if (check_db == 0 || !(dkey in checked_player)) {
+      const doubles_rank = GM_getValue(dkey, {});
+      if ((doubles_rank.check_timestamp || 0) > last_db_check) {
+        console.log(doubles_rank);
+        return doubles_rank.resp;
+      } else {
+        console.log("timestamp expired", dkey, doubles_rank);
+      }
+    }
     const resp = await GM.xmlHttpRequest({
       method: "GET",
       url:
@@ -564,8 +602,9 @@
         encodeURIComponent(key2),
       responseType: "json",
     });
-    console.log(resp);
-    return resp.response;
+    // console.log(resp);
+    save_cache_value(dkey, resp.response);
+    return resp.response || {};
   };
   const tab_jobs = {};
   const pending_job = {};
@@ -617,7 +656,7 @@
     return [key, m[1], full_key];
   }
 
-  async function replace_name_player(p, play_info, sport_id) {
+  async function replace_name_player(p, play_info, sport_id, match_info) {
     if ("mod" in p.attributes) {
       return;
     }
@@ -641,6 +680,41 @@
     const [key, raw_name, full_key] = get_player_key(href);
     const player_info_db = await get_player(full_key, p.textContent, sport_id);
     let r = full_names[key] || player_info_db?.translation;
+    if (rank == 0) {
+      const tennis_id = await get_sport_id("tennis");
+      if (!p.classList.contains("event__participant--doubles")) {
+        if (player_info_db.rank) {
+          rank = player_info_db.rank;
+        }
+      } else if (
+        match_info &&
+        (p.classList.contains("event__participant--home2") ||
+          p.classList.contains("event__participant--away2") ||
+          ((p.classList.contains("event__participant--home1") || p.classList.contains("event__participant--away1")) &&
+            sport_id == tennis_id))
+      ) {
+        let other_key = null;
+        if (sport_id != tennis_id) {
+          let other_class;
+          if (p.classList.contains("event__participant--home2")) {
+            other_class = ".event__participant--home1";
+          } else {
+            other_class = ".event__participant--away1";
+          }
+          const other = p.parentElement.querySelector(other_class);
+          let other_t = other.textContent;
+          if ("mod" in other.attributes) {
+            other_t = other.getAttribute("mod");
+          }
+          const other_href = match_info[other_t].href;
+          [, , other_key] = get_player_key(other_href);
+        }
+        const doubles_rank = await get_doubles_rank(full_key, other_key);
+        if (doubles_rank) {
+          rank = doubles_rank.rank;
+        }
+      }
+    }
     if (r) {
       if (!player_info_db?.translation && player_info_db.sport) {
         update_player({ key: full_key, translation: r });
@@ -692,7 +766,7 @@
       }
       return false;
     }
-    return await replace_name_player(p, v[n], sport_id);
+    return await replace_name_player(p, v[n], sport_id, v);
   }
   const updateEventStage = (tnode, match) => {
     let mnode;
@@ -764,6 +838,7 @@
       for (const p of children) {
         const sport = p.parentElement.parentElement.classList[1];
         const sport_id = await get_sport_id(sport);
+        console.log("replace_name", sport, sport_id, p.textContent);
         replace_name(p, sport, sport_id);
       }
     } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
@@ -873,37 +948,6 @@
           }
           if (name_wrapper.attributes.rank?.value != undefined) {
             rank = parseInt(name_wrapper.attributes.rank.value);
-          } else {
-            const players = name_wrapper.querySelectorAll("a.participant__participantName");
-            if (players.length == 2) {
-              const [, , key1] = get_player_key(players[0].href);
-              const [, , key2] = get_player_key(players[1].href);
-              const drank = await get_doubles_rank(key1, key2);
-              if (drank.rank) {
-                rank = drank.rank;
-                const ele = document.createElement("DIV");
-                ele.classList.add("participant__participantRank");
-                const rank_text = document.createTextNode(drank.rank);
-                ele.appendChild(rank_text);
-                name_wrapper.parentNode.appendChild(ele);
-                console.log("added rank", rank, name_wrapper);
-              }
-              console.log("rank !!!!!", rank, drank);
-              name_wrapper.setAttribute("rank", rank);
-            } else if (players.length == 1) {
-              const [, , key] = get_player_key(players[0].href);
-              const player = await get_player(key);
-              console.log("rank !!!!!", rank, player);
-              if (player.rank) {
-                rank = player.rank;
-                const ele = document.createElement("DIV");
-                ele.classList.add("participant__participantRank");
-                const rank_text = document.createTextNode(player.rank);
-                ele.appendChild(rank_text);
-                name_wrapper.parentNode.appendChild(ele);
-                console.log("added rank", rank, name_wrapper);
-              }
-            }
           }
         }
         console.log(href, rank);
@@ -915,7 +959,7 @@
           player.t = Math.max(player.t || 0, date);
           GM_setValue("player/" + key, player);
         }
-        update_player({ key: full_key, display: p.textContent, sport: sport_id, last_seen: date });
+        update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
       }
       const stage = document.querySelector(
         ".wcl-breadcrumbItem_CiWQ7:last-child .wcl-breadcrumbItemLabel_ogiBc"
