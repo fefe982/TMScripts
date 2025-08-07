@@ -569,6 +569,12 @@
         "Content-Type": "application/json",
       },
     });
+    const cached = GM_getValue(player.key, {});
+    if ("resp" in cached) {
+      delete cached.resp;
+      delete cached.check_timestamp;
+    }
+    GM_setValue(player.key, cached);
     return resp.response;
   };
   const get_doubles_rank = async (key1, key2) => {
@@ -686,29 +692,28 @@
         if (player_info_db.rank) {
           rank = player_info_db.rank;
         }
+      } else if (sport_id == tennis_id) {
+        if (player_info_db.drank) {
+          rank = player_info_db.drank;
+        }
       } else if (
         match_info &&
-        (p.classList.contains("event__participant--home2") ||
-          p.classList.contains("event__participant--away2") ||
-          ((p.classList.contains("event__participant--home1") || p.classList.contains("event__participant--away1")) &&
-            sport_id == tennis_id))
+        (p.classList.contains("event__participant--home2") || p.classList.contains("event__participant--away2"))
       ) {
         let other_key = null;
-        if (sport_id != tennis_id) {
-          let other_class;
-          if (p.classList.contains("event__participant--home2")) {
-            other_class = ".event__participant--home1";
-          } else {
-            other_class = ".event__participant--away1";
-          }
-          const other = p.parentElement.querySelector(other_class);
-          let other_t = other.textContent;
-          if ("mod" in other.attributes) {
-            other_t = other.getAttribute("mod");
-          }
-          const other_href = match_info[other_t].href;
-          [, , other_key] = get_player_key(other_href);
+        let other_class;
+        if (p.classList.contains("event__participant--home2")) {
+          other_class = ".event__participant--home1";
+        } else {
+          other_class = ".event__participant--away1";
         }
+        const other = p.parentElement.querySelector(other_class);
+        let other_t = other.textContent;
+        if ("mod" in other.attributes) {
+          other_t = other.getAttribute("mod");
+        }
+        const other_href = match_info[other_t].href;
+        [, , other_key] = get_player_key(other_href);
         const doubles_rank = await get_doubles_rank(full_key, other_key);
         if (doubles_rank) {
           rank = doubles_rank.rank;
@@ -716,8 +721,8 @@
       }
     }
     if (r) {
-      if (!player_info_db?.translation && player_info_db.sport) {
-        update_player({ key: full_key, translation: r });
+      if (!player_info_db?.translation) {
+        update_player({ key: full_key, display: p.textContent, translation: r });
       }
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
