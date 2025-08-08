@@ -843,8 +843,10 @@
       for (const p of children) {
         const sport = p.parentElement.parentElement.classList[1];
         const sport_id = await get_sport_id(sport);
-        console.log("replace_name", sport, sport_id, p.textContent);
-        replace_name(p, sport, sport_id);
+        if (sport_id) {
+          console.log("replace_name", sport, sport_id, p.textContent);
+          replace_name(p, sport, sport_id);
+        }
       }
     } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
       const sport_eles = document.body.querySelectorAll("body > sport");
