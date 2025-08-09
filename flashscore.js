@@ -648,7 +648,7 @@
   function get_player_key(href) {
     const m = href.match(/\/player\/(.*)\/(.*)\//);
     if (!m) {
-      return ["", ""];
+      return ["", "", ""];
     }
     let key = m[1] + "/" + m[2];
     const full_key = key;
@@ -684,6 +684,9 @@
       href = play_info;
     }
     const [key, raw_name, full_key] = get_player_key(href);
+    if (key == "") {
+      return;
+    }
     const player_info_db = await get_player(full_key, p.textContent, sport_id);
     let r = full_names[key] || player_info_db?.translation;
     if (rank == 0) {
