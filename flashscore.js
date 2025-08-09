@@ -622,13 +622,14 @@
     }
     const check_pending_job = () => {
       if (num_jobs < 5) {
-        for (const match in pending_job) {
+        const matches = Object.keys(pending_job);
+        if (matches.length > 0) {
+          const match = matches[0];
           const href = pending_job[match];
           delete pending_job[match];
           num_jobs++;
           console.log(`opening ${href}`);
           tab_jobs[match] = GM_openInTab(href);
-          break;
         }
       } else {
         console.log(tab_jobs);
