@@ -685,7 +685,7 @@
       href = play_info;
     }
     const [key, raw_name, full_key] = get_player_key(href);
-    if (key == "") {
+    if (full_key == "") {
       return;
     }
     const player_info_db = await get_player(full_key, p.textContent, sport_id);
