@@ -61,7 +61,7 @@
   });
   const sport_id = sport_id_resp.response;
   for (const player of document.querySelectorAll("table.desktop-table tr.lower-row")) {
-    player.scrollIntoView();
+    // player.scrollIntoView();
     const name_ele = player.querySelector("li.name > a");
     console.log(name_ele);
     const player_id = name_ele.href.match(/\/players\/([^/]*\/[^/]*)\//)[1];
