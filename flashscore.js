@@ -973,7 +973,7 @@
         update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
       }
       const stage = document.querySelector(
-        ".wcl-breadcrumbItem_CiWQ7:last-child .wcl-breadcrumbItemLabel_ogiBc"
+        "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]"
       ).textContent;
       const stagesplit = stage.split(" - ");
       if (stagesplit.length > 1) {
