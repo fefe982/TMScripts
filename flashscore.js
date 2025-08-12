@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-08-12_06-51
+// @version      2025-08-12_20-04
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -17,6 +17,7 @@
 // @grant        GM_openInTab
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
+// @connect      localhost
 // @noframes
 // ==/UserScript==
 
