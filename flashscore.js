@@ -971,7 +971,7 @@
           player.t = Math.max(player.t || 0, date);
           GM_setValue("player/" + key, player);
         }
-        update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
+        await update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
       }
       const stage = document.querySelector(
         "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]"
