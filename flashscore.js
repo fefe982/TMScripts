@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-08-12_20-04
+// @version      2025-08-18_04-53
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -727,7 +727,7 @@
     }
     if (r) {
       if (!player_info_db?.translation) {
-        update_player({ key: full_key, display: p.textContent, translation: r });
+        await update_player({ key: full_key, display: p.textContent, translation: r });
       }
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
