@@ -26,12 +26,13 @@
     document.querySelector(".rankings_container  button:nth-child(2)").click();
   };
   const clickFirstPage = () => {
-    const item = document.querySelector("#mat-option-0 > span");
+    console.log("clicking first page")
+    const item = document.querySelector(".mat-option[value='1']");
     if (item) {
       item.click();
       return;
     }
-    const sel = document.querySelector("#mat-select-0 > div > div.mat-select-value");
+    const sel = document.querySelector("[placeholder='-- All Ranking --'] > div > div.mat-select-value");
     if (sel) {
       sel.click();
       setTimeout(clickFirstPage, 1000);

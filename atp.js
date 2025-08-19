@@ -70,10 +70,10 @@
     console.log(date, metric, player_id, rank, name);
     if (metric == "Doubles") {
       await save_doubles_data(player_id, name, sport_id, rank, date.getTime());
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      // await new Promise((resolve) => setTimeout(resolve, 10));
     } else if (metric == "Singles") {
       await save_singles_data(player_id, name, sport_id, rank, date.getTime());
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      // await new Promise((resolve) => setTimeout(resolve, 10));
     }
   }
   // Your code here...
