@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-08-18_04-53
+// @version      2025-08-19_20-49
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -523,10 +523,7 @@
     if (check_db == 0 || key in checked_player) {
       const player = GM_getValue(key, {});
       if ((player.check_timestamp || 0) > last_db_check) {
-        console.log(player);
         return player.resp;
-      } else {
-        console.log("timestamp expired", key, player);
       }
     }
     return null;
@@ -667,6 +664,8 @@
   async function replace_name_player(p, play_info, sport_id, match_info) {
     if ("mod" in p.attributes) {
       return;
+    } else {
+      p.setAttribute("mod", p.textContent);
     }
     const formatRank = (rank) => {
       return rank ? " (" + rank + ")" : "";
@@ -909,7 +908,7 @@
         if (node.nodeType == node.ELEMENT_NODE) {
           udpateElement(node);
         } else if (node.nodeType == node.TEXT_NODE) {
-          if (node.parentNode.classList.contains("event__stage--block")) {
+          if (node.parentNode?.classList?.contains("event__stage--block")) {
             updateEventStage(node.parentNode);
           }
         }
@@ -929,7 +928,7 @@
       const key = get_match_key(window.location.href);
       console.log(key);
       const val = { t: Date.now() };
-      const children = document.querySelectorAll("div.duelParticipant a.participant__participantName");
+      const children = document.querySelectorAll("div.participant__participantNameWrapper a.participant__participantName");
       console.log(children);
       if (children.length == 0) {
         setTimeout(wait_for_load, 1000);
