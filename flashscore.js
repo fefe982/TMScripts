@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-08-19_20-49
+// @version      2025-09-03_06-20
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -661,6 +661,30 @@
     return [key, m[1], full_key];
   }
 
+  const get_flag = (p) => {
+    let flag_sel = "";
+    if (p.classList.contains("event__participant--home1")) {
+      flag_sel = ".event__logo--home1";
+    } else if (p.classList.contains("event__participant--away1")) {
+      flag_sel = ".event__logo--away1";
+    } else if (p.classList.contains("event__participant--home2")) {
+      flag_sel = ".event__logo--home2";
+    } else if (p.classList.contains("event__participant--away2")) {
+      flag_sel = ".event__logo--away2";
+    } else if (p.classList.contains("event__participant--home")) {
+      flag_sel = ".event__logo--home";
+    } else if (p.classList.contains("event__participant--away")) {
+      flag_sel = ".event__logo--away";
+    }
+    if (flag_sel) {
+      const flag = p.parentElement.querySelector(flag_sel);
+      if (flag) {
+        return flag.title;
+      }
+    }
+    return "";
+  };
+
   async function replace_name_player(p, play_info, sport_id, match_info) {
     if ("mod" in p.attributes) {
       return;
@@ -688,7 +712,11 @@
     if (full_key == "") {
       return;
     }
+    const flag = get_flag(p);
     const player_info_db = await get_player(full_key, p.textContent, sport_id);
+    if (flag && player_info_db && player_info_db.region != flag) {
+      await update_player({ key: full_key, display: p.textContent, region: flag });
+    }
     let r = full_names[key] || player_info_db?.translation;
     if (rank == 0) {
       const tennis_id = await get_sport_id("tennis");
@@ -928,7 +956,9 @@
       const key = get_match_key(window.location.href);
       console.log(key);
       const val = { t: Date.now() };
-      const children = document.querySelectorAll("div.participant__participantNameWrapper a.participant__participantName");
+      const children = document.querySelectorAll(
+        "div.participant__participantNameWrapper a.participant__participantName"
+      );
       console.log(children);
       if (children.length == 0) {
         setTimeout(wait_for_load, 1000);
