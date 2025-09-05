@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-09-03_06-20
+// @version      2025-09-06_06-30
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -685,6 +685,24 @@
     return "";
   };
 
+  const get_idx = (p) => {
+    let idx = -1;
+    if (p.classList.contains("event__participant--home1")) {
+      idx = 0;
+    } else if (p.classList.contains("event__participant--away1")) {
+      idx = 2;
+    } else if (p.classList.contains("event__participant--home2")) {
+      idx = 1;
+    } else if (p.classList.contains("event__participant--away2")) {
+      idx = 3;
+    } else if (p.classList.contains("event__participant--home")) {
+      idx = 0;
+    } else if (p.classList.contains("event__participant--away")) {
+      idx = 1;
+    }
+    return idx;
+  };
+
   async function replace_name_player(p, play_info, sport_id, match_info) {
     if ("mod" in p.attributes) {
       return;
@@ -734,17 +752,20 @@
       ) {
         let other_key = null;
         let other_class;
+        let other_idx;
         if (p.classList.contains("event__participant--home2")) {
           other_class = ".event__participant--home1";
+          other_idx = 0;
         } else {
           other_class = ".event__participant--away1";
+          other_idx = 2;
         }
         const other = p.parentElement.querySelector(other_class);
         let other_t = other.textContent;
         if ("mod" in other.attributes) {
           other_t = other.getAttribute("mod");
         }
-        const other_href = match_info[other_t].href;
+        const other_href = match_info[other_idx + "_" + other_t].href;
         [, , other_key] = get_player_key(other_href);
         const doubles_rank = await get_doubles_rank(full_key, other_key);
         if (doubles_rank) {
@@ -790,20 +811,25 @@
       startTimer();
     }
   };
-  async function replace_name_match(p, match, href, sport_id) {
+  async function replace_name_match(p, match, href, sport_id, idx) {
     if ("mod" in p.attributes) {
       return;
     }
     const n = p.textContent;
+    if (idx === undefined) {
+      idx = get_idx(p);
+    }
+    let key = idx + "_" + n;
+    console.log(key);
     const v = GM_getValue(match);
-    if (!v?.[n]) {
+    if (!v?.[key]) {
       console.log(match, v);
       if (!(match in tab_jobs) && href) {
         addMatchListener(match, href, sport_id);
       }
       return false;
     }
-    return await replace_name_player(p, v[n], sport_id, v);
+    return await replace_name_player(p, v[key], sport_id, v);
   }
   const updateEventStage = (tnode, match) => {
     let mnode;
@@ -862,9 +888,10 @@
   }
   function hanlde_draw_observer(node, sport_id) {
     for (const p of node.querySelectorAll(".series")) {
-      for (const player of p.parentNode.parentNode.querySelectorAll(".bracket__name")) {
-        replace_name_match(player, get_match_key(p.href), null, sport_id);
-      }
+      p.parentNode.parentNode.querySelectorAll(".bracket__name").forEach((player, idx) => {
+        replace_name_match(player, get_match_key(p.href), null, sport_id, idx);
+        console.log(player);
+      });
       const height = p.parentNode.parentNode.childNodes[0].offsetHeight;
       p.parentNode.style.top = "calc(50% + " + height / 2 + "px)";
     }
@@ -974,34 +1001,36 @@
       if (!date) {
         return;
       }
-      for (const p of children) {
-        console.log(p);
-        const href = p.attributes.href.value;
-        const rank_ele = p.parentNode.parentNode.parentNode.querySelector(".participant__participantRank");
-        let rank = 0;
-        if (rank_ele?.childNodes?.length > 2) {
-          rank = parseInt(rank_ele.childNodes[2].textContent);
-        } else {
-          let name_wrapper = p.parentNode;
-          while (!name_wrapper.classList.contains("participant__participantNameWrapper")) {
-            name_wrapper = name_wrapper.parentNode;
-            console.log("go up !!!!");
+      await Promise.all(
+        [...children].map(async (p, i) => {
+          console.log(p);
+          const href = p.attributes.href.value;
+          const rank_ele = p.parentNode.parentNode.parentNode.querySelector(".participant__participantRank");
+          let rank = 0;
+          if (rank_ele?.childNodes?.length > 2) {
+            rank = parseInt(rank_ele.childNodes[2].textContent);
+          } else {
+            let name_wrapper = p.parentNode;
+            while (!name_wrapper.classList.contains("participant__participantNameWrapper")) {
+              name_wrapper = name_wrapper.parentNode;
+              console.log("go up !!!!");
+            }
+            if (name_wrapper.attributes.rank?.value != undefined) {
+              rank = parseInt(name_wrapper.attributes.rank.value);
+            }
           }
-          if (name_wrapper.attributes.rank?.value != undefined) {
-            rank = parseInt(name_wrapper.attributes.rank.value);
+          console.log(href, rank);
+          const player_key = p.attributes.mod?.value || p.textContent;
+          val[i + "_" + player_key] = { href, rank };
+          const [key, , full_key] = get_player_key(href);
+          if (key) {
+            const player = GM_getValue("player/" + key, {});
+            player.t = Math.max(player.t || 0, date);
+            GM_setValue("player/" + key, player);
           }
-        }
-        console.log(href, rank);
-        const player_key = p.attributes.mod?.value || p.textContent;
-        val[player_key] = { href, rank };
-        const [key, , full_key] = get_player_key(href);
-        if (key) {
-          const player = GM_getValue("player/" + key, {});
-          player.t = Math.max(player.t || 0, date);
-          GM_setValue("player/" + key, player);
-        }
-        await update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
-      }
+          await update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
+        })
+      );
       const stage = document.querySelector(
         "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]"
       ).textContent;
@@ -1045,16 +1074,12 @@
   (function () {
     const exchangeSport = (mainhref, minorhref) => {
       const main = document.querySelector(`.menuTop__item[href="${mainhref}"]`);
-      console.log(`.menuTop_item[a='${mainhref}']`);
       const minor = document.querySelector(`.menuMinority__item[href='${minorhref}']`);
       const mainminor = document.querySelector(`.menuMinority__item[href='${mainhref}']`);
-      console.log(main, minor, mainminor);
       if (main && minor && mainminor) {
         mainminor.classList.remove("menuMinority__item--hidden");
-        console.log("minor class", mainminor.classList);
         minor.classList.add("menuMinority__item--hidden");
         main.href = minorhref;
-        console.log(main.children[0].children[0]);
         main.children[0].removeChild(main.children[0].children[0]);
         main.children[0].appendChild(minor.children[0].children[0]);
         main.setAttribute("data-sport-id", minor.getAttribute("data-sport-id"));
