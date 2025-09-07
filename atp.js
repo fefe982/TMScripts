@@ -15,13 +15,14 @@
 (async function () {
   "use strict";
   const endpoint = "http://localhost:5173";
-  const save_doubles_data = async (key, display, sport_id, rank, rank_time) => {
+  const save_doubles_data = async (key, display, sport_id, rank, rank_time, region) => {
     const player = {
       key,
       display,
       sport: sport_id,
       drank: rank,
       drank_time: rank_time,
+      region,
     };
     await GM.xmlHttpRequest({
       method: "POST",
@@ -32,13 +33,14 @@
       data: JSON.stringify(player),
     });
   };
-  const save_singles_data = async (key, display, sport_id, rank, rank_time) => {
+  const save_singles_data = async (key, display, sport_id, rank, rank_time, region) => {
     const player = {
       key,
       display,
       sport: sport_id,
       rank,
       rank_time,
+      region,
     };
     await GM.xmlHttpRequest({
       method: "POST",
@@ -63,17 +65,19 @@
   for (const player of document.querySelectorAll("table.desktop-table tr.lower-row")) {
     // player.scrollIntoView();
     const name_ele = player.querySelector("li.name > a");
-    console.log(name_ele);
+    // console.log(name_ele);
     const player_id = name_ele.href.match(/\/players\/([^/]*\/[^/]*)\//)[1];
     const name = name_ele.innerText;
     const rank = parseInt(player.querySelector("td.rank").innerText.replace("T", ""));
-    console.log(date, metric, player_id, rank, name);
+    const region = player
+      .querySelector("li > svg > use")
+      .href.baseVal.match(/#flag-([^"]*)/)[1]
+      .toUpperCase();
+    console.log(date, metric, player_id, rank, name, region);
     if (metric == "Doubles") {
-      await save_doubles_data(player_id, name, sport_id, rank, date.getTime());
-      // await new Promise((resolve) => setTimeout(resolve, 10));
+      await save_doubles_data(player_id, name, sport_id, rank, date.getTime(), region);
     } else if (metric == "Singles") {
-      await save_singles_data(player_id, name, sport_id, rank, date.getTime());
-      // await new Promise((resolve) => setTimeout(resolve, 10));
+      await save_singles_data(player_id, name, sport_id, rank, date.getTime(), region);
     }
   }
   // Your code here...

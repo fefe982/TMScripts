@@ -30,13 +30,14 @@
   }
   console.log("loaded");
   const endpoint = "http://localhost:5173";
-  const save_doubles_data = async (key, display, sport_id, rank, rank_time) => {
+  const save_doubles_data = async (key, display, sport_id, rank, rank_time, region) => {
     const player = {
       key,
       display,
       sport: sport_id,
       drank: rank,
       drank_time: rank_time,
+      region,
     };
     await GM.xmlHttpRequest({
       method: "POST",
@@ -47,13 +48,14 @@
       data: JSON.stringify(player),
     });
   };
-  const save_singles_data = async (key, display, sport_id, rank, rank_time) => {
+  const save_singles_data = async (key, display, sport_id, rank, rank_time, region) => {
     const player = {
       key,
       display,
       sport: sport_id,
       rank,
       rank_time,
+      region,
     };
     await GM.xmlHttpRequest({
       method: "POST",
@@ -76,13 +78,12 @@
     const player_id = player.dataset.playerId;
     const name = player.dataset.playerName;
     const rank = parseInt(player.querySelector(".player-row__rank").innerText);
-    console.log(date, metric, player_id, rank, name);
+    const region = player.querySelector(".player-cell__country").innerText.trim();
+    console.log(date, metric, player_id, rank, name, region);
     if (metric == "DOUBLES") {
-      await save_doubles_data(player_id, name, sport_id, rank, date.getTime());
-      // await new Promise((resolve) => setTimeout(resolve, 10));
+      await save_doubles_data(player_id, name, sport_id, rank, date.getTime(), region);
     } else if (metric == "SINGLES") {
-      await save_singles_data(player_id, name, sport_id, rank, date.getTime());
-      // await new Promise((resolve) => setTimeout(resolve, 10));
+      await save_singles_data(player_id, name, sport_id, rank, date.getTime(), region);
     }
   }
   // Your code here...
