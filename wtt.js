@@ -14,7 +14,6 @@
 (async function () {
   "use strict";
   const endpoint = "http://localhost:5173";
-  console.log("fffffffffffffffffffffffffffffffffffffffffffff");
   if (unsafeWindow.XMLHttpRequest.prototype.send.saved_send) {
     console.log("restoring send ..........");
     unsafeWindow.XMLHttpRequest.prototype.send = unsafeWindow.XMLHttpRequest.prototype.send.saved_send;
@@ -26,7 +25,7 @@
     document.querySelector(".rankings_container  button:nth-child(2)").click();
   };
   const clickFirstPage = () => {
-    console.log("clicking first page")
+    console.log("clicking first page");
     const item = document.querySelector(".mat-option[value='1']");
     if (item) {
       item.click();
@@ -38,13 +37,13 @@
       setTimeout(clickFirstPage, 1000);
     }
   };
+  const sport_id_resp = await GM.xmlHttpRequest({
+    method: "GET",
+    url: endpoint + "/api/sport?sport=table-tennis",
+  });
+  const sport_id = sport_id_resp.response;
   const save_doubles_data = async () => {
     console.log("saving collected");
-    const sport_id_resp = await GM.xmlHttpRequest({
-      method: "GET",
-      url: endpoint + "/api/sport?sport=table-tennis",
-    });
-    const sport_id = sport_id_resp.response;
     for (const item of collected) {
       const player1 = {
         key: item.IttfId1,
@@ -73,11 +72,6 @@
   };
   const save_singles_data = async () => {
     console.log("saving collected");
-    const sport_id_resp = await GM.xmlHttpRequest({
-      method: "GET",
-      url: endpoint + "/api/sport?sport=table-tennis",
-    });
-    const sport_id = sport_id_resp.response;
     for (const item of collected) {
       const player = {
         key: item.IttfId,
@@ -85,6 +79,7 @@
         sport: sport_id,
         rank: item.CurrentRank,
         rank_time: new Date(item.PublishDate).getTime(),
+        region: item.CountryCode,
       };
       await GM.xmlHttpRequest({
         method: "POST",
