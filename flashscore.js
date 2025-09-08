@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         flashscore
 // @namespace    http://tampermonkey.net/
-// @version      2025-09-06_06-30
+// @version      2025-09-09_07-06
 // @description  try to take over the world!
 // @author       Yongxin Wang
 // @downloadURL  https://raw.githubusercontent.com/fefe982/TMScripts/refs/heads/master/flashscore.js
@@ -641,8 +641,13 @@
     check_pending_job();
   };
   function get_match_key(href) {
-    const m = href.match(/match\/[^/]+\/[^/]+/);
-    return m[0];
+    if (href.indexOf("#") > 0) {
+      const m = href.match(/match\/[^/]+\/[^/]+/);
+      return m[0];
+    } else {
+      const m = href.match(/(match\/[^/]+\/[^/]+\/[^/]+).*(mid=[0-9a-zA-z]+)/);
+      return m[1] + "/?" + m[2];
+    }
   }
   function get_player_key(href) {
     const m = href.match(/\/player\/(.*)\/(.*)\//);
@@ -820,7 +825,6 @@
       idx = get_idx(p);
     }
     let key = idx + "_" + n;
-    console.log(key);
     const v = GM_getValue(match);
     if (!v?.[key]) {
       console.log(match, v);
@@ -883,7 +887,11 @@
       }
     }
     if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-      replace_name_match(p, get_match_key(p.parentNode.parentNode.href), null, sport_id);
+      let a = p.parentElement;
+      while (a && a.tagName != "A") {
+        a = a.parentElement;
+      }
+      replace_name_match(p, get_match_key(a.href), null, sport_id);
     }
   }
   function hanlde_draw_observer(node, sport_id) {
@@ -903,7 +911,6 @@
         const sport = p.parentElement.parentElement.classList[1];
         const sport_id = await get_sport_id(sport);
         if (sport_id) {
-          console.log("replace_name", sport, sport_id, p.textContent);
           replace_name(p, sport, sport_id);
         }
       }
@@ -973,7 +980,7 @@
 
   observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-    if (window.location.href.indexOf("#") < 0) {
+    if (window.location.href.indexOf("?") < 0 && window.location.href.indexOf("#") < 0) {
       return;
     }
     async function wait_for_load() {
@@ -1065,11 +1072,6 @@
     // } else {
     //   console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t) / 1000 / 60 / 60} hours old`, v);
     // }
-  }
-  for (const key in full_names) {
-    if (!GM_getValue("player/" + key)) {
-      console.log(`player ${key}, ${full_names[key]}, never met`);
-    }
   }
   (function () {
     const exchangeSport = (mainhref, minorhref) => {

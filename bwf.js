@@ -41,12 +41,13 @@
       }),
     });
   };
-  const save_singles_data = async (key, display, rank) => {
+  const save_singles_data = async (key, display, region, rank) => {
     const player = {
       key,
       display,
       sport: sport_id,
       rank,
+      region,
       rank_time: date.getTime(),
     };
     await GM.xmlHttpRequest({
@@ -63,10 +64,16 @@
       const rank = parseInt(tr.querySelector(".rank-value").textContent);
       const p = [];
       for (const pa of tr.querySelectorAll(".player a")) {
+        let tr = pa.parentNode;
+        while (tr.tagName != "TR") {
+          tr = tr.parentNode;
+        }
+        const region = tr.querySelector(".country img")?.title || null;
         const pv = {};
         pv.display = pa.textContent;
         pv.key = /\/player\/(\d+)/.exec(pa.href)[1];
         pv.sport = sport_id;
+        pv.region = region;
         p.push(pv);
       }
       // . const points = tr.querySelector(".col-points").textContent;
@@ -80,7 +87,7 @@
         if (metric != "MS" && metric != "WS") {
           throw new Error("Invalid metric");
         }
-        await save_singles_data(p[0].key, p[0].display, rank);
+        await save_singles_data(p[0].key, p[0].display, p[0].region, rank);
       }
     }
     const next_page = document.querySelector("a:not(.disabled):has(.fa-chevron-right)");
