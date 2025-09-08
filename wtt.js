@@ -49,11 +49,13 @@
         key: item.IttfId1,
         display: item.PlayerName1,
         sport: sport_id,
+        region: item.CountryCode1,
       };
       const player2 = {
         key: item.IttfId1d,
         display: item.PlayerName1d,
         sport: sport_id,
+        region: item.CountryCode1d,
       };
       await GM.xmlHttpRequest({
         method: "POST",
@@ -122,7 +124,6 @@
           } else if (url.pathname === "/internalttu/RankingsCurrentWeek/CurrentWeek/GetRankingIndividuals") {
             if (pages.includes(url.searchParams.get("StartRank"))) {
               unsafeWindow.XMLHttpRequest.prototype.send = send;
-              console.log(collected);
               setTimeout(save_singles_data, 1000);
               return;
             }
