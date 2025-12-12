@@ -622,13 +622,14 @@
       GM_deleteValue(key);
       continue;
     }
+    if ("check_timestamp" in v && Date.now() - v.check_timestamp > 1000 * 60 * 60 * 24 * 7) {
+      console.log(`Deleting key with old check_timestamp: ${key}`, v);
+      GM_deleteValue(key);
+    }
     if (key.startsWith("match/") && Date.now() - v.t > 1000 * 60 * 60 * 24 * 7) {
       console.log(`Deleting old value for key: ${key}`, v);
       GM_deleteValue(key);
     }
-    // } else {
-    //   console.log(`Keeping value for key: ${key}, ${(Date.now() - v.t) / 1000 / 60 / 60} hours old`, v);
-    // }
   }
   (function () {
     const exchangeSport = (mainhref, minorhref) => {
