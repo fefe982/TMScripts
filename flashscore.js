@@ -348,6 +348,9 @@
       old_name = old_name ? " [" + old_name + "]" : "";
       r = formatRawName(raw_name) + old_name + formatRank(rank);
     }
+    if (flag === "China") {
+      p.style.color = "red";
+    }
     p.setAttribute("mod", p.textContent);
     p.textContent = r;
   }
@@ -548,7 +551,7 @@
       console.log(key);
       const val = { t: Date.now() };
       const children = document.querySelectorAll(
-        "div.participant__participantNameWrapper a.participant__participantName"
+        "div.participant__participantNameWrapper a.participant__participantName",
       );
       console.log(children);
       if (children.length == 0) {
@@ -593,10 +596,10 @@
             GM_setValue("player/" + key, player);
           }
           await update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
-        })
+        }),
       );
       const stage = document.querySelector(
-        "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]"
+        "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]",
       ).textContent;
       const stagesplit = stage.split(" - ");
       if (stagesplit.length > 1) {
