@@ -501,13 +501,13 @@
         for (const p of node.querySelectorAll(".h2h__participantInner")) {
           replace_name(p, sport, sport_id);
         }
-        hanlde_draw_observer(node, sport_id);
       } else {
         const children = node.getElementsByClassName("event__participant");
         for (const p of children) {
           replace_name(p, sport, sport_id);
         }
       }
+      hanlde_draw_observer(node, sport_id);
     }
     updateEventStageP(node);
     const children = node.getElementsByClassName("leftMenu__text");
