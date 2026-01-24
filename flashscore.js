@@ -116,6 +116,7 @@
       headers: {
         "Content-Type": "application/json",
       },
+      responseType: "json",
     });
     save_cache_value(player.key, resp.response);
     return resp.response;
