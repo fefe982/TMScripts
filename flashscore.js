@@ -38,19 +38,15 @@
 }
 .bracket--doubles .bracket__participantRow {
     grid-template-rows: auto auto;
+}
+.flag {
+    z-index: 1;
 }`);
   const replaces = {
     tennis: {},
     "table-tennis": {},
     badminton: {},
   };
-  const full_names = {};
-  const check_db = GM_getValue("__check_db", 1);
-  const last_db_check = GM_getValue("__check_timestamp", 0);
-  if (check_db == 1) {
-    GM_setValue("__check_db", 0);
-    GM_setValue("__check_timestamp", new Date().getTime());
-  }
   const get_sport_id = async (sport) => {
     if (!(sport in replaces)) {
       return null;
@@ -74,14 +70,13 @@
     replaces[sport].id = sports[sport].id;
     return sports[sport].id;
   };
-  const checked_player = new Set();
   const get_cached_value = (key) => {
-    if (check_db == 0 || key in checked_player) {
-      const player = GM_getValue(key, {});
-      if ((player.check_timestamp || 0) > last_db_check) {
-        return player.resp;
-      }
+    const player = GM_getValue(key, {});
+    if ("resp" in player) {
+      console.log(`get_cached_value, player ${key}`);
+      return player.resp;
     }
+    console.log(`get_cached_value, player ${key} -- no cache`);
     return null;
   };
   const save_cache_value = (key, value) => {
@@ -89,7 +84,6 @@
     player.resp = value || {};
     player.check_timestamp = new Date().getTime();
     GM_setValue(key, player);
-    checked_player.add(key);
   };
   const get_player = async (key, display, sport_id) => {
     const cached = get_cached_value(key);
@@ -123,12 +117,7 @@
         "Content-Type": "application/json",
       },
     });
-    const cached = GM_getValue(player.key, {});
-    if ("resp" in cached) {
-      delete cached.resp;
-      delete cached.check_timestamp;
-    }
-    GM_setValue(player.key, cached);
+    save_cache_value(player.key, resp.response);
     return resp.response;
   };
   const get_doubles_rank = async (key1, key2) => {
@@ -143,15 +132,6 @@
     const cached = get_cached_value(dkey);
     if (cached) {
       return cached;
-    }
-    if (check_db == 0 || !(dkey in checked_player)) {
-      const doubles_rank = GM_getValue(dkey, {});
-      if ((doubles_rank.check_timestamp || 0) > last_db_check) {
-        console.log(doubles_rank);
-        return doubles_rank.resp;
-      } else {
-        console.log("timestamp expired", dkey, doubles_rank);
-      }
     }
     const resp = await GM.xmlHttpRequest({
       method: "GET",
@@ -197,7 +177,6 @@
     check_pending_job();
   };
   const get_match_key = (href) => {
-    console.log(href);
     if (href.indexOf("?") == -1) {
       const m = href.match(/match\/[^/]+\/[^/]+/);
       return m[0];
@@ -213,13 +192,6 @@
     }
     let key = m[1] + "/" + m[2];
     const full_key = key;
-    if (!(key in full_names)) {
-      if (m[1] in full_names) {
-        key = m[1];
-      } else {
-        key = "";
-      }
-    }
     return [key, m[1], full_key];
   }
 
@@ -297,7 +269,7 @@
     if (flag && player_info_db && player_info_db.region != flag) {
       await update_player({ key: full_key, display: p.textContent, region: flag });
     }
-    let r = full_names[key] || player_info_db?.translation;
+    let r = player_info_db?.translation;
     if (rank == 0) {
       const tennis_id = await get_sport_id("tennis");
       if (!p.classList.contains("event__participant--doubles")) {
@@ -336,17 +308,9 @@
       }
     }
     if (r) {
-      if (!player_info_db?.translation) {
-        await update_player({ key: full_key, display: p.textContent, translation: r });
-      }
       r = formatRawName(raw_name) + " (" + r + ")" + formatRank(rank);
     } else {
-      if (!raw_name) {
-        return;
-      }
-      let old_name = full_names[p.textContent];
-      old_name = old_name ? " [" + old_name + "]" : "";
-      r = formatRawName(raw_name) + old_name + formatRank(rank);
+      r = formatRawName(raw_name) + formatRank(rank);
     }
     if (flag === "China") {
       p.style.color = "red";
