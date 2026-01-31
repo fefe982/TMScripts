@@ -105,6 +105,5 @@
       break;
     }
   }
-
-  // Your code here...
+  alert("finished");
 })();
