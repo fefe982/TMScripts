@@ -80,5 +80,6 @@
       await save_singles_data(player_id, name, sport_id, rank, date.getTime(), region);
     }
   }
+  alert("finished");
   // Your code here...
 })();
