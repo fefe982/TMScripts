@@ -20,10 +20,11 @@
 // @connect      localhost
 // @noframes
 // ==/UserScript==
+/// <reference path="./tampermonkey.d.ts" />
 
 (async function () /* NOSONAR */ {
   "use strict";
-  console.log("oops, tampermonkey: " + window.location.href);
+  console.log("oops, tampermonkey: " + globalThis.location.href);
   GM_addStyle(`.seoAdWrapper, .adsclick, #rc-top, iframe, .adsenvelope {
     display:none !important
 }
@@ -42,12 +43,12 @@
 .flag {
     z-index: 1;
 }`);
-  const replaces = {
-    tennis: {},
-    "table-tennis": {},
-    badminton: {},
-  };
-  const get_sport_id = async (sport) => {
+  const /** @type {{[key: string]: {id?: string}}} */ replaces = {
+      tennis: {},
+      "table-tennis": {},
+      badminton: {},
+    };
+  const get_sport_id = async (/** @type {string} */ sport) => {
     if (!(sport in replaces)) {
       return null;
     }
@@ -70,7 +71,7 @@
     replaces[sport].id = sports[sport].id;
     return sports[sport].id;
   };
-  const get_cached_value = (key) => {
+  const get_cached_value = (/** @type {string} */ key) => {
     const player = GM_getValue(key, {});
     if ("resp" in player) {
       console.log(`get_cached_value, player ${key}`);
@@ -79,12 +80,19 @@
     console.log(`get_cached_value, player ${key} -- no cache`);
     return null;
   };
-  const save_cache_value = (key, value) => {
+  const save_cache_value = (/** @type {string} */ key, /** @type {{}} */ value) => {
     const player = GM_getValue(key, {});
     player.resp = value || {};
-    player.check_timestamp = new Date().getTime();
+    player.check_timestamp = Date.now();
     GM_setValue(key, player);
   };
+  /**
+   *
+   * @param {string} key
+   * @param {string} display
+   * @param {string | undefined} [sport_id]
+   * @returns
+   */
   const get_player = async (key, display, sport_id) => {
     const cached = get_cached_value(key);
     if (cached) {
@@ -108,20 +116,22 @@
     }
     return resp.response || {};
   };
-  const update_player = async (player) => {
-    const resp = await GM.xmlHttpRequest({
-      method: "POST",
-      url: "http://localhost:5173/api/flashscore_player",
-      data: JSON.stringify(player),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      responseType: "json",
-    });
+  const update_player = async (
+    /** @type {{ key: any; display?: any; region?: any; sport?: any; last_seen?: number; }} */ player
+  ) => {
+    const /** @type GM.XmlHttpRequestResponse<object> */ resp = await GM.xmlHttpRequest({
+        method: "POST",
+        url: "http://localhost:5173/api/flashscore_player",
+        data: JSON.stringify(player),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        responseType: "json",
+      });
     save_cache_value(player.key, resp.response);
     return resp.response;
   };
-  const get_doubles_rank = async (key1, key2) => {
+  const get_doubles_rank = async (/** @type {string} */ key1, /** @type {string | null} */ key2) => {
     if (!key2) {
       key2 = null;
     } else if (key1 > key2) {
@@ -134,21 +144,29 @@
     if (cached) {
       return cached;
     }
-    const resp = await GM.xmlHttpRequest({
-      method: "GET",
-      url:
-        "http://localhost:5173/api/doubles_rank?player1=" +
-        encodeURIComponent(key1) +
-        "&player2=" +
-        encodeURIComponent(key2),
-      responseType: "json",
-    });
-    // console.log(resp);
+    const /** @type GM.XmlHttpRequestResponse<object> */ resp = await GM.xmlHttpRequest({
+        method: "GET",
+        url:
+          "http://localhost:5173/api/doubles_rank?player1=" +
+          encodeURIComponent(key1) +
+          "&player2=" +
+          encodeURIComponent(key2 || ""),
+        responseType: "json",
+      });
     save_cache_value(dkey, resp.response);
     return resp.response || {};
   };
+  /**
+   * @type {{[key: string]: openInTabResponse}}
+   */
   const tab_jobs = {};
+  /**
+   * @type {{[key: string]: string}}
+   */
   const pending_job = {};
+  /**
+   * @type {ReturnType<typeof setTimeout> | null}
+   */
   let timer = null;
   let num_jobs = 0;
   const startTimer = () => {
@@ -169,7 +187,7 @@
       } else {
         console.log(tab_jobs);
       }
-      if (pending_job) {
+      if (Object.keys(pending_job).length > 0) {
         timer = setTimeout(check_pending_job, 1000);
       } else {
         timer = null;
@@ -177,26 +195,35 @@
     };
     check_pending_job();
   };
-  const get_match_key = (href) => {
-    if (href.indexOf("?") == -1) {
-      const m = href.match(/match\/[^/]+\/[^/]+/);
-      return m[0];
-    } else {
-      const m = href.match(/(match\/[^/]+\/[^/]+\/[^/]+).*(mid=[0-9a-zA-z]+)/);
+  const get_match_key = (/** @type {string} */ href) => {
+    if (href.includes("?")) {
+      const m = new RegExp(/(match\/[^/]+\/[^/]+\/[^/]+).*(mid=[0-9a-zA-Z]+)/).exec(href);
+      if (m === null) {
+        throw new Error("get_match_key failed, no match");
+      }
       return m[1] + "/?" + m[2];
+    } else {
+      const m = new RegExp(/match\/[^/]+\/[^/]+/).exec(href);
+      if (m === null) {
+        throw new Error("get_match_key failed, no match");
+      }
+      return m[0];
     }
   };
+  /**
+   * @param {string} href
+   */
   function get_player_key(href) {
-    const m = href.match(/\/player\/(.*)\/(.*)\//);
+    const m = new RegExp(/\/player\/(.*)\/(.*)\//).exec(href);
     if (!m) {
       return ["", "", ""];
     }
-    let key = m[1] + "/" + m[2];
+    const key = m[1] + "/" + m[2];
     const full_key = key;
     return [key, m[1], full_key];
   }
 
-  const get_flag = (p) => {
+  const get_flag = (/** @type {HTMLElement} */ p) => {
     let flag_sel = "";
     if (p.classList.contains("event__participant--home1")) {
       flag_sel = ".event__logo--home1";
@@ -212,7 +239,7 @@
       flag_sel = ".event__logo--away";
     }
     if (flag_sel) {
-      const flag = p.parentElement.querySelector(flag_sel);
+      const /** @type {HTMLElement | null | undefined} */ flag = p.parentElement?.querySelector(flag_sel);
       if (flag) {
         return flag.title;
       }
@@ -220,7 +247,7 @@
     return "";
   };
 
-  const get_idx = (p) => {
+  const get_idx = (/** @type {{ classList: { contains: (arg0: string) => any; }; }} */ p) => {
     let idx = -1;
     if (p.classList.contains("event__participant--home1")) {
       idx = 0;
@@ -238,19 +265,25 @@
     return idx;
   };
 
+  /**
+   * @param {HTMLElement} p
+   * @param {string |  { href: string; rank: number; }} play_info
+   * @param {string} [sport_id]
+   * @param {{ [x: string]: { href: any; }; } | undefined} [match_info]
+   */
   async function replace_name_player(p, play_info, sport_id, match_info) {
     if ("mod" in p.attributes) {
       return;
     } else {
       p.setAttribute("mod", p.textContent);
     }
-    const formatRank = (rank) => {
+    const formatRank = (/** @type {string | number} */ rank) => {
       return rank ? " (" + rank + ")" : "";
     };
-    const formatRawName = (raw_name) => {
+    const formatRawName = (/** @type {string} */ raw_name) => {
       return raw_name
         .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .map((/** @type {string} */ word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ");
     };
     let rank = 0;
@@ -261,7 +294,7 @@
     } else {
       href = play_info;
     }
-    const [key, raw_name, full_key] = get_player_key(href);
+    const [, raw_name, full_key] = get_player_key(href);
     if (full_key == "") {
       return;
     }
@@ -295,10 +328,13 @@
           other_class = ".event__participant--away1";
           other_idx = 2;
         }
-        const other = p.parentElement.querySelector(other_class);
+        const other = p.parentElement?.querySelector(other_class);
+        if (!other) {
+          throw new Error("other player not found");
+        }
         let other_t = other.textContent;
         if ("mod" in other.attributes) {
-          other_t = other.getAttribute("mod");
+          other_t = other.getAttribute("mod") || "";
         }
         const other_href = match_info[other_idx + "_" + other_t].href;
         [, , other_key] = get_player_key(other_href);
@@ -320,7 +356,11 @@
     p.textContent = r;
   }
 
-  const addMatchListener = (match, href, sport_id) => {
+  const addMatchListener = (
+    /** @type {string} */ match,
+    /** @type {string} */ href,
+    /** @type {string} */ sport_id
+  ) => {
     if (!(match in pending_job)) {
       const listener = GM_addValueChangeListener(match, (key, old_val, new_val) => {
         GM_removeValueChangeListener(listener);
@@ -329,11 +369,18 @@
           delete tab_jobs[match];
           num_jobs--;
         }
-        const eventRowLink = document.querySelector("a.eventRowLink[href='" + href + "']");
-        for (const p of eventRowLink.parentElement.querySelectorAll("div.event__participant")) {
-          replace_name_match(p, match, null, sport_id);
+        const /** @type {HTMLAnchorElement | null} */ eventRowLink = document.querySelector(
+            "a.eventRowLink[href='" + href + "']"
+          );
+        for (const p of eventRowLink?.parentElement?.querySelectorAll("div.event__participant") ?? []) {
+          replace_name_match(/** @type {HTMLElement} */ (p), match, null, sport_id);
         }
-        updateEventStage(eventRowLink.parentElement.querySelector("div.event__time, div.event__stage--block"), match);
+        const /** @type {HTMLElement | null | undefined} */ stage_ele = eventRowLink?.parentElement?.querySelector(
+            "div.event__time, div.event__stage--block"
+          );
+        if (stage_ele) {
+          updateEventStage(stage_ele, match);
+        }
         console.log("listener for " + match + " fired", key, old_val, new_val);
       });
       console.log("create pending job", match);
@@ -341,6 +388,13 @@
       startTimer();
     }
   };
+  /**
+   * @param {HTMLElement} p
+   * @param {string} match
+   * @param {string | null} href
+   * @param {string} sport_id
+   * @param {number=} [idx]
+   */
   async function replace_name_match(p, match, href, sport_id, idx) {
     if ("mod" in p.attributes) {
       return;
@@ -349,7 +403,7 @@
     if (idx === undefined) {
       idx = get_idx(p);
     }
-    let key = idx + "_" + n;
+    const key = idx + "_" + n;
     const v = GM_getValue(match);
     if (!v?.[key]) {
       console.log(match, v);
@@ -360,6 +414,11 @@
     }
     return await replace_name_player(p, v[key], sport_id, v);
   }
+  /**
+   * @param {HTMLElement} tnode
+   * @param {string=} match
+   * @returns
+   */
   const updateEventStage = (tnode, match) => {
     let mnode;
     if (!match) {
@@ -371,7 +430,7 @@
       if (!mnode) {
         return;
       }
-      match = get_match_key(mnode.href);
+      match = get_match_key(/** @type {HTMLAnchorElement} */ (mnode).href);
     }
     if (!match) {
       return;
@@ -383,18 +442,23 @@
     if (v.stage == "__null__") {
       return;
     }
-    if (tnode && tnode.lastChild.textContent != v.stage) {
-      if (tnode.lastChild.nodeType == 3) {
+    if (tnode && tnode.lastChild?.textContent != v.stage) {
+      if (tnode.lastChild?.nodeType == 3) {
         tnode.appendChild(document.createElement("br"));
       }
       tnode.appendChild(document.createTextNode(v.stage));
     }
   };
-  const updateEventStageP = (node) => {
+  const updateEventStageP = (/** @type {HTMLElement} */ node) => {
     for (const tnode of node.querySelectorAll("div.event__time, div.event__stage--block")) {
-      updateEventStage(tnode);
+      updateEventStage(/** @type {HTMLElement} */ (tnode));
     }
   };
+  /**
+   * @param {HTMLElement} p
+   * @param {string} sport
+   * @param {string} sport_id
+   */
   function replace_name(p, sport, sport_id) {
     if (p.nodeType == 1 && (p.childNodes.length == 0 || p.childNodes[0].nodeType != 3)) {
       return;
@@ -403,75 +467,98 @@
       return;
     }
     if (
-      window.location.href.startsWith("https://www.flashscore.com/favorites/") ||
-      window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
-      window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
-      window.location.href.startsWith("https://www.flashscore.com/tennis/")
+      globalThis.location.href.startsWith("https://www.flashscore.com/favorites/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/badminton/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/tennis/")
     ) {
-      const match = p.parentNode.querySelector("a.eventRowLink");
-      if (match != null) {
+      /**
+       * @type {HTMLAnchorElement | null | undefined}
+       */
+      const match = p.parentNode?.querySelector("a.eventRowLink");
+      if (match) {
         replace_name_match(p, get_match_key(match.href), match.href, sport_id);
       }
     }
-    if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-      let a = p.parentElement;
-      while (a && a.tagName != "A") {
-        a = a.parentElement;
+    if (globalThis.location.href.startsWith("https://www.flashscore.com/match/")) {
+      const a = p.closest("a");
+      if (a) {
+        replace_name_match(p, get_match_key(a.href), null, sport_id);
       }
-      replace_name_match(p, get_match_key(a.href), null, sport_id);
     }
   }
+  /**
+   * @param {HTMLElement} node
+   * @param {string} sport_id
+   */
   function hanlde_draw_observer(node, sport_id) {
     for (const p of node.querySelectorAll(".series")) {
-      p.parentElement.parentElement.querySelectorAll(".bracket__name").forEach((player, idx) => {
-        replace_name_match(player, get_match_key(p.href), null, sport_id, idx);
+      p.parentElement?.parentElement?.querySelectorAll(".bracket__name").forEach((player, idx) => {
+        replace_name_match(
+          /** @type{HTMLElement} */ (player),
+          get_match_key(/** @type {HTMLAnchorElement} */ (p).href),
+          null,
+          sport_id,
+          idx
+        );
         console.log(player);
       });
-      const height = p.parentElement.parentElement.childNodes[0].offsetHeight;
-      p.parentElement.style.top = "calc(50% + " + height / 2 + "px)";
+      const height =
+        p.parentElement?.parentElement?.children[0] instanceof HTMLElement
+          ? p.parentElement.parentElement.children[0].offsetHeight
+          : 0;
+      if (p.parentElement) {
+        p.parentElement.style.top = "calc(50% + " + height / 2 + "px)";
+      }
     }
   }
-  const udpateElement = async (/** @type {Node} */ node) => {
-    if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
+  const udpateElement = async (/** @type {HTMLElement} */ node) => {
+    if (globalThis.location.href.startsWith("https://www.flashscore.com/favorites/")) {
       const children = node.getElementsByClassName("event__participant");
       for (const p of children) {
-        const sport = p.parentElement.parentElement.classList[1];
+        const sport = p.parentElement?.parentElement?.classList[1] ?? "";
         const sport_id = await get_sport_id(sport);
         if (sport_id) {
-          replace_name(p, sport, sport_id);
+          replace_name(/** @type {HTMLElement} */ (p), sport, sport_id);
         }
       }
-    } else if (window.location.href.startsWith("https://www.flashscore.com/draw/")) {
+    } else if (globalThis.location.href.startsWith("https://www.flashscore.com/draw/")) {
       const sport_eles = document.body.querySelectorAll("body > sport");
       const sport = sport_eles[0].getAttribute("name");
+      if (!sport) {
+        throw new Error("sport not found");
+      }
       const sport_id = await get_sport_id(sport);
       hanlde_draw_observer(node, sport_id);
     } else if (
-      window.location.href.startsWith("https://www.flashscore.com/match/") ||
-      window.location.href.startsWith("https://www.flashscore.com/player/") ||
-      window.location.href.startsWith("https://www.flashscore.com/badminton/") ||
-      window.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
-      window.location.href.startsWith("https://www.flashscore.com/tennis/")
+      globalThis.location.href.startsWith("https://www.flashscore.com/match/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/player/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/badminton/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/table-tennis/") ||
+      globalThis.location.href.startsWith("https://www.flashscore.com/tennis/")
     ) {
       const sport_eles = document.body.querySelectorAll("body > sport");
       const sport = sport_eles[0].getAttribute("name");
+      if (!sport) {
+        throw new Error("sport not found");
+      }
       const sport_id = await get_sport_id(sport);
       const children = node.querySelectorAll(".participant__participantName:not(:has(.participant__participantName))");
       for (const p of children) {
         if (p.tagName == "A") {
-          replace_name_player(p, p.href, sport_id);
+          replace_name_player(/** @type {HTMLElement} */ (p), /** @type {HTMLAnchorElement} */ (p).href, sport_id);
         } else {
-          replace_name(p, sport, sport_id);
+          replace_name(/** @type {HTMLElement} */ (p), sport, sport_id);
         }
       }
-      if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
+      if (globalThis.location.href.startsWith("https://www.flashscore.com/match/")) {
         for (const p of node.querySelectorAll(".h2h__participantInner")) {
-          replace_name(p, sport, sport_id);
+          replace_name(/** @type {HTMLElement} */ (p), sport, sport_id);
         }
       } else {
         const children = node.getElementsByClassName("event__participant");
         for (const p of children) {
-          replace_name(p, sport, sport_id);
+          replace_name(/** @type {HTMLElement} */ (p), sport, sport_id);
         }
       }
       hanlde_draw_observer(node, sport_id);
@@ -479,7 +566,7 @@
     updateEventStageP(node);
     const children = node.getElementsByClassName("leftMenu__text");
     for (const p of children) {
-      replace_name_player(p, p.parentElement.href);
+      replace_name_player(/** @type {HTMLElement} */ (p), /** @type {HTMLAnchorElement} */ (p.parentElement).href);
     }
   };
   const observer = new MutationObserver((mutations) => {
@@ -495,7 +582,7 @@
       }
       for (const node of mutation.addedNodes) {
         if (node.nodeType == node.ELEMENT_NODE) {
-          udpateElement(node);
+          udpateElement(/** @type {HTMLElement} */ (node));
         } else if (node.nodeType == node.TEXT_NODE) {
           if (node.parentElement?.classList?.contains("event__stage--block")) {
             updateEventStage(node.parentElement);
@@ -506,17 +593,20 @@
   });
 
   observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
-  if (window.location.href.startsWith("https://www.flashscore.com/match/")) {
-    // if (window.location.href.indexOf("?") < 0 && window.location.href.indexOf("#") < 0) {
-    //   return;
-    // }
+  if (globalThis.location.href.startsWith("https://www.flashscore.com/match/")) {
     async function wait_for_load() {
       const sport_eles = document.body.querySelectorAll("body > sport");
-      const sport = sport_eles[0].getAttribute("name");
+      const sport = sport_eles[0].getAttribute("name") || "";
       const sport_id = await get_sport_id(sport);
-      const key = get_match_key(window.location.href);
+      const key = get_match_key(globalThis.location.href);
       console.log(key);
+      /**
+       * @type {{ t: number; stage?: string; [playerKey: `${number}_${string}`]: { href: string; rank: number }; }}
+       */
       const val = { t: Date.now() };
+      /**
+       * @type {NodeListOf<HTMLAnchorElement>}
+       */
       const children = document.querySelectorAll(
         "div.participant__participantNameWrapper a.participant__participantName"
       );
@@ -525,12 +615,19 @@
         setTimeout(wait_for_load, 1000);
         return;
       }
-      const match_time = document.querySelector("div.duelParticipant div.duelParticipant__startTime div").textContent;
+      const match_time =
+        document.querySelector("div.duelParticipant div.duelParticipant__startTime div")?.textContent || "";
       console.log(match_time);
       const m_time = /(\d+).(\d+).(\d+) (\d+):(\d+)/.exec(match_time);
       let date = 0;
       if (m_time) {
-        date = new Date(m_time[3], m_time[2] - 1, m_time[1], m_time[4], m_time[5]).getTime();
+        date = new Date(
+          Number.parseFloat(m_time[3]),
+          Number.parseFloat(m_time[2]) - 1,
+          Number.parseFloat(m_time[1]),
+          Number.parseFloat(m_time[4]),
+          Number.parseFloat(m_time[5])
+        ).getTime();
       }
       if (!date) {
         return;
@@ -538,24 +635,25 @@
       await Promise.all(
         [...children].map(async (p, i) => {
           console.log(p);
-          const href = p.attributes.href.value;
-          const rank_ele = p.parentNode.parentNode.parentNode.querySelector(".participant__participantRank");
+          const href = p.href;
+          const rank_ele = p.parentNode?.parentNode?.parentNode?.querySelector(".participant__participantRank");
           let rank = 0;
-          if (rank_ele?.childNodes?.length > 2) {
-            rank = parseInt(rank_ele.childNodes[2].textContent);
+          if (rank_ele?.childNodes?.length && rank_ele.childNodes.length > 2) {
+            rank = Number.parseInt(rank_ele.childNodes[2].textContent || "0");
           } else {
-            let name_wrapper = p.parentNode;
-            while (!name_wrapper.classList.contains("participant__participantNameWrapper")) {
-              name_wrapper = name_wrapper.parentNode;
+            let name_wrapper = p.parentElement;
+            while (name_wrapper && !name_wrapper.classList.contains("participant__participantNameWrapper")) {
+              name_wrapper = name_wrapper.parentElement;
               console.log("go up !!!!");
             }
-            if (name_wrapper.attributes.rank?.value != undefined) {
-              rank = parseInt(name_wrapper.attributes.rank.value);
+            const rankAttr = name_wrapper?.attributes.getNamedItem("rank");
+            if (rankAttr?.value !== undefined) {
+              rank = Number.parseInt(rankAttr.value);
             }
           }
           console.log(href, rank);
-          const player_key = p.attributes.mod?.value || p.textContent;
-          val[i + "_" + player_key] = { href, rank };
+          const player_key = p.attributes.getNamedItem("mod")?.value || p.textContent;
+          val[`${i}_${player_key}`] = { href, rank };
           const [key, , full_key] = get_player_key(href);
           if (key) {
             const player = GM_getValue("player/" + key, {});
@@ -565,9 +663,9 @@
           await update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
         })
       );
-      const stage = document.querySelector(
-        "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]"
-      ).textContent;
+      const stage =
+        document.querySelector("li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]")
+          ?.textContent || "";
       const stagesplit = stage.split(" - ");
       if (stagesplit.length > 1) {
         val.stage = stagesplit.pop();
@@ -602,17 +700,20 @@
     }
   }
   (function () {
-    const exchangeSport = (mainhref, minorhref) => {
+    const exchangeSport = (/** @type {string} */ mainhref, /** @type {string} */ minorhref) => {
+      /** @type {HTMLAnchorElement | null} */
       const main = document.querySelector(`.menuTop__item[href="${mainhref}"]`);
+      /** @type {HTMLAnchorElement | null} */
       const minor = document.querySelector(`.menuMinority__item[href='${minorhref}']`);
+      /** @type {HTMLAnchorElement | null} */
       const mainminor = document.querySelector(`.menuMinority__item[href='${mainhref}']`);
       if (main && minor && mainminor) {
         mainminor.classList.remove("menuMinority__item--hidden");
         minor.classList.add("menuMinority__item--hidden");
         main.href = minorhref;
-        main.children[0].removeChild(main.children[0].children[0]);
+        main.children[0].children[0].remove();
         main.children[0].appendChild(minor.children[0].children[0]);
-        main.setAttribute("data-sport-id", minor.getAttribute("data-sport-id"));
+        main.dataset.sportId = minor.dataset.sportId;
         main.children[1].textContent = minor.children[1].textContent;
         return true;
       }
