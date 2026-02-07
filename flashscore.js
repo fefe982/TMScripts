@@ -21,7 +21,7 @@
 // @noframes
 // ==/UserScript==
 
-(async function () {
+(async function () /* NOSONAR */ {
   "use strict";
   console.log("oops, tampermonkey: " + window.location.href);
   GM_addStyle(`.seoAdWrapper, .adsclick, #rc-top, iframe, .adsenvelope {
@@ -363,9 +363,9 @@
   const updateEventStage = (tnode, match) => {
     let mnode;
     if (!match) {
-      mnode = tnode.parentNode;
+      mnode = tnode.parentElement;
       while (mnode && !mnode.classList.contains("event__match")) {
-        mnode = mnode.parentNode;
+        mnode = mnode.parentElement;
       }
       mnode = mnode?.querySelector(".eventRowLink");
       if (!mnode) {
@@ -384,7 +384,9 @@
       return;
     }
     if (tnode && tnode.lastChild.textContent != v.stage) {
-      tnode.appendChild(document.createElement("br"));
+      if (tnode.lastChild.nodeType == 3) {
+        tnode.appendChild(document.createElement("br"));
+      }
       tnode.appendChild(document.createTextNode(v.stage));
     }
   };
@@ -421,15 +423,15 @@
   }
   function hanlde_draw_observer(node, sport_id) {
     for (const p of node.querySelectorAll(".series")) {
-      p.parentNode.parentNode.querySelectorAll(".bracket__name").forEach((player, idx) => {
+      p.parentElement.parentElement.querySelectorAll(".bracket__name").forEach((player, idx) => {
         replace_name_match(player, get_match_key(p.href), null, sport_id, idx);
         console.log(player);
       });
-      const height = p.parentNode.parentNode.childNodes[0].offsetHeight;
-      p.parentNode.style.top = "calc(50% + " + height / 2 + "px)";
+      const height = p.parentElement.parentElement.childNodes[0].offsetHeight;
+      p.parentElement.style.top = "calc(50% + " + height / 2 + "px)";
     }
   }
-  const udpateElement = async (node) => {
+  const udpateElement = async (/** @type {Node} */ node) => {
     if (window.location.href.startsWith("https://www.flashscore.com/favorites/")) {
       const children = node.getElementsByClassName("event__participant");
       for (const p of children) {
@@ -483,8 +485,8 @@
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (mutation.type == "characterData") {
-        if (mutation.target.parentNode.classList.contains("event__stage--block")) {
-          updateEventStage(mutation.target.parentNode);
+        if (mutation.target.parentElement?.classList.contains("event__stage--block")) {
+          updateEventStage(mutation.target.parentElement);
         }
         continue;
       }
@@ -495,8 +497,8 @@
         if (node.nodeType == node.ELEMENT_NODE) {
           udpateElement(node);
         } else if (node.nodeType == node.TEXT_NODE) {
-          if (node.parentNode?.classList?.contains("event__stage--block")) {
-            updateEventStage(node.parentNode);
+          if (node.parentElement?.classList?.contains("event__stage--block")) {
+            updateEventStage(node.parentElement);
           }
         }
       }
@@ -516,7 +518,7 @@
       console.log(key);
       const val = { t: Date.now() };
       const children = document.querySelectorAll(
-        "div.participant__participantNameWrapper a.participant__participantName",
+        "div.participant__participantNameWrapper a.participant__participantName"
       );
       console.log(children);
       if (children.length == 0) {
@@ -561,10 +563,10 @@
             GM_setValue("player/" + key, player);
           }
           await update_player({ key: full_key, display: player_key, sport: sport_id, last_seen: date });
-        }),
+        })
       );
       const stage = document.querySelector(
-        "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]",
+        "li[class^=wcl-breadcrumbItem]:last-child [class^=wcl-breadcrumbItemLabel]"
       ).textContent;
       const stagesplit = stage.split(" - ");
       if (stagesplit.length > 1) {
