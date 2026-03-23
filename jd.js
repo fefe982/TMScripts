@@ -12,14 +12,18 @@
 
 (function () {
   "use strict";
+  /** @type {Record<string, { time?: string, shop?: string, order?: string, amount?: string }>} */
   const full_data = {};
   for (const body of document.querySelectorAll("tbody")) {
+    /** @type {{ time?: string, shop?: string, order?: string, amount?: string }} */
     const data = {};
-    data.time = body.querySelector(".dealtime").innerText;
-    data.shop = body.querySelector(".shop-txt").innerText;
-    data.order = body.querySelector(".number a").innerText;
-    data.amount = body.querySelector(".amount span:first-child").innerText;
-    full_data[data.order] = data;
+    data.time = /** @type {HTMLElement | null} */ (body.querySelector(".dealtime"))?.innerText;
+    data.shop = /** @type {HTMLElement | null} */ (body.querySelector(".shop-txt"))?.innerText;
+    data.order = /** @type {HTMLElement | null} */ (body.querySelector(".number a"))?.innerText;
+    data.amount = /** @type {HTMLElement | null} */ (body.querySelector(".amount span:first-child"))?.innerText;
+    if (data.order) {
+      full_data[data.order] = data;
+    }
   }
   const date = new Date();
   const metas = JSON.stringify(full_data);
