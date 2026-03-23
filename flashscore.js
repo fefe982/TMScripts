@@ -28,7 +28,7 @@
   GM_addStyle(`.seoAdWrapper, .adsclick, #rc-top, iframe, .adsenvelope {
     display:none !important
 }
-.leftMenu__text, .bracket__name {
+.leftMenu__text, .bracket__name, .wcl-name_jjfMf {
     text-wrap: wrap !important
 }
 .bracket {
@@ -244,10 +244,16 @@
         return flag.title;
       }
     }
+    if (p.classList.contains("wcl-name_jjfMf")) {
+      const img = p.parentElement?.querySelector("img");
+      if (img) {
+        return img.title;
+      }
+    }
     return "";
   };
 
-  const get_idx = (/** @type {{ classList: { contains: (arg0: string) => any; }; }} */ p) => {
+  const get_idx = (/** @type {HTMLElement} */ p) => {
     let idx = -1;
     if (p.classList.contains("event__participant--home1")) {
       idx = 0;
@@ -261,6 +267,23 @@
       idx = 0;
     } else if (p.classList.contains("event__participant--away")) {
       idx = 1;
+    } else if (p.classList.contains("wcl-name_jjfMf")) {
+      const item = p.closest("[class*='wcl-item_']");
+      const participants = item?.parentElement;
+      if (item && participants && [...participants.classList].some((cls) => cls.startsWith("wcl-participants_"))) {
+        idx = [...participants.children]
+          .filter(
+            (child) => child instanceof HTMLElement && [...child.classList].some((cls) => cls.startsWith("wcl-item_"))
+          )
+          .indexOf(item);
+      }
+      if (participants?.parentElement?.classList.contains("event__awayParticipant")) {
+        if (participants?.parentElement?.classList.contains("event__participant--doubles")) {
+          idx += 2;
+        } else {
+          idx += 1;
+        }
+      }
     }
     return idx;
   };
@@ -272,6 +295,7 @@
    * @param {{ [x: string]: { href: any; }; } | undefined} [match_info]
    */
   async function replace_name_player(p, play_info, sport_id, match_info) {
+    console.log("replace_name_player", p, play_info, sport_id, match_info);
     if ("mod" in p.attributes) {
       return;
     } else {
@@ -299,6 +323,7 @@
       return;
     }
     const flag = get_flag(p);
+    console.log("player info", full_key, raw_name, rank, flag);
     const player_info_db = await get_player(full_key, p.textContent, sport_id);
     if (flag && player_info_db && player_info_db.region != flag) {
       await update_player({ key: full_key, display: p.textContent, region: flag });
@@ -406,7 +431,7 @@
     const key = idx + "_" + n;
     const v = GM_getValue(match);
     if (!v?.[key]) {
-      console.log(match, v);
+      console.log(match, v, key);
       if (!(match in tab_jobs) && href) {
         addMatchListener(match, href, sport_id);
       }
@@ -421,6 +446,7 @@
    */
   const updateEventStage = (tnode, match) => {
     let mnode;
+    console.log("updateEventStage", tnode, match);
     if (!match) {
       mnode = tnode.parentElement;
       while (mnode && !mnode.classList.contains("event__match")) {
@@ -475,7 +501,7 @@
       /**
        * @type {HTMLAnchorElement | null | undefined}
        */
-      const match = p.parentNode?.querySelector("a.eventRowLink");
+      const match = p.closest("div.event__match")?.querySelector("a.eventRowLink");
       if (match) {
         replace_name_match(p, get_match_key(match.href), match.href, sport_id);
       }
@@ -556,7 +582,7 @@
           replace_name(/** @type {HTMLElement} */ (p), sport, sport_id);
         }
       } else {
-        const children = node.getElementsByClassName("event__participant");
+        const children = node.querySelectorAll(".event__participant, .wcl-name_jjfMf");
         for (const p of children) {
           replace_name(/** @type {HTMLElement} */ (p), sport, sport_id);
         }
