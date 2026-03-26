@@ -40,8 +40,16 @@
 .bracket--doubles .bracket__participantRow {
     grid-template-rows: auto auto;
 }
-.flag {
+.flag, .wcl-participant_bctDY {
     z-index: 1;
+}
+@font-face {
+  font-family: 'MiddleDotFallback';
+  src: local('Segoe UI'), local('Arial');
+  unicode-range: U+00B7;
+}
+body,button,input {
+    font-family: MiddleDotFallback,LivesportFinderLatin,Adjusted Arial Fallback,Arial,sans-serif;
 }`);
   const /** @type {{[key: string]: {id?: string}}} */ replaces = {
       tennis: {},
@@ -397,7 +405,8 @@
         const /** @type {HTMLAnchorElement | null} */ eventRowLink = document.querySelector(
             "a.eventRowLink[href='" + href + "']"
           );
-        for (const p of eventRowLink?.parentElement?.querySelectorAll("div.event__participant") ?? []) {
+        for (const p of eventRowLink?.parentElement?.querySelectorAll("div.event__participant, .wcl-name_jjfMf") ??
+          []) {
           replace_name_match(/** @type {HTMLElement} */ (p), match, null, sport_id);
         }
         const /** @type {HTMLElement | null | undefined} */ stage_ele = eventRowLink?.parentElement?.querySelector(
