@@ -22,6 +22,16 @@
 // ==/UserScript==
 /// <reference path="./tampermonkey.d.ts" />
 
+/**
+ * Flashscore enhancer for racket sports.
+ *
+ * Main behavior:
+ * 1) On match pages, collect complete player metadata (href/name/rank/stage/time) and persist it.
+ * 2) On listing pages, resolve short names into readable full names with translation/rank.
+ * 3) Keep local Tampermonkey storage synchronized with a localhost backend API.
+ *
+ * The script relies on MutationObserver because Flashscore updates content dynamically.
+ */
 (async function () /* NOSONAR */ {
   "use strict";
   console.log("oops, tampermonkey: " + globalThis.location.href);
@@ -56,6 +66,10 @@ body,button,input {
       "table-tennis": {},
       badminton: {},
     };
+  /**
+   * Resolve backend sport id and cache it in GM storage for later lookups.
+   * Returns null for unsupported sports.
+   */
   const get_sport_id = async (/** @type {string} */ sport) => {
     if (!(sport in replaces)) {
       return null;
@@ -79,6 +93,10 @@ body,button,input {
     replaces[sport].id = sports[sport].id;
     return sports[sport].id;
   };
+  /**
+   * Read normalized API response cache for a key.
+   * Cache entries are stored as: { resp: object, check_timestamp: number }.
+   */
   const get_cached_value = (/** @type {string} */ key) => {
     const player = GM_getValue(key, {});
     if ("resp" in player) {
@@ -88,6 +106,9 @@ body,button,input {
     console.log(`get_cached_value, player ${key} -- no cache`);
     return null;
   };
+  /**
+   * Persist normalized API response with freshness timestamp.
+   */
   const save_cache_value = (/** @type {string} */ key, /** @type {{}} */ value) => {
     const player = GM_getValue(key, {});
     player.resp = value || {};
@@ -95,11 +116,15 @@ body,button,input {
     GM_setValue(key, player);
   };
   /**
+   * Fetch player profile from cache/backend.
+   *
+   * `key` is usually "name-slug/player-id" parsed from player URL.
+   * Optional `display` and `sport_id` help backend disambiguation.
    *
    * @param {string} key
    * @param {string} display
    * @param {string | undefined} [sport_id]
-   * @returns
+   * @returns {Promise<any>}
    */
   const get_player = async (key, display, sport_id) => {
     const cached = get_cached_value(key);
@@ -124,6 +149,9 @@ body,button,input {
     }
     return resp.response || {};
   };
+  /**
+   * Upsert player metadata in backend and refresh local cache.
+   */
   const update_player = async (
     /** @type {{ key: any; display?: any; region?: any; sport?: any; last_seen?: number; }} */ player
   ) => {
@@ -139,6 +167,11 @@ body,button,input {
     save_cache_value(player.key, resp.response);
     return resp.response;
   };
+  /**
+   * Fetch combined doubles ranking for two players.
+   *
+   * Keys are sorted first so cache key is stable regardless of input order.
+   */
   const get_doubles_rank = async (/** @type {string} */ key1, /** @type {string | null} */ key2) => {
     if (!key2) {
       key2 = null;
@@ -177,6 +210,12 @@ body,button,input {
    */
   let timer = null;
   let num_jobs = 0;
+  /**
+   * Throttled scheduler that opens pending match tabs.
+   *
+   * Why tabs: detailed match pages contain richer player data than list pages.
+   * Limit: at most 5 concurrently opened tabs to reduce browser load.
+   */
   const startTimer = () => {
     if (timer) {
       return;
@@ -203,6 +242,11 @@ body,button,input {
     };
     check_pending_job();
   };
+  /**
+   * Build stable match key from flashscore URL.
+   *
+   * Some pages include `mid=...` query part; keep it when present.
+   */
   const get_match_key = (/** @type {string} */ href) => {
     if (href.includes("?")) {
       const m = new RegExp(/(match\/[^/]+\/[^/]+\/[^/]+).*(mid=[0-9a-zA-Z]+)/).exec(href);
@@ -219,7 +263,10 @@ body,button,input {
     }
   };
   /**
+   * Parse player URL and return identifiers used by cache/backend.
+   *
    * @param {string} href
+   * @returns {[string, string, string]}
    */
   function get_player_key(href) {
     const m = new RegExp(/\/player\/(.*)\/(.*)\//).exec(href);
@@ -231,6 +278,9 @@ body,button,input {
     return [key, m[1], full_key];
   }
 
+  /**
+   * Get visible country/region label for a participant element.
+   */
   const get_flag = (/** @type {HTMLElement} */ p) => {
     let flag_sel = "";
     if (p.classList.contains("event__participant--home1")) {
@@ -261,6 +311,11 @@ body,button,input {
     return "";
   };
 
+  /**
+   * Map participant node to player index in match payload.
+   *
+   * Singles usually map to 0/1, doubles to 0/1/2/3 depending on side/order.
+   */
   const get_idx = (/** @type {HTMLElement} */ p) => {
     let idx = -1;
     if (p.classList.contains("event__participant--home1")) {
@@ -297,6 +352,11 @@ body,button,input {
   };
 
   /**
+   * Replace short UI name with formatted full name + translation + rank.
+   *
+   * Supports both direct player href and pre-resolved match payload entry.
+   * Uses `mod` attribute as a guard to avoid repeated replacements.
+   *
    * @param {HTMLElement} p
    * @param {string |  { href: string; rank: number; }} play_info
    * @param {string} [sport_id]
@@ -389,6 +449,12 @@ body,button,input {
     p.textContent = r;
   }
 
+  /**
+   * Register once-per-match value listener and queue match tab for data hydration.
+   *
+   * When another tab writes GM value for this match, listener applies replacements
+   * and closes the helper tab.
+   */
   const addMatchListener = (
     /** @type {string} */ match,
     /** @type {string} */ href,
@@ -423,6 +489,11 @@ body,button,input {
     }
   };
   /**
+   * Resolve participant via stored match payload and replace display name.
+   *
+   * If payload does not exist yet and href is available, schedule background
+   * match tab fetch by calling `addMatchListener`.
+   *
    * @param {HTMLElement} p
    * @param {string} match
    * @param {string | null} href
@@ -449,6 +520,8 @@ body,button,input {
     return await replace_name_player(p, v[key], sport_id, v);
   }
   /**
+   * Append saved stage label (e.g. round info) into event row stage/time area.
+   *
    * @param {HTMLElement} tnode
    * @param {string=} match
    * @returns
@@ -484,12 +557,19 @@ body,button,input {
       tnode.appendChild(document.createTextNode(v.stage));
     }
   };
+  /**
+   * Apply stage update for every stage/time node under a subtree.
+   */
   const updateEventStageP = (/** @type {HTMLElement} */ node) => {
     for (const tnode of node.querySelectorAll("div.event__time, div.event__stage--block")) {
       updateEventStage(/** @type {HTMLElement} */ (tnode));
     }
   };
   /**
+   * Entry point for participant text replacement in list/match contexts.
+   *
+   * It determines current page mode and routes to `replace_name_match`.
+   *
    * @param {HTMLElement} p
    * @param {string} sport
    * @param {string} sport_id
@@ -523,6 +603,10 @@ body,button,input {
     }
   }
   /**
+   * Handle tournament draw/bracket nodes.
+   *
+   * Replaces bracket names and also adjusts connector vertical offset.
+   *
    * @param {HTMLElement} node
    * @param {string} sport_id
    */
@@ -547,6 +631,14 @@ body,button,input {
       }
     }
   }
+  /**
+   * Process a newly added DOM subtree and apply all enrichments.
+   *
+   * Includes:
+   * - participant name replacement
+   * - stage text update
+   * - side menu name replacement
+   */
   const udpateElement = async (/** @type {HTMLElement} */ node) => {
     if (globalThis.location.href.startsWith("https://www.flashscore.com/favorites/")) {
       const children = node.getElementsByClassName("event__participant");
@@ -604,6 +696,9 @@ body,button,input {
       replace_name_player(/** @type {HTMLElement} */ (p), /** @type {HTMLAnchorElement} */ (p.parentElement).href);
     }
   };
+  /**
+   * Observe dynamic page updates and patch newly inserted nodes.
+   */
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       if (mutation.type == "characterData") {
@@ -629,6 +724,12 @@ body,button,input {
 
   observer.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true });
   if (globalThis.location.href.startsWith("https://www.flashscore.com/match/")) {
+    /**
+     * Wait until match page participant block is loaded, then persist:
+     * - per-player href/rank under match key
+     * - latest seen timestamp under player key
+     * - stage text for list page display
+     */
     async function wait_for_load() {
       const sport_eles = document.body.querySelectorAll("body > sport");
       const sport = sport_eles[0].getAttribute("name") || "";
@@ -714,6 +815,13 @@ body,button,input {
     await wait_for_load();
   }
   udpateElement(document.body);
+  /**
+   * Periodic cleanup of stale GM cache entries.
+   *
+   * - keep internal keys (`__*`)
+   * - remove malformed values
+   * - remove week-old API cache / match cache entries
+   */
   for (const key of GM_listValues()) {
     if (key.startsWith("__")) {
       console.log("met special key: " + key);
@@ -735,6 +843,9 @@ body,button,input {
     }
   }
   (function () {
+    /**
+     * Promote selected minority sports into top menu by swapping menu entries.
+     */
     const exchangeSport = (/** @type {string} */ mainhref, /** @type {string} */ minorhref) => {
       /** @type {HTMLAnchorElement | null} */
       const main = document.querySelector(`.menuTop__item[href="${mainhref}"]`);
@@ -763,6 +874,9 @@ body,button,input {
       exchangeSport(mainhref, minorhref);
     }
   })();
+  /**
+   * Close helper tabs opened for match hydration to avoid orphan tabs.
+   */
   window.addEventListener("beforeunload", () => {
     for (const match in tab_jobs) {
       tab_jobs[match].close();
