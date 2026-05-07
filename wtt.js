@@ -10,6 +10,7 @@
 // @grant        GM_xmlhttpRequest
 // @connect      localhost
 // ==/UserScript==
+/// <reference path="./tampermonkey.d.ts" />
 
 (async function () {
   "use strict";
