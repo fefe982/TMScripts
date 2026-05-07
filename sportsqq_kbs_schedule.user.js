@@ -20,6 +20,113 @@
     return (value || "").replaceAll(/\s+/g, " ").trim();
   }
 
+  /**
+   * Remove accidental spaces inside CJK names caused by wrapped text nodes.
+   * @param {string} value
+   */
+  function tightenCjkSpacing(value) {
+    let current = normalizeText(value);
+    let prev = "";
+    while (current !== prev) {
+      prev = current;
+      current = current.replaceAll(/([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g, "$1$2");
+    }
+    return current;
+  }
+
+  /**
+   * Extract ordered text fragments from leaf elements under the match link.
+   * This avoids parsing merged text from the whole <a> node.
+   * @param {Element} link
+   */
+  function extractMatchTextFromElements(link) {
+    const fragments = [];
+
+    for (const child of link.childNodes) {
+      if (child.nodeType !== Node.TEXT_NODE) {
+        continue;
+      }
+      const text = normalizeText(child.textContent);
+      if (text) {
+        fragments.push(text);
+      }
+    }
+
+    for (const el of link.querySelectorAll("*")) {
+      if (el.children.length > 0) {
+        continue;
+      }
+
+      let text = "";
+      if (el instanceof HTMLImageElement) {
+        text = normalizeText(el.alt || el.title || "");
+      } else {
+        text = normalizeText(el.textContent);
+      }
+
+      if (!text) {
+        continue;
+      }
+      if (/^[\ue000-\uf8ff]+$/.test(text)) {
+        continue;
+      }
+      fragments.push(text);
+    }
+
+    const filtered = fragments
+      .map((item) => tightenCjkSpacing(item))
+      .filter(Boolean)
+      .filter((item) => !/^(详细数据|集锦\/?回放|回放|集锦|视频直播|图文直播)$/.test(item));
+
+    /** @type {string[]} */
+    const deduped = [];
+    for (const item of filtered) {
+      if (deduped.at(-1) !== item) {
+        deduped.push(item);
+      }
+    }
+
+    return normalizeText(deduped.join(" "));
+  }
+
+  /**
+   * Extract structured match fields by dedicated classes/order under the link.
+   * @param {Element} link
+   */
+  function extractMatchDataFromLink(link) {
+    const time = normalizeText(link.querySelector(".date")?.textContent);
+    const teams = Array.from(link.querySelectorAll(".team"));
+    const leftTeamEl = teams.at(0)?.querySelector(".team-name") || teams.at(0);
+    const rightTeamEl = teams.at(-1)?.querySelector(".team-name") || teams.at(-1);
+
+    const leftTeamText = normalizeText(leftTeamEl?.textContent);
+    const rightTeamText = normalizeText(rightTeamEl?.textContent);
+
+    const tournament = normalizeText(link.querySelector(".status .game-type")?.textContent);
+    const stage = normalizeText(link.querySelector(".status .game-stage")?.textContent);
+
+    const scoreValues = Array.from(link.querySelectorAll(".score"))
+      .map((el) => normalizeText(el.textContent))
+      .filter(Boolean);
+
+    if (!time || !leftTeamText || !rightTeamText || !tournament) {
+      return null;
+    }
+
+    const left = parseParticipantSide(leftTeamText);
+    const right = parseParticipantSide(rightTeamText);
+
+    return {
+      time,
+      tournament,
+      left,
+      right,
+      stage,
+      leftScore: scoreValues.at(0) || "",
+      rightScore: scoreValues.at(-1) || "",
+    };
+  }
+
   function getActiveDateText() {
     const candidates = [".active", "li.active", "[class*='active']", "[class*='current']", "[class*='selected']"];
 
@@ -75,14 +182,24 @@
    * @param {string} sideText
    */
   function parseParticipantSide(sideText) {
-    const side = normalizeText(sideText);
+    const side = normalizeText(sideText)
+      .replaceAll(/[（(]\d+[)）]/g, "")
+      .replaceAll(/^(?:用券|付费|会员|免费)\s+/g, "")
+      .trim();
     if (!side) {
       return { participant: "", nationality: "" };
     }
 
+    const doubledWhole = /^(.+?)\s+\1$/.exec(side);
+    if (doubledWhole) {
+      return { participant: tightenCjkSpacing(doubledWhole[1]), nationality: "" };
+    }
+
     const tokens = side.split(" ").filter(Boolean);
-    if (tokens.length >= 2 && tokens[0] === tokens[1]) {
-      return { participant: tokens[0], nationality: tokens[0] };
+    if (tokens.length >= 2) {
+      if (tokens[0] === tokens[1]) {
+        return { participant: tightenCjkSpacing(tokens[0]), nationality: "" };
+      }
     }
 
     const bracketNation = /[（(]([A-Za-z]{2,3}|[\u4e00-\u9fa5]{2,10})[)）]/.exec(side);
@@ -93,7 +210,7 @@
       };
     }
 
-    return { participant: side, nationality: "" };
+    return { participant: tightenCjkSpacing(side), nationality: "" };
   }
 
   /**
@@ -102,16 +219,19 @@
   function parseMatchText(text) {
     const clean = normalizeText(text)
       .replaceAll(/详细数据|集锦\/?回放|回放|集锦|视频直播|图文直播/g, "")
+      .replaceAll(/^(?:用券|付费|会员|免费)\s+/g, "")
       .trim();
 
-    const timeMatch = /\b([01]?\d|2[0-3]):[0-5]\d\b/.exec(clean);
+    const timeMatch = /\b(?:([01]?\d|2[0-3]):[0-5]\d|待定)\b/.exec(clean);
     if (!timeMatch) {
       return null;
     }
 
     const time = timeMatch[0];
     const start = clean.indexOf(time) + time.length;
-    const afterTime = normalizeText(clean.slice(start));
+    const afterTime = normalizeText(clean.slice(start))
+      .replaceAll(/^(?:用券|付费|会员|免费)\s+/g, "")
+      .trim();
 
     const withScore = /^(.*?)\s+\d+\s+(.*?)\s+(已结束|未开始|进行中|直播中|推迟|取消|中断)\s+\d+\s+(.*?)$/.exec(
       afterTime
@@ -158,8 +278,9 @@
       }
       seen.add(href);
 
-      const text = normalizeText(link.textContent);
-      const parsed = parseMatchText(text);
+      const direct = extractMatchDataFromLink(link);
+      const text = extractMatchTextFromElements(link);
+      const parsed = direct || parseMatchText(text);
       if (!parsed) {
         continue;
       }
