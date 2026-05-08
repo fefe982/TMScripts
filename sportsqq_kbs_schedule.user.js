@@ -127,15 +127,59 @@
     };
   }
 
+  /**
+   * @param {string} text
+   */
+  function extractDateToken(text) {
+    const normalized = normalizeText(text);
+    const m = /(\d{2}-\d{2})(?:\s*(?:周[一二三四五六日天]|今天|星期[一二三四五六日天]))?/.exec(normalized);
+    return m ? m[1] : "";
+  }
+
+  /**
+   * Read date from the date div under the same .schedule-block as the match link.
+   * @param {Element} link
+   */
+  function getDateFromScheduleBlock(link) {
+    const block = link.closest(".schedule-block");
+    if (!block) {
+      return "";
+    }
+
+    // Typical header text is like: "05-05 星期二".
+    for (const node of block.querySelectorAll(":scope > div")) {
+      const text = normalizeText(node.textContent);
+      if (!text) {
+        continue;
+      }
+      if (!/(\d{2}-\d{2})\s*(?:周[一二三四五六日天]|今天|星期[一二三四五六日天])/.test(text)) {
+        continue;
+      }
+      const date = extractDateToken(text);
+      if (date) {
+        return date;
+      }
+    }
+
+    // Fallback for minor structure/class changes inside the same block.
+    for (const node of block.querySelectorAll("[class*='date'], [class*='day'], [class*='week']")) {
+      const date = extractDateToken(node.textContent || "");
+      if (date) {
+        return date;
+      }
+    }
+
+    return "";
+  }
+
   function getActiveDateText() {
     const candidates = [".active", "li.active", "[class*='active']", "[class*='current']", "[class*='selected']"];
 
     for (const selector of candidates) {
       for (const node of document.querySelectorAll(selector)) {
-        const text = normalizeText(node.textContent);
-        const m = /(\d{2}-\d{2})(?:\s*(?:周[一二三四五六日天]|今天|星期[一二三四五六日天]))?/.exec(text);
-        if (m) {
-          return m[1];
+        const date = extractDateToken(node.textContent || "");
+        if (date) {
+          return date;
         }
       }
     }
@@ -291,7 +335,9 @@
 
       const domTournament = findTournamentFromDom(link);
       const tournament = parsed.tournament || domTournament || "unknown";
-      const datetime = normalizeText(`${selectedDate} ${parsed.time}`).trim();
+      const blockDate = getDateFromScheduleBlock(link);
+      const date = blockDate || selectedDate;
+      const datetime = normalizeText(`${date} ${parsed.time}`).trim();
 
       rows.push({
         tournament,
