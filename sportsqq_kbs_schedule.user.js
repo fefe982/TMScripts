@@ -285,6 +285,10 @@
         continue;
       }
 
+      if (parsed.left.participant === "待定" || parsed.right.participant === "待定") {
+        continue;
+      }
+
       const domTournament = findTournamentFromDom(link);
       const tournament = parsed.tournament || domTournament || "unknown";
       const datetime = normalizeText(`${selectedDate} ${parsed.time}`).trim();
